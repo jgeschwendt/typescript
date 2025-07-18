@@ -1,0 +1,31 @@
+{
+  "name": "@jlg/eslint",
+  "version": "0.0.0-alpha.0",
+  "type": "module",
+  "dependencies": {
+    "@eslint/js": "^9.31.0",
+    "@eslint/json": "^0.13.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-unicorn": "^59.0.1",
+    "globals": "^16.3.0",
+    "typescript-eslint": "^8.37.0"
+  },
+  "devDependencies": {
+    "@jest/globals": "^30.0.4",
+    "@swc/core": "^1.13.0",
+    "@swc/jest": "^0.2.39",
+    "eslint": "9.31.0",
+    "jest": "^30.0.4"
+  },
+  "peerDependencies": {
+    "eslint": "^9.31.0"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "ncu": "npx npm-check-updates -u",
+    "test": "NODE_OPTIONS=\"--experimental-vm-modules\" jest"
+  }
+}

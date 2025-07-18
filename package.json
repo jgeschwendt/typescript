@@ -1,0 +1,10 @@
+{
+  "name": "jlg",
+  "devDependencies": {
+    "claude-flow": "2.0.0-alpha.61",
+    "prettier": "3.6.2"
+  },
+  "scripts": {
+    "prettier": "prettier --write ."
+  }
+}
