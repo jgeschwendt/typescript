@@ -1,0 +1,242 @@
+{
+  "adrs": {},
+  "landmarks": {
+    "oxfmt-mirror-root": {
+      "file": ".oxfmtrc.jsonc",
+      "line": 9,
+      "node": "/"
+    },
+    "oxlint-base": {
+      "file": "packages/oxlint/index.mjs",
+      "line": 29,
+      "node": "packages/oxlint"
+    },
+    "oxlint-extends-objects": {
+      "file": "packages/oxlint/index.mjs",
+      "line": 40,
+      "node": "packages/oxlint"
+    },
+    "oxlint-peer-coupling": {
+      "file": "packages/oxlint/oxlintrc.jsonc",
+      "line": 49,
+      "node": "packages/oxlint"
+    },
+    "oxlint-tsgolint-pairing": {
+      "file": "packages/oxlint/oxlintrc.jsonc",
+      "line": 19,
+      "node": "packages/oxlint"
+    },
+    "publish-scope-rewrite": {
+      "file": "publish",
+      "line": 32,
+      "node": "/"
+    },
+    "rule-existence-guard": {
+      "file": "packages/oxlint/__tests__/rule-existence.test.js",
+      "line": 24,
+      "node": "packages/oxlint"
+    },
+    "rule-inventory-gate": {
+      "file": "packages/oxlint/__tests__/rule-inventory.test.js",
+      "line": 13,
+      "node": "packages/oxlint"
+    }
+  },
+  "nodes": {
+    "/": {
+      "budget": null,
+      "claims": [
+        {
+          "anchor": "lm:oxfmt-mirror-root",
+          "enforced_by": null,
+          "id": "oxfmt-mirror-root",
+          "kind": "hazard",
+          "resolved": ".oxfmtrc.jsonc:9",
+          "text": "MIRRORED PAIR — every base key in packages/oxfmt/oxfmtrc.json must also appear here in .oxfmtrc.jsonc; oxfmt has no `extends`, so the two files are edited together",
+          "verified": {
+            "digest": null,
+            "sha": "57103c312f9d079042f3f490d8bff7cbb6040d9f"
+          }
+        },
+        {
+          "anchor": "lm:publish-scope-rewrite",
+          "enforced_by": null,
+          "id": "publish-scope-rewrite",
+          "kind": "invariant",
+          "resolved": "publish:32",
+          "text": "source packages keep @jlg/* names; ./publish stages and rewrites them to @jgeschwendt/* for GitHub Packages (scope must equal repo owner); the npmjs @jlg org is the end state — delete the rewrite then",
+          "verified": {
+            "digest": null,
+            "sha": "57103c312f9d079042f3f490d8bff7cbb6040d9f"
+          }
+        }
+      ],
+      "commands": {
+        "fmt:check": "bun run fmt:check",
+        "lint": "bun run lint",
+        "publish-check": "./publish --dry-run",
+        "save": "./save"
+      },
+      "contains": [
+        "packages"
+      ],
+      "declared": {
+        "allow": [],
+        "decided_by": [],
+        "depends": []
+      },
+      "extracted": {
+        "imports": []
+      },
+      "id": "/",
+      "kind": "system",
+      "purpose": "Bun-workspace monorepo that publishes the @jlg shared toolchain configs — oxlint (lint), oxfmt (format), tsconfig. No app code; the packages ARE the product."
+    },
+    "packages": {
+      "budget": null,
+      "claims": [],
+      "commands": {},
+      "contains": [
+        "packages/oxfmt",
+        "packages/oxlint"
+      ],
+      "declared": {
+        "allow": [],
+        "decided_by": [],
+        "depends": []
+      },
+      "extracted": {
+        "imports": []
+      },
+      "id": "packages",
+      "kind": "container",
+      "purpose": "The three shipped configs. oxlint and oxfmt each carry a base ruleset plus the guard tests that keep it honest; tsconfig is a single shared tsconfig.json. Per-package detail lives in each node."
+    },
+    "packages/oxfmt": {
+      "budget": null,
+      "claims": [
+        {
+          "anchor": "packages/oxfmt/README.md#relationship-to-the-repo-root",
+          "enforced_by": null,
+          "id": "relationship-to-the-repo-root",
+          "kind": "hazard",
+          "resolved": "packages/oxfmt/README.md:103",
+          "text": "MIRRORED PAIR — every key in this oxfmtrc.json must also appear in the repo-root .oxfmtrc.jsonc; oxfmt has no `extends`, so the base cannot compose by reference and the two are edited together",
+          "verified": {
+            "digest": null,
+            "sha": "57103c312f9d079042f3f490d8bff7cbb6040d9f"
+          }
+        }
+      ],
+      "commands": {
+        "test": "bun run --filter '@jlg/oxfmt' test"
+      },
+      "contains": [],
+      "declared": {
+        "allow": [],
+        "decided_by": [],
+        "depends": []
+      },
+      "extracted": {
+        "imports": []
+      },
+      "id": "packages/oxfmt",
+      "kind": "container",
+      "purpose": "Canonical oxfmt settings — formatter companion to @jlg/oxlint. oxfmtrc.json ships one opinion (singleQuote); index.mjs merges it in (oxfmt has no `extends`). Repo-local keys stay in the consumer."
+    },
+    "packages/oxlint": {
+      "budget": null,
+      "claims": [
+        {
+          "anchor": "lm:oxlint-base",
+          "enforced_by": null,
+          "id": "oxlint-base",
+          "kind": "invariant",
+          "resolved": "packages/oxlint/index.mjs:29",
+          "text": "SINGLE SOURCE OF TRUTH — oxlintrc.jsonc is the only base ruleset; index.mjs parses it at import so JS and raw-JSONC consumers never drift; never fork the data",
+          "verified": {
+            "digest": "d50eea6c84e7c836a7d59b87c457478bba16e39a1d6616a1f5f3bc5c2c3ebd24",
+            "sha": "57103c312f9d079042f3f490d8bff7cbb6040d9f"
+          }
+        },
+        {
+          "anchor": "lm:oxlint-extends-objects",
+          "enforced_by": null,
+          "id": "oxlint-extends-objects",
+          "kind": "hazard",
+          "resolved": "packages/oxlint/index.mjs:40",
+          "text": "JS-CONFIG RUNTIME — oxlint/oxfmt .config.ts files evaluate under Node >=22.18 even when invoked via bun; in a JS config oxlint `extends` takes config OBJECTS, not path strings",
+          "verified": {
+            "digest": "d50eea6c84e7c836a7d59b87c457478bba16e39a1d6616a1f5f3bc5c2c3ebd24",
+            "sha": "57103c312f9d079042f3f490d8bff7cbb6040d9f"
+          }
+        },
+        {
+          "anchor": "lm:oxlint-peer-coupling",
+          "enforced_by": null,
+          "id": "oxlint-peer-coupling",
+          "kind": "hazard",
+          "resolved": "packages/oxlint/oxlintrc.jsonc:49",
+          "text": "PEER COUPLING — naming a version-N-only rule in oxlintrc.jsonc forces peerDependencies.oxlint to ^N (older consumers hard-fail on the unknown name); category-activated rules don't",
+          "verified": {
+            "digest": null,
+            "sha": "57103c312f9d079042f3f490d8bff7cbb6040d9f"
+          }
+        },
+        {
+          "anchor": "lm:oxlint-tsgolint-pairing",
+          "enforced_by": null,
+          "id": "oxlint-tsgolint-pairing",
+          "kind": "hazard",
+          "resolved": "packages/oxlint/oxlintrc.jsonc:19",
+          "text": "VERSION PAIRING — oxlint 1.75 requires oxlint-tsgolint >=7.0.2001; an old tsgolint breaks type-aware SILENTLY ('Failed to find tsgolint executable') and a TS-free repo still lints green; probe type-aware directly when bumping",
+          "verified": {
+            "digest": null,
+            "sha": "57103c312f9d079042f3f490d8bff7cbb6040d9f"
+          }
+        },
+        {
+          "anchor": "lm:rule-existence-guard",
+          "enforced_by": null,
+          "id": "rule-existence-guard",
+          "kind": "hazard",
+          "resolved": "packages/oxlint/__tests__/rule-existence.test.js:24",
+          "text": "FOOTGUN — an unknown rule NAME hard-fails the whole oxlint config (exit 1, nothing lints); a valid rule whose plugin isn't enabled is a SILENT no-op; both guarded by rule-existence.test.js",
+          "verified": {
+            "digest": "49bf09561327f98a1120af62a50fd78367ca4f8380a378d83e452941bf5e8ad0",
+            "sha": "57103c312f9d079042f3f490d8bff7cbb6040d9f"
+          }
+        },
+        {
+          "anchor": "lm:rule-inventory-gate",
+          "enforced_by": null,
+          "id": "rule-inventory-gate",
+          "kind": "invariant",
+          "resolved": "packages/oxlint/__tests__/rule-inventory.test.js:13",
+          "text": "SNAPSHOT GATE — the rule-inventory bun snapshot is the review gate for oxlint version bumps; a bump adds new rules to on-categories as consumer-facing errors, so regen and review the diff",
+          "verified": {
+            "digest": "4bc638054a0082fe351df2313939b2e579ce4ca26448d817119d96605a9d7f08",
+            "sha": "57103c312f9d079042f3f490d8bff7cbb6040d9f"
+          }
+        }
+      ],
+      "commands": {
+        "snapshot-regen": "bun run --filter '@jlg/oxlint' test --update-snapshots",
+        "test": "bun run --filter '@jlg/oxlint' test"
+      },
+      "contains": [],
+      "declared": {
+        "allow": [],
+        "decided_by": [],
+        "depends": []
+      },
+      "extracted": {
+        "imports": []
+      },
+      "id": "packages/oxlint",
+      "kind": "container",
+      "purpose": "Shareable oxlint base config (successor to @jlg/eslint). oxlintrc.jsonc is the base ruleset; index.mjs exposes defineConfig/base for JS configs. Maximalist — every category on, then curated overrides."
+    }
+  },
+  "version": 1
+}

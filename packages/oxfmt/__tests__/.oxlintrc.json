@@ -1,0 +1,24 @@
+{
+  "$schema": "../../../node_modules/oxlint/configuration_schema.json",
+
+  // Nested config, scoped to this directory only (blast radius = __tests__/).
+  // The base config is maximalist and type-aware; a handful of its rules are
+  // categorically wrong for test code. Relaxed here rather than in the shipped
+  // base or the repo root, so consumers are unaffected. Each disable is
+  // justified — nothing is silenced for convenience. Mirrors the sibling
+  // packages/oxlint/__tests__/.oxlintrc.json.
+  "rules": {
+    // Test files necessarily import Node builtins (node:fs, node:path, …).
+    "import/no-nodejs-modules": "off",
+    // Short locals are idiomatic in test code.
+    "id-length": "off",
+    // oxfmt's `configuration_schema.json` and the parsed `oxfmtrc.json` are
+    // `any`; the no-unsafe-* family fires on every access. These are external,
+    // schema-known shapes read only by the tests.
+    "typescript/no-unsafe-argument": "off",
+    "typescript/no-unsafe-assignment": "off",
+    "typescript/no-unsafe-call": "off",
+    "typescript/no-unsafe-member-access": "off",
+    "typescript/no-unsafe-return": "off"
+  }
+}

@@ -1,0 +1,187 @@
+#!/bin/bash
+set -e
+
+# ─────────────────────────────────────────────────────────────────────────────
+# publish — v1 registry deploy path for the three workspace packages.
+#
+# DECISION CONTEXT (permanent plan — do not delete on refactor):
+#   Source packages keep their END-STATE names: @jlg/tsconfig, @jlg/oxlint,
+#   @jlg/oxfmt. Source carries the permanent identity.
+#
+#   The INTERIM registry is GitHub Packages (npm.pkg.github.com), which requires
+#   the package scope to equal the repo owner (jgeschwendt). So this script does
+#   NOT rename source. Instead it stages each package into a temp dir and, at
+#   publish time only, rewrites  @jlg/<pkg>  ->  @jgeschwendt/<pkg>  and injects
+#   publishConfig.registry + a repository field (GitHub links the package to the
+#   repo by matching repository.url — https://github.com/jgeschwendt/typescript.git).
+#
+#   LATER the packages move to the @jlg org on npmjs. At that point:
+#     - delete the SCOPE_FROM/SCOPE_TO rewrite (publish source names as-is),
+#     - drop publishConfig.registry (default registry = npmjs),
+#     - keep the version/files arrays that already live in source.
+#   Deploy adapts to the interim registry; source never bends to it.
+#
+# Usage:
+#   ./publish --dry-run     gates + stage + rewrite + `npm publish --dry-run`
+#                           (prints the packed file list per package; no auth
+#                            needed; uploads nothing)
+#   ./publish --yes         real publish, no interactive prompt
+#   ./publish               real publish, prompts once before uploading
+# ─────────────────────────────────────────────────────────────────────────────
+
+# stele:landmark publish-scope-rewrite
+REGISTRY="https://npm.pkg.github.com"
+REPO_URL="git+https://github.com/jgeschwendt/typescript.git"
+SCOPE_FROM="@jlg/"
+SCOPE_TO="@jgeschwendt/"
+PACKAGES=(tsconfig oxlint oxfmt)
+
+DRY_RUN=false
+YES=false
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run) DRY_RUN=true ;;
+    --yes | -y) YES=true ;;
+    *)
+      echo "publish: unknown argument '$arg' (expected --dry-run, --yes)" >&2
+      exit 1
+      ;;
+  esac
+done
+
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+cd "$ROOT"
+
+# Load .env (gitignored) so GITHUB_TOKEN can live there.
+if [ -f .env ]; then
+  set -a
+  # shellcheck disable=SC1091
+  . ./.env
+  set +a
+fi
+
+# ── 1. Gates — abort on any failure ─────────────────────────────────────────
+echo "==> gates"
+bun run lint
+bun run fmt:check
+bun run --filter '@jlg/oxlint' test
+bun run --filter '@jlg/oxfmt' test
+stele check
+stele emit --check
+
+# ── 2. Auth — required for a real publish, skipped for --dry-run ─────────────
+if [ "$DRY_RUN" = false ]; then
+  token="${GITHUB_TOKEN:-}"
+  if [ -z "$token" ]; then
+    configured="$(npm config get //npm.pkg.github.com/:_authToken 2>/dev/null || true)"
+    if [ -n "$configured" ] && [ "$configured" != "undefined" ]; then
+      token="configured"
+    fi
+  fi
+  if [ -z "$token" ]; then
+    cat >&2 <<'EOF'
+==> ERROR: no GitHub Packages auth token found.
+
+Provide one of:
+  • export GITHUB_TOKEN=<a PAT with `write:packages`>   (recommended)
+  • or add to ~/.npmrc:
+        //npm.pkg.github.com/:_authToken=<PAT with write:packages>
+
+Create the PAT at https://github.com/settings/tokens (classic, scope
+`write:packages` + `read:packages`). Then re-run `./publish`.
+EOF
+    exit 1
+  fi
+fi
+
+# ── 3. Confirm before a real upload ─────────────────────────────────────────
+if [ "$DRY_RUN" = false ] && [ "$YES" = false ]; then
+  read -p "publish ${#PACKAGES[@]} packages to GitHub Packages as ${SCOPE_TO}*? (y) " -n 1 -r answer
+  echo
+  if [[ -n $answer && $answer != "y" ]]; then
+    echo "aborted."
+    exit 0
+  fi
+fi
+
+# ── 4. Stage + rewrite + publish each package ───────────────────────────────
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT
+
+# node helper: rewrite a staged package.json in place.
+REWRITE="$TMP/rewrite.mjs"
+cat >"$REWRITE" <<'EOF'
+import { readFileSync, writeFileSync } from "node:fs";
+const [file, directory, registry, repoUrl, scopeFrom, scopeTo] =
+  process.argv.slice(2);
+const pkg = JSON.parse(readFileSync(file, "utf8"));
+if (!pkg.name.startsWith(scopeFrom)) {
+  throw new Error(`unexpected package name: ${pkg.name}`);
+}
+pkg.name = scopeTo + pkg.name.slice(scopeFrom.length);
+pkg.publishConfig = { ...pkg.publishConfig, registry };
+pkg.repository = { type: "git", url: repoUrl, directory };
+writeFileSync(file, JSON.stringify(pkg, null, 2) + "\n");
+console.log(`${pkg.name}@${pkg.version}`);
+EOF
+
+for name in "${PACKAGES[@]}"; do
+  echo
+  echo "==> stage packages/$name"
+  stage="$TMP/$name"
+  mkdir -p "$stage"
+
+  # Pack from source: the tarball IS npm's authoritative "what ships" set
+  # (honors the `files` array). Extract it, then rewrite the staged manifest.
+  npm pack "./packages/$name" --pack-destination "$stage" >/dev/null 2>&1
+  tar -xzf "$stage"/*.tgz -C "$stage"
+  rm -f "$stage"/*.tgz
+  pkgroot="$stage/package"
+
+  spec="$(node "$REWRITE" "$pkgroot/package.json" "packages/$name" \
+    "$REGISTRY" "$REPO_URL" "$SCOPE_FROM" "$SCOPE_TO")"
+  echo "    staged as $spec"
+
+  # Auth for the staged publish (never packed — npm always ignores .npmrc).
+  if [ -n "${GITHUB_TOKEN:-}" ]; then
+    {
+      echo "${SCOPE_TO%/}:registry=$REGISTRY"
+      echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN"
+    } >"$pkgroot/.npmrc"
+  fi
+
+  echo "--- packed files ---"
+  ( cd "$pkgroot" && npm pack --dry-run --json 2>/dev/null ) |
+    node -e 'const d=JSON.parse(require("node:fs").readFileSync(0));for(const f of d[0].files)console.log("    "+f.path)'
+
+  # Idempotence: skip any package whose exact name@version is already on the
+  # registry — in BOTH dry-run and real mode. `npm publish` contacts the registry
+  # even with --dry-run and fails hard ("cannot publish over the previously
+  # published versions") on an existing version, so a re-run after a partial
+  # publish (e.g. oxlint bumped to 0.2.0 while tsconfig/oxfmt stay 0.1.0) would
+  # abort on the already-up packages without this guard. `npm view <spec> version`
+  # prints the version when it exists, prints nothing when the package exists but
+  # this version does not, and exits E404 when the name is unknown — the latter
+  # two both mean "not published yet, go ahead" (the `|| true` tolerates the 404).
+  version="${spec##*@}"
+  existing="$(cd "$pkgroot" && npm view "$spec" version --registry="$REGISTRY" 2>/dev/null || true)"
+  if [ "$existing" = "$version" ]; then
+    echo "--- skip: $spec already on the registry ---"
+    continue
+  fi
+
+  if [ "$DRY_RUN" = true ]; then
+    echo "--- npm publish --dry-run ---"
+    ( cd "$pkgroot" && npm publish --dry-run --registry="$REGISTRY" )
+  else
+    echo "--- npm publish ---"
+    ( cd "$pkgroot" && npm publish --registry="$REGISTRY" )
+  fi
+done
+
+echo
+if [ "$DRY_RUN" = true ]; then
+  echo "==> dry-run complete — nothing was uploaded."
+else
+  echo "==> published ${#PACKAGES[@]} packages to GitHub Packages."
+fi

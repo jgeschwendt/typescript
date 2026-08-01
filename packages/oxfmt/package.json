@@ -1,0 +1,27 @@
+{
+  "devDependencies": {
+    "oxfmt": "^0.59.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.mjs"
+    },
+    "./oxfmtrc.json": "./oxfmtrc.json"
+  },
+  "files": [
+    "README.md",
+    "index.d.ts",
+    "index.mjs",
+    "oxfmtrc.json"
+  ],
+  "name": "@jlg/oxfmt",
+  "peerDependencies": {
+    "oxfmt": "^0.59.0"
+  },
+  "scripts": {
+    "test": "bun test"
+  },
+  "type": "module",
+  "version": "0.3.0"
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+
+  // Nested config, scoped to this directory (blast radius = packages/oxlint/).
+  // The maximalist, type-aware base is correct for app code but categorically
+  // wrong for `index.mjs` — the JS entry that bridges the shipped JSONC into a
+  // config object. Relaxed HERE, only for that one file, so the shipped base and
+  // the repo root stay untouched (this file is not in `files`, so consumers never
+  // see it). Same rationale, and same rule family, as __tests__/.oxlintrc.json.
+  "overrides": [
+    {
+      "files": ["index.mjs"],
+      "rules": {
+        // The JS entry must read its own shipped JSONC at runtime; node:fs is
+        // unavoidable for a config package.
+        "import/no-nodejs-modules": "off",
+        // `jsonc-parser`'s `parse` returns `any`, and node:fs types are not
+        // resolved for this standalone `.mjs` under type-aware linting, so the
+        // no-unsafe-* family fires on every downstream access. The parsed data
+        // is an external, schema-known shape.
+        "typescript/no-unsafe-argument": "off",
+        "typescript/no-unsafe-assignment": "off",
+        "typescript/no-unsafe-call": "off"
+      }
+    }
+  ]
+}

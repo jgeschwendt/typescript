@@ -1,0 +1,15 @@
+# Mirrors jlg.io's lefthook.yaml (both on bun).
+# --no-error-on-unmatched-pattern: oxlint exits 1 when every staged file is in
+# its ignorePatterns, silently aborting the commit (found in jlg.io 2026-07-22).
+
+[pre-commit]
+parallel = true
+
+[pre-commit.commands.oxfmt]
+glob = "*.{cjs,js,json,jsonc,jsx,mjs,ts,tsx}"
+run = "bunx oxfmt {staged_files}"
+stage_fixed = true
+
+[pre-commit.commands.oxlint]
+glob = "*.{cjs,js,jsx,mjs,ts,tsx}"
+run = "bunx oxlint --no-error-on-unmatched-pattern {staged_files}"

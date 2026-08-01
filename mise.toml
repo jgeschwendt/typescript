@@ -1,0 +1,9 @@
+[tools]
+bun = "1.3.14"
+# node: the oxlint/oxfmt JS launchers (index.mjs) run under Node, and any future
+# `*.config.ts` evaluation needs Node >=22.18 — pin 24 so `bun run lint`/`fmt`
+# and the workspace `node --test` suites resolve a Node the launchers accept.
+node = "24"
+
+[env]
+_.file = ".env"

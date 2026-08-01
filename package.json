@@ -1,0 +1,22 @@
+{
+  "name": "typescript",
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "lefthook": "^2.1.10",
+    "oxfmt": "^0.59.0",
+    "oxlint": "^1.75.0",
+    "oxlint-tsgolint": "^7.0.2001"
+  },
+  "scripts": {
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "lint": "oxlint",
+    "ncu": "bunx npm-check-updates -u",
+    "update": "bunx npm-check-updates -u && bun install"
+  },
+  "trustedDependencies": [
+    "lefthook"
+  ]
+}

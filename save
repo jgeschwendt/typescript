@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+read -p "continue? (y) " -n 1 -r answer
+# Accept 'y' or Enter (empty input) as confirmation
+if [[ -z $answer || $answer == "y" ]]; then
+  bun run lint
+  bun run fmt:check
+  bun run --filter '@jlg/oxlint' test
+  bun run --filter '@jlg/oxfmt' test
+  stele check
+  stele emit --check
+  git add .
+  git commit --amend --no-edit
+  git push -f
+fi

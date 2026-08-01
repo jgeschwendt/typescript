@@ -1,0 +1,24 @@
+{
+  // MIRRORED PAIR: every key in packages/oxfmt/oxfmtrc.json (the shipped base)
+  // must also appear here, and the two files MUST be edited together. oxfmt has
+  // no `extends` mechanism (verified 2026-07-19), so the base cannot compose
+  // into this root config the way @jlg/oxlint does — its keys are duplicated by
+  // necessity. Keys below the base section are repo-local, not shipped.
+
+  // ── from the base (packages/oxfmt/oxfmtrc.json) ──
+  // stele:landmark oxfmt-mirror-root
+  "singleQuote": true,
+
+  // ── repo-local ──
+  // Preserve Prettier-era formatting: Prettier defaults to 80, oxfmt to 100.
+  "printWidth": 80,
+
+  // oxfmt does NOT read the `"prettier"` field in package.json, so
+  // `sortPackageJson` (on by default) would reorder every package.json.
+  "sortPackageJson": false,
+
+  // stele owns the format of everything under .stele/ (the committed graph.lock
+  // and the generated index/*.md); `stele emit --check` is their formatter. Keep
+  // oxfmt off them or the two gates fight over the same files.
+  "ignorePatterns": [".stele/**"],
+}

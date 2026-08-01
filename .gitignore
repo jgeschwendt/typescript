@@ -1,0 +1,9 @@
+.env
+.vscode
+
+node_modules
+
+.eslintcache
+
+# Claude Flow generated files
+.mcp.json

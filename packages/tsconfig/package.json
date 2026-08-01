@@ -1,0 +1,15 @@
+{
+  "name": "@jlg/tsconfig",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": "./tsconfig.json",
+  "files": [
+    "tsconfig.json"
+  ],
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "peerDependencies": {
+    "typescript": "^7.0.0"
+  }
+}
