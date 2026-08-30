@@ -1,0 +1,29 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Full history: stele's freshness class walks verified.sha..HEAD; a
+      # shallow clone prunes the watermark commit and makes churn uncountable.
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: jdx/mise-action@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run fmt:check
+      - run: bun run lint
+      # stele graph gate (recommended order: check → emit --check). NEVER run
+      # `stele build` in CI: build is the sole writer of .stele/graph.lock, so
+      # running it here would overwrite the committed lock and make check's
+      # byte-compare trivially pass, defeating the stale-lock gate.
+      - run: curl -fsSL https://raw.githubusercontent.com/jgeschwendt/stele/main/scripts/install.sh | bash -s v0.2.0
+      - run: ~/.local/bin/stele check
+      - run: ~/.local/bin/stele emit --check
