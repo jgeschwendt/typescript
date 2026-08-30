@@ -1,0 +1,3 @@
+# CI plumbing, not architecture — kept out of the graph so its tracked dot-dir
+# needs no node and never trips exhaustiveness.
+.github/
