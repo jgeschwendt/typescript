@@ -21,7 +21,7 @@ import {
 //  2. A VALID rule whose plugin is NOT in `plugins` (e.g. `unicorn/no-null` while
 //     `plugins` omits `unicorn`) parses fine, exits 0, and simply never runs.
 //     This is the genuinely silent case; the third test below guards it.
-// stele:landmark rule-existence-guard
+// ※ rule-existence-guard
 
 test('every configured rule exists in oxlint', () => {
   const known = new Set(

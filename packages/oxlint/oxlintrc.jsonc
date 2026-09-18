@@ -23,7 +23,7 @@
   // Type-checked `typescript/*` rules are retuned in the "type-aware retuning"
   // section below. See README.md.
   //
-  // stele:landmark oxlint-tsgolint-pairing
+  // ※ oxlint-tsgolint-pairing
   // FOOTGUN (re-verified 2026-09-08 · probe, oxlint 1.82): an unknown rule NAME makes oxlint
   // reject this ENTIRE config ("Rule 'x' not found in plugin 'y'") — nothing then
   // lints. A rule whose plugin is not in `plugins` is worse: it parses, exits 0,
@@ -53,7 +53,7 @@
   // every restriction lint stays visible for case-by-case promotion, rather than
   // silenced. Promote individual restriction rules to "error" in `rules` below
   // (as this config already does for `no-void`).
-  // stele:landmark oxlint-peer-coupling
+  // ※ oxlint-peer-coupling
   "categories": {
     "correctness": "error",
     "nursery": "off",

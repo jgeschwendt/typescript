@@ -10,5 +10,5 @@ hazards:
     anchor: packages/oxfmt/README.md#relationship-to-the-repo-root
 ```
 
-<!-- stele:begin router -->
-<!-- stele:end -->
+<!-- @stele -->
+<!-- @end -->

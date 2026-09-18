@@ -26,7 +26,7 @@ if (errors.length > 0) {
 
 // The parsed base config object, exported for consumers who want raw access
 // (merge fields by hand, inspect the ruleset, etc.).
-// stele:landmark oxlint-base
+// ※ oxlint-base
 const base = parsed;
 
 // Compose the base with a consumer config.
@@ -37,7 +37,7 @@ const base = parsed;
 // array of file paths.) So the base is spread in as an object here, and any
 // `extends` the consumer supplied is preserved AFTER it, letting user configs
 // still compose on top. (2026-07-20)
-// stele:landmark oxlint-extends-objects
+// ※ oxlint-extends-objects
 const defineConfig = (config = {}) => ({
   ...config,
   extends: [base, ...(config.extends ?? [])],

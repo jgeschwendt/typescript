@@ -57,7 +57,7 @@ jobs:
       - uses: jdx/mise-action@v2
       - run: bun install --frozen-lockfile
 
-      # stele:landmark release-app-token
+      # ※ release-app-token
       # VERSION PR TOKEN — the Version Packages PR must be opened with this app
       # token, never GITHUB_TOKEN. GitHub raises no workflow events for anything
       # GITHUB_TOKEN creates, so a PR opened with it never runs ci.yaml, its
@@ -70,7 +70,7 @@ jobs:
           permission-pull-requests: write
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
-      # stele:landmark release-approval-gate
+      # ※ release-approval-gate
       # RELEASE APPROVAL — a patch release lands on its own; a minor (or, after
       # 1.0, a major) waits for the owner: this step reads the pending changesets
       # BEFORE `changeset version` consumes them, and the auto-merge step below is

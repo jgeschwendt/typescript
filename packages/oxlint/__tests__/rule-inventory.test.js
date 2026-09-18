@@ -10,7 +10,7 @@ import { enabledScopes, loadConfig, loadRules } from './_lib.js';
 // that adds, removes, or recategorizes a rule surfaces as a reviewable diff here
 // at update time instead of as a surprise downstream. After an INTENTIONAL bump,
 // regenerate with: bun test --update-snapshots
-// stele:landmark rule-inventory-gate
+// ※ rule-inventory-gate
 
 test('rule inventory for enabled plugins', () => {
   // Derive the filter from the config's own `plugins` so it can never drift from

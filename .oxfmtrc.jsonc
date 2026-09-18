@@ -6,7 +6,7 @@
   // necessity. Keys below the base section are repo-local, not shipped.
 
   // ── from the base (packages/oxfmt/oxfmtrc.json) ──
-  // stele:landmark oxfmt-mirror-root
+  // ※ oxfmt-mirror-root
   "singleQuote": true,
 
   // ── repo-local ──
