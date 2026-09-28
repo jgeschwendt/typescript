@@ -368,6 +368,7 @@ exports[`rule inventory for enabled plugins 1`] = `
   "typescript/no-extraneous-class | suspicious | type_aware=false",
   "typescript/no-floating-promises | correctness | type_aware=true",
   "typescript/no-for-in-array | correctness | type_aware=true",
+  "typescript/no-generated-empty-object-type | suspicious | type_aware=true",
   "typescript/no-implied-eval | correctness | type_aware=true",
   "typescript/no-import-type-side-effects | restriction | type_aware=false",
   "typescript/no-inferrable-types | style | type_aware=false",
