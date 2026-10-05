@@ -205,7 +205,7 @@ strict on the React/Next stack this config targets.
   (re-verified 2026-09-08 · probe, oxlint 1.82):
   - An unknown/misspelled rule _name_, or an unknown _plugin_ name, makes oxlint
     reject the **entire** config — `Failed to parse … Rule 'x' not found in
-plugin 'y'` (or `Unknown plugin`), exit 1, nothing lints — the same when the
+    plugin 'y'` (or `Unknown plugin`), exit 1, nothing lints — the same when the
     config is consumed via `extends`. Loud but blunt: every rule the config
     defined stops applying, and downstream it surfaces as a cryptic parse
     failure, not "you typo'd a rule".

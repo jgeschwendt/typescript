@@ -62,7 +62,7 @@ Authored policy still open:
   root-only, so the base leaves it to consumer root configs and this repo's
   own `lint` script passes the CLI flag (applied 2026-09-08). `noInlineConfig`
   still has no equivalent; the closest key, `options.respectEslintDisableDirectives:
-false`, drops `eslint-*` directives but leaves oxlint's native `oxlint-*`
+  false`, drops `eslint-*` directives but leaves oxlint's native `oxlint-*`
   directives active (schema, verified 2026-09-08).
 - Per-Next-file `func-style` / `import/group-exports` tuning — rules exist,
   overrides simply not ported. Trivially closable.
