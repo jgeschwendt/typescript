@@ -3,7 +3,7 @@
     "jsonc-parser": "^3.3.1"
   },
   "devDependencies": {
-    "oxlint": "^1.86.0"
+    "oxlint": "^1.87.0"
   },
   "exports": {
     ".": {
