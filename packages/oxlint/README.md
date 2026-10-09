@@ -155,6 +155,11 @@ Verified against `oxlint --rules --format json`:
   **absent**. Only the core `no-magic-numbers` exists; TS number literals in
   type positions rely on the core rule's `ignoreNumericLiteralTypes` /
   `ignoreEnums` options instead.
+- **`import/order`** → **absent**. `@jlg/eslint` had it at `error` (default
+  options), so import statements were ordered by group; the port kept only
+  `sort-imports` with `ignoreDeclarationSort`, which orders the names inside one
+  import, never the statements. The replacement is the formatter's job:
+  oxfmt's `sortImports` (perfectionist-style). (gap found 2026-10-08 in jlg.io)
 - **`import/no-unresolved`** — absent (it was already `off` in `@jlg/eslint`,
   and is resolver/type-aware territory anyway).
 - **Per-file `func-style` and `import/group-exports` overrides** — both rules
