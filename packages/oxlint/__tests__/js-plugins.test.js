@@ -153,6 +153,9 @@ const fixtures = {
   ].join('\n'),
   'src/legacy.js': [
     '// TODO [2000-01-01]: expired',
+    // date conditions are skipped on pull-request CI (ignoreDatesOnPullRequests,
+    // via ci-info), so a version condition keeps the rule provably live there
+    "// TODO [typescript@>=1]: expired by the consumer's typescript@7",
     "import inner from 'not-listed/lib/inner.js';",
     "import packaged from '../packages/inner/index.js';",
     "import { default as fresh, old } from './b.js';",
