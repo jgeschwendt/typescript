@@ -1,7 +1,9 @@
 name: ci
 
 on:
+  # labeled/unlabeled: applying `release:signed-off` re-runs the changeset guard
   pull_request:
+    types: [opened, reopened, synchronize, labeled, unlabeled]
   push:
     branches:
       - main
@@ -32,19 +34,44 @@ jobs:
       # ※ changeset-guard
       # MINIMUM BUMP: pre-1.0 a breaking change is a `minor` changeset and
       # everything else is `patch`; `major` is forbidden until a deliberate 1.0,
-      # so a `major` in any pending changeset fails this job. (Patch releases
-      # land on their own; minor waits for the owner's merge — see
-      # release.yaml's approval gate.) grep, not rg —
-      # ripgrep is not on the runner and mise pins only bun and node. The
-      # optional `.` before and after the package name absorbs whichever quote
-      # style the changeset carries (`@jlg/oxlint:`, `'@jlg/oxlint':`, `"…":`).
+      # so a `major` in any pending changeset fails this job.
+      # SIGN-OFF: on a pull request, a `minor` — as a pending changeset, or as a
+      # package.json version moving past its patch component (the Version
+      # Packages PR) — fails this required check until the owner applies the
+      # `release:signed-off` label, which re-runs it. That label IS the owner's
+      # sign-off; agents never apply it. Patch releases need nothing.
+      # grep, not rg — ripgrep is not on the runner and mise pins only bun and
+      # node. The optional `.` before and after the package name absorbs
+      # whichever quote style the changeset carries (`@jlg/oxlint:`,
+      # `'@jlg/oxlint':`, `"…":`).
       - name: changeset guard
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          EVENT: ${{ github.event_name }}
+          SIGNED_OFF: ${{ contains(github.event.pull_request.labels.*.name, 'release:signed-off') }}
         run: |
-          majors=$(grep -rEl --include='*.md' --exclude=README.md \
-            '^[[:space:]]*.?@jlg/[a-z]+.?[[:space:]]*:[[:space:]]*major[[:space:]]*$' \
-            .changeset || true)
+          bump() {
+            grep -rEl --include='*.md' --exclude=README.md \
+              "^[[:space:]]*.?@jlg/[a-z]+.?[[:space:]]*:[[:space:]]*$1[[:space:]]*\$" \
+              .changeset || true
+          }
+          majors=$(bump major)
           if [ -n "$majors" ]; then
             echo "::error::major bump forbidden pre-1.0 — rewrite as minor (breaking) or patch: $majors"
+            exit 1
+          fi
+          [ "$EVENT" = pull_request ] || exit 0
+          unsigned="$(bump minor)"
+          for f in packages/*/package.json; do
+            old=$(git show "$BASE:$f" 2>/dev/null | node -p 'JSON.parse(require("fs").readFileSync(0, "utf8")).version' 2>/dev/null) || continue
+            new=$(node -p "require('./$f').version")
+            # only an upward minor or major move needs sign-off; patches and
+            # downgrades (a corrected bump) pass
+            kind=$(node -p 'const [a, b] = process.argv.slice(1).map((v) => v.split(".").map(Number)); b[0] > a[0] ? "major" : b[0] === a[0] && b[1] > a[1] ? "minor" : "patch"' "$old" "$new")
+            [ "$kind" = patch ] || unsigned="$unsigned $f ($old -> $new, $kind)"
+          done
+          if [ -n "$unsigned" ] && [ "$SIGNED_OFF" != true ]; then
+            echo "::error::minor/major release needs the owner's sign-off — apply the release:signed-off label: $unsigned"
             exit 1
           fi
 

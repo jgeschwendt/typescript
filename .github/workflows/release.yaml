@@ -74,8 +74,10 @@ jobs:
       # 1.0, a major) waits for the owner: this step reads the pending changesets
       # BEFORE `changeset version` consumes them, and the auto-merge step below is
       # skipped when any of them bumps more than patch. The Version Packages PR
-      # then sits with a review request until it is merged by hand — that merge is
-      # the approval. Patch should almost always be the answer.
+      # then cannot merge: ci.yaml's changeset guard fails its required check
+      # until the owner applies the `release:signed-off` label — that label is
+      # the approval, and agents never apply it. Patch should almost always be
+      # the answer.
       - id: bumps
         run: |
           if grep -rEq --include='*.md' --exclude=README.md \
