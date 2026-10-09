@@ -142,9 +142,13 @@ TS-specific keys (`ignoreNumericLiteralTypes`, `ignoreReadonlyClassProperties`,
 `ignoreTypeIndexes`, `ignoreClassFieldInitialValues`) are inert but kept for
 parity and forward-compatibility.
 
-## What was DROPPED (no oxlint equivalent as of oxlint 1.82; re-checked 2026-09-08 against oxlint 1.82 via the rule-inventory diff)
+## What was DROPPED
 
-Verified against `oxlint --rules --format json`:
+**The full list is [`GAPS.md`](./GAPS.md)** — every rule `@jlg/eslint` enforced
+that this base does not enforce the same way, resolved per file type against
+oxlint 1.87 (37 real gaps with no oxlint rule, among them `import/order`; 25
+absent but moot; 11 present but off here; 2 options not carried over; 73
+error→warn). The notes below add what the list can't say:
 
 - **`@typescript-eslint/naming-convention`** → `typescript/naming-convention`
   **absent**. This is the biggest gap: `@jlg/eslint` carried extensive
@@ -155,13 +159,6 @@ Verified against `oxlint --rules --format json`:
   **absent**. Only the core `no-magic-numbers` exists; TS number literals in
   type positions rely on the core rule's `ignoreNumericLiteralTypes` /
   `ignoreEnums` options instead.
-- **`import/order`** → **absent**. `@jlg/eslint` had it at `error` (default
-  options), so import statements were ordered by group; the port kept only
-  `sort-imports` with `ignoreDeclarationSort`, which orders the names inside one
-  import, never the statements. The replacement is the formatter's job:
-  oxfmt's `sortImports` (perfectionist-style). (gap found 2026-10-08 in jlg.io)
-- **`import/no-unresolved`** — absent (it was already `off` in `@jlg/eslint`,
-  and is resolver/type-aware territory anyway).
 - **Per-file `func-style` and `import/group-exports` overrides** — both rules
   _exist_ in oxlint, but `@jlg/eslint`'s fine-grained per-route-file tuning of
   them (e.g. `func-style` declaration-vs-expression by Next file type,

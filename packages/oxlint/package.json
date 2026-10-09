@@ -13,6 +13,7 @@
     "./oxlintrc.jsonc": "./oxlintrc.jsonc"
   },
   "files": [
+    "GAPS.md",
     "README.md",
     "index.d.ts",
     "index.mjs",
