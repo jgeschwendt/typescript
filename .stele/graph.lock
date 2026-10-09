@@ -3,7 +3,7 @@
   "landmarks": {
     "changeset-guard": {
       "file": ".github/workflows/ci.yaml",
-      "line": 32,
+      "line": 34,
       "node": "/"
     },
     "oxfmt-mirror-root": {
@@ -66,11 +66,11 @@
           "enforced_by": null,
           "id": "changeset-guard",
           "kind": "invariant",
-          "resolved": ".github/workflows/ci.yaml:32",
+          "resolved": ".github/workflows/ci.yaml:34",
           "text": "MINIMUM BUMP — pre-1.0 every changeset is patch, or minor for a breaking change; major is forbidden until a deliberate 1.0, and the ci check job fails on one",
           "verified": {
             "digest": null,
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         },
         {
@@ -82,7 +82,7 @@
           "text": "MIRRORED PAIR — every base key in packages/oxfmt/oxfmtrc.json must also appear here in .oxfmtrc.jsonc; oxfmt has no `extends`, so the two files are edited together",
           "verified": {
             "digest": null,
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         },
         {
@@ -94,7 +94,7 @@
           "text": "VERSION PR TOKEN — the Version Packages PR must be opened with the release app token, never GITHUB_TOKEN: GITHUB_TOKEN-created events trigger no workflows, so the required check never runs and the PR can never merge",
           "verified": {
             "digest": null,
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         },
         {
@@ -103,10 +103,10 @@
           "id": "release-approval-gate",
           "kind": "invariant",
           "resolved": ".github/workflows/release.yaml:72",
-          "text": "RELEASE APPROVAL — a patch-only Version Packages PR auto-merges; any minor (or post-1.0 major) bump skips auto-merge and requests the owner's review, and the hand merge is the approval",
+          "text": "RELEASE APPROVAL — a patch-only Version Packages PR auto-merges; any minor (or post-1.0 major) bump skips auto-merge, and ci's required check fails on that PR until the owner applies the release:signed-off label — the label is the sign-off, and agents never apply it",
           "verified": {
             "digest": null,
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         },
         {
@@ -118,7 +118,7 @@
           "text": "ROOT NAME — the workspace root is named typescript-monorepo, never typescript: changesets treats a workspace named like a dependency (@jlg/tsconfig peers on typescript) as satisfying it, reads its missing version, and every changeset command crashes with ERR_INVALID_ARG_TYPE",
           "verified": {
             "digest": null,
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         }
       ],
@@ -175,7 +175,7 @@
           "text": "MIRRORED PAIR — every key in this oxfmtrc.json must also appear in the repo-root .oxfmtrc.jsonc; oxfmt has no `extends`, so the base cannot compose by reference and the two are edited together",
           "verified": {
             "digest": null,
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         }
       ],
@@ -207,7 +207,7 @@
           "text": "SINGLE SOURCE OF TRUTH — oxlintrc.jsonc is the only base ruleset; index.mjs parses it at import (absolutizing jsPlugins paths) so the JS and raw-JSONC entries share one ruleset; defineConfig adds only override ordering and root settings; never fork the data",
           "verified": {
             "digest": "57e72f7514aa1949e0d9e8a52df4720b91ddefc548a94e394fa695dd06470c0a",
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         },
         {
@@ -219,7 +219,7 @@
           "text": "JS-CONFIG RUNTIME — oxlint/oxfmt .config.ts files evaluate under Node >=22.18 through the bins' node shebang, plain `bun run`/`bunx` included, but under Bun with `bun --bun` — as do oxlint's JS plugins (probed 2026-10-09); in a JS config oxlint `extends` takes config OBJECTS, not path strings",
           "verified": {
             "digest": "57e72f7514aa1949e0d9e8a52df4720b91ddefc548a94e394fa695dd06470c0a",
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         },
         {
@@ -231,7 +231,7 @@
           "text": "JS PLUGINS — oxlintrc.jsonc's jsPlugins run 42 dropped @jlg/eslint rules as ESLint rule code, plus the inline-directive ban; every entry is a local plugins/*.mjs (a bare specifier cannot resolve from an isolated install's symlink) adapted to oxlint's host by host.mjs; JS plugins are alpha, so oxlint is pinned exactly; a plugin that fails to load rejects the WHOLE config, and one that loads can report nothing (eslint-plugin-unicorn 77; 66 stubs two rules, hence the 60.0.0 pin) — js-plugins.test.js installs the packed tarball under both bun linkers, lints through JSON and JS consumers on node and bun, and fails unless every configured rule reports; typescript6.mjs redirects typescript-eslint's typescript import to @typescript/typescript6",
           "verified": {
             "digest": null,
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         },
         {
@@ -243,7 +243,7 @@
           "text": "PEER COUPLING — peerDependencies.oxlint is exact while JS plugins are alpha; naming a version-N-only rule in oxlintrc.jsonc puts a floor of N under any range it widens to (older consumers hard-fail on the unknown name); category-activated rules don't",
           "verified": {
             "digest": null,
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         },
         {
@@ -255,7 +255,7 @@
           "text": "VERSION PAIRING — oxlint 1.87 declares peer oxlint-tsgolint >=7.0.2003 (probed 2026-10-09); an old tsgolint breaks type-aware SILENTLY ('Failed to find tsgolint executable') and a TS-free repo still lints green; probe type-aware directly when bumping",
           "verified": {
             "digest": null,
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         },
         {
@@ -267,7 +267,7 @@
           "text": "FOOTGUN — an unknown rule NAME hard-fails the whole oxlint config (exit 1, nothing lints); a valid rule whose plugin isn't enabled is a SILENT no-op; both guarded by rule-existence.test.js",
           "verified": {
             "digest": "6d12e20c0e743a5e50a5a85e5f297b5beab603c117bc1ddbef35690d0b7f9278",
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         },
         {
@@ -279,7 +279,7 @@
           "text": "SNAPSHOT GATE — the rule-inventory bun snapshot is the review gate for oxlint version bumps; a bump adds new rules to on-categories as consumer-facing errors, so regen and review the diff",
           "verified": {
             "digest": "746584b149e6ec5113e28497d926947746053f461e44b9182cd9290aebfe156e",
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         },
         {
@@ -291,7 +291,7 @@
           "text": "SNAPSHOT RESOLUTION — the guard tests resolve oxlint from packages/oxlint/node_modules first, so a root-only oxlint bump leaves packages/oxlint's devDependency (and the regenerated snapshot) on the OLD catalog with a silent no-diff; bump both package.json files together",
           "verified": {
             "digest": null,
-            "sha": "7ea06c2d9e23ed37700c38e30abed75538b3133d"
+            "sha": "f7e86097f260ef3353a2f566b854445af59d49b2"
           }
         }
       ],
