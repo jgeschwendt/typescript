@@ -153,5 +153,7 @@ jobs:
       - run: bun install --frozen-lockfile
       - uses: changesets/action/publish@v2
         with:
-          create-github-releases: true
+          # npm is the release record; the owner keeps no GitHub Releases for
+          # these packages (git tags still mark each published version)
+          create-github-releases: false
           pack-dir-artifact-id: ${{ needs.pack.outputs.pack-dir-artifact-id }}
