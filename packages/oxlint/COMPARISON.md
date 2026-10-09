@@ -3,81 +3,41 @@
 > `packages/eslint` was removed 2026-07-19 (recoverable from git history);
 > `@jlg/eslint` references herein are historical.
 
-Chart of the eslint→oxlint migration diff (2026-07-19), verified against
-`packages/eslint/index.js` and `packages/oxlint/oxlintrc.jsonc`.
+How the two bases differ in shape. The rule-level mapping is README.md ("What
+maps from `@jlg/eslint`"), and every rule enforced differently is in GAPS.md;
+this chart does not repeat them.
 
-| Dimension            | `@jlg/eslint` (packages/eslint)                                              | `@jlg/oxlint` (packages/oxlint)                                                                                                                                                               |
-| -------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Form                 | JS factory: `config()` detects react/next/ts from consumer's package.json    | Static `oxlintrc.jsonc` via `extends` — no runtime detection                                                                                                                                  |
-| Philosophy           | Load every plugin's `all` config, subtract prettier-conflicts + curated offs | All categories at `error` (`restriction`→`warn`, `nursery`→off), then curate                                                                                                                  |
-| Plugins              | `@eslint/js`, import, react, unicorn, typescript-eslint (conditional)        | eslint, import, react, typescript, unicorn + **oxc** (new surface); react covers react-hooks                                                                                                  |
-| Type-aware rules     | Yes (`projectService: true`, full typescript-eslint all)                     | **Enabled** via tsgolint — `options.typeAware` (consumer root config) + `oxlint-tsgolint`, repo on TS 7.0                                                                                     |
-| Formatting conflicts | Subtracted via `eslint-config-prettier`                                      | N/A — oxlint ships no formatting rules; oxfmt owns format                                                                                                                                     |
-| Inline directives    | `noInlineConfig: true`, `reportUnusedDisableDirectives`                      | **Partly ported** — `--report-unused-disable-directives` in the `lint` script (2026-09-08); `options.reportUnusedDisableDirectives` exists for consumer roots; no `noInlineConfig` equivalent |
+| Dimension            | `@jlg/eslint` (packages/eslint)                                              | `@jlg/oxlint` (packages/oxlint)                                                                                                                                                                                           |
+| -------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Form                 | JS factory: `config()` detects react/next/ts from consumer's package.json    | Static `oxlintrc.jsonc`, via `extends` or `defineConfig` (which also re-orders the file-named overrides and detects `settings.react.version`); every layer applies unconditionally                                        |
+| Philosophy           | Load every plugin's `all` config, subtract prettier-conflicts + curated offs | All categories at `error` (`restriction`→`warn`, `nursery`→off), then curate                                                                                                                                              |
+| Plugins              | `@eslint/js`, import, react, unicorn, typescript-eslint (conditional)        | eslint, import, react, typescript, unicorn + **oxc** (new surface); react covers react-hooks; unported rules run as ESLint code through `jsPlugins` (`eslint-js`, `import-js`, `react-js`, `typescript-js`, `unicorn-js`) |
+| Type-aware rules     | Yes (`projectService: true`, full typescript-eslint all)                     | **Enabled** via tsgolint — `options.typeAware` (consumer root config) + `oxlint-tsgolint`, repo on TS 7.0; JS plugins get no types                                                                                        |
+| File scope           | typescript-eslint on `.ts`/`.tsx`                                            | Every file type, `.mjs`/`.cjs`/`.mts`/`.cts` included; `typescript/*` rules off on JS files                                                                                                                               |
+| Formatting conflicts | Subtracted via `eslint-config-prettier`                                      | The five eslint-config-prettier rules oxlint ships (`curly`, `no-unexpected-multiline`, `unicorn/empty-brace-spaces`, `unicorn/no-nested-ternary`, `unicorn/number-literal-case`) off; oxfmt owns format                  |
+| Inline directives    | `noInlineConfig: true`, `reportUnusedDisableDirectives`                      | Banned by `inline-config/no-directives` (a directive fails the run); `options.reportUnusedDisableDirectives` belongs in the consumer root                                                                                 |
+| JSON linting         | none — `@eslint/json` was a declared but unused dependency                   | none                                                                                                                                                                                                                      |
 
-## Rule-level mapping
-
-| Rule                                                                             | eslint                      | oxlint                                | Status                                                             |
-| -------------------------------------------------------------------------------- | --------------------------- | ------------------------------------- | ------------------------------------------------------------------ |
-| `no-void` (allowAsStatement)                                                     | error                       | error                                 | ported verbatim                                                    |
-| `sort-imports` (ignoreDeclarationSort)                                           | error                       | error                                 | ported verbatim                                                    |
-| `no-magic-numbers` + options                                                     | warn                        | warn                                  | ported; oxlint honors 5 of 10 option keys, rest inert              |
-| `capitalized-comments`, `max-lines(-per-function)`, `no-ternary`, `no-undefined` | off                         | off                                   | ported                                                             |
-| `import/no-default-export` (+ named/prefer offs)                                 | error                       | error                                 | ported                                                             |
-| `react/jsx-curly-brace-presence`                                                 | error + opts                | error + opts                          | ported verbatim                                                    |
-| `react/react-in-jsx-scope`                                                       | off                         | off                                   | ported                                                             |
-| Next routing files → `unicorn/filename-case` kebab                               | override                    | override                              | ported                                                             |
-| Next/tooling default-export exemptions                                           | findUpSync-gated + per-file | static globs, merged into 2 overrides | ported, coarser (oxlint adds `instrumentation` glob eslint lacked) |
-| `one-var: ["error","never"]`                                                     | error                       | error                                 | ported verbatim (oxlint ≥1.78, 2026-09-08)                         |
-| `@typescript-eslint/naming-convention` (default/.tsx/route.ts blocks)            | warn                        | —                                     | **dropped** (rule absent) — biggest gap                            |
-| `@typescript-eslint/no-magic-numbers`                                            | warn                        | —                                     | **dropped** (core rule covers via `ignoreNumericLiteralTypes`)     |
-| Per-file `func-style` / `import/group-exports` tuning                            | per Next file type          | —                                     | not ported; stay at category severity                              |
-| `require-await` off for `instrumentation.ts`                                     | off                         | off                                   | ported (override on `**/instrumentation.{js,ts}`, 2026-09-08)      |
-| oxc `restriction` rules (`no-optional-chaining`, `no-async-await`, …)            | —                           | warn                                  | **new in oxlint**, no eslint analog                                |
-| react-hooks rules (`rules-of-hooks`, `hook-use-state`)                           | — (no react-hooks plugin)   | error via react plugin                | **gained**                                                         |
-| `prefer-readonly-parameter-types` (type-aware)                                   | error (via ts-eslint `all`) | warn                                  | **retuned** — demoted to warn; impractically strict, kept visible  |
-
-## Open gaps
+## Not gaps
 
 1:1 rule-surface parity is a non-goal (reframed 2026-07-19). The eslint config
 was maximalist-by-construction — every plugin's `all`, then subtract — so most
 of its surface was plugin residue, never authored policy. Oxlint's
 categories-at-error is the same maximalist stance expressed natively. Parity
-matters only for the _authored_ layer: the explicit rule cases and per-file
-overrides in `packages/eslint/index.js`.
+matters for the _authored_ layer — the explicit rule cases and per-file
+overrides in `packages/eslint/index.js` — and for rules a consumer relied on;
+GAPS.md tracks both.
 
-Authored policy still open:
+Different-but-valid design, or separate concerns:
 
-- Casing policy (`@typescript-eslint/naming-convention` blocks) — the rule is
-  absent from both native oxlint and tsgolint. No verified fill path: loading
-  typescript-eslint via the jsPlugins alpha inherits its `typescript <6.1`
-  peer range, and this repo is on TS 7 (unverified 2026-07-19 · needs a
-  jsPlugins spike). Until then, `unicorn/filename-case` is the only casing
-  enforcement.
-- Inline-directive hardening (`noInlineConfig`,
-  `reportUnusedDisableDirectives`). The `reportUnusedDisableDirectives` half
-  now has a config key — `options.reportUnusedDisableDirectives`, present and
-  honored at oxlint 1.78 through 1.82 (verified 2026-09-08; the 2026-07-19
-  "CLI-only" finding is retired) — but the schema marks every `options` key
-  root-only, so the base leaves it to consumer root configs and this repo's
-  own `lint` script passes the CLI flag (applied 2026-09-08). `noInlineConfig`
-  still has no equivalent; the closest key, `options.respectEslintDisableDirectives:
-  false`, drops `eslint-*` directives but leaves oxlint's native `oxlint-*`
-  directives active (schema, verified 2026-09-08).
-- Per-Next-file `func-style` / `import/group-exports` tuning — rules exist,
-  overrides simply not ported. Trivially closable.
-
-Plugin residue, different-but-valid design, or separate concerns (not gaps):
-
-- Runtime detection — static JSONC cannot read the consumer's package.json;
-  a design choice, not a defect (`oxlint.config.ts` exists but is
-  experimental and forfeits the standalone binary).
-- `@typescript-eslint/no-magic-numbers` — absent; the core rule honors 5 of
-  10 option keys, TS-specific keys inert.
-- 2 of typescript-eslint's 61 type-aware rules missing from tsgolint (59 in
-  the catalog, verified 2026-07-19; oxc docs do not name the two).
+- Runtime detection — static JSONC cannot read the consumer's package.json, so
+  the React/Next/TypeScript layers apply to every consumer.
+- 3 of typescript-eslint 8.71's 63 type-checked rules have no tsgolint port:
+  `naming-convention` (restored as `typescript-js/naming-convention`, without
+  its `types` option), `no-unsafe-enum-assignment` (open, GAPS.md) and
+  `prefer-destructuring` (core `prefer-destructuring` runs instead)
+  (measured 2026-10-09 · `requiresTypeChecking` rules vs oxlint 1.87
+  `type_aware`).
 - `typescript/prefer-readonly-parameter-types` demoted error→warn; oxc
   `restriction` rules at warn; react-hooks rules gained — deliberate
   divergences.
-- `@eslint/json` JSON-content linting dropped workspace-wide; oxlint does not
-  lint JSON.

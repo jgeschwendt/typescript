@@ -18,18 +18,21 @@ Repo-local concerns — `printWidth`, `sortPackageJson`, `sortTailwindcss`, igno
 patterns — deliberately stay out of it; each consumer sets those in its own config
 alongside the merged base.
 
+Single quotes with as-needed property quotes are the stack style by owner
+decision (2026-10-09), replacing the typescript repo's former Prettier
+`quoteProps: 'consistent'` and double quotes.
+
 Because the base carries only `singleQuote` — a key that is valid, and unchanged
 in default, across the whole 0.59 → 0.67 range (verified 2026-09-08 against oxfmt
 0.67's `configuration_schema.json`: one key added, none removed, no defaults
-changed) — the package declares a deliberately wide peer, `oxfmt >=0.59.0
-<1.0.0`. A caret range (`^0.59.0`, i.e. `>=0.59.0 <0.60.0` under npm semver for
+changed) and still in the 0.72 schema (verified 2026-10-09) — the package
+declares a deliberately wide peer, `oxfmt >=0.59.0 <1.0.0`. A caret range (`^0.59.0`, i.e. `>=0.59.0 <0.60.0` under npm semver for
 0.x) would leave every consumer on 0.60+ with an unsatisfied peer for no reason.
 
-> **No `extends` (re-verified 2026-09-08 against oxfmt 0.67).** Unlike `@jlg/oxlint` — whose
+> **No `extends` (re-verified 2026-10-09 against oxfmt 0.72).** Unlike `@jlg/oxlint` — whose
 > `oxlintrc.jsonc` composes into a consumer via `extends` — oxfmt has **no**
-> `extends` mechanism: its configuration schema has no such key (confirmed against
-> `node_modules/oxfmt/configuration_schema.json` at 0.67.0 — the 0.59 → 0.67 schema
-> gained exactly one key, `experimentalOperatorPosition`, and lost none). This
+> `extends` mechanism: its configuration schema has no such key (checked against
+> `node_modules/oxfmt/configuration_schema.json` at 0.72.0). This
 > package therefore cannot be composed by reference; `defineConfig` composes it by **merge** instead (base
 > first, your keys win), and the raw-JSON alternatives below either point oxfmt at
 > the shipped file with `-c` or import and spread it.
@@ -38,8 +41,9 @@ changed) — the package declares a deliberately wide peer, `oxfmt >=0.59.0
 
 ### From a TS/JS config (recommended)
 
-oxfmt auto-discovers and evaluates an `oxfmt.config.{ts,js,mjs}` in the working
-directory as real JavaScript, so a config merges the base programmatically:
+oxfmt auto-discovers and evaluates an `oxfmt.config.ts` (or `.mts`) in the
+working directory as real JavaScript, so a config merges the base
+programmatically:
 
 ```ts
 // oxfmt.config.ts at your repo root
@@ -57,21 +61,20 @@ the base first and your keys winning. A no-arg call (`defineConfig()`) returns a
 fresh copy of the base. The raw parsed base object is also exported as `base` for
 direct access (`import { base } from "@jlg/oxfmt"`).
 
-- **oxfmt auto-discovers `oxfmt.config.ts`** — no `-c` needed (verified 2026-07-22,
-  oxfmt 0.59: with `oxfmt.config.ts` present in the cwd and no `-c`, both the base
-  `singleQuote` and a consumer `sortTailwindcss`/`ignorePatterns` applied). An
-  earlier "not auto-discovered" note (2026-07-20) was **wrong** — it had probed
-  `oxfmt.config.mjs`, not `.ts`. Whether the **`.mjs`** form is auto-discovered
-  remains unverified (unverified 2026-07-22 · not re-probed since the `.ts` fix).
-- **Node runtime.** Loading a **TypeScript** config (`oxfmt.config.ts`) relies on
-  Node's native TypeScript stripping; run it on a Node new enough to strip types
-  (Node 24 was used to verify above). A plain `.mjs` / `.js` config needs no
-  stripping.
+- **Only `.ts` and `.mts` are auto-discovered** (with `.oxfmtrc.json` and
+  `.oxfmtrc.jsonc`). An `oxfmt.config.{js,mjs,cjs,cts}` is ignored without
+  `-c` — oxfmt prints "No config found, using defaults" and formats with
+  double quotes, exit 0 — and applies when named with `-c` (verified
+  2026-10-09 · probe, oxfmt 0.72).
+- **Runtime.** Loading a **TypeScript** config relies on Node's native
+  TypeScript stripping; run it on a Node new enough to strip types (Node 24
+  verified). `bun run` and `bunx` honor the bin's node shebang; `bun --bun
+  oxfmt` evaluates the config in Bun (verified 2026-10-09 · probe).
 
 ### Point oxfmt at the raw JSON with `-c`
 
 The simplest route with no JS config — reference the shipped file directly
-(verified 2026-07-22, oxfmt 0.59):
+(verified 2026-10-09, oxfmt 0.72):
 
 ```sh
 oxfmt -c node_modules/@jlg/oxfmt/oxfmtrc.json --check .
@@ -82,8 +85,8 @@ oxfmt -c node_modules/@jlg/oxfmt/oxfmtrc.json --check .
 For a JS/TS config that would rather merge by hand than call `defineConfig`, import
 the JSON off its **subpath** and spread it:
 
-```js
-// oxfmt.config.mjs (also works as .ts / .mts)
+```ts
+// oxfmt.config.ts (or .mts; any other extension needs -c)
 import base from '@jlg/oxfmt/oxfmtrc.json' with { type: 'json' };
 
 export default { ...base, sortTailwindcss: true };
@@ -94,14 +97,15 @@ export default { ...base, sortTailwindcss: true };
 This repo's own `.oxfmtrc.jsonc` consumes the base by **mirroring its keys** (the
 root file cannot `extends` this one, per the constraint above): every key in
 `oxfmtrc.json` must also appear there, and the two must be edited together. The root
-file additionally carries repo-local keys (`printWidth`, `sortPackageJson`) that are
+file additionally carries repo-local keys (`printWidth`, `sortPackageJson`,
+`ignorePatterns`) that are
 not part of the shipped base. The root file is JSONC (it carries explanatory
 comments); this shipped file is strict JSON so it stays importable and `-c`-usable.
 
 ## Testing
 
 `bun run --filter '@jlg/oxfmt' test` runs Bun's built-in test runner (`bun test`)
-over `__tests__/` (migrated from `node --test` 2026-07-23):
+over `__tests__/`:
 
 - **`config.test.js`** — `oxfmtrc.json` parses as strict JSON, and every key in it
   is a real oxfmt option (validated against oxfmt's own

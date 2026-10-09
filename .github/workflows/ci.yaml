@@ -24,10 +24,6 @@ jobs:
           fetch-depth: 0
       - uses: jdx/mise-action@v2
 
-      # bun-only toolchain: shadow the runner's node so any node-shebang bin or
-      # hardcoded `node` spawn resolves to bun (the same symlink dev machines carry).
-      - run: mkdir -p ~/.local/bin && ln -sf "$(command -v bun)" ~/.local/bin/node && echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-
       - run: bun install --frozen-lockfile
       - run: bun run fmt:check
       - run: bun run lint

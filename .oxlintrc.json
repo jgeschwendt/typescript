@@ -2,5 +2,5 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "extends": ["./packages/oxlint/oxlintrc.jsonc"],
   "ignorePatterns": ["**/*.d.ts"],
-  "options": { "typeAware": true }
+  "options": { "reportUnusedDisableDirectives": "error", "typeAware": true }
 }

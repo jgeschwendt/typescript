@@ -2,26 +2,25 @@
   "$schema": "../../node_modules/oxlint/configuration_schema.json",
 
   // Nested config, scoped to this directory (blast radius = packages/oxfmt/).
-  // The maximalist, type-aware base is correct for app code but categorically
-  // wrong for `index.mjs` — the JS entry that bridges the shipped JSON into a
-  // config object. Relaxed HERE, only for that one file, so the shipped base and
-  // the repo root stay untouched (this file is not in `files`, so consumers never
-  // see it). Mirrors the sibling packages/oxlint/.oxlintrc.json.
-  "overrides": [
-    {
-      "files": ["index.mjs"],
-      "rules": {
-        // The JS entry must read its own shipped JSON at runtime; node:fs is
-        // unavoidable for a config package.
-        "import/no-nodejs-modules": "off",
-        // `JSON.parse` returns `any`, and node:fs types are not resolved for
-        // this standalone `.mjs` under type-aware linting, so the no-unsafe-*
-        // family fires on every downstream access. The parsed data is an
-        // external, schema-known shape.
-        "typescript/no-unsafe-argument": "off",
-        "typescript/no-unsafe-assignment": "off",
-        "typescript/no-unsafe-call": "off"
-      }
-    }
-  ]
+  // A nested config REPLACES the root for its subtree rather than merging with
+  // it, so it extends the root (and through it the @jlg/oxlint base) and
+  // carries only the relaxations this package's tooling code needs. Not in
+  // `files`, so consumers never see it. Mirrors packages/oxlint/.oxlintrc.json;
+  // __tests__/.oxlintrc.json extends this file.
+  "extends": ["../../.oxlintrc.json"],
+
+  // The root's ignorePatterns do not carry into a nested scope (nor through
+  // `extends`): without this the generated index.d.ts is linted.
+  "ignorePatterns": ["**/*.d.ts"],
+
+  // eslint-plugin-react warns on every run without a React version, and
+  // `settings` reach the JS plugins only from the nested config governing the
+  // file (not from the root, nor through `extends`). No React here: any semver.
+  "settings": { "react": { "version": "19.2.0" } },
+
+  "rules": {
+    // Every file here runs under oxfmt's Node/Bun config loader or bun test:
+    // there is no browser target to protect.
+    "import/no-nodejs-modules": "off"
+  }
 }

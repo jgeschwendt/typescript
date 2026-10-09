@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { enabledScopes, loadConfig, loadRules } from './_lib.js';
+import { enabledScopes, loadConfig, loadRules } from './_helpers.js';
 
 // The update-review gate. Our config turns whole rule CATEGORIES on at "error"
 // (correctness, pedantic, perf, style, suspicious), so any rule oxlint ADDS to one

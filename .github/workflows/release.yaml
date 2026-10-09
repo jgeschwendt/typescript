@@ -34,9 +34,8 @@ jobs:
           # every job's view identical.
           fetch-depth: 0
           persist-credentials: false
-      # mise pins node 24 (npm 11.9), which the publish job needs for OIDC — no
-      # bun→node symlink anywhere in this workflow, unlike ci.yaml: shadowing node
-      # with bun would take npm's trusted-publishing path out of the picture.
+      # mise pins node 24 (npm 11.9), which the publish job needs for OIDC; never
+      # shadow node with bun here — it would take npm's trusted-publishing path out.
       - uses: jdx/mise-action@v2
       - run: bun install --frozen-lockfile
       - id: select-mode

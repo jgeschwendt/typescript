@@ -1,6 +1,6 @@
+import { expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { expect, test } from 'bun:test';
 import { base, defineConfig } from '../index.mjs';
 
 const configPath = join(import.meta.dirname, '..', 'oxfmtrc.json');
