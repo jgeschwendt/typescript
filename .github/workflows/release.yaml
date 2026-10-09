@@ -147,6 +147,21 @@ jobs:
           persist-credentials: false
       - uses: jdx/mise-action@v2
       - run: bun install --frozen-lockfile
+      # Diagnostic: ask the registry directly whether it accepts this job's OIDC
+      # identity for each package — status and error text only, never a token.
+      - name: npm OIDC exchange probe
+        run: |
+          id_token=$(curl -fsS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=npm:registry.npmjs.org" | node -p 'JSON.parse(require("fs").readFileSync(0, "utf8")).value')
+          node -e 'const c = JSON.parse(Buffer.from(process.argv[1].split(".")[1], "base64url")); console.log(JSON.stringify({ repository: c.repository, workflow_ref: c.workflow_ref, ref: c.ref, environment: c.environment ?? null, event: c.event_name }))' "$id_token"
+          for pkg in @jlg/oxlint @jlg/oxfmt @jlg/tsconfig; do
+            body=$(curl -sS -o /tmp/exchange.json -w '%{http_code}' -X POST \
+              -H "Authorization: Bearer $id_token" \
+              "https://registry.npmjs.org/-/npm/v1/oidc/token/exchange/package/${pkg/\//%2f}")
+            echo "$pkg -> HTTP $body $(node -p 'const j = JSON.parse(require("fs").readFileSync("/tmp/exchange.json", "utf8")); j.token ? "token issued" : JSON.stringify(j)')"
+          done
+          rm -f /tmp/exchange.json
+
       # verbose npm output carries the OIDC token-exchange lines, the only record
       # of why a trusted-publisher login was refused (ENEEDAUTH says nothing)
       - uses: changesets/action/publish@v2
