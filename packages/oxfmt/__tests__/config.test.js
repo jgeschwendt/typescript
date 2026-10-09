@@ -1,7 +1,7 @@
+import { expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
-import { expect, test } from 'bun:test';
 
 const require = createRequire(import.meta.url);
 const here = import.meta.dirname;
@@ -10,8 +10,8 @@ const configPath = join(here, '..', 'oxfmtrc.json');
 
 // Resolve oxfmt from wherever the workspace installed it (root-hoisted or the
 // package's own node_modules), then locate its bundled JSON schema.
-const oxfmtDir = dirname(require.resolve('oxfmt/package.json'));
-const schemaPath = join(oxfmtDir, 'configuration_schema.json');
+const oxfmtDirectory = dirname(require.resolve('oxfmt/package.json'));
+const schemaPath = join(oxfmtDirectory, 'configuration_schema.json');
 
 // oxfmtrc.json is consumed via `-c` and via `import … with { type: "json" }`;
 // both demand strict JSON (no comments, no trailing commas). Guard it here —

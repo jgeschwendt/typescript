@@ -2,12 +2,13 @@ import { expect, test } from 'bun:test';
 import {
   configRuleNames,
   enabledScopes,
+  jsPluginScopes,
   loadConfig,
   loadPluginNames,
   loadRules,
   ruleKey,
   ruleScope,
-} from './_lib.js';
+} from './_helpers.js';
 
 // The footgun guard. Two ways a config rule silently stops doing its job in
 // oxlint (re-verified 2026-09-08 · probe, oxlint 1.82):
@@ -23,11 +24,18 @@ import {
 //     This is the genuinely silent case; the third test below guards it.
 // ※ rule-existence-guard
 
+// Native rules only: `jsPlugins` rules are ESLint rule code, guarded against
+// their plugins in js-plugins.test.js.
+const nativeRuleNames = (config) => {
+  const js = jsPluginScopes(config);
+  return configRuleNames(config).filter((name) => !js.has(name.split('/')[0]));
+};
+
 test('every configured rule exists in oxlint', () => {
   const known = new Set(
     loadRules().map((rule) => `${rule.scope}/${rule.value}`),
   );
-  const missing = configRuleNames(loadConfig()).filter(
+  const missing = nativeRuleNames(loadConfig()).filter(
     (name) => !known.has(ruleKey(name)),
   );
   expect(
@@ -50,11 +58,38 @@ test('every configured plugin is a valid oxlint plugin', () => {
 test("every configured rule's plugin is enabled", () => {
   const config = loadConfig();
   const enabled = enabledScopes(config);
-  const orphaned = configRuleNames(config).filter(
+  const orphaned = nativeRuleNames(config).filter(
     (name) => !enabled.has(ruleScope(name)),
   );
   expect(
     orphaned,
     `Rule(s) whose plugin is not in \`plugins\` — silent no-op, never run: ${orphaned.join(', ')}`,
+  ).toEqual([]);
+});
+
+// @jlg/eslint ran typescript-eslint on TS files only, and oxlint cannot drop a
+// plugin per override, so the JS-files override names every typescript rule
+// the categories turn on. A rule oxlint adds to the typescript plugin would
+// otherwise start firing on .js/.cjs/.mjs files (type-aware ones included).
+test('every category-enabled typescript rule is off on JavaScript files', () => {
+  const config = loadConfig();
+  const javascript = config.overrides.find(
+    (override) => override.files.join(',') === '**/*.{cjs,js,jsx,mjs}',
+  );
+  const on = new Set(
+    Object.entries(config.categories)
+      .filter(([, severity]) => severity !== 'off')
+      .map(([category]) => category),
+  );
+  const leaking = loadRules()
+    .filter((rule) => rule.scope === 'typescript' && on.has(rule.category))
+    .map((rule) => `typescript/${rule.value}`)
+    .filter(
+      (name) =>
+        config.rules[name] !== 'off' && javascript.rules[name] !== 'off',
+    );
+  expect(
+    leaking,
+    `typescript rule(s) running on JavaScript files: ${leaking.join(', ')}`,
   ).toEqual([]);
 });

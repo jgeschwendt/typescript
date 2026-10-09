@@ -1,0 +1,14 @@
+# npm-check-updates config, read by `bun run update` / `bun run ncu` and so by
+# the daily update-deps workflow. Holds: deliberate pins `ncu -u` would
+# otherwise bump. Drop an entry when the dated reason no longer holds.
+reject:
+  # packages/oxlint's JS plugins re-export ESLint 9 core rules, and
+  # eslint-plugin-import 2.32 / eslint-plugin-react 7.37 peer on eslint <=9
+  # (ncu would take ^9.39.5 to ^10.12.0 · 2026-10-09)
+  - eslint
+  # pinned exactly to the version @jlg/eslint resolved
+  # (packages/oxlint/oxlintrc.jsonc); ncu would take it to 77
+  - eslint-plugin-unicorn
+  # pinned exactly (devDependency and peer): JS plugins are outside oxlint's
+  # semver, so a bump is deliberate, root and packages/oxlint together
+  - oxlint

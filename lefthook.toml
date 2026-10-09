@@ -1,17 +1,21 @@
-# Mirrors jlg.io's lefthook.yaml (both on bun).
-# --no-error-on-unmatched-pattern: oxlint exits 1 when every staged file is in
-# its ignorePatterns, silently aborting the commit (found in jlg.io 2026-07-22).
+# Pre-commit: the staged slice of `bun run fmt` and `bun run lint`, same
+# configs. oxfmt takes every staged file with no glob, so it formats exactly
+# the file types `fmt:check` checks (md, yaml, toml, css, … — it skips what it
+# cannot format). Unused disable directives are reported by .oxlintrc.json's
+# `options`, so no flag is needed here.
+# --no-error-on-unmatched-pattern: both tools exit non-zero when no staged file
+# survives their ignores or supported types, silently aborting the commit
+# (found in jlg.io 2026-07-22).
 
 [pre-commit]
 parallel = true
 
 [pre-commit.commands.oxfmt]
-glob = "*.{cjs,js,json,jsonc,jsx,mjs,ts,tsx}"
-run = "bunx oxfmt {staged_files}"
+run = "bunx oxfmt --no-error-on-unmatched-pattern {staged_files}"
 stage_fixed = true
 
 [pre-commit.commands.oxlint]
-glob = "*.{cjs,js,jsx,mjs,ts,tsx}"
+glob = "*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}"
 run = "bunx oxlint --no-error-on-unmatched-pattern {staged_files}"
 
 # Pre-push gate: the CI check job minus its changeset guard (that one gates the

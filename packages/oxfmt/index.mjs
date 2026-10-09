@@ -1,7 +1,7 @@
 // @jlg/oxfmt — JS entry for oxfmt's TS/JS config loader.
 //
-// oxfmt auto-discovers and evaluates an `oxfmt.config.{ts,js,mjs}` as real
-// JavaScript, so a consumer can `import { defineConfig } from "@jlg/oxfmt"` and
+// oxfmt auto-discovers and evaluates an `oxfmt.config.ts` (or `.mts`) as real
+// JavaScript (other extensions load only with `-c`), so a consumer can `import { defineConfig } from "@jlg/oxfmt"` and
 // merge the base programmatically instead of importing the raw JSON and
 // spreading it by hand.
 //
