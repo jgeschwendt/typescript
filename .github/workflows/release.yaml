@@ -147,7 +147,11 @@ jobs:
           persist-credentials: false
       - uses: jdx/mise-action@v2
       - run: bun install --frozen-lockfile
+      # verbose npm output carries the OIDC token-exchange lines, the only record
+      # of why a trusted-publisher login was refused (ENEEDAUTH says nothing)
       - uses: changesets/action/publish@v2
+        env:
+          NPM_CONFIG_LOGLEVEL: verbose
         with:
           create-github-releases: true
           pack-dir-artifact-id: ${{ needs.pack.outputs.pack-dir-artifact-id }}
