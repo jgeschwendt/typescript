@@ -3,7 +3,7 @@ name: update-deps
 # Daily dependency refresh: the repo's own `bun run update` (ncu -u + bun
 # install) off main, shipped as an auto-merge PR. The required checks are the
 # merge gate — this workflow never builds or tests. Holds (pins ncu must not
-# bump; jlg.io's `holds` list) live in .ncurc.yml, which `bun run update`
+# bump; jlg.io's `holds` list) live in .ncurc.yaml, which `bun run update`
 # reads. Red runs are repaired on the update-deps branch by the local
 # `github-failures` routine. Copied from jlg.io's update-deps (per-repo copies,
 # no reusable workflow — decided 2026-08-30).
