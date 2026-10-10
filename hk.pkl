@@ -1,0 +1,42 @@
+amends "package://github.com/jdx/hk/releases/download/v2.5.0/hk@2.5.0#/Config.pkl"
+
+// Tools resolve from node_modules/.bin (mise.toml `_.path`); the hook launcher
+// runs through `mise x`, so bun, hk and the oxc binaries need no shell PATH.
+hooks {
+  // Pre-commit: the staged slice of `bun run fmt` and `bun run lint`, same
+  // configs. oxfmt takes every staged file with no glob, so it formats exactly
+  // the file types `fmt:check` checks (md, yaml, toml, css, … — it skips what it
+  // cannot format). Unused disable directives are reported by .oxlintrc.json's
+  // `options`, so no flag is needed here. Lint is check-only — fixes are the
+  // author's call — while fmt rewrites and hk stages the result.
+  // --no-error-on-unmatched-pattern: both tools exit non-zero when no staged
+  // file survives their ignores or supported types, silently aborting the
+  // commit (found in jlg.io 2026-07-22).
+  ["pre-commit"] {
+    fix = true
+    stage = true
+    stash = "git"
+    steps {
+      ["oxfmt"] {
+        check = "oxfmt --check --no-error-on-unmatched-pattern {{files}}"
+        fix = "oxfmt --no-error-on-unmatched-pattern {{files}}"
+      }
+      ["oxlint"] {
+        glob = List("*.cjs", "*.cts", "*.js", "*.jsx", "*.mjs", "*.mts", "*.ts", "*.tsx")
+        check = "oxlint --no-error-on-unmatched-pattern {{files}}"
+      }
+    }
+  }
+  // Pre-push gate: the CI check job minus its changeset guard (that one gates
+  // the merge, not the push), so a stale graph.lock or a red test never reaches
+  // the remote. `unset` the git env vars git exports into hook children, or any
+  // test that spawns git would point at this repo instead of its fixture.
+  // (since 2026-09-08 · replaces the retired ./save gate)
+  ["pre-push"] {
+    steps {
+      ["gate"] {
+        check = "unset $(git rev-parse --local-env-vars); bun run lint && bun run fmt:check && bun test && stele check && stele emit --check"
+      }
+    }
+  }
+}
