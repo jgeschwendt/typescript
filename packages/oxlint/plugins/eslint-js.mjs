@@ -14,9 +14,7 @@ const names = [
 
 export default host(
   {
-    rules: Object.fromEntries(
-      names.map((name) => [name, builtinRules.get(name)]),
-    ),
+    rules: Object.fromEntries(names.map((name) => [name, builtinRules.get(name)])),
   },
   'eslint-js',
 );

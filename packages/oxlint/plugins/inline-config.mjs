@@ -39,15 +39,12 @@ const targets = (value, directive) =>
  */
 const selfSuppressing = (comment, match) => {
   const { kind, prefix } = match.groups;
-  const covers =
-    kind === 'disable-line' || (kind === 'disable' && comment.type === 'Block');
+  const covers = kind === 'disable-line' || (kind === 'disable' && comment.type === 'Block');
   if (!covers) {
     return false;
   }
   const named = targets(comment.value, `${prefix}-${kind}`);
-  return (
-    named.length === 0 || named.some((rule) => rule.startsWith(`${name}/`))
-  );
+  return named.length === 0 || named.some((rule) => rule.startsWith(`${name}/`));
 };
 
 const plugin = {
@@ -81,8 +78,7 @@ const plugin = {
             'Disallow inline linter directives (disable, enable, env, rule config, globals)',
         },
         messages: {
-          banned:
-            'Inline linter directives are not allowed; change the config instead.',
+          banned: 'Inline linter directives are not allowed; change the config instead.',
         },
         schema: [],
         type: 'problem',

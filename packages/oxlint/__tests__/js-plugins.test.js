@@ -1,11 +1,5 @@
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
-import {
-  mkdirSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { configRuleNames, jsPluginScopes, loadConfig } from './_helpers.js';
@@ -35,13 +29,8 @@ import { base } from '../index.mjs';
 const plugins = Object.fromEntries(
   await Promise.all(
     base.jsPlugins.map(async (entry) => {
-      const { default: plugin } = await import(
-        typeof entry === 'string' ? entry : entry.specifier
-      );
-      return [
-        typeof entry === 'string' ? plugin.meta.name : entry.name,
-        plugin,
-      ];
+      const { default: plugin } = await import(typeof entry === 'string' ? entry : entry.specifier);
+      return [typeof entry === 'string' ? plugin.meta.name : entry.name, plugin];
     }),
   ),
 );
@@ -54,12 +43,8 @@ const configured = (() => {
 })();
 
 test('local plugin names match the scopes the config uses', () => {
-  expect(
-    Object.keys(plugins).toSorted((left, right) => left.localeCompare(right)),
-  ).toStrictEqual(
-    [...jsPluginScopes(loadConfig())].toSorted((left, right) =>
-      left.localeCompare(right),
-    ),
+  expect(Object.keys(plugins).toSorted((left, right) => left.localeCompare(right))).toStrictEqual(
+    [...jsPluginScopes(loadConfig())].toSorted((left, right) => left.localeCompare(right)),
   );
 });
 
@@ -79,10 +64,7 @@ test('every configured jsPlugins rule exists in its plugin', () => {
 // code is still proven to run.
 const inert = {
   'eslint-js/no-restricted-syntax': ['error', 'DebuggerStatement'],
-  'import-js/no-restricted-paths': [
-    'error',
-    { zones: [{ from: './packages', target: './src' }] },
-  ],
+  'import-js/no-restricted-paths': ['error', { zones: [{ from: './packages', target: './src' }] }],
   // also needs an `.eslintrc` beside it to enumerate files (eslint-plugin-import#3079)
   'import-js/no-unused-modules': ['error', { unusedExports: true }],
   'react-js/boolean-prop-naming': ['error', { rule: '^is[A-Z]' }],
@@ -253,9 +235,7 @@ const run = (command, cwd) => {
     stdout: 'pipe',
   });
   if (result.exitCode !== 0) {
-    throw new Error(
-      `${command.join(' ')} exited ${result.exitCode}: ${result.stderr.toString()}`,
-    );
+    throw new Error(`${command.join(' ')} exited ${result.exitCode}: ${result.stderr.toString()}`);
   }
   return result.stdout.toString().trim();
 };
@@ -314,9 +294,7 @@ const lint = (runtime, linker, entry) => {
   );
   const text = readFileSync(out, 'utf8');
   if (!text.trim().startsWith('{')) {
-    throw new Error(
-      `oxlint exited ${result.exitCode}: ${text}${result.stderr.toString()}`,
-    );
+    throw new Error(`oxlint exited ${result.exitCode}: ${text}${result.stderr.toString()}`);
   }
   return JSON.parse(text).diagnostics;
 };
@@ -332,17 +310,12 @@ describe.each(Object.entries(runtimes))('on %s', (runtimeName, runtime) => {
         const broken = diagnostics
           .map((diagnostic) => diagnostic.message)
           .filter((message) =>
-            /Error running JS plugin|Rule crashed|Parse errors in imported module/u.test(
-              message,
-            ),
+            /Error running JS plugin|Rule crashed|Parse errors in imported module/u.test(message),
           );
         expect(broken).toEqual([]);
         const codes = new Set(
           diagnostics.map((diagnostic) =>
-            diagnostic.code?.replace(
-              /^(?<plugin>.+)\((?<rule>.+)\)$/u,
-              '$<plugin>/$<rule>',
-            ),
+            diagnostic.code?.replace(/^(?<plugin>.+)\((?<rule>.+)\)$/u, '$<plugin>/$<rule>'),
           ),
         );
         expect(configured.filter((name) => !codes.has(name))).toEqual([]);

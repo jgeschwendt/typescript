@@ -32,12 +32,8 @@ const nativeRuleNames = (config) => {
 };
 
 test('every configured rule exists in oxlint', () => {
-  const known = new Set(
-    loadRules().map((rule) => `${rule.scope}/${rule.value}`),
-  );
-  const missing = nativeRuleNames(loadConfig()).filter(
-    (name) => !known.has(ruleKey(name)),
-  );
+  const known = new Set(loadRules().map((rule) => `${rule.scope}/${rule.value}`));
+  const missing = nativeRuleNames(loadConfig()).filter((name) => !known.has(ruleKey(name)));
   expect(
     missing,
     `Unknown oxlint rule name(s) — oxlint rejects the whole config: ${missing.join(', ')}`,
@@ -46,9 +42,7 @@ test('every configured rule exists in oxlint', () => {
 
 test('every configured plugin is a valid oxlint plugin', () => {
   const valid = new Set(loadPluginNames());
-  const invalid = (loadConfig().plugins ?? []).filter(
-    (plugin) => !valid.has(plugin),
-  );
+  const invalid = (loadConfig().plugins ?? []).filter((plugin) => !valid.has(plugin));
   expect(
     invalid,
     `Unknown oxlint plugin name(s) — oxlint rejects the whole config: ${invalid.join(', ')}`,
@@ -58,9 +52,7 @@ test('every configured plugin is a valid oxlint plugin', () => {
 test("every configured rule's plugin is enabled", () => {
   const config = loadConfig();
   const enabled = enabledScopes(config);
-  const orphaned = nativeRuleNames(config).filter(
-    (name) => !enabled.has(ruleScope(name)),
-  );
+  const orphaned = nativeRuleNames(config).filter((name) => !enabled.has(ruleScope(name)));
   expect(
     orphaned,
     `Rule(s) whose plugin is not in \`plugins\` — silent no-op, never run: ${orphaned.join(', ')}`,
@@ -84,12 +76,8 @@ test('every category-enabled typescript rule is off on JavaScript files', () => 
   const leaking = loadRules()
     .filter((rule) => rule.scope === 'typescript' && on.has(rule.category))
     .map((rule) => `typescript/${rule.value}`)
-    .filter(
-      (name) =>
-        config.rules[name] !== 'off' && javascript.rules[name] !== 'off',
-    );
-  expect(
-    leaking,
-    `typescript rule(s) running on JavaScript files: ${leaking.join(', ')}`,
-  ).toEqual([]);
+    .filter((name) => config.rules[name] !== 'off' && javascript.rules[name] !== 'off');
+  expect(leaking, `typescript rule(s) running on JavaScript files: ${leaking.join(', ')}`).toEqual(
+    [],
+  );
 });

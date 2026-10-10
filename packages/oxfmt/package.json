@@ -1,13 +1,10 @@
 {
-  "devDependencies": {
-    "oxfmt": "^0.72.0"
-  },
-  "exports": {
-    ".": {
-      "types": "./index.d.ts",
-      "default": "./index.mjs"
-    },
-    "./oxfmtrc.json": "./oxfmtrc.json"
+  "name": "@jlg/oxfmt",
+  "version": "0.1.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jgeschwendt/typescript.git",
+    "directory": "packages/oxfmt"
   },
   "files": [
     "README.md",
@@ -15,21 +12,24 @@
     "index.mjs",
     "oxfmtrc.json"
   ],
-  "name": "@jlg/oxfmt",
-  "peerDependencies": {
-    "oxfmt": ">=0.59.0 <1.0.0"
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.mjs"
+    },
+    "./oxfmtrc.json": "./oxfmtrc.json"
   },
   "publishConfig": {
     "access": "public"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jgeschwendt/typescript.git",
-    "directory": "packages/oxfmt"
-  },
   "scripts": {
     "test": "bun test"
   },
-  "type": "module",
-  "version": "0.1.1"
+  "devDependencies": {
+    "oxfmt": "^0.72.0"
+  },
+  "peerDependencies": {
+    "oxfmt": ">=0.59.0 <1.0.0"
+  }
 }

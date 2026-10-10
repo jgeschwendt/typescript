@@ -1,13 +1,9 @@
 {
-  "devDependencies": {
-    "@changesets/changelog-github": "^1.0.1",
-    "@changesets/cli": "^3.0.3",
-    "oxfmt": "^0.72.0",
-    "oxlint": "^1.87.0",
-    "oxlint-tsgolint": "^7.0.2003"
-  },
   "name": "typescript-monorepo",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "changeset": "changeset",
     "fmt": "oxfmt",
@@ -19,7 +15,11 @@
     "update": "bunx npm-check-updates -u --workspaces && bun install",
     "version-packages": "changeset version && bun install --lockfile-only"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
+    "oxfmt": "^0.72.0",
+    "oxlint": "^1.87.0",
+    "oxlint-tsgolint": "^7.0.2003"
+  }
 }

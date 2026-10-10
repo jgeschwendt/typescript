@@ -69,7 +69,7 @@ direct access (`import { base } from "@jlg/oxfmt"`).
 - **Runtime.** Loading a **TypeScript** config relies on Node's native
   TypeScript stripping; run it on a Node new enough to strip types (Node 24
   verified). `bun run` and `bunx` honor the bin's node shebang; `bun --bun
-  oxfmt` evaluates the config in Bun (verified 2026-10-09 · probe).
+oxfmt` evaluates the config in Bun (verified 2026-10-09 · probe).
 
 ### Point oxfmt at the raw JSON with `-c`
 
@@ -97,9 +97,8 @@ export default { ...base, sortTailwindcss: true };
 This repo's own `.oxfmtrc.jsonc` consumes the base by **mirroring its keys** (the
 root file cannot `extends` this one, per the constraint above): every key in
 `oxfmtrc.json` must also appear there, and the two must be edited together. The root
-file additionally carries repo-local keys (`printWidth`, `sortPackageJson`,
-`ignorePatterns`) that are
-not part of the shipped base. The root file is JSONC (it carries explanatory
+file additionally carries repo-local keys (`ignorePatterns`) that are not part of
+the shipped base. The root file is JSONC (it carries explanatory
 comments); this shipped file is strict JSON so it stays importable and `-c`-usable.
 
 ## Testing

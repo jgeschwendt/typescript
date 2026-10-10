@@ -20,9 +20,7 @@ const require = createRequire(import.meta.url);
  * absolute path (Bun's `createRequire` resolves a bare name from the working
  * directory once `Module._resolveFilename` is patched). `require` caches it.
  */
-const parserPath = fileURLToPath(
-  import.meta.resolve('@typescript-eslint/parser'),
-);
+const parserPath = fileURLToPath(import.meta.resolve('@typescript-eslint/parser'));
 
 export default host(plugin, 'import-js', (context) => ({
   languageOptions: {

@@ -28,8 +28,7 @@ test("every oxfmtrc.json key exists in oxfmt's schema", () => {
   const known = new Set(Object.keys(schema.properties));
   const config = JSON.parse(readFileSync(configPath, 'utf8'));
   const unknown = Object.keys(config).filter((key) => !known.has(key));
-  expect(
-    unknown,
-    `Unknown oxfmt option key(s) — silently ignored: ${unknown.join(', ')}`,
-  ).toEqual([]);
+  expect(unknown, `Unknown oxfmt option key(s) — silently ignored: ${unknown.join(', ')}`).toEqual(
+    [],
+  );
 });

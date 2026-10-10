@@ -54,20 +54,15 @@ test("defineConfig does not mutate the caller's config", () => {
 
 // the base overrides scoped by file name, which must beat the consumer's
 const fileNamed = base.overrides.filter(
-  (override) =>
-    !override.files.every((glob) => /^\*\*\/\*\.[^/]+$/u.test(glob)),
+  (override) => !override.files.every((glob) => /^\*\*\/\*\.[^/]+$/u.test(glob)),
 );
 
 test("defineConfig re-appends the file-named base overrides after the consumer's", () => {
   const own = { files: ['**/*.tsx'], rules: { 'no-void': 'off' } };
   const config = defineConfig({ overrides: [own] });
   expect(config.overrides).toStrictEqual([own, ...fileNamed]);
-  expect(fileNamed.flatMap((override) => override.files)).toContain(
-    '**/route.ts',
-  );
-  expect(fileNamed.flatMap((override) => override.files)).not.toContain(
-    '**/*.tsx',
-  );
+  expect(fileNamed.flatMap((override) => override.files)).toContain('**/route.ts');
+  expect(fileNamed.flatMap((override) => override.files)).not.toContain('**/*.tsx');
 });
 
 test('defineConfig sets settings.react.version from the installed React', () => {
@@ -82,8 +77,7 @@ test('defineConfig sets settings.react.version from the installed React', () => 
     process.chdir(directory);
     expect(defineConfig().settings.react).toStrictEqual({ version: '19.3.0' });
     expect(
-      defineConfig({ settings: { react: { version: '18.2.0' } } }).settings
-        .react,
+      defineConfig({ settings: { react: { version: '18.2.0' } } }).settings.react,
     ).toStrictEqual({ version: '18.2.0' });
   } finally {
     process.chdir(cwd);

@@ -1,11 +1,5 @@
 import { afterAll, describe, expect, test } from 'bun:test';
-import {
-  mkdirSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { oxlintBin } from './_helpers.js';
@@ -58,8 +52,7 @@ const fixtures = {
   ].join('\n'),
   'next.config.js': 'export const extra = 1;\nexport default {};\n',
   'oxlint.config.ts': 'export const extra = 1;\nexport default {};\n',
-  'src/later.ts':
-    'export async function later(): Promise<number> {\n  return 1;\n}\n',
+  'src/later.ts': 'export async function later(): Promise<number> {\n  return 1;\n}\n',
   'src/plain.js': [
     "const fs = require('node:fs');",
     'process = fs;',
@@ -89,15 +82,7 @@ const lint = (entry, paths) => {
   }
   const out = join(directory, 'report.json');
   const result = Bun.spawnSync(
-    [
-      process.execPath,
-      oxlintBin,
-      '-c',
-      entry.file,
-      '--format',
-      'json',
-      ...paths,
-    ],
+    [process.execPath, oxlintBin, '-c', entry.file, '--format', 'json', ...paths],
     { cwd: directory, stderr: 'pipe', stdout: Bun.file(out) },
   );
   return {
@@ -155,9 +140,7 @@ describe.each(Object.keys(entries))('through the %s entry', (kind) => {
   });
 
   test('typescript/* rules stay off JavaScript files', () => {
-    expect(
-      codes('src/plain.js').filter((code) => code.startsWith('typescript(')),
-    ).toEqual([]);
+    expect(codes('src/plain.js').filter((code) => code.startsWith('typescript('))).toEqual([]);
   });
 
   test('rules eslint-config-prettier switched off stay off', () => {
@@ -182,20 +165,14 @@ describe.each(Object.keys(entries))('through the %s entry', (kind) => {
 
   // defineConfig re-appends the file-named base overrides after the
   // consumer's; an `extends` of the JSONC cannot, so there the consumer wins
-  test.if(kind === 'js')(
-    'base Next overrides beat a consumer `**/*.tsx` override',
-    () => {
-      expect(codes('app/page.tsx')).not.toContain('import(no-default-export)');
-      expect(codes('app/page.tsx')).not.toContain('unicorn(filename-case)');
-    },
-  );
+  test.if(kind === 'js')('base Next overrides beat a consumer `**/*.tsx` override', () => {
+    expect(codes('app/page.tsx')).not.toContain('import(no-default-export)');
+    expect(codes('app/page.tsx')).not.toContain('unicorn(filename-case)');
+  });
 
-  test.if(kind === 'json')(
-    'a consumer `**/*.tsx` override beats the base Next overrides',
-    () => {
-      expect(codes('app/page.tsx')).toContain('import(no-default-export)');
-    },
-  );
+  test.if(kind === 'json')('a consumer `**/*.tsx` override beats the base Next overrides', () => {
+    expect(codes('app/page.tsx')).toContain('import(no-default-export)');
+  });
 });
 
 test('a directive that would suppress its own ban fails the run', () => {

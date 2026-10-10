@@ -15,9 +15,7 @@ import { readFileSync } from 'node:fs';
 // consumer's cwd. oxfmtrc.json is strict JSON — no comments, no trailing commas
 // — so JSON.parse suffices and this entry stays dependency-free (no jsonc-parser,
 // unlike @jlg/oxlint whose base is JSONC).
-const base = JSON.parse(
-  readFileSync(new URL('oxfmtrc.json', import.meta.url), 'utf8'),
-);
+const base = JSON.parse(readFileSync(new URL('oxfmtrc.json', import.meta.url), 'utf8'));
 
 // Merge the base with a consumer config. Unlike oxlint, oxfmt has NO `extends`
 // mechanism, so composition is a shallow merge: base first, consumer keys win.

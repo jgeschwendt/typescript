@@ -63,11 +63,7 @@ const jsdoc = (sourceCode, node) => {
             break;
           }
         }
-        if (
-          parent &&
-          parent.type !== 'FunctionDeclaration' &&
-          parent.type !== 'Program'
-        ) {
+        if (parent && parent.type !== 'FunctionDeclaration' && parent.type !== 'Program') {
           return find(parent);
         }
       }

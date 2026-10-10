@@ -55,11 +55,7 @@
       }
     ],
     "getter-return": ["error", { "allowImplicit": false }],
-    "grouped-accessor-pairs": [
-      "error",
-      "anyOrder",
-      { "enforceForTSTypes": false }
-    ],
+    "grouped-accessor-pairs": ["error", "anyOrder", { "enforceForTSTypes": false }],
     "guard-for-in": ["error"],
     "id-denylist": ["error"],
     "id-length": [
@@ -213,11 +209,7 @@
     "no-implied-eval": ["error"],
     "no-import-assign": ["error"],
     "no-inline-comments": ["error", {}],
-    "no-inner-declarations": [
-      "error",
-      "functions",
-      { "blockScopedFunctions": "allow" }
-    ],
+    "no-inner-declarations": ["error", "functions", { "blockScopedFunctions": "allow" }],
     "no-invalid-regexp": ["error", {}],
     "no-invalid-this": ["error", { "capIsConstructor": true }],
     "no-irregular-whitespace": [
@@ -323,10 +315,7 @@
     "no-unreachable-loop": ["error", { "ignore": [] }],
     "no-unsafe-finally": ["error"],
     "no-unsafe-negation": ["error", { "enforceForOrderingRelations": false }],
-    "no-unsafe-optional-chaining": [
-      "error",
-      { "disallowArithmeticOperators": false }
-    ],
+    "no-unsafe-optional-chaining": ["error", { "disallowArithmeticOperators": false }],
     "no-unused-expressions": [
       "error",
       {
@@ -371,22 +360,13 @@
     "no-useless-return": ["error"],
     "no-var": ["error"],
     "no-void": ["error", { "allowAsStatement": true }],
-    "no-warning-comments": [
-      "error",
-      { "location": "start", "terms": ["todo", "fixme", "xxx"] }
-    ],
+    "no-warning-comments": ["error", { "location": "start", "terms": ["todo", "fixme", "xxx"] }],
     "no-with": ["error"],
     "object-shorthand": ["error"],
     "one-var": ["error", "never"],
     "operator-assignment": ["error", "always"],
-    "prefer-arrow-callback": [
-      "error",
-      { "allowNamedFunctions": false, "allowUnboundThis": true }
-    ],
-    "prefer-const": [
-      "error",
-      { "destructuring": "any", "ignoreReadBeforeAssign": false }
-    ],
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": false, "allowUnboundThis": true }],
+    "prefer-const": ["error", { "destructuring": "any", "ignoreReadBeforeAssign": false }],
     "prefer-destructuring": ["error"],
     "prefer-exponentiation-operator": ["error"],
     "prefer-named-capture-group": ["error"],
@@ -420,10 +400,7 @@
       "error",
       { "children": "always", "propElementValues": "always", "props": "never" }
     ],
-    "react/jsx-filename-extension": [
-      "error",
-      { "extensions": [".jsx", ".tsx"] }
-    ],
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
     "react/jsx-fragments": ["error"],
     "react/jsx-handler-names": ["error"],
     "react/jsx-key": ["error"],
@@ -527,10 +504,7 @@
     "unicorn/consistent-destructuring": ["error"],
     "unicorn/consistent-empty-array-spread": ["error"],
     "unicorn/consistent-existence-index-check": ["error"],
-    "unicorn/consistent-function-scoping": [
-      "error",
-      { "checkArrowFunctions": true }
-    ],
+    "unicorn/consistent-function-scoping": ["error", { "checkArrowFunctions": true }],
     "unicorn/custom-error-definition": ["error"],
     "unicorn/error-message": ["error"],
     "unicorn/escape-case": ["error", "uppercase"],
@@ -621,10 +595,7 @@
     "unicorn/prefer-array-flat-map": ["error"],
     "unicorn/prefer-array-index-of": ["error"],
     "unicorn/prefer-array-some": ["error"],
-    "unicorn/prefer-at": [
-      "error",
-      { "checkAllIndexAccess": false, "getLastElementFunctions": [] }
-    ],
+    "unicorn/prefer-at": ["error", { "checkAllIndexAccess": false, "getLastElementFunctions": [] }],
     "unicorn/prefer-blob-reading-methods": ["error"],
     "unicorn/prefer-class-fields": ["error"],
     "unicorn/prefer-code-point": ["error"],
@@ -650,10 +621,7 @@
     "unicorn/prefer-native-coercion-functions": ["error"],
     "unicorn/prefer-negative-index": ["error"],
     "unicorn/prefer-node-protocol": ["error"],
-    "unicorn/prefer-number-properties": [
-      "error",
-      { "checkInfinity": false, "checkNaN": true }
-    ],
+    "unicorn/prefer-number-properties": ["error", { "checkInfinity": false, "checkNaN": true }],
     "unicorn/prefer-object-from-entries": ["error", {}],
     "unicorn/prefer-optional-catch-binding": ["error"],
     "unicorn/prefer-prototype-methods": ["error"],
@@ -687,10 +655,7 @@
     "unicorn/switch-case-braces": ["error", "always"],
     "unicorn/text-encoding-identifier-case": ["error"],
     "unicorn/throw-new-error": ["error"],
-    "use-isnan": [
-      "error",
-      { "enforceForIndexOf": false, "enforceForSwitchCase": true }
-    ],
+    "use-isnan": ["error", { "enforceForIndexOf": false, "enforceForSwitchCase": true }],
     "valid-typeof": ["error", { "requireStringLiterals": false }],
     "vars-on-top": ["error"],
     "yoda": ["error", "never", { "exceptRange": false, "onlyEquality": false }]
@@ -705,10 +670,7 @@
     "@typescript-eslint/class-methods-use-this": ["error"],
     "@typescript-eslint/consistent-generic-constructors": ["error"],
     "@typescript-eslint/consistent-indexed-object-style": ["error"],
-    "@typescript-eslint/consistent-return": [
-      "error",
-      { "treatUndefinedAsUnspecified": false }
-    ],
+    "@typescript-eslint/consistent-return": ["error", { "treatUndefinedAsUnspecified": false }],
     "@typescript-eslint/consistent-type-assertions": ["error"],
     "@typescript-eslint/consistent-type-definitions": ["error"],
     "@typescript-eslint/consistent-type-exports": ["error"],
@@ -773,10 +735,7 @@
     "@typescript-eslint/no-implied-eval": ["error"],
     "@typescript-eslint/no-import-type-side-effects": ["error"],
     "@typescript-eslint/no-inferrable-types": ["error"],
-    "@typescript-eslint/no-invalid-this": [
-      "error",
-      { "capIsConstructor": true }
-    ],
+    "@typescript-eslint/no-invalid-this": ["error", { "capIsConstructor": true }],
     "@typescript-eslint/no-invalid-void-type": ["error"],
     "@typescript-eslint/no-magic-numbers": [
       "warn",
@@ -810,9 +769,7 @@
     "@typescript-eslint/no-this-alias": ["error"],
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": ["error"],
     "@typescript-eslint/no-unnecessary-condition": ["error"],
-    "@typescript-eslint/no-unnecessary-parameter-property-assignment": [
-      "error"
-    ],
+    "@typescript-eslint/no-unnecessary-parameter-property-assignment": ["error"],
     "@typescript-eslint/no-unnecessary-qualifier": ["error"],
     "@typescript-eslint/no-unnecessary-template-expression": ["error"],
     "@typescript-eslint/no-unnecessary-type-arguments": ["error"],
@@ -936,11 +893,7 @@
       }
     ],
     "getter-return": ["off", { "allowImplicit": false }],
-    "grouped-accessor-pairs": [
-      "error",
-      "anyOrder",
-      { "enforceForTSTypes": false }
-    ],
+    "grouped-accessor-pairs": ["error", "anyOrder", { "enforceForTSTypes": false }],
     "guard-for-in": ["error"],
     "id-denylist": ["error"],
     "id-length": [
@@ -1094,11 +1047,7 @@
     "no-implied-eval": ["off"],
     "no-import-assign": ["off"],
     "no-inline-comments": ["error", {}],
-    "no-inner-declarations": [
-      "error",
-      "functions",
-      { "blockScopedFunctions": "allow" }
-    ],
+    "no-inner-declarations": ["error", "functions", { "blockScopedFunctions": "allow" }],
     "no-invalid-regexp": ["error", {}],
     "no-invalid-this": ["off", { "capIsConstructor": true }],
     "no-irregular-whitespace": [
@@ -1206,10 +1155,7 @@
     "no-unreachable-loop": ["error", { "ignore": [] }],
     "no-unsafe-finally": ["error"],
     "no-unsafe-negation": ["off", { "enforceForOrderingRelations": false }],
-    "no-unsafe-optional-chaining": [
-      "error",
-      { "disallowArithmeticOperators": false }
-    ],
+    "no-unsafe-optional-chaining": ["error", { "disallowArithmeticOperators": false }],
     "no-unused-expressions": [
       "off",
       {
@@ -1254,22 +1200,13 @@
     "no-useless-return": ["error"],
     "no-var": ["error"],
     "no-void": ["error", { "allowAsStatement": true }],
-    "no-warning-comments": [
-      "error",
-      { "location": "start", "terms": ["todo", "fixme", "xxx"] }
-    ],
+    "no-warning-comments": ["error", { "location": "start", "terms": ["todo", "fixme", "xxx"] }],
     "no-with": ["off"],
     "object-shorthand": ["error"],
     "one-var": ["error", "never"],
     "operator-assignment": ["error", "always"],
-    "prefer-arrow-callback": [
-      "error",
-      { "allowNamedFunctions": false, "allowUnboundThis": true }
-    ],
-    "prefer-const": [
-      "error",
-      { "destructuring": "any", "ignoreReadBeforeAssign": false }
-    ],
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": false, "allowUnboundThis": true }],
+    "prefer-const": ["error", { "destructuring": "any", "ignoreReadBeforeAssign": false }],
     "prefer-destructuring": ["off"],
     "prefer-exponentiation-operator": ["error"],
     "prefer-named-capture-group": ["error"],
@@ -1303,10 +1240,7 @@
       "error",
       { "children": "always", "propElementValues": "always", "props": "never" }
     ],
-    "react/jsx-filename-extension": [
-      "error",
-      { "extensions": [".jsx", ".tsx"] }
-    ],
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
     "react/jsx-fragments": ["error"],
     "react/jsx-handler-names": ["error"],
     "react/jsx-key": ["error"],
@@ -1410,10 +1344,7 @@
     "unicorn/consistent-destructuring": ["error"],
     "unicorn/consistent-empty-array-spread": ["error"],
     "unicorn/consistent-existence-index-check": ["error"],
-    "unicorn/consistent-function-scoping": [
-      "error",
-      { "checkArrowFunctions": true }
-    ],
+    "unicorn/consistent-function-scoping": ["error", { "checkArrowFunctions": true }],
     "unicorn/custom-error-definition": ["error"],
     "unicorn/error-message": ["error"],
     "unicorn/escape-case": ["error", "uppercase"],
@@ -1504,10 +1435,7 @@
     "unicorn/prefer-array-flat-map": ["error"],
     "unicorn/prefer-array-index-of": ["error"],
     "unicorn/prefer-array-some": ["error"],
-    "unicorn/prefer-at": [
-      "error",
-      { "checkAllIndexAccess": false, "getLastElementFunctions": [] }
-    ],
+    "unicorn/prefer-at": ["error", { "checkAllIndexAccess": false, "getLastElementFunctions": [] }],
     "unicorn/prefer-blob-reading-methods": ["error"],
     "unicorn/prefer-class-fields": ["error"],
     "unicorn/prefer-code-point": ["error"],
@@ -1533,10 +1461,7 @@
     "unicorn/prefer-native-coercion-functions": ["error"],
     "unicorn/prefer-negative-index": ["error"],
     "unicorn/prefer-node-protocol": ["error"],
-    "unicorn/prefer-number-properties": [
-      "error",
-      { "checkInfinity": false, "checkNaN": true }
-    ],
+    "unicorn/prefer-number-properties": ["error", { "checkInfinity": false, "checkNaN": true }],
     "unicorn/prefer-object-from-entries": ["error", {}],
     "unicorn/prefer-optional-catch-binding": ["error"],
     "unicorn/prefer-prototype-methods": ["error"],
@@ -1570,10 +1495,7 @@
     "unicorn/switch-case-braces": ["error", "always"],
     "unicorn/text-encoding-identifier-case": ["error"],
     "unicorn/throw-new-error": ["error"],
-    "use-isnan": [
-      "error",
-      { "enforceForIndexOf": false, "enforceForSwitchCase": true }
-    ],
+    "use-isnan": ["error", { "enforceForIndexOf": false, "enforceForSwitchCase": true }],
     "valid-typeof": ["error", { "requireStringLiterals": false }],
     "vars-on-top": ["error"],
     "yoda": ["error", "never", { "exceptRange": false, "onlyEquality": false }]
@@ -1588,10 +1510,7 @@
     "@typescript-eslint/class-methods-use-this": ["error"],
     "@typescript-eslint/consistent-generic-constructors": ["error"],
     "@typescript-eslint/consistent-indexed-object-style": ["error"],
-    "@typescript-eslint/consistent-return": [
-      "error",
-      { "treatUndefinedAsUnspecified": false }
-    ],
+    "@typescript-eslint/consistent-return": ["error", { "treatUndefinedAsUnspecified": false }],
     "@typescript-eslint/consistent-type-assertions": ["error"],
     "@typescript-eslint/consistent-type-definitions": ["error"],
     "@typescript-eslint/consistent-type-exports": ["error"],
@@ -1665,10 +1584,7 @@
     "@typescript-eslint/no-implied-eval": ["error"],
     "@typescript-eslint/no-import-type-side-effects": ["error"],
     "@typescript-eslint/no-inferrable-types": ["error"],
-    "@typescript-eslint/no-invalid-this": [
-      "error",
-      { "capIsConstructor": true }
-    ],
+    "@typescript-eslint/no-invalid-this": ["error", { "capIsConstructor": true }],
     "@typescript-eslint/no-invalid-void-type": ["error"],
     "@typescript-eslint/no-magic-numbers": [
       "warn",
@@ -1702,9 +1618,7 @@
     "@typescript-eslint/no-this-alias": ["error"],
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": ["error"],
     "@typescript-eslint/no-unnecessary-condition": ["error"],
-    "@typescript-eslint/no-unnecessary-parameter-property-assignment": [
-      "error"
-    ],
+    "@typescript-eslint/no-unnecessary-parameter-property-assignment": ["error"],
     "@typescript-eslint/no-unnecessary-qualifier": ["error"],
     "@typescript-eslint/no-unnecessary-template-expression": ["error"],
     "@typescript-eslint/no-unnecessary-type-arguments": ["error"],
@@ -1828,11 +1742,7 @@
       }
     ],
     "getter-return": ["off", { "allowImplicit": false }],
-    "grouped-accessor-pairs": [
-      "error",
-      "anyOrder",
-      { "enforceForTSTypes": false }
-    ],
+    "grouped-accessor-pairs": ["error", "anyOrder", { "enforceForTSTypes": false }],
     "guard-for-in": ["error"],
     "id-denylist": ["error"],
     "id-length": [
@@ -1986,11 +1896,7 @@
     "no-implied-eval": ["off"],
     "no-import-assign": ["off"],
     "no-inline-comments": ["error", {}],
-    "no-inner-declarations": [
-      "error",
-      "functions",
-      { "blockScopedFunctions": "allow" }
-    ],
+    "no-inner-declarations": ["error", "functions", { "blockScopedFunctions": "allow" }],
     "no-invalid-regexp": ["error", {}],
     "no-invalid-this": ["off", { "capIsConstructor": true }],
     "no-irregular-whitespace": [
@@ -2098,10 +2004,7 @@
     "no-unreachable-loop": ["error", { "ignore": [] }],
     "no-unsafe-finally": ["error"],
     "no-unsafe-negation": ["off", { "enforceForOrderingRelations": false }],
-    "no-unsafe-optional-chaining": [
-      "error",
-      { "disallowArithmeticOperators": false }
-    ],
+    "no-unsafe-optional-chaining": ["error", { "disallowArithmeticOperators": false }],
     "no-unused-expressions": [
       "off",
       {
@@ -2146,22 +2049,13 @@
     "no-useless-return": ["error"],
     "no-var": ["error"],
     "no-void": ["error", { "allowAsStatement": true }],
-    "no-warning-comments": [
-      "error",
-      { "location": "start", "terms": ["todo", "fixme", "xxx"] }
-    ],
+    "no-warning-comments": ["error", { "location": "start", "terms": ["todo", "fixme", "xxx"] }],
     "no-with": ["off"],
     "object-shorthand": ["error"],
     "one-var": ["error", "never"],
     "operator-assignment": ["error", "always"],
-    "prefer-arrow-callback": [
-      "error",
-      { "allowNamedFunctions": false, "allowUnboundThis": true }
-    ],
-    "prefer-const": [
-      "error",
-      { "destructuring": "any", "ignoreReadBeforeAssign": false }
-    ],
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": false, "allowUnboundThis": true }],
+    "prefer-const": ["error", { "destructuring": "any", "ignoreReadBeforeAssign": false }],
     "prefer-destructuring": ["off"],
     "prefer-exponentiation-operator": ["error"],
     "prefer-named-capture-group": ["error"],
@@ -2195,10 +2089,7 @@
       "error",
       { "children": "always", "propElementValues": "always", "props": "never" }
     ],
-    "react/jsx-filename-extension": [
-      "error",
-      { "extensions": [".jsx", ".tsx"] }
-    ],
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
     "react/jsx-fragments": ["error"],
     "react/jsx-handler-names": ["error"],
     "react/jsx-key": ["error"],
@@ -2302,10 +2193,7 @@
     "unicorn/consistent-destructuring": ["error"],
     "unicorn/consistent-empty-array-spread": ["error"],
     "unicorn/consistent-existence-index-check": ["error"],
-    "unicorn/consistent-function-scoping": [
-      "error",
-      { "checkArrowFunctions": true }
-    ],
+    "unicorn/consistent-function-scoping": ["error", { "checkArrowFunctions": true }],
     "unicorn/custom-error-definition": ["error"],
     "unicorn/error-message": ["error"],
     "unicorn/escape-case": ["error", "uppercase"],
@@ -2396,10 +2284,7 @@
     "unicorn/prefer-array-flat-map": ["error"],
     "unicorn/prefer-array-index-of": ["error"],
     "unicorn/prefer-array-some": ["error"],
-    "unicorn/prefer-at": [
-      "error",
-      { "checkAllIndexAccess": false, "getLastElementFunctions": [] }
-    ],
+    "unicorn/prefer-at": ["error", { "checkAllIndexAccess": false, "getLastElementFunctions": [] }],
     "unicorn/prefer-blob-reading-methods": ["error"],
     "unicorn/prefer-class-fields": ["error"],
     "unicorn/prefer-code-point": ["error"],
@@ -2425,10 +2310,7 @@
     "unicorn/prefer-native-coercion-functions": ["error"],
     "unicorn/prefer-negative-index": ["error"],
     "unicorn/prefer-node-protocol": ["error"],
-    "unicorn/prefer-number-properties": [
-      "error",
-      { "checkInfinity": false, "checkNaN": true }
-    ],
+    "unicorn/prefer-number-properties": ["error", { "checkInfinity": false, "checkNaN": true }],
     "unicorn/prefer-object-from-entries": ["error", {}],
     "unicorn/prefer-optional-catch-binding": ["error"],
     "unicorn/prefer-prototype-methods": ["error"],
@@ -2462,10 +2344,7 @@
     "unicorn/switch-case-braces": ["error", "always"],
     "unicorn/text-encoding-identifier-case": ["error"],
     "unicorn/throw-new-error": ["error"],
-    "use-isnan": [
-      "error",
-      { "enforceForIndexOf": false, "enforceForSwitchCase": true }
-    ],
+    "use-isnan": ["error", { "enforceForIndexOf": false, "enforceForSwitchCase": true }],
     "valid-typeof": ["error", { "requireStringLiterals": false }],
     "vars-on-top": ["error"],
     "yoda": ["error", "never", { "exceptRange": false, "onlyEquality": false }]
@@ -2480,10 +2359,7 @@
     "@typescript-eslint/class-methods-use-this": ["error"],
     "@typescript-eslint/consistent-generic-constructors": ["error"],
     "@typescript-eslint/consistent-indexed-object-style": ["error"],
-    "@typescript-eslint/consistent-return": [
-      "error",
-      { "treatUndefinedAsUnspecified": false }
-    ],
+    "@typescript-eslint/consistent-return": ["error", { "treatUndefinedAsUnspecified": false }],
     "@typescript-eslint/consistent-type-assertions": ["error"],
     "@typescript-eslint/consistent-type-definitions": ["error"],
     "@typescript-eslint/consistent-type-exports": ["error"],
@@ -2557,10 +2433,7 @@
     "@typescript-eslint/no-implied-eval": ["error"],
     "@typescript-eslint/no-import-type-side-effects": ["error"],
     "@typescript-eslint/no-inferrable-types": ["error"],
-    "@typescript-eslint/no-invalid-this": [
-      "error",
-      { "capIsConstructor": true }
-    ],
+    "@typescript-eslint/no-invalid-this": ["error", { "capIsConstructor": true }],
     "@typescript-eslint/no-invalid-void-type": ["error"],
     "@typescript-eslint/no-magic-numbers": [
       "warn",
@@ -2594,9 +2467,7 @@
     "@typescript-eslint/no-this-alias": ["error"],
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": ["error"],
     "@typescript-eslint/no-unnecessary-condition": ["error"],
-    "@typescript-eslint/no-unnecessary-parameter-property-assignment": [
-      "error"
-    ],
+    "@typescript-eslint/no-unnecessary-parameter-property-assignment": ["error"],
     "@typescript-eslint/no-unnecessary-qualifier": ["error"],
     "@typescript-eslint/no-unnecessary-template-expression": ["error"],
     "@typescript-eslint/no-unnecessary-type-arguments": ["error"],
@@ -2720,11 +2591,7 @@
       }
     ],
     "getter-return": ["off", { "allowImplicit": false }],
-    "grouped-accessor-pairs": [
-      "error",
-      "anyOrder",
-      { "enforceForTSTypes": false }
-    ],
+    "grouped-accessor-pairs": ["error", "anyOrder", { "enforceForTSTypes": false }],
     "guard-for-in": ["error"],
     "id-denylist": ["error"],
     "id-length": [
@@ -2878,11 +2745,7 @@
     "no-implied-eval": ["off"],
     "no-import-assign": ["off"],
     "no-inline-comments": ["error", {}],
-    "no-inner-declarations": [
-      "error",
-      "functions",
-      { "blockScopedFunctions": "allow" }
-    ],
+    "no-inner-declarations": ["error", "functions", { "blockScopedFunctions": "allow" }],
     "no-invalid-regexp": ["error", {}],
     "no-invalid-this": ["off", { "capIsConstructor": true }],
     "no-irregular-whitespace": [
@@ -2990,10 +2853,7 @@
     "no-unreachable-loop": ["error", { "ignore": [] }],
     "no-unsafe-finally": ["error"],
     "no-unsafe-negation": ["off", { "enforceForOrderingRelations": false }],
-    "no-unsafe-optional-chaining": [
-      "error",
-      { "disallowArithmeticOperators": false }
-    ],
+    "no-unsafe-optional-chaining": ["error", { "disallowArithmeticOperators": false }],
     "no-unused-expressions": [
       "off",
       {
@@ -3038,22 +2898,13 @@
     "no-useless-return": ["error"],
     "no-var": ["error"],
     "no-void": ["error", { "allowAsStatement": true }],
-    "no-warning-comments": [
-      "error",
-      { "location": "start", "terms": ["todo", "fixme", "xxx"] }
-    ],
+    "no-warning-comments": ["error", { "location": "start", "terms": ["todo", "fixme", "xxx"] }],
     "no-with": ["off"],
     "object-shorthand": ["error"],
     "one-var": ["error", "never"],
     "operator-assignment": ["error", "always"],
-    "prefer-arrow-callback": [
-      "error",
-      { "allowNamedFunctions": false, "allowUnboundThis": true }
-    ],
-    "prefer-const": [
-      "error",
-      { "destructuring": "any", "ignoreReadBeforeAssign": false }
-    ],
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": false, "allowUnboundThis": true }],
+    "prefer-const": ["error", { "destructuring": "any", "ignoreReadBeforeAssign": false }],
     "prefer-destructuring": ["off"],
     "prefer-exponentiation-operator": ["error"],
     "prefer-named-capture-group": ["error"],
@@ -3087,10 +2938,7 @@
       "error",
       { "children": "always", "propElementValues": "always", "props": "never" }
     ],
-    "react/jsx-filename-extension": [
-      "error",
-      { "extensions": [".jsx", ".tsx"] }
-    ],
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
     "react/jsx-fragments": ["error"],
     "react/jsx-handler-names": ["error"],
     "react/jsx-key": ["error"],
@@ -3194,10 +3042,7 @@
     "unicorn/consistent-destructuring": ["error"],
     "unicorn/consistent-empty-array-spread": ["error"],
     "unicorn/consistent-existence-index-check": ["error"],
-    "unicorn/consistent-function-scoping": [
-      "error",
-      { "checkArrowFunctions": true }
-    ],
+    "unicorn/consistent-function-scoping": ["error", { "checkArrowFunctions": true }],
     "unicorn/custom-error-definition": ["error"],
     "unicorn/error-message": ["error"],
     "unicorn/escape-case": ["error", "uppercase"],
@@ -3288,10 +3133,7 @@
     "unicorn/prefer-array-flat-map": ["error"],
     "unicorn/prefer-array-index-of": ["error"],
     "unicorn/prefer-array-some": ["error"],
-    "unicorn/prefer-at": [
-      "error",
-      { "checkAllIndexAccess": false, "getLastElementFunctions": [] }
-    ],
+    "unicorn/prefer-at": ["error", { "checkAllIndexAccess": false, "getLastElementFunctions": [] }],
     "unicorn/prefer-blob-reading-methods": ["error"],
     "unicorn/prefer-class-fields": ["error"],
     "unicorn/prefer-code-point": ["error"],
@@ -3317,10 +3159,7 @@
     "unicorn/prefer-native-coercion-functions": ["error"],
     "unicorn/prefer-negative-index": ["error"],
     "unicorn/prefer-node-protocol": ["error"],
-    "unicorn/prefer-number-properties": [
-      "error",
-      { "checkInfinity": false, "checkNaN": true }
-    ],
+    "unicorn/prefer-number-properties": ["error", { "checkInfinity": false, "checkNaN": true }],
     "unicorn/prefer-object-from-entries": ["error", {}],
     "unicorn/prefer-optional-catch-binding": ["error"],
     "unicorn/prefer-prototype-methods": ["error"],
@@ -3354,10 +3193,7 @@
     "unicorn/switch-case-braces": ["error", "always"],
     "unicorn/text-encoding-identifier-case": ["error"],
     "unicorn/throw-new-error": ["error"],
-    "use-isnan": [
-      "error",
-      { "enforceForIndexOf": false, "enforceForSwitchCase": true }
-    ],
+    "use-isnan": ["error", { "enforceForIndexOf": false, "enforceForSwitchCase": true }],
     "valid-typeof": ["error", { "requireStringLiterals": false }],
     "vars-on-top": ["error"],
     "yoda": ["error", "never", { "exceptRange": false, "onlyEquality": false }]
@@ -3372,10 +3208,7 @@
     "@typescript-eslint/class-methods-use-this": ["error"],
     "@typescript-eslint/consistent-generic-constructors": ["error"],
     "@typescript-eslint/consistent-indexed-object-style": ["error"],
-    "@typescript-eslint/consistent-return": [
-      "error",
-      { "treatUndefinedAsUnspecified": false }
-    ],
+    "@typescript-eslint/consistent-return": ["error", { "treatUndefinedAsUnspecified": false }],
     "@typescript-eslint/consistent-type-assertions": ["error"],
     "@typescript-eslint/consistent-type-definitions": ["error"],
     "@typescript-eslint/consistent-type-exports": ["error"],
@@ -3449,10 +3282,7 @@
     "@typescript-eslint/no-implied-eval": ["error"],
     "@typescript-eslint/no-import-type-side-effects": ["error"],
     "@typescript-eslint/no-inferrable-types": ["error"],
-    "@typescript-eslint/no-invalid-this": [
-      "error",
-      { "capIsConstructor": true }
-    ],
+    "@typescript-eslint/no-invalid-this": ["error", { "capIsConstructor": true }],
     "@typescript-eslint/no-invalid-void-type": ["error"],
     "@typescript-eslint/no-magic-numbers": [
       "warn",
@@ -3486,9 +3316,7 @@
     "@typescript-eslint/no-this-alias": ["error"],
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": ["error"],
     "@typescript-eslint/no-unnecessary-condition": ["error"],
-    "@typescript-eslint/no-unnecessary-parameter-property-assignment": [
-      "error"
-    ],
+    "@typescript-eslint/no-unnecessary-parameter-property-assignment": ["error"],
     "@typescript-eslint/no-unnecessary-qualifier": ["error"],
     "@typescript-eslint/no-unnecessary-template-expression": ["error"],
     "@typescript-eslint/no-unnecessary-type-arguments": ["error"],
@@ -3612,11 +3440,7 @@
       }
     ],
     "getter-return": ["off", { "allowImplicit": false }],
-    "grouped-accessor-pairs": [
-      "error",
-      "anyOrder",
-      { "enforceForTSTypes": false }
-    ],
+    "grouped-accessor-pairs": ["error", "anyOrder", { "enforceForTSTypes": false }],
     "guard-for-in": ["error"],
     "id-denylist": ["error"],
     "id-length": [
@@ -3770,11 +3594,7 @@
     "no-implied-eval": ["off"],
     "no-import-assign": ["off"],
     "no-inline-comments": ["error", {}],
-    "no-inner-declarations": [
-      "error",
-      "functions",
-      { "blockScopedFunctions": "allow" }
-    ],
+    "no-inner-declarations": ["error", "functions", { "blockScopedFunctions": "allow" }],
     "no-invalid-regexp": ["error", {}],
     "no-invalid-this": ["off", { "capIsConstructor": true }],
     "no-irregular-whitespace": [
@@ -3882,10 +3702,7 @@
     "no-unreachable-loop": ["error", { "ignore": [] }],
     "no-unsafe-finally": ["error"],
     "no-unsafe-negation": ["off", { "enforceForOrderingRelations": false }],
-    "no-unsafe-optional-chaining": [
-      "error",
-      { "disallowArithmeticOperators": false }
-    ],
+    "no-unsafe-optional-chaining": ["error", { "disallowArithmeticOperators": false }],
     "no-unused-expressions": [
       "off",
       {
@@ -3930,22 +3747,13 @@
     "no-useless-return": ["error"],
     "no-var": ["error"],
     "no-void": ["error", { "allowAsStatement": true }],
-    "no-warning-comments": [
-      "error",
-      { "location": "start", "terms": ["todo", "fixme", "xxx"] }
-    ],
+    "no-warning-comments": ["error", { "location": "start", "terms": ["todo", "fixme", "xxx"] }],
     "no-with": ["off"],
     "object-shorthand": ["error"],
     "one-var": ["error", "never"],
     "operator-assignment": ["error", "always"],
-    "prefer-arrow-callback": [
-      "error",
-      { "allowNamedFunctions": false, "allowUnboundThis": true }
-    ],
-    "prefer-const": [
-      "error",
-      { "destructuring": "any", "ignoreReadBeforeAssign": false }
-    ],
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": false, "allowUnboundThis": true }],
+    "prefer-const": ["error", { "destructuring": "any", "ignoreReadBeforeAssign": false }],
     "prefer-destructuring": ["off"],
     "prefer-exponentiation-operator": ["error"],
     "prefer-named-capture-group": ["error"],
@@ -3979,10 +3787,7 @@
       "error",
       { "children": "always", "propElementValues": "always", "props": "never" }
     ],
-    "react/jsx-filename-extension": [
-      "error",
-      { "extensions": [".jsx", ".tsx"] }
-    ],
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
     "react/jsx-fragments": ["error"],
     "react/jsx-handler-names": ["error"],
     "react/jsx-key": ["error"],
@@ -4086,10 +3891,7 @@
     "unicorn/consistent-destructuring": ["error"],
     "unicorn/consistent-empty-array-spread": ["error"],
     "unicorn/consistent-existence-index-check": ["error"],
-    "unicorn/consistent-function-scoping": [
-      "error",
-      { "checkArrowFunctions": true }
-    ],
+    "unicorn/consistent-function-scoping": ["error", { "checkArrowFunctions": true }],
     "unicorn/custom-error-definition": ["error"],
     "unicorn/error-message": ["error"],
     "unicorn/escape-case": ["error", "uppercase"],
@@ -4180,10 +3982,7 @@
     "unicorn/prefer-array-flat-map": ["error"],
     "unicorn/prefer-array-index-of": ["error"],
     "unicorn/prefer-array-some": ["error"],
-    "unicorn/prefer-at": [
-      "error",
-      { "checkAllIndexAccess": false, "getLastElementFunctions": [] }
-    ],
+    "unicorn/prefer-at": ["error", { "checkAllIndexAccess": false, "getLastElementFunctions": [] }],
     "unicorn/prefer-blob-reading-methods": ["error"],
     "unicorn/prefer-class-fields": ["error"],
     "unicorn/prefer-code-point": ["error"],
@@ -4209,10 +4008,7 @@
     "unicorn/prefer-native-coercion-functions": ["error"],
     "unicorn/prefer-negative-index": ["error"],
     "unicorn/prefer-node-protocol": ["error"],
-    "unicorn/prefer-number-properties": [
-      "error",
-      { "checkInfinity": false, "checkNaN": true }
-    ],
+    "unicorn/prefer-number-properties": ["error", { "checkInfinity": false, "checkNaN": true }],
     "unicorn/prefer-object-from-entries": ["error", {}],
     "unicorn/prefer-optional-catch-binding": ["error"],
     "unicorn/prefer-prototype-methods": ["error"],
@@ -4246,10 +4042,7 @@
     "unicorn/switch-case-braces": ["error", "always"],
     "unicorn/text-encoding-identifier-case": ["error"],
     "unicorn/throw-new-error": ["error"],
-    "use-isnan": [
-      "error",
-      { "enforceForIndexOf": false, "enforceForSwitchCase": true }
-    ],
+    "use-isnan": ["error", { "enforceForIndexOf": false, "enforceForSwitchCase": true }],
     "valid-typeof": ["error", { "requireStringLiterals": false }],
     "vars-on-top": ["error"],
     "yoda": ["error", "never", { "exceptRange": false, "onlyEquality": false }]
@@ -4264,10 +4057,7 @@
     "@typescript-eslint/class-methods-use-this": ["error"],
     "@typescript-eslint/consistent-generic-constructors": ["error"],
     "@typescript-eslint/consistent-indexed-object-style": ["error"],
-    "@typescript-eslint/consistent-return": [
-      "error",
-      { "treatUndefinedAsUnspecified": false }
-    ],
+    "@typescript-eslint/consistent-return": ["error", { "treatUndefinedAsUnspecified": false }],
     "@typescript-eslint/consistent-type-assertions": ["error"],
     "@typescript-eslint/consistent-type-definitions": ["error"],
     "@typescript-eslint/consistent-type-exports": ["error"],
@@ -4332,10 +4122,7 @@
     "@typescript-eslint/no-implied-eval": ["error"],
     "@typescript-eslint/no-import-type-side-effects": ["error"],
     "@typescript-eslint/no-inferrable-types": ["error"],
-    "@typescript-eslint/no-invalid-this": [
-      "error",
-      { "capIsConstructor": true }
-    ],
+    "@typescript-eslint/no-invalid-this": ["error", { "capIsConstructor": true }],
     "@typescript-eslint/no-invalid-void-type": ["error"],
     "@typescript-eslint/no-magic-numbers": [
       "warn",
@@ -4369,9 +4156,7 @@
     "@typescript-eslint/no-this-alias": ["error"],
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": ["error"],
     "@typescript-eslint/no-unnecessary-condition": ["error"],
-    "@typescript-eslint/no-unnecessary-parameter-property-assignment": [
-      "error"
-    ],
+    "@typescript-eslint/no-unnecessary-parameter-property-assignment": ["error"],
     "@typescript-eslint/no-unnecessary-qualifier": ["error"],
     "@typescript-eslint/no-unnecessary-template-expression": ["error"],
     "@typescript-eslint/no-unnecessary-type-arguments": ["error"],
@@ -4495,11 +4280,7 @@
       }
     ],
     "getter-return": ["off", { "allowImplicit": false }],
-    "grouped-accessor-pairs": [
-      "error",
-      "anyOrder",
-      { "enforceForTSTypes": false }
-    ],
+    "grouped-accessor-pairs": ["error", "anyOrder", { "enforceForTSTypes": false }],
     "guard-for-in": ["error"],
     "id-denylist": ["error"],
     "id-length": [
@@ -4653,11 +4434,7 @@
     "no-implied-eval": ["off"],
     "no-import-assign": ["off"],
     "no-inline-comments": ["error", {}],
-    "no-inner-declarations": [
-      "error",
-      "functions",
-      { "blockScopedFunctions": "allow" }
-    ],
+    "no-inner-declarations": ["error", "functions", { "blockScopedFunctions": "allow" }],
     "no-invalid-regexp": ["error", {}],
     "no-invalid-this": ["off", { "capIsConstructor": true }],
     "no-irregular-whitespace": [
@@ -4765,10 +4542,7 @@
     "no-unreachable-loop": ["error", { "ignore": [] }],
     "no-unsafe-finally": ["error"],
     "no-unsafe-negation": ["off", { "enforceForOrderingRelations": false }],
-    "no-unsafe-optional-chaining": [
-      "error",
-      { "disallowArithmeticOperators": false }
-    ],
+    "no-unsafe-optional-chaining": ["error", { "disallowArithmeticOperators": false }],
     "no-unused-expressions": [
       "off",
       {
@@ -4813,22 +4587,13 @@
     "no-useless-return": ["error"],
     "no-var": ["error"],
     "no-void": ["error", { "allowAsStatement": true }],
-    "no-warning-comments": [
-      "error",
-      { "location": "start", "terms": ["todo", "fixme", "xxx"] }
-    ],
+    "no-warning-comments": ["error", { "location": "start", "terms": ["todo", "fixme", "xxx"] }],
     "no-with": ["off"],
     "object-shorthand": ["error"],
     "one-var": ["error", "never"],
     "operator-assignment": ["error", "always"],
-    "prefer-arrow-callback": [
-      "error",
-      { "allowNamedFunctions": false, "allowUnboundThis": true }
-    ],
-    "prefer-const": [
-      "error",
-      { "destructuring": "any", "ignoreReadBeforeAssign": false }
-    ],
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": false, "allowUnboundThis": true }],
+    "prefer-const": ["error", { "destructuring": "any", "ignoreReadBeforeAssign": false }],
     "prefer-destructuring": ["off"],
     "prefer-exponentiation-operator": ["error"],
     "prefer-named-capture-group": ["error"],
@@ -4862,10 +4627,7 @@
       "error",
       { "children": "always", "propElementValues": "always", "props": "never" }
     ],
-    "react/jsx-filename-extension": [
-      "error",
-      { "extensions": [".jsx", ".tsx"] }
-    ],
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
     "react/jsx-fragments": ["error"],
     "react/jsx-handler-names": ["error"],
     "react/jsx-key": ["error"],
@@ -4969,10 +4731,7 @@
     "unicorn/consistent-destructuring": ["error"],
     "unicorn/consistent-empty-array-spread": ["error"],
     "unicorn/consistent-existence-index-check": ["error"],
-    "unicorn/consistent-function-scoping": [
-      "error",
-      { "checkArrowFunctions": true }
-    ],
+    "unicorn/consistent-function-scoping": ["error", { "checkArrowFunctions": true }],
     "unicorn/custom-error-definition": ["error"],
     "unicorn/error-message": ["error"],
     "unicorn/escape-case": ["error", "uppercase"],
@@ -5063,10 +4822,7 @@
     "unicorn/prefer-array-flat-map": ["error"],
     "unicorn/prefer-array-index-of": ["error"],
     "unicorn/prefer-array-some": ["error"],
-    "unicorn/prefer-at": [
-      "error",
-      { "checkAllIndexAccess": false, "getLastElementFunctions": [] }
-    ],
+    "unicorn/prefer-at": ["error", { "checkAllIndexAccess": false, "getLastElementFunctions": [] }],
     "unicorn/prefer-blob-reading-methods": ["error"],
     "unicorn/prefer-class-fields": ["error"],
     "unicorn/prefer-code-point": ["error"],
@@ -5092,10 +4848,7 @@
     "unicorn/prefer-native-coercion-functions": ["error"],
     "unicorn/prefer-negative-index": ["error"],
     "unicorn/prefer-node-protocol": ["error"],
-    "unicorn/prefer-number-properties": [
-      "error",
-      { "checkInfinity": false, "checkNaN": true }
-    ],
+    "unicorn/prefer-number-properties": ["error", { "checkInfinity": false, "checkNaN": true }],
     "unicorn/prefer-object-from-entries": ["error", {}],
     "unicorn/prefer-optional-catch-binding": ["error"],
     "unicorn/prefer-prototype-methods": ["error"],
@@ -5129,10 +4882,7 @@
     "unicorn/switch-case-braces": ["error", "always"],
     "unicorn/text-encoding-identifier-case": ["error"],
     "unicorn/throw-new-error": ["error"],
-    "use-isnan": [
-      "error",
-      { "enforceForIndexOf": false, "enforceForSwitchCase": true }
-    ],
+    "use-isnan": ["error", { "enforceForIndexOf": false, "enforceForSwitchCase": true }],
     "valid-typeof": ["error", { "requireStringLiterals": false }],
     "vars-on-top": ["error"],
     "yoda": ["error", "never", { "exceptRange": false, "onlyEquality": false }]
@@ -5147,10 +4897,7 @@
     "@typescript-eslint/class-methods-use-this": ["error"],
     "@typescript-eslint/consistent-generic-constructors": ["error"],
     "@typescript-eslint/consistent-indexed-object-style": ["error"],
-    "@typescript-eslint/consistent-return": [
-      "error",
-      { "treatUndefinedAsUnspecified": false }
-    ],
+    "@typescript-eslint/consistent-return": ["error", { "treatUndefinedAsUnspecified": false }],
     "@typescript-eslint/consistent-type-assertions": ["error"],
     "@typescript-eslint/consistent-type-definitions": ["error"],
     "@typescript-eslint/consistent-type-exports": ["error"],
@@ -5211,10 +4958,7 @@
     "@typescript-eslint/no-implied-eval": ["error"],
     "@typescript-eslint/no-import-type-side-effects": ["error"],
     "@typescript-eslint/no-inferrable-types": ["error"],
-    "@typescript-eslint/no-invalid-this": [
-      "error",
-      { "capIsConstructor": true }
-    ],
+    "@typescript-eslint/no-invalid-this": ["error", { "capIsConstructor": true }],
     "@typescript-eslint/no-invalid-void-type": ["error"],
     "@typescript-eslint/no-magic-numbers": [
       "warn",
@@ -5248,9 +4992,7 @@
     "@typescript-eslint/no-this-alias": ["error"],
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": ["error"],
     "@typescript-eslint/no-unnecessary-condition": ["error"],
-    "@typescript-eslint/no-unnecessary-parameter-property-assignment": [
-      "error"
-    ],
+    "@typescript-eslint/no-unnecessary-parameter-property-assignment": ["error"],
     "@typescript-eslint/no-unnecessary-qualifier": ["error"],
     "@typescript-eslint/no-unnecessary-template-expression": ["error"],
     "@typescript-eslint/no-unnecessary-type-arguments": ["error"],
@@ -5374,11 +5116,7 @@
       }
     ],
     "getter-return": ["off", { "allowImplicit": false }],
-    "grouped-accessor-pairs": [
-      "error",
-      "anyOrder",
-      { "enforceForTSTypes": false }
-    ],
+    "grouped-accessor-pairs": ["error", "anyOrder", { "enforceForTSTypes": false }],
     "guard-for-in": ["error"],
     "id-denylist": ["error"],
     "id-length": [
@@ -5532,11 +5270,7 @@
     "no-implied-eval": ["off"],
     "no-import-assign": ["off"],
     "no-inline-comments": ["error", {}],
-    "no-inner-declarations": [
-      "error",
-      "functions",
-      { "blockScopedFunctions": "allow" }
-    ],
+    "no-inner-declarations": ["error", "functions", { "blockScopedFunctions": "allow" }],
     "no-invalid-regexp": ["error", {}],
     "no-invalid-this": ["off", { "capIsConstructor": true }],
     "no-irregular-whitespace": [
@@ -5644,10 +5378,7 @@
     "no-unreachable-loop": ["error", { "ignore": [] }],
     "no-unsafe-finally": ["error"],
     "no-unsafe-negation": ["off", { "enforceForOrderingRelations": false }],
-    "no-unsafe-optional-chaining": [
-      "error",
-      { "disallowArithmeticOperators": false }
-    ],
+    "no-unsafe-optional-chaining": ["error", { "disallowArithmeticOperators": false }],
     "no-unused-expressions": [
       "off",
       {
@@ -5692,22 +5423,13 @@
     "no-useless-return": ["error"],
     "no-var": ["error"],
     "no-void": ["error", { "allowAsStatement": true }],
-    "no-warning-comments": [
-      "error",
-      { "location": "start", "terms": ["todo", "fixme", "xxx"] }
-    ],
+    "no-warning-comments": ["error", { "location": "start", "terms": ["todo", "fixme", "xxx"] }],
     "no-with": ["off"],
     "object-shorthand": ["error"],
     "one-var": ["error", "never"],
     "operator-assignment": ["error", "always"],
-    "prefer-arrow-callback": [
-      "error",
-      { "allowNamedFunctions": false, "allowUnboundThis": true }
-    ],
-    "prefer-const": [
-      "error",
-      { "destructuring": "any", "ignoreReadBeforeAssign": false }
-    ],
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": false, "allowUnboundThis": true }],
+    "prefer-const": ["error", { "destructuring": "any", "ignoreReadBeforeAssign": false }],
     "prefer-destructuring": ["off"],
     "prefer-exponentiation-operator": ["error"],
     "prefer-named-capture-group": ["error"],
@@ -5741,10 +5463,7 @@
       "error",
       { "children": "always", "propElementValues": "always", "props": "never" }
     ],
-    "react/jsx-filename-extension": [
-      "error",
-      { "extensions": [".jsx", ".tsx"] }
-    ],
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
     "react/jsx-fragments": ["error"],
     "react/jsx-handler-names": ["error"],
     "react/jsx-key": ["error"],
@@ -5848,10 +5567,7 @@
     "unicorn/consistent-destructuring": ["error"],
     "unicorn/consistent-empty-array-spread": ["error"],
     "unicorn/consistent-existence-index-check": ["error"],
-    "unicorn/consistent-function-scoping": [
-      "error",
-      { "checkArrowFunctions": true }
-    ],
+    "unicorn/consistent-function-scoping": ["error", { "checkArrowFunctions": true }],
     "unicorn/custom-error-definition": ["error"],
     "unicorn/error-message": ["error"],
     "unicorn/escape-case": ["error", "uppercase"],
@@ -5942,10 +5658,7 @@
     "unicorn/prefer-array-flat-map": ["error"],
     "unicorn/prefer-array-index-of": ["error"],
     "unicorn/prefer-array-some": ["error"],
-    "unicorn/prefer-at": [
-      "error",
-      { "checkAllIndexAccess": false, "getLastElementFunctions": [] }
-    ],
+    "unicorn/prefer-at": ["error", { "checkAllIndexAccess": false, "getLastElementFunctions": [] }],
     "unicorn/prefer-blob-reading-methods": ["error"],
     "unicorn/prefer-class-fields": ["error"],
     "unicorn/prefer-code-point": ["error"],
@@ -5971,10 +5684,7 @@
     "unicorn/prefer-native-coercion-functions": ["error"],
     "unicorn/prefer-negative-index": ["error"],
     "unicorn/prefer-node-protocol": ["error"],
-    "unicorn/prefer-number-properties": [
-      "error",
-      { "checkInfinity": false, "checkNaN": true }
-    ],
+    "unicorn/prefer-number-properties": ["error", { "checkInfinity": false, "checkNaN": true }],
     "unicorn/prefer-object-from-entries": ["error", {}],
     "unicorn/prefer-optional-catch-binding": ["error"],
     "unicorn/prefer-prototype-methods": ["error"],
@@ -6008,10 +5718,7 @@
     "unicorn/switch-case-braces": ["error", "always"],
     "unicorn/text-encoding-identifier-case": ["error"],
     "unicorn/throw-new-error": ["error"],
-    "use-isnan": [
-      "error",
-      { "enforceForIndexOf": false, "enforceForSwitchCase": true }
-    ],
+    "use-isnan": ["error", { "enforceForIndexOf": false, "enforceForSwitchCase": true }],
     "valid-typeof": ["error", { "requireStringLiterals": false }],
     "vars-on-top": ["error"],
     "yoda": ["error", "never", { "exceptRange": false, "onlyEquality": false }]
@@ -6026,10 +5733,7 @@
     "@typescript-eslint/class-methods-use-this": ["error"],
     "@typescript-eslint/consistent-generic-constructors": ["error"],
     "@typescript-eslint/consistent-indexed-object-style": ["error"],
-    "@typescript-eslint/consistent-return": [
-      "error",
-      { "treatUndefinedAsUnspecified": false }
-    ],
+    "@typescript-eslint/consistent-return": ["error", { "treatUndefinedAsUnspecified": false }],
     "@typescript-eslint/consistent-type-assertions": ["error"],
     "@typescript-eslint/consistent-type-definitions": ["error"],
     "@typescript-eslint/consistent-type-exports": ["error"],
@@ -6094,10 +5798,7 @@
     "@typescript-eslint/no-implied-eval": ["error"],
     "@typescript-eslint/no-import-type-side-effects": ["error"],
     "@typescript-eslint/no-inferrable-types": ["error"],
-    "@typescript-eslint/no-invalid-this": [
-      "error",
-      { "capIsConstructor": true }
-    ],
+    "@typescript-eslint/no-invalid-this": ["error", { "capIsConstructor": true }],
     "@typescript-eslint/no-invalid-void-type": ["error"],
     "@typescript-eslint/no-magic-numbers": [
       "warn",
@@ -6131,9 +5832,7 @@
     "@typescript-eslint/no-this-alias": ["error"],
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": ["error"],
     "@typescript-eslint/no-unnecessary-condition": ["error"],
-    "@typescript-eslint/no-unnecessary-parameter-property-assignment": [
-      "error"
-    ],
+    "@typescript-eslint/no-unnecessary-parameter-property-assignment": ["error"],
     "@typescript-eslint/no-unnecessary-qualifier": ["error"],
     "@typescript-eslint/no-unnecessary-template-expression": ["error"],
     "@typescript-eslint/no-unnecessary-type-arguments": ["error"],
@@ -6257,11 +5956,7 @@
       }
     ],
     "getter-return": ["off", { "allowImplicit": false }],
-    "grouped-accessor-pairs": [
-      "error",
-      "anyOrder",
-      { "enforceForTSTypes": false }
-    ],
+    "grouped-accessor-pairs": ["error", "anyOrder", { "enforceForTSTypes": false }],
     "guard-for-in": ["error"],
     "id-denylist": ["error"],
     "id-length": [
@@ -6415,11 +6110,7 @@
     "no-implied-eval": ["off"],
     "no-import-assign": ["off"],
     "no-inline-comments": ["error", {}],
-    "no-inner-declarations": [
-      "error",
-      "functions",
-      { "blockScopedFunctions": "allow" }
-    ],
+    "no-inner-declarations": ["error", "functions", { "blockScopedFunctions": "allow" }],
     "no-invalid-regexp": ["error", {}],
     "no-invalid-this": ["off", { "capIsConstructor": true }],
     "no-irregular-whitespace": [
@@ -6527,10 +6218,7 @@
     "no-unreachable-loop": ["error", { "ignore": [] }],
     "no-unsafe-finally": ["error"],
     "no-unsafe-negation": ["off", { "enforceForOrderingRelations": false }],
-    "no-unsafe-optional-chaining": [
-      "error",
-      { "disallowArithmeticOperators": false }
-    ],
+    "no-unsafe-optional-chaining": ["error", { "disallowArithmeticOperators": false }],
     "no-unused-expressions": [
       "off",
       {
@@ -6575,22 +6263,13 @@
     "no-useless-return": ["error"],
     "no-var": ["error"],
     "no-void": ["error", { "allowAsStatement": true }],
-    "no-warning-comments": [
-      "error",
-      { "location": "start", "terms": ["todo", "fixme", "xxx"] }
-    ],
+    "no-warning-comments": ["error", { "location": "start", "terms": ["todo", "fixme", "xxx"] }],
     "no-with": ["off"],
     "object-shorthand": ["error"],
     "one-var": ["error", "never"],
     "operator-assignment": ["error", "always"],
-    "prefer-arrow-callback": [
-      "error",
-      { "allowNamedFunctions": false, "allowUnboundThis": true }
-    ],
-    "prefer-const": [
-      "error",
-      { "destructuring": "any", "ignoreReadBeforeAssign": false }
-    ],
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": false, "allowUnboundThis": true }],
+    "prefer-const": ["error", { "destructuring": "any", "ignoreReadBeforeAssign": false }],
     "prefer-destructuring": ["off"],
     "prefer-exponentiation-operator": ["error"],
     "prefer-named-capture-group": ["error"],
@@ -6624,10 +6303,7 @@
       "error",
       { "children": "always", "propElementValues": "always", "props": "never" }
     ],
-    "react/jsx-filename-extension": [
-      "error",
-      { "extensions": [".jsx", ".tsx"] }
-    ],
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
     "react/jsx-fragments": ["error"],
     "react/jsx-handler-names": ["error"],
     "react/jsx-key": ["error"],
@@ -6731,10 +6407,7 @@
     "unicorn/consistent-destructuring": ["error"],
     "unicorn/consistent-empty-array-spread": ["error"],
     "unicorn/consistent-existence-index-check": ["error"],
-    "unicorn/consistent-function-scoping": [
-      "error",
-      { "checkArrowFunctions": true }
-    ],
+    "unicorn/consistent-function-scoping": ["error", { "checkArrowFunctions": true }],
     "unicorn/custom-error-definition": ["error"],
     "unicorn/error-message": ["error"],
     "unicorn/escape-case": ["error", "uppercase"],
@@ -6825,10 +6498,7 @@
     "unicorn/prefer-array-flat-map": ["error"],
     "unicorn/prefer-array-index-of": ["error"],
     "unicorn/prefer-array-some": ["error"],
-    "unicorn/prefer-at": [
-      "error",
-      { "checkAllIndexAccess": false, "getLastElementFunctions": [] }
-    ],
+    "unicorn/prefer-at": ["error", { "checkAllIndexAccess": false, "getLastElementFunctions": [] }],
     "unicorn/prefer-blob-reading-methods": ["error"],
     "unicorn/prefer-class-fields": ["error"],
     "unicorn/prefer-code-point": ["error"],
@@ -6854,10 +6524,7 @@
     "unicorn/prefer-native-coercion-functions": ["error"],
     "unicorn/prefer-negative-index": ["error"],
     "unicorn/prefer-node-protocol": ["error"],
-    "unicorn/prefer-number-properties": [
-      "error",
-      { "checkInfinity": false, "checkNaN": true }
-    ],
+    "unicorn/prefer-number-properties": ["error", { "checkInfinity": false, "checkNaN": true }],
     "unicorn/prefer-object-from-entries": ["error", {}],
     "unicorn/prefer-optional-catch-binding": ["error"],
     "unicorn/prefer-prototype-methods": ["error"],
@@ -6891,10 +6558,7 @@
     "unicorn/switch-case-braces": ["error", "always"],
     "unicorn/text-encoding-identifier-case": ["error"],
     "unicorn/throw-new-error": ["error"],
-    "use-isnan": [
-      "error",
-      { "enforceForIndexOf": false, "enforceForSwitchCase": true }
-    ],
+    "use-isnan": ["error", { "enforceForIndexOf": false, "enforceForSwitchCase": true }],
     "valid-typeof": ["error", { "requireStringLiterals": false }],
     "vars-on-top": ["error"],
     "yoda": ["error", "never", { "exceptRange": false, "onlyEquality": false }]
@@ -6909,10 +6573,7 @@
     "@typescript-eslint/class-methods-use-this": ["error"],
     "@typescript-eslint/consistent-generic-constructors": ["error"],
     "@typescript-eslint/consistent-indexed-object-style": ["error"],
-    "@typescript-eslint/consistent-return": [
-      "error",
-      { "treatUndefinedAsUnspecified": false }
-    ],
+    "@typescript-eslint/consistent-return": ["error", { "treatUndefinedAsUnspecified": false }],
     "@typescript-eslint/consistent-type-assertions": ["error"],
     "@typescript-eslint/consistent-type-definitions": ["error"],
     "@typescript-eslint/consistent-type-exports": ["error"],
@@ -6977,10 +6638,7 @@
     "@typescript-eslint/no-implied-eval": ["error"],
     "@typescript-eslint/no-import-type-side-effects": ["error"],
     "@typescript-eslint/no-inferrable-types": ["error"],
-    "@typescript-eslint/no-invalid-this": [
-      "error",
-      { "capIsConstructor": true }
-    ],
+    "@typescript-eslint/no-invalid-this": ["error", { "capIsConstructor": true }],
     "@typescript-eslint/no-invalid-void-type": ["error"],
     "@typescript-eslint/no-magic-numbers": [
       "warn",
@@ -7014,9 +6672,7 @@
     "@typescript-eslint/no-this-alias": ["error"],
     "@typescript-eslint/no-unnecessary-boolean-literal-compare": ["error"],
     "@typescript-eslint/no-unnecessary-condition": ["error"],
-    "@typescript-eslint/no-unnecessary-parameter-property-assignment": [
-      "error"
-    ],
+    "@typescript-eslint/no-unnecessary-parameter-property-assignment": ["error"],
     "@typescript-eslint/no-unnecessary-qualifier": ["error"],
     "@typescript-eslint/no-unnecessary-template-expression": ["error"],
     "@typescript-eslint/no-unnecessary-type-arguments": ["error"],
@@ -7140,11 +6796,7 @@
       }
     ],
     "getter-return": ["off", { "allowImplicit": false }],
-    "grouped-accessor-pairs": [
-      "error",
-      "anyOrder",
-      { "enforceForTSTypes": false }
-    ],
+    "grouped-accessor-pairs": ["error", "anyOrder", { "enforceForTSTypes": false }],
     "guard-for-in": ["error"],
     "id-denylist": ["error"],
     "id-length": [
@@ -7298,11 +6950,7 @@
     "no-implied-eval": ["off"],
     "no-import-assign": ["off"],
     "no-inline-comments": ["error", {}],
-    "no-inner-declarations": [
-      "error",
-      "functions",
-      { "blockScopedFunctions": "allow" }
-    ],
+    "no-inner-declarations": ["error", "functions", { "blockScopedFunctions": "allow" }],
     "no-invalid-regexp": ["error", {}],
     "no-invalid-this": ["off", { "capIsConstructor": true }],
     "no-irregular-whitespace": [
@@ -7410,10 +7058,7 @@
     "no-unreachable-loop": ["error", { "ignore": [] }],
     "no-unsafe-finally": ["error"],
     "no-unsafe-negation": ["off", { "enforceForOrderingRelations": false }],
-    "no-unsafe-optional-chaining": [
-      "error",
-      { "disallowArithmeticOperators": false }
-    ],
+    "no-unsafe-optional-chaining": ["error", { "disallowArithmeticOperators": false }],
     "no-unused-expressions": [
       "off",
       {
@@ -7458,22 +7103,13 @@
     "no-useless-return": ["error"],
     "no-var": ["error"],
     "no-void": ["error", { "allowAsStatement": true }],
-    "no-warning-comments": [
-      "error",
-      { "location": "start", "terms": ["todo", "fixme", "xxx"] }
-    ],
+    "no-warning-comments": ["error", { "location": "start", "terms": ["todo", "fixme", "xxx"] }],
     "no-with": ["off"],
     "object-shorthand": ["error"],
     "one-var": ["error", "never"],
     "operator-assignment": ["error", "always"],
-    "prefer-arrow-callback": [
-      "error",
-      { "allowNamedFunctions": false, "allowUnboundThis": true }
-    ],
-    "prefer-const": [
-      "error",
-      { "destructuring": "any", "ignoreReadBeforeAssign": false }
-    ],
+    "prefer-arrow-callback": ["error", { "allowNamedFunctions": false, "allowUnboundThis": true }],
+    "prefer-const": ["error", { "destructuring": "any", "ignoreReadBeforeAssign": false }],
     "prefer-destructuring": ["off"],
     "prefer-exponentiation-operator": ["error"],
     "prefer-named-capture-group": ["error"],
@@ -7507,10 +7143,7 @@
       "error",
       { "children": "always", "propElementValues": "always", "props": "never" }
     ],
-    "react/jsx-filename-extension": [
-      "error",
-      { "extensions": [".jsx", ".tsx"] }
-    ],
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
     "react/jsx-fragments": ["error"],
     "react/jsx-handler-names": ["error"],
     "react/jsx-key": ["error"],
@@ -7614,10 +7247,7 @@
     "unicorn/consistent-destructuring": ["error"],
     "unicorn/consistent-empty-array-spread": ["error"],
     "unicorn/consistent-existence-index-check": ["error"],
-    "unicorn/consistent-function-scoping": [
-      "error",
-      { "checkArrowFunctions": true }
-    ],
+    "unicorn/consistent-function-scoping": ["error", { "checkArrowFunctions": true }],
     "unicorn/custom-error-definition": ["error"],
     "unicorn/error-message": ["error"],
     "unicorn/escape-case": ["error", "uppercase"],
@@ -7708,10 +7338,7 @@
     "unicorn/prefer-array-flat-map": ["error"],
     "unicorn/prefer-array-index-of": ["error"],
     "unicorn/prefer-array-some": ["error"],
-    "unicorn/prefer-at": [
-      "error",
-      { "checkAllIndexAccess": false, "getLastElementFunctions": [] }
-    ],
+    "unicorn/prefer-at": ["error", { "checkAllIndexAccess": false, "getLastElementFunctions": [] }],
     "unicorn/prefer-blob-reading-methods": ["error"],
     "unicorn/prefer-class-fields": ["error"],
     "unicorn/prefer-code-point": ["error"],
@@ -7737,10 +7364,7 @@
     "unicorn/prefer-native-coercion-functions": ["error"],
     "unicorn/prefer-negative-index": ["error"],
     "unicorn/prefer-node-protocol": ["error"],
-    "unicorn/prefer-number-properties": [
-      "error",
-      { "checkInfinity": false, "checkNaN": true }
-    ],
+    "unicorn/prefer-number-properties": ["error", { "checkInfinity": false, "checkNaN": true }],
     "unicorn/prefer-object-from-entries": ["error", {}],
     "unicorn/prefer-optional-catch-binding": ["error"],
     "unicorn/prefer-prototype-methods": ["error"],
@@ -7774,10 +7398,7 @@
     "unicorn/switch-case-braces": ["error", "always"],
     "unicorn/text-encoding-identifier-case": ["error"],
     "unicorn/throw-new-error": ["error"],
-    "use-isnan": [
-      "error",
-      { "enforceForIndexOf": false, "enforceForSwitchCase": true }
-    ],
+    "use-isnan": ["error", { "enforceForIndexOf": false, "enforceForSwitchCase": true }],
     "valid-typeof": ["error", { "requireStringLiterals": false }],
     "vars-on-top": ["error"],
     "yoda": ["error", "never", { "exceptRange": false, "onlyEquality": false }]

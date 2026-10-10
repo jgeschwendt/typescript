@@ -11,9 +11,7 @@ import { fileURLToPath } from 'node:url';
 // process — the repo, tsc and tsgolint keep TypeScript 7.
 // (verified 2026-10-08 · typescript 7.0.2: "typescript-eslint does not support
 // TS 7.0" without this; both rules fire with it)
-const typescript6 = fileURLToPath(
-  import.meta.resolve('@typescript/typescript6'),
-);
+const typescript6 = fileURLToPath(import.meta.resolve('@typescript/typescript6'));
 
 const fromTypescriptEslint = (importer = '') =>
   /[/\\](?:@typescript-eslint|ts-api-utils)[/\\]/u.test(importer);
@@ -36,11 +34,7 @@ if (typeof Module.registerHooks === 'function') {
   // (verified 2026-10-09 · packed install with typescript 7.0.2, hoisted and
   // isolated: js-plugins.test.js)
   const resolveFilename = Module._resolveFilename;
-  Module._resolveFilename = function _resolveFilename(
-    request,
-    parent,
-    ...rest
-  ) {
+  Module._resolveFilename = function _resolveFilename(request, parent, ...rest) {
     return request === 'typescript' && fromTypescriptEslint(parent?.filename)
       ? typescript6
       : Reflect.apply(resolveFilename, this, [request, parent, ...rest]);

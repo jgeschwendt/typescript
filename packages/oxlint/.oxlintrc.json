@@ -34,17 +34,11 @@
         "import-js/no-unresolved": [
           "error",
           {
-            "ignore": [
-              "^@typescript-eslint/eslint-plugin$",
-              "^eslint/use-at-your-own-risk$"
-            ]
+            "ignore": ["^@typescript-eslint/eslint-plugin$", "^eslint/use-at-your-own-risk$"]
           }
         ],
         // typescript6.mjs is imported for its side effect (the resolve hook).
-        "import/no-unassigned-import": [
-          "error",
-          { "allow": ["**/typescript6.mjs"] }
-        ]
+        "import/no-unassigned-import": ["error", { "allow": ["**/typescript6.mjs"] }]
       }
     },
     {

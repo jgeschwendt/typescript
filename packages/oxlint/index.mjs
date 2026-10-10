@@ -22,9 +22,7 @@ const source = readFileSync(new URL('oxlintrc.jsonc', import.meta.url), 'utf8');
 const errors = [];
 const parsed = parse(source, errors, { allowTrailingComma: true });
 if (errors.length > 0) {
-  throw new Error(
-    `@jlg/oxlint: oxlintrc.jsonc failed to parse: ${JSON.stringify(errors)}`,
-  );
+  throw new Error(`@jlg/oxlint: oxlintrc.jsonc failed to parse: ${JSON.stringify(errors)}`);
 }
 
 // `jsPlugins` entries resolve against the config file that declares them, and
@@ -33,8 +31,7 @@ if (errors.length > 0) {
 // a path relative to oxlintrc.jsonc (plugins/ wraps the plugin packages, so no
 // entry is a bare specifier); pin each to an absolute path resolved from here.
 // An aliased entry object is this module's own parse, so it is updated in place.
-const absolute = (specifier) =>
-  fileURLToPath(new URL(specifier, import.meta.url));
+const absolute = (specifier) => fileURLToPath(new URL(specifier, import.meta.url));
 
 // The parsed base config object, its jsPlugins paths absolutized, exported for
 // consumers who want raw access (merge fields by hand, inspect the ruleset).

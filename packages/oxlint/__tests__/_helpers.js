@@ -40,20 +40,11 @@ const loadRules = () => {
     writeFileSync(join(directory, '.oxlintrc.json'), '{}');
     const out = join(directory, 'rules.json');
     const result = Bun.spawnSync(
-      [
-        process.execPath,
-        oxlintBin,
-        '--rules',
-        '--format',
-        'json',
-        '--disable-nested-config',
-      ],
+      [process.execPath, oxlintBin, '--rules', '--format', 'json', '--disable-nested-config'],
       { cwd: directory, stderr: 'pipe', stdout: Bun.file(out) },
     );
     if (result.exitCode !== 0) {
-      throw new Error(
-        `oxlint --rules exited ${result.exitCode}: ${result.stderr.toString()}`,
-      );
+      throw new Error(`oxlint --rules exited ${result.exitCode}: ${result.stderr.toString()}`);
     }
     return JSON.parse(readFileSync(out, 'utf8'));
   } finally {
@@ -70,9 +61,7 @@ const loadConfig = () => {
     allowTrailingComma: true,
   });
   if (errors.length > 0) {
-    throw new Error(
-      `oxlintrc.jsonc failed to parse: ${JSON.stringify(errors)}`,
-    );
+    throw new Error(`oxlintrc.jsonc failed to parse: ${JSON.stringify(errors)}`);
   }
   return config;
 };
@@ -107,9 +96,7 @@ const ruleScope = (name) => {
 // Map a config rule name to its `scope/value` catalog key.
 const ruleKey = (name) => {
   const slash = name.indexOf('/');
-  return slash === -1
-    ? `eslint/${name}`
-    : `${ruleScope(name)}/${name.slice(slash + 1)}`;
+  return slash === -1 ? `eslint/${name}` : `${ruleScope(name)}/${name.slice(slash + 1)}`;
 };
 
 // The rule namespaces `jsPlugins` adds: an aliased entry's `name`, or a local

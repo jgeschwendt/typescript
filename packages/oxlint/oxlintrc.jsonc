@@ -140,11 +140,7 @@
     // (__tests__/fixtures/eslint-baseline.json). id-length's checkGeneric is
     // oxlint-only: ESLint never visited TS type parameters.
     "id-length": ["error", { "checkGeneric": false }],
-    "no-inner-declarations": [
-      "error",
-      "functions",
-      { "blockScopedFunctions": "allow" },
-    ],
+    "no-inner-declarations": ["error", "functions", { "blockScopedFunctions": "allow" }],
     "no-irregular-whitespace": [
       "error",
       {
@@ -278,13 +274,7 @@
       "error",
       {
         "alphabetize": { "caseInsensitive": false, "order": "asc" },
-        "groups": [
-          ["builtin", "external"],
-          "internal",
-          "index",
-          "sibling",
-          "parent",
-        ],
+        "groups": [["builtin", "external"], "internal", "index", "sibling", "parent"],
         "pathGroups": [{ "group": "internal", "pattern": "@/**" }],
       },
     ],
@@ -306,10 +296,7 @@
     // ignores defaultProps on function components, so the same policy — an
     // optional prop needs a default — is enforced through a destructuring
     // default instead
-    "react-js/require-default-props": [
-      "error",
-      { "functions": "defaultArguments" },
-    ],
+    "react-js/require-default-props": ["error", { "functions": "defaultArguments" }],
     "unicorn-js/better-regex": "error",
     "unicorn-js/consistent-destructuring": "error",
     "unicorn-js/expiring-todo-comments": "error",
@@ -560,9 +547,7 @@
     // would otherwise warn on every page and layout
     // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
     {
-      "files": [
-        "**/{default,error,global-error,layout,loading,not-found,page,template}.{jsx,tsx}",
-      ],
+      "files": ["**/{default,error,global-error,layout,loading,not-found,page,template}.{jsx,tsx}"],
       "rules": {
         "react/only-export-components": [
           "warn",
@@ -605,9 +590,7 @@
     // conventions are named exports (register, GET/POST). Kept wider by owner
     // decision (2026-10-09).
     {
-      "files": [
-        "**/{layout,page,middleware,instrumentation,robots,route}.{js,jsx,ts,tsx}",
-      ],
+      "files": ["**/{layout,page,middleware,instrumentation,robots,route}.{js,jsx,ts,tsx}"],
       "rules": {
         "import/no-default-export": "off",
       },
@@ -616,10 +599,7 @@
     // Next.js files whose conventions are separate named exports: route
     // handlers (GET, POST, …), page/layout `metadata` and segment config.
     {
-      "files": [
-        "**/{instrumentation,middleware,route}.{js,ts}",
-        "**/{layout,page}.{jsx,tsx}",
-      ],
+      "files": ["**/{instrumentation,middleware,route}.{js,ts}", "**/{layout,page}.{jsx,tsx}"],
       "rules": {
         "import/group-exports": "off",
       },
@@ -642,9 +622,7 @@
     // the root config's directory, while a bare name matches at any depth
     // (verified 2026-10-09 · probe).
     {
-      "files": [
-        "./{eslint,jest,next,oxfmt,oxlint,postcss}.config.{cjs,cts,js,mjs,mts,ts}",
-      ],
+      "files": ["./{eslint,jest,next,oxfmt,oxlint,postcss}.config.{cjs,cts,js,mjs,mts,ts}"],
       "rules": {
         "import/no-default-export": "off",
         "import/no-named-export": "error",

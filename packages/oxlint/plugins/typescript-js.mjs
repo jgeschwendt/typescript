@@ -16,8 +16,7 @@ const untyped = (rule) => ({
   create(context) {
     if (
       context.options.some(
-        (option) =>
-          option !== null && typeof option === 'object' && 'types' in option,
+        (option) => option !== null && typeof option === 'object' && 'types' in option,
       )
     ) {
       throw new Error(
@@ -33,9 +32,7 @@ const untyped = (rule) => ({
     const sourceCode = Object.create(context.sourceCode, {
       parserServices: { value: parserServices },
     });
-    return rule.create(
-      Object.create(context, { sourceCode: { value: sourceCode } }),
-    );
+    return rule.create(Object.create(context, { sourceCode: { value: sourceCode } }));
   },
 });
 
