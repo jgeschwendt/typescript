@@ -243,13 +243,11 @@
 
     // --- jsPlugins: @jlg/eslint rules with no oxlint port (GAPS.md) -------
     // Severities and options as @jlg/eslint resolved them — `error`, defaults —
-    // unless noted. Five check nothing without options, under @jlg/eslint as
+    // unless noted. Four check nothing without options, under @jlg/eslint as
     // here, and stay as hooks a consumer can give options to:
-    // no-restricted-syntax, no-restricted-paths, no-unused-modules,
-    // boolean-prop-naming and string-content.
-    // eslint-plugin-unicorn is pinned to 60.0.0, the version @jlg/eslint
-    // resolved for jlg.io; 66 stubs out better-regex and
-    // prefer-json-parse-buffer and drops expiring-todo-comments' date check.
+    // no-restricted-syntax, no-restricted-paths, boolean-prop-naming and
+    // string-content. Not carried: import/no-unused-modules (needs ESLint <=9
+    // internals) and unicorn/better-regex (removed in unicorn 77).
     "eslint-js/camelcase": "error",
     "eslint-js/consistent-this": "error",
     "eslint-js/no-restricted-syntax": "error",
@@ -261,7 +259,6 @@
     "import-js/no-internal-modules": "error",
     "import-js/no-relative-packages": "error",
     "import-js/no-restricted-paths": "error",
-    "import-js/no-unused-modules": "error",
     "import-js/no-useless-path-segments": "error",
     // jlg.io's pre-2022 .eslintrc order (alphabetized, its group sequence), plus
     // an `internal` group for the `@/` path alias through `pathGroups` — the
@@ -297,17 +294,19 @@
     // optional prop needs a default — is enforced through a destructuring
     // default instead
     "react-js/require-default-props": ["error", { "functions": "defaultArguments" }],
-    "unicorn-js/better-regex": "error",
     "unicorn-js/consistent-destructuring": "error",
-    "unicorn-js/expiring-todo-comments": "error",
+    // unicorn 77 renamed prefer-json-parse-buffer, whose behavior is "buffer"
+    "unicorn-js/consistent-json-file-read": ["error", "buffer"],
+    // unicorn 60's default; 66 turned date checks off
+    "unicorn-js/expiring-todo-comments": ["error", { "checkDates": true }],
+    // unicorn 77's name for prevent-abbreviations
+    "unicorn-js/name-replacements": "error",
     "unicorn-js/no-for-loop": "error",
     "unicorn-js/no-keyword-prefix": "error",
     "unicorn-js/no-named-default": "error",
     "unicorn-js/no-unnecessary-polyfills": "error",
     "unicorn-js/no-unused-properties": "error",
-    "unicorn-js/prefer-json-parse-buffer": "error",
     "unicorn-js/prefer-switch": "error",
-    "unicorn-js/prevent-abbreviations": "error",
     "unicorn-js/string-content": "error",
   },
 

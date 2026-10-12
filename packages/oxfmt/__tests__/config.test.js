@@ -17,16 +17,16 @@ const schemaPath = join(oxfmtDirectory, 'configuration_schema.json');
 // both demand strict JSON (no comments, no trailing commas). Guard it here —
 // unlike the root .oxfmtrc.jsonc, this file may never drift into JSONC.
 test('oxfmtrc.json parses as strict JSON', () => {
-  expect(() => JSON.parse(readFileSync(configPath, 'utf8'))).not.toThrow();
+  expect(() => JSON.parse(readFileSync(configPath))).not.toThrow();
 });
 
 // A key oxfmt does not recognize is silently ignored — the setting simply never
 // applies. Guard every key in oxfmtrc.json against oxfmt's own schema so a typo,
 // or a key an oxfmt bump renames/removes, fails the suite by name.
 test("every oxfmtrc.json key exists in oxfmt's schema", () => {
-  const schema = JSON.parse(readFileSync(schemaPath, 'utf8'));
+  const schema = JSON.parse(readFileSync(schemaPath));
   const known = new Set(Object.keys(schema.properties));
-  const config = JSON.parse(readFileSync(configPath, 'utf8'));
+  const config = JSON.parse(readFileSync(configPath));
   const unknown = Object.keys(config).filter((key) => !known.has(key));
   expect(unknown, `Unknown oxfmt option key(s) — silently ignored: ${unknown.join(', ')}`).toEqual(
     [],

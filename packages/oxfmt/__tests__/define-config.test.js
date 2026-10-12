@@ -14,7 +14,7 @@ const configPath = join(import.meta.dirname, '..', 'oxfmtrc.json');
 // identical settings).
 
 test('base export matches parsing oxfmtrc.json directly', () => {
-  expect(base).toStrictEqual(JSON.parse(readFileSync(configPath, 'utf8')));
+  expect(base).toStrictEqual(JSON.parse(readFileSync(configPath)));
 });
 
 test('defineConfig merges base first — consumer keys win', () => {

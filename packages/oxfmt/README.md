@@ -69,7 +69,7 @@ direct access (`import { base } from "@jlg/oxfmt"`).
 - **Runtime.** Loading a **TypeScript** config relies on Node's native
   TypeScript stripping; run it on a Node new enough to strip types (Node 24
   verified). `bun run` and `bunx` honor the bin's node shebang; `bun --bun
-oxfmt` evaluates the config in Bun (verified 2026-10-09 · probe).
+  oxfmt` evaluates the config in Bun (verified 2026-10-09 · probe).
 
 ### Point oxfmt at the raw JSON with `-c`
 

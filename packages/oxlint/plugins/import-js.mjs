@@ -3,13 +3,28 @@
 // symlinked node_modules/@jlg/oxlint, whose ancestors hold none of this
 // package's dependencies under an isolated install, while this module's own
 // import resolves from its real path. Rules run through host.mjs.
-import plugin from 'eslint-plugin-import';
+// Rules load one by one: the plugin's index requires no-unused-modules, which
+// needs ESLint <=9 internals (FileEnumerator) and throws at load on ESLint 10.
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { host } from './host.mjs';
 import './typescript6.mjs';
 
 const require = createRequire(import.meta.url);
+
+// lib/index.js, resolved but never loaded; rules by absolute path (see parserPath)
+const index = import.meta.resolve('eslint-plugin-import');
+const names = [
+  'no-deprecated',
+  'no-extraneous-dependencies',
+  'no-import-module-exports',
+  'no-internal-modules',
+  'no-relative-packages',
+  'no-restricted-paths',
+  'no-unresolved',
+  'no-useless-path-segments',
+  'order',
+];
 
 /**
  * The parser eslint-module-utils' ExportMap reads imported modules with. It
@@ -22,16 +37,24 @@ const require = createRequire(import.meta.url);
  */
 const parserPath = fileURLToPath(import.meta.resolve('@typescript-eslint/parser'));
 
-export default host(plugin, 'import-js', (context) => ({
-  languageOptions: {
-    ...context.languageOptions,
-    get parser() {
-      return require(parserPath);
-    },
-    parserOptions: {
-      ecmaFeatures: { jsx: true },
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-    },
+export default host(
+  {
+    rules: Object.fromEntries(
+      names.map((name) => [name, require(fileURLToPath(new URL(`rules/${name}.js`, index)))]),
+    ),
   },
-}));
+  'import-js',
+  (context) => ({
+    languageOptions: {
+      ...context.languageOptions,
+      get parser() {
+        return require(parserPath);
+      },
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+  }),
+);

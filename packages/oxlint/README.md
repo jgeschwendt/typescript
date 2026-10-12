@@ -196,7 +196,7 @@ package does not carry them (measured 2026-10-09 · `rg` across every grove repo
 
 **The full list is [`GAPS.md`](./GAPS.md)** — every rule `@jlg/eslint` enforced
 that this base does not enforce the same way, resolved per file type against
-oxlint 1.87 (42 real gaps with no oxlint rule, 37 of them restored and 5 open;
+oxlint 1.87 (42 real gaps with no oxlint rule, 36 of them restored and 6 open;
 25 absent but moot; 11 present but off here; 4 with changed options; 73
 error→warn). The notes below add what the list can't say:
 
@@ -208,43 +208,42 @@ error→warn). The notes below add what the list can't say:
   layout/page). Not in the base; it runs at its category severity with
   oxlint's defaults, so a Next consumer ports the matrix itself (jlg.io does).
 - **Open real gaps** — `@typescript-eslint/no-unsafe-enum-assignment` (no
-  types in JS plugins), and on JS files `consistent-return`, `dot-notation`,
+  types in JS plugins), `unicorn/better-regex` (removed in unicorn 77), and on
+  JS files `consistent-return`, `dot-notation`,
   `no-octal` and `no-octal-escape` (GAPS.md says how each would come back).
 
 ## Restored through JS plugins
 
-oxlint's `jsPlugins` run ESLint rule code inside oxlint, so 42 of the rules
+oxlint's `jsPlugins` run ESLint rule code inside oxlint, so 40 of the rules
 the migration dropped (GAPS.md) run again as the **original** rules, at the
 severities and options `@jlg/eslint` resolved — except `import-js/order`,
 which takes jlg.io's pre-2022 alphabetized config (plus an `internal` group
 for `@/`), since `@jlg/eslint`'s defaults never sorted, and
 `react-js/require-default-props`, which takes `functions:
 "defaultArguments"` because React 19 ignores `defaultProps` on function
-components. A 43rd rule, `inline-config/no-directives`, is the directive ban.
+components. A 41st rule, `inline-config/no-directives`, is the directive ban.
 `oxlint --fix` applies the fixable ones:
 
 | plugin          | source                                                               | rules |
 | --------------- | -------------------------------------------------------------------- | ----: |
-| `import-js`     | `plugins/import-js.mjs` — `eslint-plugin-import`                     |    10 |
+| `import-js`     | `plugins/import-js.mjs` — `eslint-plugin-import`                     |     9 |
 | `react-js`      | `plugins/react-js.mjs` — `eslint-plugin-react`                       |    12 |
-| `unicorn-js`    | `plugins/unicorn-js.mjs` — `eslint-plugin-unicorn` (pinned 60.0.0)   |    12 |
+| `unicorn-js`    | `plugins/unicorn-js.mjs` — `eslint-plugin-unicorn`                   |    11 |
 | `eslint-js`     | `plugins/eslint-js.mjs` — ESLint core rules                          |     6 |
 | `typescript-js` | `plugins/typescript-js.mjs` — `member-ordering`, `naming-convention` |     2 |
 | `inline-config` | `plugins/inline-config.mjs` — the directive ban                      |     1 |
 
-(measured 2026-10-09 · rules named in `oxlintrc.jsonc`)
+(measured 2026-10-11 · rules named in `oxlintrc.jsonc`)
 
 The `-js` aliases exist because `import`, `react` and `unicorn` collide with
 oxlint's native plugins. Disable or retune one like any rule
-(`"unicorn-js/prevent-abbreviations": "off"`). Two run on JS files only,
+(`"unicorn-js/name-replacements": "off"`). Two run on JS files only,
 where TypeScript checks nothing without `allowJs`/`checkJs`:
 `import-js/no-unresolved` and `eslint-js/no-invalid-this`.
 
-Five are loaded but check nothing without options, as under `@jlg/eslint`:
+Four are loaded but check nothing without options, as under `@jlg/eslint`:
 `eslint-js/no-restricted-syntax` (selectors), `import-js/no-restricted-paths`
-(`zones`), `import-js/no-unused-modules` (`unusedExports`/`missingExports`,
-plus an `.eslintrc` stub beside it, eslint-plugin-import#3079),
-`react-js/boolean-prop-naming` (`rule`) and `unicorn-js/string-content`
+(`zones`), `react-js/boolean-prop-naming` (`rule`) and `unicorn-js/string-content`
 (`patterns`). Give them options to turn them on.
 
 How the layer is built, each part guarded by `__tests__/js-plugins.test.js`:
@@ -274,14 +273,17 @@ How the layer is built, each part guarded by `__tests__/js-plugins.test.js`:
   `require()` from `node_modules`. The repo, `tsc` and tsgolint stay on 7.
 - **Alpha.** JS plugins sit outside oxlint's semver, so `oxlint` is pinned
   exactly (peer and dev) — bump it deliberately and let the test speak.
-- **unicorn is pinned to 60.0.0**, the version `@jlg/eslint` resolved for
-  jlg.io; every `unicorn-js` rule reports with its old semantics on node and
-  bun. Later majors drift: 66 stubs `better-regex` and
-  `prefer-json-parse-buffer`, defaults `expiring-todo-comments` to
-  `checkDates: false` and narrows `consistent-destructuring`; 67 crashes at
-  load, 68–76 fail options validation on their own
-  `logical-assignment-operators`, and 77 loads but reports nothing (verified
-  2026-10-08 · bisect, oxlint 1.87).
+- **unicorn floats at `^77`** on ESLint 10 (its peer); the exact 60.0.0 pin
+  is gone because 77 runs under oxlint. Drift from 60, `@jlg/eslint`'s
+  version: `prevent-abbreviations` and `prefer-json-parse-buffer` are renamed
+  `name-replacements` and `consistent-json-file-read` (given `"buffer"`, 60's
+  behavior, and now also flagging a bare `readFileSync`); `better-regex` is
+  removed; `expiring-todo-comments` gets back 60's `checkDates: true`;
+  `consistent-destructuring` reports only members already destructured
+  (verified 2026-10-11 · probe).
+- **eslint-plugin-import loads per rule.** Its index requires
+  `no-unused-modules`, which needs ESLint ≤9 internals and throws on ESLint
+  10, so `import-js` loads only the configured rules and that one is dropped.
 
 The test packs the package, installs the tarball next to `typescript@7` and
 the peer `oxlint` under both bun linkers, lints a fixture through both
@@ -325,7 +327,7 @@ stack); the last two are this base's own config, kept as is:
   where eslint-plugin-react restarts — re-derive any `max` tuned under ESLint.
 - **`unicorn/consistent-function-scoping`** disagrees with unicorn 60 both
   ways. `unicorn-js/consistent-function-scoping` (with the native rule off)
-  would match it exactly.
+  would run unicorn's own code, though 77's, not 60's.
 - **`no-shadow`** misses a shadowed import used only as a type;
   `ignoreTypeValueShadow: false` would also flag the type/value name pairs
   typescript-eslint allowed.

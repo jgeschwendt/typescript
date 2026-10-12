@@ -46,7 +46,7 @@ const loadRules = () => {
     if (result.exitCode !== 0) {
       throw new Error(`oxlint --rules exited ${result.exitCode}: ${result.stderr.toString()}`);
     }
-    return JSON.parse(readFileSync(out, 'utf8'));
+    return JSON.parse(readFileSync(out));
   } finally {
     rmSync(directory, { force: true, recursive: true });
   }
@@ -68,7 +68,7 @@ const loadConfig = () => {
 
 // The set of valid plugin names, straight from oxlint's own JSON schema.
 const loadPluginNames = () => {
-  const schema = JSON.parse(readFileSync(schemaPath, 'utf8'));
+  const schema = JSON.parse(readFileSync(schemaPath));
   return schema.definitions.LintPluginOptionsSchema.enum;
 };
 

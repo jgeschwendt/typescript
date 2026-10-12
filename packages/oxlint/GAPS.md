@@ -38,8 +38,8 @@ differences found by probe are listed in the README ("Engine differences").
 
 ## No oxlint rule — real gaps
 
-Enforced by `@jlg/eslint`, absent from oxlint 1.87 under its own plugin. 37 run again as the
-original ESLint rule code through `jsPlugins` (README, "Restored through JS plugins"); 5 are open.
+Enforced by `@jlg/eslint`, absent from oxlint 1.87 under its own plugin. 36 run again as the
+original ESLint rule code through `jsPlugins` (README, "Restored through JS plugins"); 6 are open.
 
 | rule                                                      | was   | status                                                                                                                                              |
 | --------------------------------------------------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -74,54 +74,54 @@ original ESLint rule code through `jsPlugins` (README, "Restored through JS plug
 | `react/prefer-read-only-props`                            | error | **restored** as `react-js/prefer-read-only-props`                                                                                                   |
 | `react/require-default-props`                             | error | **restored** as `react-js/require-default-props`, with changed options ([below](#options-changed))                                                  |
 | `require-atomic-updates`                                  | error | **restored** as `eslint-js/require-atomic-updates`                                                                                                  |
-| `unicorn/better-regex`                                    | error | **restored** as `unicorn-js/better-regex`                                                                                                           |
-| `unicorn/consistent-destructuring`                        | error | **restored** as `unicorn-js/consistent-destructuring`                                                                                               |
-| `unicorn/expiring-todo-comments`                          | error | **restored** as `unicorn-js/expiring-todo-comments`                                                                                                 |
+| `unicorn/better-regex`                                    | error | **open** — removed in unicorn 77 (it points to eslint-plugin-regexp)                                                                                |
+| `unicorn/consistent-destructuring`                        | error | **restored** as `unicorn-js/consistent-destructuring`; 77 reports only members already destructured                                                 |
+| `unicorn/expiring-todo-comments`                          | error | **restored** as `unicorn-js/expiring-todo-comments`, with `checkDates: true` (60's default)                                                         |
 | `unicorn/no-for-loop`                                     | error | **restored** as `unicorn-js/no-for-loop`                                                                                                            |
 | `unicorn/no-keyword-prefix`                               | error | **restored** as `unicorn-js/no-keyword-prefix`                                                                                                      |
 | `unicorn/no-named-default`                                | error | **restored** as `unicorn-js/no-named-default`; native `import/no-named-default` misses the `export { x as default }` side                           |
 | `unicorn/no-unnecessary-polyfills`                        | error | **restored** as `unicorn-js/no-unnecessary-polyfills`                                                                                               |
 | `unicorn/no-unused-properties`                            | error | **restored** as `unicorn-js/no-unused-properties`                                                                                                   |
-| `unicorn/prefer-json-parse-buffer`                        | error | **restored** as `unicorn-js/prefer-json-parse-buffer`                                                                                               |
+| `unicorn/prefer-json-parse-buffer`                        | error | **restored** as `unicorn-js/consistent-json-file-read` (77's name), `"buffer"`                                                                      |
 | `unicorn/prefer-switch`                                   | error | **restored** as `unicorn-js/prefer-switch`                                                                                                          |
-| `unicorn/prevent-abbreviations`                           | error | **restored** as `unicorn-js/prevent-abbreviations`                                                                                                  |
+| `unicorn/prevent-abbreviations`                           | error | **restored** as `unicorn-js/name-replacements` (77's name)                                                                                          |
 
 `consistent-return`, `dot-notation`, `no-octal` and `no-octal-escape` would come back the same way,
 as `eslint-js/*` rules (the first two in the JS-files override).
 
 ## No oxlint rule — moot
 
-Absent from oxlint, but nothing is lost on this stack. The first five run through `jsPlugins` all
+Absent from oxlint, but nothing is lost on this stack. The first four run through `jsPlugins` all
 the same, as hooks a consumer can give options to: without options they check nothing, under
 `@jlg/eslint` as here.
 
-| rule                                            | why                                                                                                                                                              |
-| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `import/no-restricted-paths`                    | no-op without `zones`; loaded as `import-js/no-restricted-paths`                                                                                                 |
-| `import/no-unused-modules`                      | no-op without `unusedExports`/`missingExports`; loaded as `import-js/no-unused-modules`. With them it also needs an `.eslintrc` stub (eslint-plugin-import#3079) |
-| `no-restricted-syntax`                          | no-op without selectors; loaded as `eslint-js/no-restricted-syntax`                                                                                              |
-| `react/boolean-prop-naming`                     | no-op without `rule` (its pattern is `null`); loaded as `react-js/boolean-prop-naming`                                                                           |
-| `unicorn/string-content`                        | no-op without `patterns`; loaded as `unicorn-js/string-content`                                                                                                  |
-| `@typescript-eslint/no-invalid-this` (TS files) | TS `noImplicitThis` (on under `strict`) covers it                                                                                                                |
-| `no-dupe-args` (`a.js`)                         | a parse error in a module; in a script, `no-redeclare` reports the duplicate                                                                                     |
-| `react/default-props-match-prop-types`          | propTypes era; TypeScript props replace it                                                                                                                       |
-| `react/forbid-foreign-prop-types`               | propTypes era; TypeScript props replace it                                                                                                                       |
-| `react/forbid-prop-types`                       | propTypes era; TypeScript props replace it                                                                                                                       |
-| `react/jsx-uses-react`                          | oxlint `no-unused-vars` understands JSX natively                                                                                                                 |
-| `react/jsx-uses-vars`                           | oxlint `no-unused-vars` understands JSX natively                                                                                                                 |
-| `react/no-access-state-in-setstate`             | class components only                                                                                                                                            |
-| `react/no-arrow-function-lifecycle`             | class components only                                                                                                                                            |
-| `react/no-unused-class-component-methods`       | class components only                                                                                                                                            |
-| `react/no-unused-state`                         | class components only                                                                                                                                            |
-| `react/prefer-exact-props`                      | propTypes era; TypeScript props replace it                                                                                                                       |
-| `react/prefer-stateless-function`               | class components only                                                                                                                                            |
-| `react/prop-types`                              | propTypes era; TypeScript props replace it                                                                                                                       |
-| `react/require-optimization`                    | class components only                                                                                                                                            |
-| `react/sort-comp`                               | class components only                                                                                                                                            |
-| `react/sort-default-props`                      | propTypes era; TypeScript props replace it                                                                                                                       |
-| `react/sort-prop-types`                         | propTypes era; TypeScript props replace it                                                                                                                       |
-| `react/static-property-placement`               | class components only                                                                                                                                            |
-| `strict`                                        | `@jlg/eslint` parsed every file as a module, so it only flagged `'use strict'`; `unicorn/prefer-module` (warn) flags that                                        |
+| rule                                            | why                                                                                                                       |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `import/no-restricted-paths`                    | no-op without `zones`; loaded as `import-js/no-restricted-paths`                                                          |
+| `no-restricted-syntax`                          | no-op without selectors; loaded as `eslint-js/no-restricted-syntax`                                                       |
+| `react/boolean-prop-naming`                     | no-op without `rule` (its pattern is `null`); loaded as `react-js/boolean-prop-naming`                                    |
+| `unicorn/string-content`                        | no-op without `patterns`; loaded as `unicorn-js/string-content`                                                           |
+| `@typescript-eslint/no-invalid-this` (TS files) | TS `noImplicitThis` (on under `strict`) covers it                                                                         |
+| `import/no-unused-modules`                      | no-op without `unusedExports`/`missingExports`; not loaded, its module needs ESLint ≤9 internals                          |
+| `no-dupe-args` (`a.js`)                         | a parse error in a module; in a script, `no-redeclare` reports the duplicate                                              |
+| `react/default-props-match-prop-types`          | propTypes era; TypeScript props replace it                                                                                |
+| `react/forbid-foreign-prop-types`               | propTypes era; TypeScript props replace it                                                                                |
+| `react/forbid-prop-types`                       | propTypes era; TypeScript props replace it                                                                                |
+| `react/jsx-uses-react`                          | oxlint `no-unused-vars` understands JSX natively                                                                          |
+| `react/jsx-uses-vars`                           | oxlint `no-unused-vars` understands JSX natively                                                                          |
+| `react/no-access-state-in-setstate`             | class components only                                                                                                     |
+| `react/no-arrow-function-lifecycle`             | class components only                                                                                                     |
+| `react/no-unused-class-component-methods`       | class components only                                                                                                     |
+| `react/no-unused-state`                         | class components only                                                                                                     |
+| `react/prefer-exact-props`                      | propTypes era; TypeScript props replace it                                                                                |
+| `react/prefer-stateless-function`               | class components only                                                                                                     |
+| `react/prop-types`                              | propTypes era; TypeScript props replace it                                                                                |
+| `react/require-optimization`                    | class components only                                                                                                     |
+| `react/sort-comp`                               | class components only                                                                                                     |
+| `react/sort-default-props`                      | propTypes era; TypeScript props replace it                                                                                |
+| `react/sort-prop-types`                         | propTypes era; TypeScript props replace it                                                                                |
+| `react/static-property-placement`               | class components only                                                                                                     |
+| `strict`                                        | `@jlg/eslint` parsed every file as a module, so it only flagged `'use strict'`; `unicorn/prefer-module` (warn) flags that |
 
 ## In oxlint, off in this base
 

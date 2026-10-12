@@ -10,11 +10,9 @@ import { base } from '../index.mjs';
 //
 //  1. A configured rule the plugin does not export — oxlint rejects the WHOLE
 //     config, so nothing lints.
-//  2. A plugin, or a single rule, that loads yet reports nothing.
-//     eslint-plugin-unicorn 77 reports nothing at all under oxlint 1.87 (exit
-//     0) and 67–76 fail at load (verified 2026-10-08 · bisect); 66 stubs
-//     better-regex and prefer-json-parse-buffer as `create: () => ({})`. Hence
-//     the 60.0.0 pin and the assertion below that EVERY configured rule fires.
+//  2. A plugin, or a single rule, that loads yet reports nothing (unicorn 66
+//     stubbed two rules as `create: () => ({})`). Hence the assertion below
+//     that EVERY configured rule fires.
 //  3. A layout only an installed copy has. The repo's own node_modules link
 //     typescript-eslint to TypeScript 6 and hold every dependency next to the
 //     package; a consumer's carries TypeScript 7 and, isolated, holds the
@@ -65,15 +63,12 @@ test('every configured jsPlugins rule exists in its plugin', () => {
 const inert = {
   'eslint-js/no-restricted-syntax': ['error', 'DebuggerStatement'],
   'import-js/no-restricted-paths': ['error', { zones: [{ from: './packages', target: './src' }] }],
-  // also needs an `.eslintrc` beside it to enumerate files (eslint-plugin-import#3079)
-  'import-js/no-unused-modules': ['error', { unusedExports: true }],
   'react-js/boolean-prop-naming': ['error', { rule: '^is[A-Z]' }],
   'unicorn-js/string-content': ['error', { patterns: { unicorn: '🦄' } }],
 };
 
 // At least one violation of every configured jsPlugins rule.
 const fixtures = {
-  '.eslintrc': '{}\n',
   'node_modules/not-listed/lib/inner.js': 'export default 1;\n',
   'node_modules/not-listed/package.json': JSON.stringify({
     name: 'not-listed',
@@ -135,7 +130,7 @@ const fixtures = {
   ].join('\n'),
   'src/legacy.js': [
     '// TODO [2000-01-01]: expired',
-    // date conditions are skipped on pull-request CI (ignoreDatesOnPullRequests,
+    // date conditions are skipped on pull-request CI (checkDatesOnPullRequests,
     // via ci-info), so a version condition keeps the rule provably live there
     "// TODO [typescript@>=1]: expired by the consumer's typescript@7",
     "import inner from 'not-listed/lib/inner.js';",
@@ -149,14 +144,13 @@ const fixtures = {
     '// eslint-disable-next-line no-console',
     'let my_var = undefined;',
     'const obj = { a: 1, unused: 2 };',
-    'export const re = /[0-9]/;',
     "export const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'));",
     "export const str = 'unicorn';",
     'export const newThing = [inner, packaged, fresh, old, missing, sibling, assign, obj.a, my_var];',
     '',
     'export function destructure(foo) {',
     '  const { first } = foo;',
-    '  return [first, foo.second];',
+    '  return [first, foo.first];',
     '}',
     '',
     'export function loop(items) {',
@@ -247,7 +241,7 @@ beforeAll(() => {
   );
   // the oxlint the package pins as its peer
   const { oxlint } = JSON.parse(
-    readFileSync(join(import.meta.dirname, '..', 'package.json'), 'utf8'),
+    readFileSync(join(import.meta.dirname, '..', 'package.json')),
   ).peerDependencies;
   for (const linker of linkers) {
     const directory = join(scratch, linker);
