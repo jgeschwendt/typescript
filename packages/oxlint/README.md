@@ -58,8 +58,11 @@ in a JS config the base has no file of its own to resolve them against.
   stripping (verified 2026-07-22 against oxlint 1.74's js_config loader,
   which emits exactly this requirement on an unsupported Node). `bun run`
   and `bunx` honor the bin's node shebang; `bun --bun oxlint` evaluates the
-  config — and every JS plugin — in Bun instead (verified 2026-10-09 · probe).
-  Both runtimes are tested (see [Testing](#testing)).
+  config — and every JS plugin — in Bun instead (verified 2026-10-09 · probe);
+  that path needs Bun >=1.4: 1.3 cannot resolve the JSON `require` inside
+  eslint-plugin-unicorn 77's `@eslint/css-tree` and rejects the whole config
+  (verified 2026-10-11 · 1.3.14 fails, 1.4.2 loads). Both runtimes are tested
+  (see [Testing](#testing)).
 
 ### From a JSON config
 

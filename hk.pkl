@@ -6,12 +6,12 @@ hooks {
     stash = "git"
     steps {
       ["oxfmt"] {
-        check = "oxfmt --check --no-error-on-unmatched-pattern {{files}}"
-        fix = "oxfmt --no-error-on-unmatched-pattern {{files}}"
+        check = "bunx oxfmt --check --no-error-on-unmatched-pattern {{files}}"
+        fix = "bunx oxfmt --no-error-on-unmatched-pattern {{files}}"
       }
       ["oxlint"] {
         glob = List("*.cjs", "*.cts", "*.js", "*.jsx", "*.mjs", "*.mts", "*.ts", "*.tsx")
-        check = "oxlint --no-error-on-unmatched-pattern {{files}}"
+        check = "bunx oxlint --no-error-on-unmatched-pattern {{files}}"
       }
     }
   }

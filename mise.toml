@@ -1,10 +1,8 @@
 [tools]
-bun = "1.3.14"
+bun = "1.4.2"
 hk = { version = "2.5.0", workflow = "release.yml" }
 # oxlint/oxfmt launchers run under node
 node = "24"
 
 [env]
 _.file = ".env"
-# hk steps call oxfmt/oxlint by name.
-_.path = ["node_modules/.bin"]
