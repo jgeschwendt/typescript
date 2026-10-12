@@ -1,55 +1,11 @@
 {
   "$schema": "../../node_modules/oxlint/configuration_schema.json",
 
-  // Shareable base config — the oxlint successor to the removed @jlg/eslint.
-  //
-  // Philosophy: maximalist. Every rule category is turned on at "error"
-  // (except `nursery`, which is off), then a small set of curated overrides
-  // relaxes or retunes individual rules. This mirrors @jlg/eslint, which loads
-  // the `all` config of every plugin and then subtracts.
-  //
-  // NOTE: type-aware rules are ENABLED. tsgolint (oxlint's type-aware engine)
-  // requires the `oxlint-tsgolint` package and TypeScript 7+; both are in place.
-  // oxlint 1.87.0 declares `peerDependencies: { "oxlint-tsgolint": ">=7.0.2003" }`,
-  // and the pair oxlint 1.87.0 + oxlint-tsgolint 7.0.2003 was probed directly —
-  // `typescript/no-floating-promises` fires (verified 2026-10-09 · direct
-  // probe). Type-aware linting is switched on via
-  // `options.typeAware: true` in the CONSUMING root config, never here: the
-  // configuration schema documents `options` as "Only supported in the root
-  // configuration file". (An extended config's `options` were OBSERVED to take
-  // effect at oxlint 1.78, 1.80, 1.82 and 1.87 — probed 2026-09-08 and
-  // 2026-10-09 — but this base
-  // does not build on behavior the vendor documents as unsupported: an upstream
-  // fix would turn it into a silent no-op for every consumer.)
-  // Type-checked `typescript/*` rules are retuned in the "type-aware retuning"
-  // section below. See README.md.
-  //
   // ※ oxlint-tsgolint-pairing
-  // FOOTGUN (re-verified 2026-10-09 · probe, oxlint 1.87): an unknown rule NAME makes oxlint
-  // reject this ENTIRE config ("Rule 'x' not found in plugin 'y'") — nothing then
-  // lints. A rule whose plugin is not in `plugins` is worse: it parses, exits 0,
-  // and silently never runs. Both are caught by __tests__/rule-existence.test.js;
-  // every rule below was verified against `oxlint --rules --format json`.
 
-  // Setting `plugins` replaces oxlint's defaults (unicorn, typescript, oxc), so
-  // all six are listed: those three plus eslint (core), import and react
-  // (verified 2026-10-09 · probe: `plugins: ["eslint"]` leaves a unicorn rule
-  // unrun). react also covers react-hooks
-  // rules (react/rules-of-hooks, react/hook-use-state) — oxlint has no separate
-  // react-hooks plugin.
+  // replaces oxlint's default plugin set: an unlisted plugin's rules silently never run
   "plugins": ["eslint", "import", "oxc", "react", "typescript", "unicorn"],
 
-  // The @jlg/eslint rules oxlint never ported (GAPS.md), run as the original
-  // ESLint rule code through oxlint's JS plugins. Aliased `-js`: `import`,
-  // `react` and `unicorn` would otherwise collide with oxlint's native plugins.
-  // Every entry is a local module under plugins/: the three package wrappers
-  // (a bare specifier cannot resolve from an isolated install's symlink),
-  // `eslint-js` and `typescript-js` re-exporting ESLint core and
-  // typescript-eslint rules, and `inline-config`, the directive ban. All but
-  // the ban run through plugins/host.mjs. JS plugins are alpha and outside
-  // semver — hence the exact oxlint pin in package.json. Relative paths
-  // resolve against this file; index.mjs absolutizes them for JS-config
-  // consumers.
   // ※ oxlint-js-plugins
   "jsPlugins": [
     { "name": "import-js", "specifier": "./plugins/import-js.mjs" },
@@ -60,23 +16,6 @@
     "./plugins/typescript-js.mjs",
   ],
 
-  // NOTE: `ignorePatterns` intentionally lives in the *consuming* root config,
-  // not here. oxlint roots an extended config's ignore globs at that config's
-  // own directory, so patterns set here would only match files under
-  // packages/oxlint — never the consumer's tree. Ignore generated files (e.g.
-  // `**/*.d.ts`) in the root .oxlintrc.json instead.
-
-  // Turn on the whole rule surface, then curate below. nursery stays off.
-  //
-  // `restriction` is set to "warn", NOT "error". oxlint's restriction category
-  // is dominated by the oxc plugin's language-feature bans (no-optional-chaining,
-  // no-rest-spread-properties, no-async-await, ...) which have NO analog in the
-  // @jlg/eslint stack (@eslint/js + import + unicorn + react + typescript-eslint
-  // "all" configs do not ban idiomatic modern JS/TS). Erroring on them would make
-  // this config unusable on the React/Next stack it targets. Kept at "warn" so
-  // every restriction lint stays visible for case-by-case promotion, rather than
-  // silenced. Promote individual restriction rules to "error" in `rules` below
-  // (as this config already does for `no-void`).
   // ※ oxlint-peer-coupling
   "categories": {
     "correctness": "error",
@@ -89,11 +28,6 @@
   },
 
   "rules": {
-    // --- core (eslint) ---------------------------------------------------
-
-    // no-magic-numbers: warn-level, same option object as @jlg/eslint. oxlint
-    // honors all ten keys, the TS-specific ones included: flipping any one
-    // changes the output (verified 2026-10-09 · toggle probe, oxlint 1.87)
     "no-magic-numbers": [
       "warn",
       {
@@ -109,10 +43,7 @@
         "ignoreTypeIndexes": false,
       },
     ],
-    // ESLint 9's defaults, spelled out: an options object switches off
-    // oxlint's own `^_` ignore patterns for vars/args (a documented deviation
-    // from ESLint and typescript-eslint), and reportVarsOnlyUsedAsTypes is
-    // typescript-eslint's "only used as a type" report
+    // ESLint 9's defaults: any options object drops oxlint's own ^_ ignore patterns
     "no-unused-vars": [
       "error",
       {
@@ -124,21 +55,9 @@
       },
     ],
     "no-void": ["error", { "allowAsStatement": true }],
-    // Implemented in oxlint 1.78 ("linter/eslint: Implement `one-var` rule
-    // (#24470)", oxc apps/oxlint/CHANGELOG.md at tag oxlint_v1.78.0; verified
-    // 2026-09-08), in the `style` category — so left alone it would land at
-    // error with oxlint's own default option, "always" (combine declarations),
-    // the opposite of this stack's policy. The authored @jlg/eslint value was
-    // ["error", "never"]; ported verbatim. Naming a 1.78-only rule puts a 1.78
-    // floor under the oxlint peer (PEER COUPLING): an older consumer hard-fails
-    // this whole config on the unknown name — probed 2026-09-08: oxlint 1.75
-    // exits with "Rule 'one-var' not found in plugin 'eslint'". (2026-09-08)
     "one-var": ["error", "never"],
     "sort-imports": ["error", { "ignoreDeclarationSort": true }],
 
-    // Option values @jlg/eslint resolved where oxlint's defaults differ
-    // (__tests__/fixtures/eslint-baseline.json). id-length's checkGeneric is
-    // oxlint-only: ESLint never visited TS type parameters.
     "id-length": ["error", { "checkGeneric": false }],
     "no-inner-declarations": ["error", "functions", { "blockScopedFunctions": "allow" }],
     "no-irregular-whitespace": [
@@ -159,95 +78,32 @@
     "no-ternary": "off",
     "no-undefined": "off",
 
-    // Formatting rules: @jlg/eslint switched off every rule in
-    // eslint-config-prettier (10.1.8); these five are the ones oxlint ships and
-    // its categories turn back on. oxfmt owns the layout, and two of them can
-    // never pass on its output (it lowercases hex digits and strips nested
-    // ternary parens).
     "curly": "off",
     "no-unexpected-multiline": "off",
     "unicorn/empty-brace-spaces": "off",
     "unicorn/no-nested-ternary": "off",
     "unicorn/number-literal-case": "off",
 
-    // --- import ----------------------------------------------------------
-
-    // oxlint's import plugin prefers named exports by default; enforce it.
     "import/no-default-export": "error",
     "import/no-named-export": "off",
     "import/prefer-default-export": "off",
-
-    // --- react -----------------------------------------------------------
 
     "react/jsx-curly-brace-presence": [
       "error",
       { "children": "always", "propElementValues": "always", "props": "never" },
     ],
-    // New in oxlint 1.75 (style category — would land at error). Enforces one
-    // blanket component-definition style (declaration vs arrow), but this
-    // stack's authored policy has always been per-context (the eslint-era
-    // config tuned `func-style` per Next file type, a matrix a Next consumer
-    // ports itself, as jlg.io does). A blanket opinion is wrong-fit — off.
-    // Naming it puts a floor of oxlint >=1.75 under this config (PEER COUPLING —
-    // a 1.74 consumer would hard-fail on the unknown name). The peer may never
-    // drop below the highest such floor (1.78, `one-var` above); it is pinned
-    // exactly while JS plugins are alpha. (2026-07-23; peer note 2026-10-09)
     "react/function-component-definition": "off",
-    // Automatic JSX Transform (React 17+).
     "react/react-in-jsx-scope": "off",
 
-    // REACT COMPILER REVIEW (2026-09-08). oxlint 1.80 added 22 React Compiler
-    // rules to the `react` plugin — https://oxc.rs/blog/2026-08-18-react-compiler-support
-    // — spread across correctness (error-boundaries, globals, immutability,
-    // incompatible-library, preserve-manual-memoization, purity, refs,
-    // set-state-in-effect, set-state-in-render, static-components, use-memo,
-    // void-use-memo), perf (no-deriving-state-in-effects), suspicious
-    // (capitalized-calls, exhaustive-effect-dependencies, hooks,
-    // memo-dependencies) and restriction (invariant, rule-suppression, syntax,
-    // todo, unsupported-syntax). All 22 are category-activated here, so the
-    // correctness/perf/suspicious ones are at error and the restriction ones at
-    // warn. Reviewed and KEPT as-is — including the five upstream's own ESLint
-    // preset ships OFF (no-deriving-state-in-effects, capitalized-calls,
-    // exhaustive-effect-dependencies, hooks, memo-dependencies): jgeschwendt/jlg.io,
-    // a Next.js consumer of this base with typeAware, has green CI on main at
-    // oxlint 1.81 with none of them disabled (runs 2026-09-07/08). Deliberately
-    // NOT named in `rules` — naming even one would set a 1.80 floor under the
-    // peer (PEER COUPLING). A consumer that wants one off turns it off in its own
-    // root config. The old nursery rule `react/react-compiler` was removed in
-    // 1.80 in favor of these 22; it was never named here, so nothing to remove.
-
-    // --- type-aware retuning (tsgolint) ----------------------------------
-    // These rules require type information and only fire when the root config
-    // sets `options.typeAware: true` (which also needs the `oxlint-tsgolint`
-    // package). typeAware is enabled in the consuming root config, never here
-    // (schema: `options` is root-only — see the NOTE at the top). Retune noisy
-    // type-checked rules below.
-
-    // prefer-readonly-parameter-types demands a `readonly` type on every
-    // non-primitive parameter — including idiomatic destructured callback args
-    // like `.map(({ a, b }) => …)`. It is impractically strict on the
-    // React/Next stack this config targets (typescript-eslint itself ships it
-    // in `all` only, never `recommended`). Demoted to "warn" — same treatment,
-    // and same rationale, as the `restriction` category above: kept visible for
-    // case-by-case promotion rather than erroring on idiomatic code.
+    // ─── type-aware retuning (tsgolint) ─────────────────────────────────────
     "typescript/prefer-readonly-parameter-types": "warn",
 
-    // Rules typescript-eslint deprecated or removed (its `all` never enabled
-    // them); the categories do, and each double-reports with its successor:
-    // no-wrapper-object-types, no-empty-object-type, ban-ts-comment and
-    // no-require-imports.
+    // deprecated upstream: each double-reports with its successor
     "typescript/ban-types": "off",
     "typescript/no-empty-interface": "off",
     "typescript/no-var-requires": "off",
     "typescript/prefer-ts-expect-error": "off",
 
-    // --- jsPlugins: @jlg/eslint rules with no oxlint port (GAPS.md) -------
-    // Severities and options as @jlg/eslint resolved them — `error`, defaults —
-    // unless noted. Four check nothing without options, under @jlg/eslint as
-    // here, and stay as hooks a consumer can give options to:
-    // no-restricted-syntax, no-restricted-paths, boolean-prop-naming and
-    // string-content. Not carried: import/no-unused-modules (needs ESLint <=9
-    // internals) and unicorn/better-regex (removed in unicorn 77).
     "eslint-js/camelcase": "error",
     "eslint-js/consistent-this": "error",
     "eslint-js/no-restricted-syntax": "error",
@@ -260,13 +116,7 @@
     "import-js/no-relative-packages": "error",
     "import-js/no-restricted-paths": "error",
     "import-js/no-useless-path-segments": "error",
-    // jlg.io's pre-2022 .eslintrc order (alphabetized, its group sequence), plus
-    // an `internal` group for the `@/` path alias through `pathGroups` — the
-    // alias postdates that config, and `settings['import/internal-regex']`
-    // can't carry it to a JSONC consumer: oxlint drops `settings` from an
-    // extended config (verified 2026-10-08 · probe), which only defineConfig
-    // works around. @jlg/eslint itself ran the defaults, which never
-    // alphabetize and rank `@/` (unclassified) after every relative import.
+    // pathGroups, not settings['import/internal-regex']: an extended config drops settings
     "import-js/order": [
       "error",
       {
@@ -275,8 +125,6 @@
         "pathGroups": [{ "group": "internal", "pattern": "@/**" }],
       },
     ],
-    // inline eslint-/oxlint- directives are banned, as @jlg/eslint's
-    // `noInlineConfig: true` made them inert (plugins/inline-config.mjs)
     "inline-config/no-directives": "error",
     "react-js/boolean-prop-naming": "error",
     "react-js/destructuring-assignment": "error",
@@ -289,17 +137,10 @@
     "react-js/no-typos": "error",
     "react-js/no-unused-prop-types": "error",
     "react-js/prefer-read-only-props": "error",
-    // @jlg/eslint ran the default `functions: "defaultProps"`; React 19
-    // ignores defaultProps on function components, so the same policy — an
-    // optional prop needs a default — is enforced through a destructuring
-    // default instead
     "react-js/require-default-props": ["error", { "functions": "defaultArguments" }],
     "unicorn-js/consistent-destructuring": "error",
-    // unicorn 77 renamed prefer-json-parse-buffer, whose behavior is "buffer"
     "unicorn-js/consistent-json-file-read": ["error", "buffer"],
-    // unicorn 60's default; 66 turned date checks off
     "unicorn-js/expiring-todo-comments": ["error", { "checkDates": true }],
-    // unicorn 77's name for prevent-abbreviations
     "unicorn-js/name-replacements": "error",
     "unicorn-js/no-for-loop": "error",
     "unicorn-js/no-keyword-prefix": "error",
@@ -310,27 +151,12 @@
     "unicorn-js/string-content": "error",
   },
 
-  // ORDER: overrides scoped by extension alone (`**/*.<ext>`) layer under a
-  // consumer's own overrides; every file-named one (Next routing files, route
-  // naming, tooling configs) must beat them, as @jlg/eslint spliced its Next
-  // and config-file blocks after the consumer's. defineConfig (index.mjs)
-  // re-appends the file-named ones after the consumer's overrides; an
-  // `extends` of this file cannot, so there a consumer override wins.
   "overrides": [
-    // @jlg/eslint declared globals.node for every file. `env` set at the top
-    // level of an extended config is dropped (like `settings`); inside an
-    // override it survives `extends` (verified 2026-10-09 · probe).
     {
       "files": ["**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}"],
       "env": { "node": true },
     },
 
-    // JavaScript files. @jlg/eslint ran typescript-eslint on .ts/.tsx only,
-    // but oxlint's typescript plugin covers every file (and a plugin cannot be
-    // dropped per override), so each category-enabled typescript/* rule is
-    // switched off here — rule-existence.test.js holds the list complete. Two
-    // rules @jlg/eslint ran on JS alone come back through jsPlugins: TypeScript
-    // checks neither imports nor `this` in a JS file without allowJs/checkJs.
     {
       "files": ["**/*.{cjs,js,jsx,mjs}"],
       "rules": {
@@ -444,13 +270,7 @@
       },
     },
 
-    // TypeScript files: the offs @jlg/eslint's TypeScript block set, and the
-    // core rules typescript-eslint replaces with type-aware twins (core off,
-    // typescript/* on, as typescript-eslint's `all` resolved them) — so a TS
-    // file with `options.typeAware` off runs neither. Then the TypeScript-only
-    // jsPlugins rules, with the three naming-convention option sets
-    // @jlg/eslint resolved per file type (.ts, .tsx, Next's route.ts) — later
-    // overrides win, so route.ts comes last.
+    // later overrides win: the .ts, .tsx, then route.ts naming-convention sets, in that order
     {
       "files": ["**/*.{cts,mts,ts,tsx}"],
       "rules": {
@@ -541,10 +361,7 @@
       },
     },
 
-    // Next.js route-segment files export framework-reserved names (metadata,
-    // route segment config) beside the component; only-export-components
-    // would otherwise warn on every page and layout
-    // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
+    // Next segment files export reserved names (metadata, segment config) beside the component
     {
       "files": ["**/{default,error,global-error,layout,loading,not-found,page,template}.{jsx,tsx}"],
       "rules": {
@@ -571,8 +388,6 @@
       },
     },
 
-    // Next.js routing files must be kebab-cased.
-    // https://nextjs.org/docs/app/getting-started/project-structure#routing-files
     {
       "files": [
         "**/{layout,page,loading,not-found,error,global-error,template,default}.{jsx,tsx}",
@@ -583,11 +398,6 @@
       },
     },
 
-    // Next.js files that default-export: layout, page, middleware and robots,
-    // as @jlg/eslint exempted. instrumentation and route are exempted too,
-    // wider than @jlg/eslint (which enforced the rule there): their
-    // conventions are named exports (register, GET/POST). Kept wider by owner
-    // decision (2026-10-09).
     {
       "files": ["**/{layout,page,middleware,instrumentation,robots,route}.{js,jsx,ts,tsx}"],
       "rules": {
@@ -595,8 +405,6 @@
       },
     },
 
-    // Next.js files whose conventions are separate named exports: route
-    // handlers (GET, POST, …), page/layout `metadata` and segment config.
     {
       "files": ["**/{instrumentation,middleware,route}.{js,ts}", "**/{layout,page}.{jsx,tsx}"],
       "rules": {
@@ -604,9 +412,6 @@
       },
     },
 
-    // Next.js declares `register()` in instrumentation as async by convention,
-    // and it often has nothing to await — the core rule too, since oxlint runs
-    // it on TS files (@jlg/eslint's typescript-eslint switched it off there).
     {
       "files": ["**/instrumentation.{js,ts}"],
       "rules": {
@@ -615,11 +420,6 @@
       },
     },
 
-    // Tooling config files export their config as the default and nothing
-    // else (@jlg/eslint's preferDefaultExports). Root only, as @jlg/eslint's
-    // root-relative globs matched: a leading `./` anchors an override glob at
-    // the root config's directory, while a bare name matches at any depth
-    // (verified 2026-10-09 · probe).
     {
       "files": ["./{eslint,jest,next,oxfmt,oxlint,postcss}.config.{cjs,cts,js,mjs,mts,ts}"],
       "rules": {

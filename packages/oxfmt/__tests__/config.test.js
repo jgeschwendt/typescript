@@ -8,21 +8,14 @@ const here = import.meta.dirname;
 
 const configPath = join(here, '..', 'oxfmtrc.json');
 
-// Resolve oxfmt from wherever the workspace installed it (root-hoisted or the
-// package's own node_modules), then locate its bundled JSON schema.
 const oxfmtDirectory = dirname(require.resolve('oxfmt/package.json'));
 const schemaPath = join(oxfmtDirectory, 'configuration_schema.json');
 
-// oxfmtrc.json is consumed via `-c` and via `import … with { type: "json" }`;
-// both demand strict JSON (no comments, no trailing commas). Guard it here —
-// unlike the root .oxfmtrc.jsonc, this file may never drift into JSONC.
+// consumed via `-c` and `import … with { type: "json" }`, both strict JSON, never JSONC
 test('oxfmtrc.json parses as strict JSON', () => {
   expect(() => JSON.parse(readFileSync(configPath))).not.toThrow();
 });
 
-// A key oxfmt does not recognize is silently ignored — the setting simply never
-// applies. Guard every key in oxfmtrc.json against oxfmt's own schema so a typo,
-// or a key an oxfmt bump renames/removes, fails the suite by name.
 test("every oxfmtrc.json key exists in oxfmt's schema", () => {
   const schema = JSON.parse(readFileSync(schemaPath));
   const known = new Set(Object.keys(schema.properties));

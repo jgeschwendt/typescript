@@ -159,7 +159,7 @@ ESLint's: `id-length` (plus the oxlint-only `checkGeneric: false`), `no-inner-de
 
 ## error → warn
 
-All but one come from one decision: the `restriction` category runs at `warn` (see `oxlintrc.jsonc`). The exception, `@typescript-eslint/prefer-readonly-parameter-types`, is set to `warn` there by name.
+All but one come from one decision: the `restriction` category runs at `warn` (why: README.md, Caveats). The exception, `@typescript-eslint/prefer-readonly-parameter-types`, is set to `warn` there by name.
 
 Scope, per the baseline: the `@typescript-eslint/*` entries applied to TypeScript files only, and `class-methods-use-this`, `import/extensions`, `no-empty-function` and `no-use-before-define` to `.js` only (their TypeScript twins replaced them); every other entry applied to all files.
 

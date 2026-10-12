@@ -4,10 +4,6 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { oxlintBin } from './_helpers.js';
 
-// Behaviors of @jlg/eslint the base restores through config rather than a
-// rule, linted end to end from the checkout through both entries. Each was
-// lost once without anything failing (migration audit, 2026-10-09).
-
 const here = import.meta.dirname;
 const consumerOverride = {
   files: ['**/*.tsx'],
@@ -95,7 +91,6 @@ const lint = (entry, paths) => {
   };
 };
 
-// `file → codes` for the reported diagnostics
 const byFile = (diagnostics) => {
   const files = {};
   for (const { code, filename } of diagnostics) {
@@ -163,8 +158,7 @@ describe.each(Object.keys(entries))('through the %s entry', (kind) => {
     expect(codes('sub/next.config.js')).toContain('import(no-default-export)');
   });
 
-  // defineConfig re-appends the file-named base overrides after the
-  // consumer's; an `extends` of the JSONC cannot, so there the consumer wins
+  // defineConfig re-appends the file-named base overrides; a JSONC `extends` cannot
   test.if(kind === 'js')('base Next overrides beat a consumer `**/*.tsx` override', () => {
     expect(codes('app/page.tsx')).not.toContain('import(no-default-export)');
     expect(codes('app/page.tsx')).not.toContain('unicorn(filename-case)');

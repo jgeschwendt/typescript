@@ -1,5 +1,3 @@
-// ESLint core rules oxlint has no native port of (GAPS.md), run unchanged
-// through oxlint's `jsPlugins` (and host.mjs) — the rule objects are ESLint's own.
 import { builtinRules } from 'eslint/use-at-your-own-risk';
 import { host } from './host.mjs';
 

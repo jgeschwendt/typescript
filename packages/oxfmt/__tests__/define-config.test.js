@@ -5,14 +5,6 @@ import { base, defineConfig } from '../index.mjs';
 
 const configPath = join(import.meta.dirname, '..', 'oxfmtrc.json');
 
-// The JS entry (`import { defineConfig } from "@jlg/oxfmt"`) is the consumption
-// path for TS/JS oxfmt configs. It parses the package's own oxfmtrc.json — the
-// single source of truth — and shallow-merges it UNDER the consumer config.
-// oxfmt has no `extends`, so composition is a merge, not a reference: base
-// first, consumer keys win. These guard that merge contract, plus that the
-// exported `base` is the verbatim parsed JSON (so JS and raw-JSON consumers get
-// identical settings).
-
 test('base export matches parsing oxfmtrc.json directly', () => {
   expect(base).toStrictEqual(JSON.parse(readFileSync(configPath)));
 });

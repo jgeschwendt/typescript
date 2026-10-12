@@ -5,24 +5,7 @@ import { dirname, join } from 'node:path';
 import { configRuleNames, jsPluginScopes, loadConfig } from './_helpers.js';
 import { base } from '../index.mjs';
 
-// The jsPlugins layer runs @jlg/eslint's unported rules as ESLint rule code
-// (GAPS.md). Failure modes the native-rule guards cannot see:
-//
-//  1. A configured rule the plugin does not export — oxlint rejects the WHOLE
-//     config, so nothing lints.
-//  2. A plugin, or a single rule, that loads yet reports nothing (unicorn 66
-//     stubbed two rules as `create: () => ({})`). Hence the assertion below
-//     that EVERY configured rule fires.
-//  3. A layout only an installed copy has. The repo's own node_modules link
-//     typescript-eslint to TypeScript 6 and hold every dependency next to the
-//     package; a consumer's carries TypeScript 7 and, isolated, holds the
-//     dependencies only beside the real path. So the package is packed, the
-//     tarball installed under both linkers next to typescript@7, and linted
-//     through both entries (the JSONC by its node_modules path, the JS entry by
-//     its package name) under both runtimes consumers use (`oxlint` on node,
-//     `bun --bun oxlint`). (2026-10-09 · Bun loaded the consumer's TS 7 into
-//     typescript-eslint, and an isolated JSONC consumer could not resolve
-//     `eslint-plugin-import`; both passed from the checkout)
+// packed and installed: a consumer's layout (TS 7, isolated deps) is not the checkout's
 
 const plugins = Object.fromEntries(
   await Promise.all(
@@ -57,9 +40,7 @@ test('every configured jsPlugins rule exists in its plugin', () => {
   ).toEqual([]);
 });
 
-// Rules that check nothing without options, in @jlg/eslint as here (the base
-// runs them as `error` with none). The consumers hand them options so their
-// code is still proven to run.
+/** rules that check nothing without options, as in @jlg/eslint */
 const inert = {
   'eslint-js/no-restricted-syntax': ['error', 'DebuggerStatement'],
   'import-js/no-restricted-paths': ['error', { zones: [{ from: './packages', target: './src' }] }],
@@ -67,7 +48,6 @@ const inert = {
   'unicorn-js/string-content': ['error', { patterns: { unicorn: '🦄' } }],
 };
 
-// At least one violation of every configured jsPlugins rule.
 const fixtures = {
   'node_modules/not-listed/lib/inner.js': 'export default 1;\n',
   'node_modules/not-listed/package.json': JSON.stringify({
@@ -130,8 +110,7 @@ const fixtures = {
   ].join('\n'),
   'src/legacy.js': [
     '// TODO [2000-01-01]: expired',
-    // date conditions are skipped on pull-request CI (checkDatesOnPullRequests,
-    // via ci-info), so a version condition keeps the rule provably live there
+    // date conditions skip on pull-request CI (checkDatesOnPullRequests): a version one stays live
     "// TODO [typescript@>=1]: expired by the consumer's typescript@7",
     "import inner from 'not-listed/lib/inner.js';",
     "import packaged from '../packages/inner/index.js';",
@@ -190,14 +169,12 @@ const fixtures = {
 };
 
 const entries = {
-  // JS config: the base arrives as an object, so index.mjs's absolute paths
-  // are the only thing locating the plugins
+  // the base arrives as an object: only index.mjs's absolute paths locate the plugins
   js: {
     file: 'oxlint.config.mjs',
     source: `import { defineConfig } from '@jlg/oxlint';\nexport default defineConfig({ rules: ${JSON.stringify(inert)} });\n`,
   },
-  // raw JSONC, extended by its installed path: plugin paths resolve against
-  // the symlinked file
+  // plugin paths resolve against the symlinked JSONC
   json: {
     file: '.oxlintrc.json',
     source: JSON.stringify({
@@ -209,7 +186,6 @@ const entries = {
 
 const runtimes = { bun: process.execPath, node: Bun.which('node') };
 const linkers = ['hoisted', 'isolated'];
-// timeouts: a cold install of the packed tarball per linker; one lint run
 const installTimeout = 300_000;
 const lintTimeout = 120_000;
 const scratch = mkdtempSync(join(tmpdir(), 'oxlint-js-plugins-'));
@@ -239,7 +215,6 @@ beforeAll(() => {
     [process.execPath, 'pm', 'pack', '--destination', scratch, '--quiet'],
     join(import.meta.dirname, '..'),
   );
-  // the oxlint the package pins as its peer
   const { oxlint } = JSON.parse(
     readFileSync(join(import.meta.dirname, '..', 'package.json')),
   ).peerDependencies;
@@ -299,8 +274,7 @@ describe.each(Object.entries(runtimes))('on %s', (runtimeName, runtime) => {
       'every configured jsPlugins rule fires through the %s entry',
       (kind) => {
         const diagnostics = lint(runtime, linker, entries[kind]);
-        // a crashed plugin drops every JS rule on the file; a crashed rule
-        // reports itself through host.mjs
+        // a crashed plugin drops every JS rule on the file; a crashed rule reports via host.mjs
         const broken = diagnostics
           .map((diagnostic) => diagnostic.message)
           .filter((message) =>

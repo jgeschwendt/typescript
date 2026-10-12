@@ -10,22 +10,10 @@ import {
   ruleScope,
 } from './_helpers.js';
 
-// The footgun guard. Two ways a config rule silently stops doing its job in
-// oxlint (re-verified 2026-09-08 · probe, oxlint 1.82):
-//
-//  1. An unknown rule NAME, or an unknown PLUGIN name, makes oxlint reject the
-//     WHOLE config ("Failed to parse … Rule 'x' not found in plugin 'y'" /
-//     "Unknown plugin"), exit 1, and lint nothing — the same when the config is
-//     pulled in via `extends`. Loud, but blunt: every rule the config defined
-//     stops applying, and downstream it reads as a cryptic parse failure rather
-//     than "you typo'd a rule". These tests catch it here, by name.
-//  2. A VALID rule whose plugin is NOT in `plugins` (e.g. `unicorn/no-null` while
-//     `plugins` omits `unicorn`) parses fine, exits 0, and simply never runs.
-//     This is the genuinely silent case; the third test below guards it.
+// an unknown rule or plugin rejects the whole config; a rule whose plugin is off never runs
 // ※ rule-existence-guard
 
-// Native rules only: `jsPlugins` rules are ESLint rule code, guarded against
-// their plugins in js-plugins.test.js.
+/** jsPlugins rules are ESLint rule code, guarded in js-plugins.test.js */
 const nativeRuleNames = (config) => {
   const js = jsPluginScopes(config);
   return configRuleNames(config).filter((name) => !js.has(name.split('/')[0]));
@@ -59,10 +47,7 @@ test("every configured rule's plugin is enabled", () => {
   ).toEqual([]);
 });
 
-// @jlg/eslint ran typescript-eslint on TS files only, and oxlint cannot drop a
-// plugin per override, so the JS-files override names every typescript rule
-// the categories turn on. A rule oxlint adds to the typescript plugin would
-// otherwise start firing on .js/.cjs/.mjs files (type-aware ones included).
+// oxlint cannot drop a plugin per override, so the JS override must name every typescript rule
 test('every category-enabled typescript rule is off on JavaScript files', () => {
   const config = loadConfig();
   const javascript = config.overrides.find(
