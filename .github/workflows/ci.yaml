@@ -8,6 +8,7 @@ on:
     branches:
       - main
   workflow_dispatch:
+  merge_group:
 
 # The branch ruleset on main requires the status check whose context is exactly
 # `check` — the job id below. Renaming the job breaks every PR's merge gate.
