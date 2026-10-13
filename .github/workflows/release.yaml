@@ -104,7 +104,7 @@ jobs:
       - if: steps.version.outputs.pr-number != '' && steps.bumps.outputs.gated != 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: gh pr merge ${{ steps.version.outputs.pr-number }} --auto --squash
+        run: gh pr merge ${{ steps.version.outputs.pr-number }} --auto --rebase
 
       # Minor or major: no auto-merge; ask the owner to review, and let the
       # merge be the approval.
