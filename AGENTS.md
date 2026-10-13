@@ -41,6 +41,7 @@ hazards:
 
 | node     | kind      | purpose                                                                                                                                                                                           | unfold                                                 |
 | -------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| docs     | container | plan.md — the active plan: hazards for working here and what is next, in order.                                                                                                                   | `stele unfold docs` · or read `docs/AGENTS.md`         |
 | packages | container | The three shipped configs. oxlint and oxfmt each carry a base ruleset plus the guard tests that keep it honest; tsconfig is a single shared tsconfig.json. Per-package detail lives in each node. | `stele unfold packages` · or read `packages/AGENTS.md` |
 
 ## Indexes
