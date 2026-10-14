@@ -40,6 +40,8 @@ const write = (root, files) => {
 // 1.3.14 on ubuntu-latest)
 const spawnOxlint = (cwd, flags, command = [process.execPath, oxlintBin]) => {
   const out = join(cwd, 'oxlint.out');
+  // a Bun.file stdout overwrites without truncating: empty it for a reused cwd
+  writeFileSync(out, '');
   const { exitCode, stderr } = Bun.spawnSync([...command, ...flags], {
     cwd,
     stderr: 'pipe',

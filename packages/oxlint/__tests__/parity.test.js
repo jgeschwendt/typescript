@@ -17,21 +17,15 @@ const consumerOverride = {
   },
 };
 
-const entries = {
-  js: {
-    file: 'oxlint.config.mjs',
-    source: `import { defineConfig } from ${JSON.stringify(join(here, '..', 'index.mjs'))};\nexport default defineConfig({ overrides: [${JSON.stringify(consumerOverride)}] });\n`,
-  },
-  json: {
-    file: '.oxlintrc.json',
-    source: JSON.stringify({
-      extends: [join(here, '..', 'oxlintrc.jsonc')],
-      overrides: [consumerOverride],
-    }),
-  },
-};
-
-const fixtures = {
+const directory = mkdtempSync(join(tmpdir(), 'oxlint-parity-'));
+afterAll(() => {
+  rmSync(directory, { force: true, recursive: true });
+});
+write(directory, {
+  '.oxlintrc.json': JSON.stringify({
+    extends: [join(here, '..', 'oxlintrc.jsonc')],
+    overrides: [consumerOverride],
+  }),
   'app/api/route.ts': [
     'export function GET() {',
     '  return 1;',
@@ -51,6 +45,7 @@ const fixtures = {
     '',
   ].join('\n'),
   'next.config.js': 'export const extra = 1;\nexport default {};\n',
+  'oxlint.config.mjs': `import { defineConfig } from ${JSON.stringify(join(here, '..', 'index.mjs'))};\nexport default defineConfig({ overrides: [${JSON.stringify(consumerOverride)}] });\n`,
   'oxlint.config.ts': 'export const extra = 1;\nexport default {};\n',
   'src/later.ts':
     'export async function later(): Promise<number> {\n  return 1;\n}\n',
@@ -62,45 +57,24 @@ const fixtures = {
     '',
   ].join('\n'),
   'sub/next.config.js': 'export const extra = 1;\nexport default {};\n',
-};
-
-const directories = [];
-afterAll(() => {
-  for (const directory of directories) {
-    rmSync(directory, { force: true, recursive: true });
-  }
 });
 
-const lint = (entry, paths) => {
-  const directory = mkdtempSync(join(tmpdir(), 'oxlint-parity-'));
-  directories.push(directory);
-  write(directory, { ...fixtures, [entry.file]: entry.source });
-  const { exitCode, output, text } = spawnOxlint(directory, [
-    '-c',
-    entry.file,
-    '--format',
-    'json',
-    ...paths,
-  ]);
-  return {
-    diagnostics: text.trim().startsWith('{')
-      ? JSON.parse(text).diagnostics
-      : [],
-    exitCode,
-    output,
-  };
-};
+const entries = { js: 'oxlint.config.mjs', json: '.oxlintrc.json' };
+const lint = (entry, paths) =>
+  spawnOxlint(directory, ['-c', entry, '--format', 'json', ...paths]);
 
 describe.each(Object.keys(entries))('through the %s entry', (kind) => {
   const files = Object.groupBy(
-    lint(entries[kind], [
-      'app',
-      'instrumentation.ts',
-      'next.config.js',
-      'oxlint.config.ts',
-      'src',
-      'sub',
-    ]).diagnostics,
+    JSON.parse(
+      lint(entries[kind], [
+        'app',
+        'instrumentation.ts',
+        'next.config.js',
+        'oxlint.config.ts',
+        'src',
+        'sub',
+      ]).text,
+    ).diagnostics,
     ({ filename }) => filename,
   );
   const codes = (file) => (files[file] ?? []).map(({ code }) => code);
