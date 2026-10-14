@@ -17,6 +17,28 @@ const consumerOverride = {
   },
 };
 
+// every comment ESLint or oxlint reads as configuration, after look-alikes
+// that are not; a line `oxlint-disable` covers only what follows it, so last
+const banned = [
+  '// eslint-disable-next-line no-console',
+  '// oxlint-enable',
+  '// eslint-env node',
+  '// oxlint-disable-line no-console',
+  '/* eslint no-console: "off" */',
+  '/* global foo */',
+  '/* globals foo */',
+  '/* exported bar */',
+  '// oxlint-disable',
+];
+const directives = [
+  '// global foo',
+  '// eslint-disabled',
+  '/* exportedx */',
+  'export const value = 1;',
+  ...banned,
+  '',
+].join('\n');
+
 const directory = mkdtempSync(join(tmpdir(), 'oxlint-parity-'));
 afterAll(() => {
   rmSync(directory, { force: true, recursive: true });
@@ -38,6 +60,8 @@ write(directory, {
   ].join('\n'),
   'app/page.tsx': 'export default function Page() {\n  return null;\n}\n',
   'blanket.js': '/* oxlint-disable */\nexport const value = 1;\n',
+  'described.js': '/* eslint-disable -- reason */\nexport const value = 1;\n',
+  'directives.js': directives,
   'instrumentation.ts': [
     'export async function register(): Promise<void> {',
     "  globalThis.console.info('registered');",
@@ -45,6 +69,8 @@ write(directory, {
     '',
   ].join('\n'),
   'next.config.js': 'export const extra = 1;\nexport default {};\n',
+  'own-line.js':
+    'export const value = 1; // oxlint-disable-line inline-config/no-directives\n',
   'oxlint.config.mjs': `import { defineConfig } from ${JSON.stringify(join(here, '..', 'index.mjs'))};\nexport default defineConfig({ overrides: [${JSON.stringify(consumerOverride)}] });\n`,
   'oxlint.config.ts': 'export const extra = 1;\nexport default {};\n',
   'src/later.ts':
@@ -67,6 +93,7 @@ describe.each(Object.keys(entries))('through the %s entry', (kind) => {
   const files = Object.groupBy(
     lint(entries[kind], [
       'app',
+      'directives.js',
       'instrumentation.ts',
       'next.config.js',
       'oxlint.config.ts',
@@ -82,6 +109,7 @@ describe.each(Object.keys(entries))('through the %s entry', (kind) => {
     expect(Object.keys(files).toSorted()).toEqual([
       'app/api/route.ts',
       'app/page.tsx',
+      'directives.js',
       'instrumentation.ts',
       'next.config.js',
       'oxlint.config.ts',
@@ -89,6 +117,16 @@ describe.each(Object.keys(entries))('through the %s entry', (kind) => {
       'src/plain.js',
       'sub/next.config.js',
     ]);
+  });
+
+  test('every directive form is banned, and nothing else', () => {
+    expect(
+      files['directives.js']
+        .filter(({ code }) => code === 'inline-config(no-directives)')
+        .map(({ labels: [{ span }] }) =>
+          directives.slice(span.offset, span.offset + span.length),
+        ),
+    ).toEqual(banned);
   });
 
   test('Node globals are declared (globals.node)', () => {
@@ -143,8 +181,11 @@ describe.each(Object.keys(entries))('through the %s entry', (kind) => {
   );
 });
 
-test('a directive that would suppress its own ban fails the run', () => {
-  const { exitCode, output } = lint(entries.json, ['blanket.js']);
-  expect(exitCode).not.toBe(0);
-  expect(output).toContain('would suppress its own report');
-});
+test.each(['blanket.js', 'described.js', 'own-line.js'])(
+  'a directive that would suppress its own ban fails the run: %s',
+  (file) => {
+    const { exitCode, output } = lint(entries.json, [file]);
+    expect(exitCode).not.toBe(0);
+    expect(output).toContain('would suppress its own report');
+  },
+);

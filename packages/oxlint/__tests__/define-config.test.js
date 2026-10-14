@@ -79,8 +79,8 @@ test.each([
   },
   {
     files: react,
-    input: { settings: { react: { version: '18.2.0' } } },
-    settings: { react: { version: '18.2.0' } },
+    input: { settings: { next: {}, react: { version: '18.2.0' } } },
+    settings: { next: {}, react: { version: '18.2.0' } },
     source: 'the consumer over the installed React',
   },
   { files: {}, input: {}, settings: {}, source: 'nothing without React' },
