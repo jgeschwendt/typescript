@@ -184,9 +184,11 @@ From oxlint's JS plugin host:
   fails on a rule that was on, is native, and is off here outside its deliberate list.
   `bun run --filter '@jlg/oxlint' report` renders the same `rules.js` rows to a filterable,
   sortable `__tests__/rules.html` styled by `ui.css` beside it (`ui.css` vendored from
-  jgeschwendt/ui @ 162e78b): old options are compared with the base's, or with the rule's declared
-  defaults (resolved as ESLint does) where the base passes none, `unverified` if it declares none;
-  each `differs` carries its reason, and a click opens the old and base options side by side;
+  jgeschwendt/ui @ 162e78b): old and base options are each resolved over the rule's declared defaults
+  as ESLint does and compared over the keys the rule's ESLint schema knows, so an oxlint-only key
+  never counts; `-` where the base runs no such rule, `unverified` for an old key the schema no
+  longer has or a bare base with no declared defaults; each `differs` and `unverified` carries its
+  reason, and a click opens the old and base options side by side;
   regenerate and commit it after every snapshot change. A push to `main` touching either publishes
   both to [GitHub Pages](https://jgeschwendt.github.io/typescript/).
 - `define-config.test.js`: the `defineConfig` contract (detection, merge order, `env`, `settings`).

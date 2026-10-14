@@ -1,6 +1,6 @@
 import { config, enabledScopes, loadRules, overrides, ruleKey } from './_helpers.js';
 
-/** @type {[string, string, Record<string, { defaultOptions?: unknown[]; meta?: { defaultOptions?: unknown[]; deprecated?: unknown } }>][]} */
+/** @type {[string, string, Record<string, { defaultOptions?: unknown[]; meta?: { defaultOptions?: unknown[]; deprecated?: unknown; schema?: unknown } }>][]} */
 const catalogs = await Promise.all(
   [
     ['', 'eslint'],
@@ -34,6 +34,7 @@ const eslint = new Map(
         {
           ...prior(`${prefix}${name}`),
           defaults: rule.meta?.defaultOptions ?? rule.defaultOptions ?? [],
+          schema: rule.meta?.schema,
         },
       ]),
   ),
@@ -70,27 +71,55 @@ const merge = new URL('shared/deep-merge-arrays.js', import.meta.resolve('eslint
 const { deepMergeArrays } = import.meta.require(Bun.fileURLToPath(merge));
 
 /**
-@jlg/eslint's options against the base's, or against the declared defaults when the base passes none; `-` without an ESLint counterpart
-@param {unknown[] | undefined} was
+every key the schema's object properties name, at any depth
+@param {any} schema
+@returns {string[]}
+*/
+const known = (schema) =>
+  schema && typeof schema === 'object'
+    ? [
+        ...Object.keys(schema.properties ?? {}),
+        ...Object.values(schema).flatMap((value) => known(value)),
+      ]
+    : [];
+
+/** @param {unknown[]} options the keys of its object positions */
+const fields = (options) =>
+  options.flatMap((option) => (option?.constructor === Object ? Object.keys(option) : []));
+
+/**
+@jlg/eslint's options against the base's, each resolved over the rule's declared defaults as ESLint does and read over the keys the rule knows, so an oxlint-only key never counts
+@param {unknown[]} was
 @param {unknown[]} now
-@param {unknown[]} defaults
+@param {{ defaults?: unknown[]; schema?: unknown }} rule
 @returns {[string, string?]}
 */
-const compare = (was, now, defaults) => {
-  if (!was) {
-    return ['-'];
+const compare = (was, now, { defaults = [], schema }) => {
+  const keys = new Set([...known(schema), ...fields(defaults)]);
+  const drift = [...new Set(fields(was))].flatMap((key) => (keys.has(key) ? [] : [key]));
+  if (drift.length > 0) {
+    return ['unverified', `schema drift: ${drift.join(', ')}`];
   }
-  if (now.length > 0 || was.length === 0) {
-    return Bun.deepEquals(was, now)
-      ? [was.length > 0 ? 'same' : 'none']
-      : ['differs', was.length > 0 ? 'values differ' : 'old sets none'];
+  if (was.length + now.length === 0) {
+    return ['none'];
   }
-  if (defaults.length === 0) {
-    return ['unverified'];
+  if (defaults.length + now.length === 0) {
+    return ['unverified', 'no declared defaults'];
   }
-  return Bun.deepEquals(deepMergeArrays(defaults, was), defaults)
-    ? ['same']
-    : ['differs', 'off defaults'];
+  /** @param {unknown[]} options */
+  const effective = (options) =>
+    deepMergeArrays(defaults, options).map((option) =>
+      option?.constructor === Object
+        ? Object.fromEntries(Object.entries(option).filter(([key]) => keys.has(key)))
+        : option,
+    );
+  if (Bun.deepEquals(effective(was), effective(now))) {
+    return ['same'];
+  }
+  if (was.length === 0) {
+    return ['differs', 'old sets none'];
+  }
+  return ['differs', now.length > 0 ? 'values differ' : 'off defaults'];
 };
 
 /**
@@ -100,12 +129,16 @@ every non-deprecated rule of @jlg/eslint's catalogs and every oxlint rule of the
 const rows = [...new Set([...eslint.keys(), ...native.keys()])].map((rule) => {
   const js = ruleKey(rule.replace('/', '-js/'));
   const [base, ...baseOptions] = entry(rule) ?? entry(js) ?? ['off'];
-  const { defaults = [], old = '-', oldOptions } = eslint.get(rule) ?? {};
+  const { old = '-', oldOptions, ...declared } = eslint.get(rule) ?? {};
   const { category = '-', type_aware: typed } = native.get(rule) ?? {};
   const oxlint = native.has(rule)
     ? `native${typed ? ' (type-aware)' : ''}`
     : ((entry(js) && 'js') ?? 'none');
-  const [options = '', reason] = compare(oldOptions, baseOptions, defaults);
+  /** `-` without an ESLint counterpart or where the base runs no such rule */
+  const [options = '', reason] =
+    !oldOptions || base === 'off' || oxlint === 'none'
+      ? ['-']
+      : compare(oldOptions, baseOptions, declared);
   return { base, baseOptions, category, old, oldOptions, options, oxlint, reason, rule };
 });
 
