@@ -177,9 +177,10 @@ From oxlint's JS plugin host:
 - `rules.test.js`: snapshots every rule of the enabled plugins and of `@jlg/eslint`'s catalogs
   against this base, so a rule a bump adds to an error category shows as a diff at review, and
   fails on a rule that was on, is native, and is off here outside its deliberate list.
-  `bun run --filter '@jlg/oxlint' report` renders it to a filterable, sortable
-  `__tests__/rules.html` styled by `ui.css` beside it (`ui.css` vendored from jgeschwendt/ui @
-  162e78b); regenerate and commit that after every snapshot change. A push to `main` touching
+  `bun run --filter '@jlg/oxlint' report` renders the same `rules.js` rows to a filterable,
+  sortable `__tests__/rules.html` styled by `ui.css` beside it (`ui.css` vendored from
+  jgeschwendt/ui @ 162e78b): each `differs` carries its reason, and a click opens the old and base
+  options side by side; regenerate and commit it after every snapshot change. A push to `main` touching
   either publishes both to [GitHub Pages](https://jgeschwendt.github.io/typescript/).
 - `define-config.test.js`: the `defineConfig` contract (detection, merge order, `env`, `settings`).
 - `js-plugins.test.js`: installs the packed tarball beside `typescript@7` and `oxlint` under both

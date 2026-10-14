@@ -1,12 +1,14 @@
 // regenerate after every snapshot change: bun run --filter '@jlg/oxlint' report
 // ui.css vendored from jgeschwendt/ui @ 162e78b
+import { rows } from './rules.js';
 
-const snapshot = await Bun.file(
-  new URL('__snapshots__/rules.test.js.snap', import.meta.url),
-).text();
-const rows = [...snapshot.matchAll(/^ {2}"(?<line>.+)",$/gmu)].map(
-  ({ groups: { line = '' } = {} }) => line.split(' | '),
-);
+const reasons = [...new Set(rows.flatMap(({ reason }) => reason ?? []))]
+  .toSorted()
+  .map(
+    (reason) =>
+      `<output class="badge badge-warn">${rows.filter((row) => row.reason === reason).length} ${reason}</output>`,
+  )
+  .join('');
 
 const html = new URL('rules.html', import.meta.url);
 await Bun.write(
@@ -27,7 +29,8 @@ await Bun.write(
         /* above the muted rows: opacity stacks them like positioned boxes */
         z-index: 1;
       }
-      th {
+      th,
+      .is-differs {
         cursor: pointer;
         user-select: none;
       }
@@ -46,7 +49,12 @@ await Bun.write(
         <div class="row">
           <h1 class="h1">@jlg/oxlint rules</h1>
           <output id="count" class="badge"></output>
+          ${reasons}
         </div>
+        <p class="muted">
+          The baseline spells out every option at its default, so <code class="code">base sets none</code>
+          usually means the base runs the rule at defaults, not a behaviour difference.
+        </p>
         <div id="filters" class="row">
           <label class="field">
             <span class="label">rule</span>
@@ -78,56 +86,88 @@ await Bun.write(
       };
       const filter = document.querySelector('#filter');
       const head = document.querySelector('#head');
+      /** rules whose detail row is open */
+      const open = new Set();
       let [sort, dir] = [0, 1];
-      const selects = columns.slice(1).map((name, index) => {
-        const label = Object.assign(document.createElement('label'), { className: 'field' });
-        const select = Object.assign(document.createElement('select'), { className: 'select select-sm' });
-        const values = [...new Set(rows.map((row) => row[index + 1]))].sort();
-        select.append(...['any', ...values].map((value) => new Option(value)));
-        select.addEventListener('input', render);
-        label.append(Object.assign(document.createElement('span'), { className: 'label', textContent: name }), select);
-        document.querySelector('#filters').append(label);
+      const el = (tag, props, ...children) => {
+        const node = Object.assign(document.createElement(tag), props);
+        node.append(...children);
+        return node;
+      };
+      /** what a filter matches: plain \`differs\` takes every reason */
+      const values = (row, name) => [row[name], ...(name === 'options' && row.reason ? [\`differs: \${row.reason}\`] : [])];
+      const selects = columns.slice(1).map((name) => {
+        const select = el(
+          'select',
+          { className: 'select select-sm', oninput: render },
+          ...['any', ...new Set(rows.flatMap((row) => values(row, name)).sort())].map((value) => new Option(value)),
+        );
+        document.querySelector('#filters').append(el('label', { className: 'field' }, el('span', { className: 'label', textContent: name }), select));
         return select;
       });
       head.append(
-        ...columns.map((name, index) => {
-          const th = document.createElement('th');
-          th.textContent = name;
-          th.addEventListener('click', () => {
-            [sort, dir] = [index, sort === index ? -dir : 1];
-            render();
-          });
-          return th;
-        }),
+        ...columns.map((name, index) =>
+          el('th', {
+            onclick: () => {
+              [sort, dir] = [index, sort === index ? -dir : 1];
+              render();
+            },
+            textContent: name,
+          }),
+        ),
       );
-      /** a pill per value but the rule and \`-\` */
-      const cell = (value, index) => {
-        const td = document.createElement('td');
-        td.append(
-          index === 0 || value === '-'
-            ? value
-            : Object.assign(document.createElement('span'), {
-                className: \`pill \${pills[value] ? \`pill-\${pills[value]}\` : ''}\`,
-                textContent: value,
+      /** a pill per value but the rule and \`-\`; a \`differs\` pill titles its reason */
+      const cell = (row, name) =>
+        el(
+          'td',
+          {},
+          row.reason && name === 'options' ? (open.has(row.rule) ? '▾ ' : '▸ ') : '',
+          name === 'rule' || row[name] === '-'
+            ? row[name]
+            : el('span', {
+                className: \`pill \${pills[row[name]] ? \`pill-\${pills[row[name]]}\` : ''}\`,
+                textContent: row[name],
+                title: row[name] === 'differs' ? row.reason : '',
               }),
         );
-        return td;
+      /** old and base option arrays side by side */
+      const detail = (row) => {
+        const grid = el(
+          'div',
+          {},
+          ...['old', 'base'].map((side) =>
+            el(
+              'div',
+              { className: 'stack' },
+              el('span', { className: 'label', textContent: side }),
+              el('pre', { className: 'readout', textContent: JSON.stringify(row[\`\${side}Options\`], undefined, 2) }),
+            ),
+          ),
+        );
+        grid.dataset.grid = '';
+        return el('tr', {}, el('td', { colSpan: columns.length }, grid));
       };
       function render() {
         const query = filter.value.trim().toLowerCase();
         const shown = rows
           .filter(
             (row) =>
-              row[0].includes(query) &&
-              selects.every((select, index) => ['any', row[index + 1]].includes(select.value)),
+              row.rule.includes(query) &&
+              selects.every((select, index) => select.value === 'any' || values(row, columns[index + 1]).includes(select.value)),
           )
-          .sort((a, b) => dir * a[sort].localeCompare(b[sort]) || a[0].localeCompare(b[0]));
+          .sort((a, b) => dir * a[columns[sort]].localeCompare(b[columns[sort]]) || a.rule.localeCompare(b.rule));
         document.querySelector('#body').replaceChildren(
-          ...shown.map((row) => {
-            const tr = document.createElement('tr');
-            tr.classList.toggle('is-muted', row[3] === 'none' || row[4] === 'off');
-            tr.append(...row.map(cell));
-            return tr;
+          ...shown.flatMap((row) => {
+            const tr = el('tr', { className: row.oxlint === 'none' || row.base === 'off' ? 'is-muted' : '' }, ...columns.map((name) => cell(row, name)));
+            if (!row.reason) {
+              return [tr];
+            }
+            tr.classList.add('is-differs');
+            tr.onclick = () => {
+              open.delete(row.rule) || open.add(row.rule);
+              render();
+            };
+            return open.has(row.rule) ? [tr, detail(row)] : [tr];
           }),
         );
         [...head.children].forEach((th, index) =>
