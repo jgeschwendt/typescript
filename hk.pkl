@@ -10,8 +10,8 @@ hooks {
         fix = "bunx oxfmt --no-error-on-unmatched-pattern {{files}}"
       }
       ["oxlint"] {
-        glob = List("*.cjs", "*.cts", "*.js", "*.jsx", "*.mjs", "*.mts", "*.ts", "*.tsx")
         check = "bunx oxlint --no-error-on-unmatched-pattern {{files}}"
+        glob = List("*.cjs", "*.cts", "*.js", "*.jsx", "*.mjs", "*.mts", "*.ts", "*.tsx")
       }
     }
   }
