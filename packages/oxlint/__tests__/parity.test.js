@@ -1,14 +1,8 @@
 import { afterAll, describe, expect, test } from 'bun:test';
-import {
-  mkdirSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs';
+import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
-import { oxlintBin } from './_helpers.js';
+import { join } from 'node:path';
+import { spawnOxlint, write } from './_helpers.js';
 
 // Behaviors of @jlg/eslint the base restores through config rather than a
 // rule, linted end to end from the checkout through both entries. Each was
@@ -80,47 +74,25 @@ afterAll(() => {
 const lint = (entry, paths) => {
   const directory = mkdtempSync(join(tmpdir(), 'oxlint-parity-'));
   directories.push(directory);
-  for (const [name, source] of Object.entries({
-    ...fixtures,
-    [entry.file]: entry.source,
-  })) {
-    mkdirSync(dirname(join(directory, name)), { recursive: true });
-    writeFileSync(join(directory, name), source);
-  }
-  const out = join(directory, 'report.json');
-  const result = Bun.spawnSync(
-    [
-      process.execPath,
-      oxlintBin,
-      '-c',
-      entry.file,
-      '--format',
-      'json',
-      ...paths,
-    ],
-    { cwd: directory, stderr: 'pipe', stdout: Bun.file(out) },
-  );
+  write(directory, { ...fixtures, [entry.file]: entry.source });
+  const { exitCode, output, text } = spawnOxlint(directory, [
+    '-c',
+    entry.file,
+    '--format',
+    'json',
+    ...paths,
+  ]);
   return {
-    diagnostics: (() => {
-      const text = readFileSync(out, 'utf8');
-      return text.trim().startsWith('{') ? JSON.parse(text).diagnostics : [];
-    })(),
-    exitCode: result.exitCode,
-    output: `${readFileSync(out, 'utf8')}${result.stderr.toString()}`,
+    diagnostics: text.trim().startsWith('{')
+      ? JSON.parse(text).diagnostics
+      : [],
+    exitCode,
+    output,
   };
 };
 
-// `file → codes` for the reported diagnostics
-const byFile = (diagnostics) => {
-  const files = {};
-  for (const { code, filename } of diagnostics) {
-    (files[filename] ??= new Set()).add(code);
-  }
-  return files;
-};
-
 describe.each(Object.keys(entries))('through the %s entry', (kind) => {
-  const files = byFile(
+  const files = Object.groupBy(
     lint(entries[kind], [
       'app',
       'instrumentation.ts',
@@ -129,8 +101,9 @@ describe.each(Object.keys(entries))('through the %s entry', (kind) => {
       'src',
       'sub',
     ]).diagnostics,
+    ({ filename }) => filename,
   );
-  const codes = (file) => [...(files[file] ?? [])];
+  const codes = (file) => (files[file] ?? []).map(({ code }) => code);
 
   // the negative assertions below hold vacuously for a file never linted
   test('every fixture was linted', () => {

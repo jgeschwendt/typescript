@@ -1,14 +1,8 @@
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
-import {
-  mkdirSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
-import { configRuleNames, jsPluginScopes, loadConfig } from './_helpers.js';
+import { join } from 'node:path';
+import { jsPluginScopes, jsRuleNames, spawnOxlint, write } from './_helpers.js';
 import { base } from '../index.mjs';
 
 // The jsPlugins layer runs @jlg/eslint's unported rules as ESLint rule code
@@ -35,36 +29,18 @@ import { base } from '../index.mjs';
 const plugins = Object.fromEntries(
   await Promise.all(
     base.jsPlugins.map(async (entry) => {
-      const { default: plugin } = await import(
-        typeof entry === 'string' ? entry : entry.specifier
-      );
-      return [
-        typeof entry === 'string' ? plugin.meta.name : entry.name,
-        plugin,
-      ];
+      const { default: plugin } = await import(entry.specifier ?? entry);
+      return [plugin.meta.name, plugin];
     }),
   ),
 );
 
-const configured = (() => {
-  const js = jsPluginScopes(loadConfig());
-  return configRuleNames(loadConfig())
-    .filter((name) => js.has(name.split('/')[0]))
-    .toSorted((left, right) => left.localeCompare(right));
-})();
-
 test('local plugin names match the scopes the config uses', () => {
-  expect(
-    Object.keys(plugins).toSorted((left, right) => left.localeCompare(right)),
-  ).toStrictEqual(
-    [...jsPluginScopes(loadConfig())].toSorted((left, right) =>
-      left.localeCompare(right),
-    ),
-  );
+  expect(new Set(Object.keys(plugins))).toStrictEqual(jsPluginScopes);
 });
 
 test('every configured jsPlugins rule exists in its plugin', () => {
-  const missing = configured.filter((name) => {
+  const missing = jsRuleNames.filter((name) => {
     const [scope, rule] = name.split('/');
     return plugins[scope]?.rules?.[rule] === undefined;
   });
@@ -239,13 +215,6 @@ const lintTimeout = 120_000;
 const scratch = mkdtempSync(join(tmpdir(), 'oxlint-js-plugins-'));
 const consumers = {};
 
-const write = (root, files) => {
-  for (const [name, source] of Object.entries(files)) {
-    mkdirSync(dirname(join(root, name)), { recursive: true });
-    writeFileSync(join(root, name), source);
-  }
-};
-
 const run = (command, cwd) => {
   const result = Bun.spawnSync(command, {
     cwd,
@@ -298,25 +267,14 @@ const lint = (runtime, linker, entry) => {
   const directory = consumers[linker];
   rmSync(join(directory, '.oxlintrc.json'), { force: true });
   rmSync(join(directory, 'oxlint.config.mjs'), { force: true });
-  writeFileSync(join(directory, entry.file), entry.source);
-  const out = join(directory, 'report.json');
-  const result = Bun.spawnSync(
-    [
-      runtime,
-      join(directory, 'node_modules', 'oxlint', 'bin', 'oxlint'),
-      '-c',
-      entry.file,
-      '--format',
-      'json',
-      'src',
-    ],
-    { cwd: directory, stderr: 'pipe', stdout: Bun.file(out) },
+  write(directory, { [entry.file]: entry.source });
+  const { exitCode, output, text } = spawnOxlint(
+    directory,
+    ['-c', entry.file, '--format', 'json', 'src'],
+    [runtime, join(directory, 'node_modules', 'oxlint', 'bin', 'oxlint')],
   );
-  const text = readFileSync(out, 'utf8');
   if (!text.trim().startsWith('{')) {
-    throw new Error(
-      `oxlint exited ${result.exitCode}: ${text}${result.stderr.toString()}`,
-    );
+    throw new Error(`oxlint exited ${exitCode}: ${output}`);
   }
   return JSON.parse(text).diagnostics;
 };
@@ -345,7 +303,7 @@ describe.each(Object.entries(runtimes))('on %s', (runtimeName, runtime) => {
             ),
           ),
         );
-        expect(configured.filter((name) => !codes.has(name))).toEqual([]);
+        expect(jsRuleNames.filter((name) => !codes.has(name))).toEqual([]);
       },
       lintTimeout,
     );
