@@ -1,6 +1,10 @@
 // Adapts ESLint plugins to oxlint's JS plugin host where the two differ in
-// ways a rule can feel. Not a plugin itself: the -js plugins wrap their rules
-// with `host`.
+// ways a rule can feel. Not a plugin itself: each -js plugin wraps its rules
+// with `host`, and exists so oxlintrc.jsonc names it by a relative path — a bare
+// specifier in an extended config resolves from the consumer's symlinked
+// node_modules/@jlg/oxlint, whose ancestors hold none of this package's
+// dependencies under an isolated install; a -js module's own import resolves
+// from its real path.
 //
 //  - oxlint hands every file the SAME context and sourceCode objects, so a
 //    cache keyed by them — eslint-plugin-react's memoized `@jsx` pragma,

@@ -41,7 +41,7 @@ const absolute = (specifier) =>
 // ※ oxlint-base
 const base = {
   ...parsed,
-  jsPlugins: (parsed.jsPlugins ?? []).map((entry) =>
+  jsPlugins: parsed.jsPlugins.map((entry) =>
     typeof entry === 'string'
       ? absolute(entry)
       : Object.assign(entry, { specifier: absolute(entry.specifier) }),
@@ -55,7 +55,7 @@ const byExtension = /^\*\*\/\*\.[^/]+$/u;
  * tooling configs. They must beat the consumer's overrides (oxlintrc.jsonc,
  * ORDER).
  */
-const trailing = (base.overrides ?? []).filter(
+const trailing = base.overrides.filter(
   (override) => !override.files.every((glob) => byExtension.test(glob)),
 );
 

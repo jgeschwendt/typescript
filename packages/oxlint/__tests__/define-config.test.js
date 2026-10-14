@@ -1,8 +1,8 @@
 import { expect, test } from 'bun:test';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { isAbsolute, join } from 'node:path';
-import { loadConfig } from './_helpers.js';
+import { config as parsed, write } from './_helpers.js';
 import { base, defineConfig } from '../index.mjs';
 
 // The JS entry (`import { defineConfig } from "@jlg/oxlint"`) is the consumption
@@ -15,7 +15,7 @@ import { base, defineConfig } from '../index.mjs';
 
 test('base export matches parsing oxlintrc.jsonc directly', () => {
   const { jsPlugins, ...rest } = base;
-  const { jsPlugins: declared, ...expected } = loadConfig();
+  const { jsPlugins: declared, ...expected } = parsed;
   expect(rest).toStrictEqual(expected);
   expect(jsPlugins).toHaveLength(declared.length);
 });
@@ -23,26 +23,22 @@ test('base export matches parsing oxlintrc.jsonc directly', () => {
 // A JS config hands oxlint the base as an object, with no file to resolve
 // relative entries against — so every jsPlugins path must already be absolute.
 test('base jsPlugins entries are absolute paths', () => {
-  const paths = base.jsPlugins.map((entry) =>
-    typeof entry === 'string' ? entry : entry.specifier,
-  );
-  expect(paths.filter((path) => !isAbsolute(path))).toEqual([]);
+  expect(
+    base.jsPlugins
+      .map((entry) => entry.specifier ?? entry)
+      .filter((path) => !isAbsolute(path)),
+  ).toEqual([]);
 });
 
-test('defineConfig puts base as the first extends entry', () => {
-  const config = defineConfig({ rules: { 'no-void': 'off' } });
-  expect(config.extends[0]).toStrictEqual(base);
-  expect(config.rules).toStrictEqual({ 'no-void': 'off' });
-});
-
-test('defineConfig appends user-supplied extends after base', () => {
-  const userExtend = { rules: { 'no-console': 'error' } };
-  const config = defineConfig({ extends: [userExtend] });
-  expect(config.extends).toStrictEqual([base, userExtend]);
-});
-
-test('defineConfig with no argument still composes the base', () => {
+test("defineConfig prepends base to the consumer's extends and keeps its rules", () => {
+  const extend = { rules: { 'no-console': 'error' } };
+  const config = defineConfig({
+    extends: [extend],
+    rules: { 'no-void': 'off' },
+  });
   expect(defineConfig().extends).toStrictEqual([base]);
+  expect(config.extends).toStrictEqual([base, extend]);
+  expect(config.rules).toStrictEqual({ 'no-void': 'off' });
 });
 
 test("defineConfig does not mutate the caller's config", () => {
@@ -62,43 +58,44 @@ test("defineConfig re-appends the file-named base overrides after the consumer's
   const own = { files: ['**/*.tsx'], rules: { 'no-void': 'off' } };
   const config = defineConfig({ overrides: [own] });
   expect(config.overrides).toStrictEqual([own, ...fileNamed]);
-  expect(fileNamed.flatMap((override) => override.files)).toContain(
-    '**/route.ts',
-  );
-  expect(fileNamed.flatMap((override) => override.files)).not.toContain(
-    '**/*.tsx',
-  );
+  const globs = fileNamed.flatMap((override) => override.files);
+  expect(globs).toContain('**/route.ts');
+  expect(globs).not.toContain('**/*.tsx');
 });
 
-test('defineConfig sets settings.react.version from the installed React', () => {
-  const directory = mkdtempSync(join(tmpdir(), 'oxlint-react-'));
-  const cwd = process.cwd();
-  try {
-    mkdirSync(join(directory, 'node_modules', 'react'), { recursive: true });
-    writeFileSync(
-      join(directory, 'node_modules', 'react', 'package.json'),
-      JSON.stringify({ name: 'react', version: '19.3.0-canary-1' }),
-    );
-    process.chdir(directory);
-    expect(defineConfig().settings.react).toStrictEqual({ version: '19.3.0' });
-    expect(
-      defineConfig({ settings: { react: { version: '18.2.0' } } }).settings
-        .react,
-    ).toStrictEqual({ version: '18.2.0' });
-  } finally {
-    process.chdir(cwd);
-    rmSync(directory, { force: true, recursive: true });
-  }
-});
+const react = {
+  'node_modules/react/package.json': JSON.stringify({
+    name: 'react',
+    version: '19.3.0-canary-1',
+  }),
+};
 
-test('defineConfig leaves settings.react unset without an installed React', () => {
-  const directory = mkdtempSync(join(tmpdir(), 'oxlint-react-'));
-  const cwd = process.cwd();
-  try {
-    process.chdir(directory);
-    expect(defineConfig().settings).toStrictEqual({});
-  } finally {
-    process.chdir(cwd);
-    rmSync(directory, { force: true, recursive: true });
-  }
-});
+test.each([
+  {
+    files: react,
+    input: {},
+    settings: { react: { version: '19.3.0' } },
+    source: 'the installed React',
+  },
+  {
+    files: react,
+    input: { settings: { react: { version: '18.2.0' } } },
+    settings: { react: { version: '18.2.0' } },
+    source: 'the consumer over the installed React',
+  },
+  { files: {}, input: {}, settings: {}, source: 'nothing without React' },
+])(
+  'defineConfig takes settings.react from $source',
+  ({ files, input, settings }) => {
+    const directory = mkdtempSync(join(tmpdir(), 'oxlint-react-'));
+    const cwd = process.cwd();
+    try {
+      write(directory, files);
+      process.chdir(directory);
+      expect(defineConfig(input).settings).toStrictEqual(settings);
+    } finally {
+      process.chdir(cwd);
+      rmSync(directory, { force: true, recursive: true });
+    }
+  },
+);

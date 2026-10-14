@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { enabledScopes, loadConfig, loadRules } from './_helpers.js';
+import { enabledScopes, loadRules } from './_helpers.js';
 
 // The update-review gate. Our config turns whole rule CATEGORIES on at "error"
 // (correctness, pedantic, perf, style, suspicious), so any rule oxlint ADDS to one
@@ -15,9 +15,8 @@ import { enabledScopes, loadConfig, loadRules } from './_helpers.js';
 test('rule inventory for enabled plugins', () => {
   // Derive the filter from the config's own `plugins` so it can never drift from
   // what the config actually enables.
-  const enabled = enabledScopes(loadConfig());
   const inventory = loadRules()
-    .filter((rule) => enabled.has(rule.scope))
+    .filter((rule) => enabledScopes.has(rule.scope))
     .map(
       (rule) =>
         `${rule.scope}/${rule.value} | ${rule.category} | type_aware=${rule.type_aware}`,

@@ -2,10 +2,16 @@
 // discovers `*.test.*` / `*.spec.*`), so it is never run on its own.
 
 import { parse } from 'jsonc-parser';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname, join, parse as parsePath } from 'node:path';
 
 const require = createRequire(import.meta.url);
 const here = import.meta.dirname;
@@ -17,45 +23,51 @@ const oxlintDirectory = dirname(require.resolve('oxlint/package.json'));
 
 const oxlintBin = join(oxlintDirectory, 'bin', 'oxlint');
 const schemaPath = join(oxlintDirectory, 'configuration_schema.json');
-const configPath = join(here, '..', 'oxlintrc.jsonc');
+
+// Writes `{ relativePath: source }` under `root`, creating directories.
+const write = (root, files) => {
+  for (const [name, source] of Object.entries(files)) {
+    mkdirSync(dirname(join(root, name)), { recursive: true });
+    writeFileSync(join(root, name), source);
+  }
+};
+
+// Runs `command` (a runtime and oxlint's bin, so the bin's exec bit and PATH
+// never matter) with `flags` in `cwd`. stdout goes to a FILE, not a pipe: on
+// the Linux runner a piped ~230 kB report came back truncated mid-string
+// ("JSON Parse error: Unterminated string") in one of two identical spawns — a
+// pipe race, not a size cap. (observed 2026-09-09 · ci run 34302573741, bun
+// 1.3.14 on ubuntu-latest)
+const spawnOxlint = (cwd, flags, command = [process.execPath, oxlintBin]) => {
+  const out = join(cwd, 'oxlint.out');
+  const { exitCode, stderr } = Bun.spawnSync([...command, ...flags], {
+    cwd,
+    stderr: 'pipe',
+    stdout: Bun.file(out),
+  });
+  const text = readFileSync(out, 'utf8');
+  return { exitCode, output: `${text}${stderr.toString()}`, text };
+};
 
 // The full rule catalog: `[{ scope, value, category, type_aware, ... }, …]`.
-// 870 rules as of oxlint 1.82 (measured 2026-09-08 · `oxlint --rules --format json`). Spawned through `process.execPath` so it works
-// regardless of the bin's exec bit or PATH.
-//
-// `--rules` still performs oxlint's config discovery and exits non-zero if the
-// nearest `.oxlintrc.json` (walking up to the repo root, which extends THIS
-// package) is broken — including while test 1's own fixture deliberately breaks
-// it. Run from an isolated temp dir holding an empty `{}` config so the catalog
-// is always readable and this helper never masks the assertion that should fire.
-//
-// stdout goes to a FILE in that temp dir, not a pipe: the catalog is ~230 kB,
-// and on the Linux runner a piped read came back truncated mid-string
-// ("JSON Parse error: Unterminated string") in one of the two callers while
-// the other, identical spawn succeeded — a pipe race, not a size cap.
-// (observed 2026-09-09 · ci run 34302573741, bun 1.3.14 on ubuntu-latest)
+// `--rules` still runs config discovery and exits non-zero if the nearest
+// `.oxlintrc.json` (the repo root's, which extends THIS package) is broken; an
+// isolated temp dir holding `{}` keeps the catalog readable so a broken config
+// fails its own assertion, not this helper.
 const loadRules = () => {
   const directory = mkdtempSync(join(tmpdir(), 'oxlint-rules-'));
   try {
-    writeFileSync(join(directory, '.oxlintrc.json'), '{}');
-    const out = join(directory, 'rules.json');
-    const result = Bun.spawnSync(
-      [
-        process.execPath,
-        oxlintBin,
-        '--rules',
-        '--format',
-        'json',
-        '--disable-nested-config',
-      ],
-      { cwd: directory, stderr: 'pipe', stdout: Bun.file(out) },
-    );
-    if (result.exitCode !== 0) {
-      throw new Error(
-        `oxlint --rules exited ${result.exitCode}: ${result.stderr.toString()}`,
-      );
+    write(directory, { '.oxlintrc.json': '{}' });
+    const { exitCode, output, text } = spawnOxlint(directory, [
+      '--rules',
+      '--format',
+      'json',
+      '--disable-nested-config',
+    ]);
+    if (exitCode !== 0) {
+      throw new Error(`oxlint --rules exited ${exitCode}: ${output}`);
     }
-    return JSON.parse(readFileSync(out, 'utf8'));
+    return JSON.parse(text);
   } finally {
     rmSync(directory, { force: true, recursive: true });
   }
@@ -64,36 +76,20 @@ const loadRules = () => {
 // The oxlintrc.jsonc config, parsed with jsonc-parser (comments + trailing
 // commas). jsonc-parser is fault-tolerant; surface parse errors ourselves so a
 // malformed config fails loudly instead of silently yielding `undefined`.
-const loadConfig = () => {
-  const errors = [];
-  const config = parse(readFileSync(configPath, 'utf8'), errors, {
-    allowTrailingComma: true,
-  });
-  if (errors.length > 0) {
-    throw new Error(
-      `oxlintrc.jsonc failed to parse: ${JSON.stringify(errors)}`,
-    );
-  }
-  return config;
-};
+const errors = [];
+const config = parse(
+  readFileSync(join(here, '..', 'oxlintrc.jsonc'), 'utf8'),
+  errors,
+  { allowTrailingComma: true },
+);
+if (errors.length > 0) {
+  throw new Error(`oxlintrc.jsonc failed to parse: ${JSON.stringify(errors)}`);
+}
 
 // The set of valid plugin names, straight from oxlint's own JSON schema.
-const loadPluginNames = () => {
-  const schema = JSON.parse(readFileSync(schemaPath, 'utf8'));
-  return schema.definitions.LintPluginOptionsSchema.enum;
-};
-
-// Every rule name referenced by the config: top-level `rules` plus every
-// `overrides[].rules`.
-const configRuleNames = (config) => {
-  const names = new Set(Object.keys(config.rules ?? {}));
-  for (const override of config.overrides ?? []) {
-    for (const name of Object.keys(override.rules ?? {})) {
-      names.add(name);
-    }
-  }
-  return [...names];
-};
+const loadPluginNames = () =>
+  JSON.parse(readFileSync(schemaPath, 'utf8')).definitions
+    .LintPluginOptionsSchema.enum;
 
 // The catalog scope a config rule name resolves to. Bare names (`no-void`) belong
 // to the `eslint` scope; namespaced names (`import/no-default-export`) take their
@@ -105,43 +101,46 @@ const ruleScope = (name) => {
 };
 
 // Map a config rule name to its `scope/value` catalog key.
-const ruleKey = (name) => {
-  const slash = name.indexOf('/');
-  return slash === -1
-    ? `eslint/${name}`
-    : `${ruleScope(name)}/${name.slice(slash + 1)}`;
-};
+const ruleKey = (name) =>
+  `${ruleScope(name)}/${name.slice(name.indexOf('/') + 1)}`;
 
 // The rule namespaces `jsPlugins` adds: an aliased entry's `name`, or a local
 // plugin file's basename (`./plugins/eslint-js.mjs` → `eslint-js`, which the
-// js-plugins test holds equal to the file's `meta.name`). Their rules are ESLint
-// rule code, absent from oxlint's catalog by design, so the native-rule guards
-// skip them and js-plugins.test.js checks them against the plugins instead.
-const jsPluginScopes = (config) =>
+// js-plugins test holds equal to the file's `meta.name`).
+const jsPluginScopes = new Set(
+  config.jsPlugins.map((entry) => entry.name ?? parsePath(entry).name),
+);
+
+// Every rule name the config references (top-level `rules` plus every
+// `overrides[].rules`), split by whether a jsPlugins scope owns it. jsPlugins
+// rules are ESLint rule code, absent from oxlint's catalog by design, so the
+// native-rule guards skip them and js-plugins.test.js checks them against the
+// plugins instead.
+const { js: jsRuleNames, native: nativeRuleNames } = Object.groupBy(
   new Set(
-    (config.jsPlugins ?? []).map((entry) =>
-      typeof entry === 'string'
-        ? entry
-            .split('/')
-            .pop()
-            .replace(/\.m?js$/u, '')
-        : entry.name,
+    [config, ...config.overrides].flatMap(({ rules }) =>
+      Object.keys(rules ?? {}),
     ),
-  );
+  ),
+  (name) => (jsPluginScopes.has(name.split('/')[0]) ? 'js' : 'native'),
+);
 
 // The catalog scopes the config's `plugins` array turns on, normalized to match
 // catalog scope spelling (`react-perf` → `react_perf`).
-const enabledScopes = (config) =>
-  new Set((config.plugins ?? []).map((plugin) => plugin.replaceAll('-', '_')));
+const enabledScopes = new Set(
+  config.plugins.map((plugin) => plugin.replaceAll('-', '_')),
+);
 
 export {
-  configRuleNames,
+  config,
   enabledScopes,
   jsPluginScopes,
-  loadConfig,
+  jsRuleNames,
   loadPluginNames,
   loadRules,
-  oxlintBin,
+  nativeRuleNames,
   ruleKey,
   ruleScope,
+  spawnOxlint,
+  write,
 };

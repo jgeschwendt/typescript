@@ -24,27 +24,25 @@ const blockComment = /^\s*(?:eslint|exported|globals?|oxlint)(?:\s|$)/u;
 
 const name = 'inline-config';
 
-/** The rules a disable directive names, without its `-- description`. */
-const targets = (value, directive) =>
-  value
-    .slice(value.indexOf(directive) + directive.length)
-    .split('--')[0]
-    .split(/[\s,]+/u)
-    .filter(Boolean);
-
 /**
  * A directive whose suppression range includes the comment itself: a block
  * `disable` (a line `// oxlint-disable` starts after its own line) or a
- * `disable-line`, blanket or naming this plugin.
+ * `disable-line`, blanket or naming this plugin (rules read up to any
+ * `-- description`).
  */
-const selfSuppressing = (comment, match) => {
-  const { kind, prefix } = match.groups;
-  const covers =
-    kind === 'disable-line' || (kind === 'disable' && comment.type === 'Block');
-  if (!covers) {
+const selfSuppressing = (comment, { groups: { kind, prefix } }) => {
+  if (
+    kind !== 'disable-line' &&
+    (kind !== 'disable' || comment.type !== 'Block')
+  ) {
     return false;
   }
-  const named = targets(comment.value, `${prefix}-${kind}`);
+  const directive = `${prefix}-${kind}`;
+  const named = comment.value
+    .slice(comment.value.indexOf(directive) + directive.length)
+    .split('--')[0]
+    .split(/[\s,]+/u)
+    .filter(Boolean);
   return (
     named.length === 0 || named.some((rule) => rule.startsWith(`${name}/`))
   );
