@@ -22,8 +22,8 @@ invariants and hazards, `README.md` the contract; this file is what is open.
 
 1. Land `cleanup` (hk replaces lefthook, bun 1.4.3, eslint 10 + unicorn 77,
    `@jlg/oxlint` rebuilt as a dynamic `index.js`, the eslint parity
-   snapshot). Its `@jlg/oxlint` changesets are `minor`, so the Version
-   Packages PR needs the owner's `release:signed-off` label.
+   snapshot). Its `@jlg/oxlint` changesets are `patch` (0.1.2 ships on
+   merge); the owner takes another pass before any minor.
 2. After 1: `hk install --mise --force` once — every checkout shares the bare
    repo's hooks dir. Not while any checkout sits at a pre-hk commit (`verax`,
    `js-plugins`, `import-order`, `demo-share`, grove's pool slots): the hook
