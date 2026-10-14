@@ -1,9 +1,11 @@
 # @jlg/oxlint
 
 Shareable [oxlint](https://oxc.rs/docs/guide/usage/linter) base config. `defineConfig()` in
-`index.js` builds it at call time and returns one flat oxlint config. Against the retired
-`@jlg/eslint`: [the parity snapshot](https://github.com/jgeschwendt/typescript/blob/main/packages/oxlint/__tests__/__snapshots__/eslint-parity.test.js.snap), one line per ESLint rule — on or off there, native, JS
-plugin or missing in oxlint, its severity here, and whether the options match.
+`index.js` builds it at call time and returns one flat oxlint config. [The rules
+table](https://jgeschwendt.github.io/typescript/) ([snapshot](https://github.com/jgeschwendt/typescript/blob/main/packages/oxlint/__tests__/__snapshots__/rules.test.js.snap)) has one line per rule of
+the enabled oxlint plugins and of the retired `@jlg/eslint`'s catalogs: oxlint's category, on or
+off in `@jlg/eslint`, native, JS plugin or missing in oxlint, its severity here, and whether the
+options match.
 
 ## Consumption
 
@@ -99,7 +101,7 @@ callback args.
 
 ## Restored through JS plugins
 
-`jsPlugins` run ESLint rule code inside oxlint: rules oxlint never ported (the `js` lines of [the parity snapshot](https://github.com/jgeschwendt/typescript/blob/main/packages/oxlint/__tests__/__snapshots__/eslint-parity.test.js.snap)) plus
+`jsPlugins` run ESLint rule code inside oxlint: rules oxlint never ported (the `js` lines of [the rules table](https://jgeschwendt.github.io/typescript/)) plus
 the directive ban. Retune them like any rule; `oxlint --fix` applies the fixable ones.
 
 | plugin          | runs                                                     |
@@ -172,22 +174,23 @@ From oxlint's JS plugin host:
 
 - `rule-existence.test.js`: every emitted rule and plugin exists in `oxlint --rules`, every rule's
   plugin is enabled, and no category-enabled `typescript/*` rule stays on for JS files.
-- `rule-inventory.test.js`: snapshots every rule in the enabled plugins, so a rule a bump adds to
-  an error category shows as a diff at review.
-- `eslint-parity.test.js`: snapshots every rule of `@jlg/eslint`'s catalogs against oxlint and this
-  base, and fails on a rule that was on, is native, and is off here outside its deliberate list.
+- `rules.test.js`: snapshots every rule of the enabled plugins and of `@jlg/eslint`'s catalogs
+  against this base, so a rule a bump adds to an error category shows as a diff at review, and
+  fails on a rule that was on, is native, and is off here outside its deliberate list.
   `bun run --filter '@jlg/oxlint' report` renders it to a filterable, sortable
-  `__tests__/eslint-parity.html`; regenerate and commit that after every snapshot change.
+  `__tests__/rules.html` styled by `ui.css` beside it (`ui.css` vendored from jgeschwendt/ui @
+  162e78b); regenerate and commit that after every snapshot change. A push to `main` touching
+  either publishes both to [GitHub Pages](https://jgeschwendt.github.io/typescript/).
 - `define-config.test.js`: the `defineConfig` contract (detection, merge order, `env`, `settings`).
 - `js-plugins.test.js`: installs the packed tarball beside `typescript@7` and `oxlint` under both
   bun linkers, lints through `oxlint.config.ts` on Node and Bun, and fails unless every configured
   JS-plugin rule reports. Needs the network or a warm bun cache.
 - `host.test.js`: `plugins/host` end to end through a probe plugin: a throwing listener reports
   once and stops that rule on the file; the restored `getJSDocComment` attaches as ESLint's does.
-- `parity.test.js`: config-level behavior linted end to end (`env.node`, `no-unused-vars` options,
+- `lint.test.js`: config-level behavior linted end to end (`env.node`, `no-unused-vars` options,
   tooling configs, override order, the directive-ban throw).
 
-After an intentional oxlint bump, review the inventory diff, then regenerate:
+After an intentional oxlint bump, review the rules snapshot diff, then regenerate:
 
 ```sh
 bun run --filter '@jlg/oxlint' test --update-snapshots

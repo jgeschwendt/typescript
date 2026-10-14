@@ -23,7 +23,7 @@
     "access": "public"
   },
   "scripts": {
-    "report": "bun __tests__/eslint-parity.html.js",
+    "report": "bun __tests__/rules.html.js",
     "test": "bun test"
   },
   "dependencies": {

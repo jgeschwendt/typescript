@@ -38,7 +38,7 @@ const directives = [
 const index = Bun.fileURLToPath(import.meta.resolve('../index.js'));
 
 // no package.json above the temp dir: every environment is on
-const directory = mkdtempSync(join(tmpdir(), 'oxlint-parity-'));
+const directory = mkdtempSync(join(tmpdir(), 'oxlint-lint-'));
 afterAll(() => {
   rmSync(directory, { force: true, recursive: true });
 });
