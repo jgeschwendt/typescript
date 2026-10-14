@@ -37,19 +37,27 @@ test('rules', () => {
 });
 
 test('options', () => {
+  /** @type {Record<string, string>} */
+  const verdicts = {
+    'eslint/id-length': 'same',
+    'eslint/new-cap': 'differs: off defaults',
+    'eslint/no-unused-vars': 'same',
+    'eslint/radix': 'unverified: no declared defaults',
+    'eslint/sort-imports': 'same',
+    'import/order': 'differs: old sets none',
+    'react/require-default-props': 'differs: old sets none',
+    'typescript/naming-convention': 'differs: values differ',
+    'typescript/no-magic-numbers': '-',
+    'unicorn/consistent-json-file-read': 'differs: old sets none',
+    'unicorn/expiring-todo-comments': 'unverified: schema drift: ignoreDatesOnPullRequests',
+    'unicorn/prefer-export-from': 'unverified: schema drift: ignoreUsedVariables',
+    'unicorn/prefer-number-properties': 'differs: off defaults',
+  };
   expect(
     Object.fromEntries(
       rows
-        .filter(({ rule }) =>
-          /^eslint\/(?:accessor-pairs|id-length|new-cap|no-unused-vars|radix)$/u.test(rule),
-        )
+        .filter(({ rule }) => Object.hasOwn(verdicts, rule))
         .map(({ options, reason, rule }) => [rule, [options, reason].filter(Boolean).join(': ')]),
     ),
-  ).toEqual({
-    'eslint/accessor-pairs': 'same',
-    'eslint/id-length': 'differs: values differ',
-    'eslint/new-cap': 'differs: off defaults',
-    'eslint/no-unused-vars': 'differs: old sets none',
-    'eslint/radix': 'unverified',
-  });
+  ).toEqual(verdicts);
 });

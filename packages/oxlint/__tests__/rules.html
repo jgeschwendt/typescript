@@ -34,14 +34,18 @@
         <div class="row">
           <h1 class="h1">@jlg/oxlint rules</h1>
           <output id="count" class="badge"></output>
-          <output class="badge badge-warn">4 off defaults</output
-          ><output class="badge badge-warn">4 old sets none</output
-          ><output class="badge badge-warn">4 values differ</output>
+          <output class="badge badge-warn">2 no declared defaults</output
+          ><output class="badge badge-warn">2 off defaults</output
+          ><output class="badge badge-warn">3 old sets none</output
+          ><output class="badge badge-warn">1 schema drift: ignoreDatesOnPullRequests</output
+          ><output class="badge badge-warn">1 schema drift: ignoreUsedVariables</output
+          ><output class="badge badge-warn">1 values differ</output>
         </div>
         <p class="muted">
-          Where the base passes no options, the old ones are resolved over the rule's declared
-          defaults as ESLint does; <code class="code">unverified</code> marks a rule that declares
-          none, so no difference is claimed.
+          Old and base options are resolved over the rule's declared defaults as ESLint does and
+          compared over the keys the rule knows; <code class="code">unverified</code> marks an old
+          key its schema no longer has, or a bare base where the rule declares no defaults, so no
+          difference is claimed.
         </p>
         <div id="filters" class="row">
           <label class="field">
@@ -136,7 +140,7 @@
           "category": "style",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "eslint/capitalized-comments"
         },
@@ -198,7 +202,7 @@
           "category": "style",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "eslint/curly"
         },
@@ -343,9 +347,8 @@
           "oldOptions": [
             { "exceptionPatterns": [], "exceptions": [], "min": 2, "properties": "always" }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "values differ",
           "rule": "eslint/id-length"
         },
         {
@@ -412,7 +415,7 @@
           "category": "pedantic",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "eslint/max-lines"
         },
@@ -422,7 +425,7 @@
           "category": "pedantic",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "eslint/max-lines-per-function"
         },
@@ -1343,7 +1346,7 @@
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "eslint/no-restricted-exports"
         },
@@ -1502,7 +1505,7 @@
           "category": "style",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "eslint/no-ternary"
         },
@@ -1542,7 +1545,7 @@
           "category": "nursery",
           "old": "on",
           "oldOptions": [{ "typeof": false }],
-          "options": "same",
+          "options": "-",
           "oxlint": "native",
           "rule": "eslint/no-undef"
         },
@@ -1562,7 +1565,7 @@
           "category": "restriction",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "eslint/no-undefined"
         },
@@ -1594,7 +1597,7 @@
           "category": "suspicious",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "eslint/no-unexpected-multiline"
         },
@@ -1634,7 +1637,7 @@
           "category": "nursery",
           "old": "on",
           "oldOptions": [{ "ignore": [] }],
-          "options": "same",
+          "options": "-",
           "oxlint": "native",
           "rule": "eslint/no-unreachable-loop"
         },
@@ -1720,9 +1723,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "old sets none",
           "rule": "eslint/no-unused-vars"
         },
         {
@@ -1751,7 +1753,7 @@
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "eslint/no-useless-assignment"
         },
@@ -2065,6 +2067,7 @@
           "oldOptions": ["always"],
           "options": "unverified",
           "oxlint": "native",
+          "reason": "no declared defaults",
           "rule": "eslint/radix"
         },
         {
@@ -2121,9 +2124,8 @@
               "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
             }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "values differ",
           "rule": "eslint/sort-imports"
         },
         {
@@ -2291,7 +2293,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/class-methods-use-this"
         },
@@ -2371,7 +2373,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/default-param-last"
         },
@@ -2429,7 +2431,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/init-declarations"
         },
@@ -2439,7 +2441,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/max-params"
         },
@@ -2503,7 +2505,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/no-array-constructor"
         },
@@ -2563,7 +2565,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/no-dupe-class-members"
         },
@@ -2603,7 +2605,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [{ "allow": [] }],
-          "options": "same",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/no-empty-function"
         },
@@ -2746,9 +2748,8 @@
               "ignoreTypeIndexes": false
             }
           ],
-          "options": "differs",
+          "options": "-",
           "oxlint": "none",
-          "reason": "off defaults",
           "rule": "typescript/no-magic-numbers"
         },
         {
@@ -2847,7 +2848,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/no-redeclare"
         },
@@ -2887,7 +2888,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/no-shadow"
         },
@@ -2917,7 +2918,7 @@
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native (type-aware)",
           "rule": "typescript/no-unnecessary-condition"
         },
@@ -3047,7 +3048,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/no-unsafe-enum-assignment"
         },
@@ -3119,7 +3120,7 @@
           "oldOptions": [
             { "allowShortCircuit": false, "allowTaggedTemplates": false, "allowTernary": false }
           ],
-          "options": "same",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/no-unused-expressions"
         },
@@ -3129,7 +3130,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/no-unused-private-class-members"
         },
@@ -3139,7 +3140,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/no-unused-vars"
         },
@@ -3149,7 +3150,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/no-use-before-define"
         },
@@ -3159,7 +3160,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/no-useless-constructor"
         },
@@ -3239,7 +3240,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "typescript/prefer-destructuring"
         },
@@ -3329,7 +3330,7 @@
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native (type-aware)",
           "rule": "typescript/prefer-optional-chain"
         },
@@ -3616,7 +3617,7 @@
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "import/export"
         },
@@ -3646,7 +3647,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "import/no-unused-modules"
         },
@@ -3806,7 +3807,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "import/enforce-node-protocol-usage"
         },
@@ -3856,7 +3857,7 @@
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "import/named"
         },
@@ -3876,7 +3877,7 @@
           "category": "style",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "import/no-named-export"
         },
@@ -3946,7 +3947,7 @@
           "category": "style",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "import/prefer-default-export"
         },
@@ -4126,7 +4127,7 @@
           "category": "style",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "react/function-component-definition"
         },
@@ -4166,7 +4167,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-child-element-spacing"
         },
@@ -4176,7 +4177,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-closing-bracket-location"
         },
@@ -4186,7 +4187,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-closing-tag-location"
         },
@@ -4196,7 +4197,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-curly-spacing"
         },
@@ -4206,7 +4207,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-curly-newline"
         },
@@ -4216,7 +4217,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-equals-spacing"
         },
@@ -4228,6 +4229,7 @@
           "oldOptions": [{ "extensions": [".jsx", ".tsx"] }],
           "options": "unverified",
           "oxlint": "native",
+          "reason": "no declared defaults",
           "rule": "react/jsx-filename-extension"
         },
         {
@@ -4236,7 +4238,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-first-prop-new-line"
         },
@@ -4256,7 +4258,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-indent"
         },
@@ -4266,7 +4268,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-indent-props"
         },
@@ -4296,7 +4298,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-max-props-per-line"
         },
@@ -4306,7 +4308,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-newline"
         },
@@ -4406,7 +4408,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-one-expression-per-line"
         },
@@ -4458,7 +4460,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-props-no-multi-spaces"
         },
@@ -4498,7 +4500,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-tag-spacing"
         },
@@ -4508,7 +4510,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-uses-react"
         },
@@ -4518,7 +4520,7 @@
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-uses-vars"
         },
@@ -4528,7 +4530,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "react/jsx-wrap-multilines"
         },
@@ -4898,7 +4900,7 @@
           "category": "suspicious",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "react/react-in-jsx-scope"
         },
@@ -4929,7 +4931,7 @@
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "react/require-render-return"
         },
@@ -5049,7 +5051,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "unicorn/comma-spacing"
         },
@@ -5270,7 +5272,7 @@
           "category": "style",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "unicorn/empty-brace-spaces"
         },
@@ -5307,9 +5309,9 @@
               "terms": ["todo", "fixme", "xxx"]
             }
           ],
-          "options": "differs",
+          "options": "unverified",
           "oxlint": "js",
-          "reason": "values differ",
+          "reason": "schema drift: ignoreDatesOnPullRequests",
           "rule": "unicorn/expiring-todo-comments"
         },
         {
@@ -5368,7 +5370,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "unicorn/indent"
         },
@@ -5398,7 +5400,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "unicorn/key-name-casing"
         },
@@ -5858,7 +5860,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "unicorn/no-empty-link-text"
         },
@@ -6140,7 +6142,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "unicorn/no-javascript-url"
         },
@@ -6210,7 +6212,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "unicorn/no-loss-of-precision"
         },
@@ -6330,7 +6332,7 @@
           "category": "style",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "unicorn/no-nested-ternary"
         },
@@ -6360,7 +6362,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "unicorn/no-non-function-verb-prefix"
         },
@@ -6990,7 +6992,7 @@
           "category": "nursery",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "unicorn/no-useless-iterator-to-array"
         },
@@ -7140,7 +7142,7 @@
           "category": "style",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "unicorn/number-literal-case"
         },
@@ -7588,9 +7590,9 @@
           "category": "style",
           "old": "on",
           "oldOptions": [{ "ignoreUsedVariables": false }],
-          "options": "differs",
+          "options": "unverified",
           "oxlint": "native",
-          "reason": "off defaults",
+          "reason": "schema drift: ignoreUsedVariables",
           "rule": "unicorn/prefer-export-from"
         },
         {
@@ -8620,7 +8622,7 @@
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "none",
           "rule": "unicorn/require-frontmatter-fields"
         },
@@ -9374,10 +9376,10 @@
         node.append(...children);
         return node;
       };
-      /** what a filter matches: plain `differs` takes every reason */
+      /** what a filter matches: a plain value takes every reason */
       const values = (row, name) => [
         row[name],
-        ...(name === 'options' && row.reason ? [`differs: ${row.reason}`] : []),
+        ...(name === 'options' && row.reason ? [`${row[name]}: ${row.reason}`] : []),
       ];
       const selects = columns.slice(1).map((name) => {
         const select = el(
@@ -9410,7 +9412,7 @@
           }),
         ),
       );
-      /** a pill per value but the rule and `-`; a `differs` pill titles its reason, an `unverified` one why */
+      /** a pill per value but the rule and `-`; a `differs` or `unverified` pill titles its reason */
       const cell = (row, name) =>
         el(
           'td',
@@ -9421,12 +9423,7 @@
             : el('span', {
                 className: `pill ${pills[row[name]] ? `pill-${pills[row[name]]}` : ''}`,
                 textContent: row[name],
-                title:
-                  {
-                    differs: row.reason,
-                    unverified:
-                      'the base passes no options and the rule declares no defaults to compare against',
-                  }[row[name]] ?? '',
+                title: (name === 'options' && row.reason) || '',
               }),
         );
       /** old and base option arrays side by side */

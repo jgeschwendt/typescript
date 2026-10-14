@@ -52,8 +52,9 @@ await Bun.write(
           ${reasons}
         </div>
         <p class="muted">
-          Where the base passes no options, the old ones are resolved over the rule's declared defaults as ESLint
-          does; <code class="code">unverified</code> marks a rule that declares none, so no difference is claimed.
+          Old and base options are resolved over the rule's declared defaults as ESLint does and compared over the
+          keys the rule knows; <code class="code">unverified</code> marks an old key its schema no longer has, or a
+          bare base where the rule declares no defaults, so no difference is claimed.
         </p>
         <div id="filters" class="row">
           <label class="field">
@@ -94,8 +95,8 @@ await Bun.write(
         node.append(...children);
         return node;
       };
-      /** what a filter matches: plain \`differs\` takes every reason */
-      const values = (row, name) => [row[name], ...(name === 'options' && row.reason ? [\`differs: \${row.reason}\`] : [])];
+      /** what a filter matches: a plain value takes every reason */
+      const values = (row, name) => [row[name], ...(name === 'options' && row.reason ? [\`\${row[name]}: \${row.reason}\`] : [])];
       const selects = columns.slice(1).map((name) => {
         const select = el(
           'select',
@@ -116,7 +117,7 @@ await Bun.write(
           }),
         ),
       );
-      /** a pill per value but the rule and \`-\`; a \`differs\` pill titles its reason, an \`unverified\` one why */
+      /** a pill per value but the rule and \`-\`; a \`differs\` or \`unverified\` pill titles its reason */
       const cell = (row, name) =>
         el(
           'td',
@@ -127,7 +128,7 @@ await Bun.write(
             : el('span', {
                 className: \`pill \${pills[row[name]] ? \`pill-\${pills[row[name]]}\` : ''}\`,
                 textContent: row[name],
-                title: { differs: row.reason, unverified: 'the base passes no options and the rule declares no defaults to compare against' }[row[name]] ?? '',
+                title: (name === 'options' && row.reason) || '',
               }),
         );
       /** old and base option arrays side by side */
