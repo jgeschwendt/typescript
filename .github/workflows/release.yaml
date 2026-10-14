@@ -31,6 +31,7 @@ jobs:
       # node 24 (npm 11.9) for OIDC publishing: never shadow node with bun
       - uses: jdx/mise-action@v2
       - run: bun install --frozen-lockfile
+      # ※ root-name
       - id: select-mode
         uses: changesets/action/select-mode@v2
 

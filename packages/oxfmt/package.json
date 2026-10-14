@@ -9,14 +9,14 @@
   "files": [
     "README.md",
     "index.d.ts",
-    "index.mjs",
+    "index.js",
     "oxfmtrc.json"
   ],
   "type": "module",
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "default": "./index.mjs"
+      "default": "./index.js"
     },
     "./oxfmtrc.json": "./oxfmtrc.json"
   },
@@ -27,6 +27,7 @@
     "test": "bun test"
   },
   "devDependencies": {
+    "@jlg/lint": "^0.1.1",
     "@jlg/tsconfig": "^0.1.0",
     "@types/bun": "^1.4.3",
     "oxfmt": "^0.72.0"

@@ -7,6 +7,7 @@
       "devDependencies": {
         "@changesets/changelog-github": "^1.0.1",
         "@changesets/cli": "^3.0.3",
+        "@jlg/lint": "^0.1.1",
         "@types/bun": "^1.4.3",
         "oxfmt": "^0.72.0",
         "oxlint": "^1.87.0",
@@ -17,6 +18,7 @@
       "name": "@jlg/oxfmt",
       "version": "0.1.1",
       "devDependencies": {
+        "@jlg/lint": "^0.1.1",
         "@jlg/tsconfig": "^0.1.0",
         "@types/bun": "^1.4.3",
         "oxfmt": "^0.72.0",
@@ -26,7 +28,7 @@
       },
     },
     "packages/oxlint": {
-      "name": "@jlg/oxlint",
+      "name": "@jlg/lint",
       "version": "0.1.1",
       "dependencies": {
         "@typescript-eslint/eslint-plugin": "^8.71.1",
@@ -36,7 +38,6 @@
         "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-unicorn": "^77.0.0",
-        "jsonc-parser": "^3.3.1",
       },
       "devDependencies": {
         "@jlg/tsconfig": "^0.1.1",
@@ -50,6 +51,7 @@
       "name": "@jlg/tsconfig",
       "version": "0.1.1",
       "devDependencies": {
+        "@jlg/lint": "^0.1.1",
         "@jlg/oxfmt": "^0.1.1",
         "typescript": "^7.0.2",
       },
@@ -131,9 +133,9 @@
 
     "@humanwhocodes/retry": ["@humanwhocodes/retry@0.4.3", "", {}, "sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ=="],
 
-    "@jlg/oxfmt": ["@jlg/oxfmt@workspace:packages/oxfmt"],
+    "@jlg/lint": ["@jlg/lint@workspace:packages/oxlint"],
 
-    "@jlg/oxlint": ["@jlg/oxlint@workspace:packages/oxlint"],
+    "@jlg/oxfmt": ["@jlg/oxfmt@workspace:packages/oxfmt"],
 
     "@jlg/tsconfig": ["@jlg/tsconfig@workspace:packages/tsconfig"],
 

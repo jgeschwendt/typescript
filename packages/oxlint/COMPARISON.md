@@ -1,4 +1,4 @@
-# `@jlg/eslint` vs `@jlg/oxlint`
+# `@jlg/eslint` vs `@jlg/lint`
 
 > `packages/eslint` was removed 2026-07-19 (recoverable from git history);
 > `@jlg/eslint` references herein are historical.
@@ -7,9 +7,9 @@ How the two bases differ in shape. The rule-level mapping is README.md ("What
 maps from `@jlg/eslint`"), and every rule enforced differently is in GAPS.md;
 this chart does not repeat them.
 
-| Dimension            | `@jlg/eslint` (packages/eslint)                                              | `@jlg/oxlint` (packages/oxlint)                                                                                                                                                                                           |
+| Dimension            | `@jlg/eslint` (packages/eslint)                                              | `@jlg/lint` (packages/oxlint)                                                                                                                                                                                             |
 | -------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Form                 | JS factory: `config()` detects react/next/ts from consumer's package.json    | Static `oxlintrc.jsonc`, via `extends` or `defineConfig` (which also re-orders the file-named overrides and detects `settings.react.version`); every layer applies unconditionally                                        |
+| Form                 | JS factory: `config()` detects react/next/ts from consumer's package.json    | JS factory: `defineConfig()` detects next/react/typescript from the nearest package.json (all on when none; `env` forces), detects `settings.react.version`, returns one flat config                                      |
 | Philosophy           | Load every plugin's `all` config, subtract prettier-conflicts + curated offs | All categories at `error` (`restriction`→`warn`, `nursery`→off), then curate                                                                                                                                              |
 | Plugins              | `@eslint/js`, import, react, unicorn, typescript-eslint (conditional)        | eslint, import, react, typescript, unicorn + **oxc** (new surface); react covers react-hooks; unported rules run as ESLint code through `jsPlugins` (`eslint-js`, `import-js`, `react-js`, `typescript-js`, `unicorn-js`) |
 | Type-aware rules     | Yes (`projectService: true`, full typescript-eslint all)                     | **Enabled** via tsgolint — `options.typeAware` (consumer root config) + `oxlint-tsgolint`, repo on TS 7.0; JS plugins get no types                                                                                        |

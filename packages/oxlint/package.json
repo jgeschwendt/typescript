@@ -1,5 +1,5 @@
 {
-  "name": "@jlg/oxlint",
+  "name": "@jlg/lint",
   "version": "0.1.1",
   "repository": {
     "type": "git",
@@ -10,17 +10,15 @@
     "GAPS.md",
     "README.md",
     "index.d.ts",
-    "index.mjs",
-    "oxlintrc.jsonc",
+    "index.js",
     "plugins"
   ],
   "type": "module",
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "default": "./index.mjs"
-    },
-    "./oxlintrc.jsonc": "./oxlintrc.jsonc"
+      "default": "./index.js"
+    }
   },
   "publishConfig": {
     "access": "public"
@@ -35,8 +33,7 @@
     "eslint": "^10.12.0",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-unicorn": "^77.0.0",
-    "jsonc-parser": "^3.3.1"
+    "eslint-plugin-unicorn": "^77.0.0"
   },
   "devDependencies": {
     "@jlg/tsconfig": "^0.1.1",

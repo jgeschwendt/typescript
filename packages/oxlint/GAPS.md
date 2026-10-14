@@ -3,10 +3,10 @@
 Every rule `@jlg/eslint` (`@jgeschwendt/eslint@0.0.0-canary.0`, its last release) enforced that
 this base does not enforce the same way, against **oxlint 1.87**. Resolved, not read off the source:
 ESLint's `calculateConfigForFile` on a Next + React + TypeScript probe (every conditional block on)
-for `a.js`, `a.ts`, `a.tsx` and the Next route files, diffed against this package's `oxlintrc.jsonc`
+for `a.js`, `a.ts`, `a.tsx` and the Next route files, diffed against this package's `index.js`
 (categories, rules, overrides) and `oxlint --rules`, matching rules by plugin and name. The resolved
 ESLint side is `__tests__/fixtures/eslint-baseline.json`. (measured 2026-10-09 · baseline × `oxlint
---rules --format json` × `oxlintrc.jsonc`)
+--rules --format json` × `index.js`)
 
 | bucket                                                     | rules |
 | ---------------------------------------------------------- | ----: |
@@ -125,7 +125,7 @@ the same, as hooks a consumer can give options to: without options they check no
 
 ## In oxlint, off in this base
 
-`nursery` is off by policy (unstable rules); the rest are explicit offs in `oxlintrc.jsonc`.
+`nursery` is off by policy (unstable rules); the rest are explicit offs in `index.js`.
 
 | rule                                                              | why off                                                                                                                                                                       |
 | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

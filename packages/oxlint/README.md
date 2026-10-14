@@ -1,14 +1,11 @@
-# @jlg/oxlint
+# @jlg/lint
 
 Shareable [oxlint](https://oxc.rs/docs/guide/usage/linter) base config — the
-oxlint successor to the removed `@jlg/eslint`. The base ruleset lives in one
-file, `oxlintrc.jsonc`, consumed either programmatically from a TS config
-(`import { defineConfig } from "@jlg/oxlint"` — the primary path) or by
-`extends`-ing the JSONC directly from a JSON config.
+oxlint successor to the removed `@jlg/eslint`. The whole base is `index.js`:
+`defineConfig()` builds it in JavaScript at call time, the way `@jlg/eslint`'s
+`config()` did, and returns one flat oxlint config.
 
 ## Consumption
-
-### From a TS config (recommended)
 
 oxlint auto-discovers an `oxlint.config.ts` (or `.mts`) and evaluates it as
 real JavaScript; an `oxlint.config.{js,mjs,cjs,cts}` loads only when named
@@ -16,84 +13,71 @@ with `-c` (verified 2026-10-09 · probe, oxlint 1.87):
 
 ```ts
 // oxlint.config.ts at your repo root
-import { defineConfig } from '@jlg/oxlint';
+import { defineConfig } from '@jlg/lint';
 
 export default defineConfig({
-  // Ignores belong in the CONSUMING config — see "Caveats" below.
+  // the base sets no ignores
   ignorePatterns: ['**/*.d.ts'],
-  // Type-aware linting belongs in this root config — see "Type-aware linting"
-  // below. Requires the `oxlint-tsgolint` package + TypeScript 7+.
+  // root-only; needs `oxlint-tsgolint` + TypeScript 7+ (see "Type-aware linting")
   options: { typeAware: true },
-  // Your own plugins / rules / overrides compose on top of the base.
+  // yours merge over the base; these overrides apply after the base's
+  overrides: [],
   rules: {},
 });
 ```
 
-`defineConfig(config)` returns your config with three things added:
+`defineConfig(config)` returns a single object — no `extends`:
 
-- **`extends: [base, ...config.extends]`** — the parsed base first, any
-  `extends` you passed after it.
-- **`overrides: [...config.overrides, ...fileNamed]`** — the base's overrides
-  scoped by file name (Next routing files, `route.ts` naming, tooling
-  configs) re-appended after yours, so they beat a consumer `**/*.tsx`
-  override as they did under `@jlg/eslint`. The base's extension-only
-  overrides (`**/*.<ext>`) stay under yours.
-- **`settings`** in the root config, where oxlint reads them, with
-  `settings.react.version` detected from the `react/package.json` your project
-  resolves (eslint-plugin-react's `"detect"` is rejected by oxlint). Your own
-  `settings` win.
+- **`categories`, `rules`**: the base's, with yours merged over them.
+- **`plugins`, `jsPlugins`**: the base's, plus any you add.
+- **`overrides`**: the base's for the detected environment, then yours —
+  yours come **last**, so they win.
+- **`settings`**: `react.version` detected from the `react/package.json` your
+  project resolves (oxlint rejects eslint-plugin-react's `"detect"`), then
+  yours.
+- **`env`**: oxlint's own environments (`browser`, …) pass through;
+  `next`, `react` and `typescript` are consumed by detection and stripped.
+- Every other key (`ignorePatterns`, `options`, `globals`, …) passes through.
 
-The base is also exported as `base` (`import { base } from "@jlg/oxlint"`): the
-parsed `oxlintrc.jsonc`, except that its `jsPlugins` paths are absolutized —
-in a JS config the base has no file of its own to resolve them against.
+### Environment detection
 
-- **`extends` in a JS/TS config takes config OBJECTS, not path strings**:
-  oxlint rejects a string with "`extends[0]` must be a config object
-  (strings/paths are not supported)" — the opposite of the JSON loader, where
-  `extends` is an array of file paths (verified 2026-10-09 · probe, oxlint
-  1.87). `defineConfig` handles this; it matters only if you hand-build
-  `extends` yourself.
-- **Runtime.** Loading a **TypeScript** config requires Node
-  `^20.19.0 || >=22.18.0` — oxlint relies on Node's native TypeScript
-  stripping (verified 2026-07-22 against oxlint 1.74's js_config loader,
-  which emits exactly this requirement on an unsupported Node). `bun run`
-  and `bunx` honor the bin's node shebang; `bun --bun oxlint` evaluates the
-  config — and every JS plugin — in Bun instead (verified 2026-10-09 · probe);
-  that path needs Bun >=1.4: 1.3 cannot resolve the JSON `require` inside
-  eslint-plugin-unicorn 77's `@eslint/css-tree` and rejects the whole config
-  (verified 2026-10-11 · 1.3.14 fails, 1.4.2 loads). Both runtimes are tested
-  (see [Testing](#testing)).
+The base's overrides depend on what the project uses, read from the nearest
+`package.json` at or above the working directory (`dependencies` and
+`devDependencies`):
 
-### From a JSON config
+| detected     | overrides added                                                                               |
+| ------------ | --------------------------------------------------------------------------------------------- |
+| always       | `env.node` on every source file; `typescript/*` off on JS files; root tooling configs         |
+| `typescript` | the TS-file set (`**/*.{cts,mts,ts,tsx}`): core twins off, `typescript-js/*` naming and order |
+| `react`      | the `**/*.tsx` naming set                                                                     |
+| `next`       | `route.ts` naming and the Next segment/route-file exemptions                                  |
 
-`oxlintrc.jsonc` is also published as a subpath and can be pulled into a JSON
-config via `extends` — here the entries ARE file paths, resolved relative to the
-config's own location:
+No `package.json` found turns all three on. Force any of them with
+`defineConfig({ env: { next: true } })`. In a monorepo linted from the root,
+the root `package.json` decides — declare what the workspaces use, or force
+it.
 
-```jsonc
-// .oxlintrc.json at your repo root
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "extends": ["./node_modules/@jlg/oxlint/oxlintrc.jsonc"],
-  // Ignores belong HERE, not in the base — see "Caveats" below.
-  "ignorePatterns": ["**/*.d.ts"],
-  // Type-aware linting belongs in this root config — see "Type-aware
-  // linting" below. Requires the `oxlint-tsgolint` package + TypeScript 7+.
-  "options": { "typeAware": true },
-  // eslint-plugin-react needs a semver; it warns on every run without one.
-  "settings": { "react": { "version": "19.2.0" } },
-}
-```
+### Precedence
 
-What the JS entry does for you, a JSON consumer does by hand:
+Your overrides come after the base's, so a consumer `**/*.tsx` override now
+beats the base's Next segment-file exemptions — the reverse of the JSONC
+`extends` era, when the base re-appended its file-named overrides after
+yours. Scope your globs to keep those exemptions. A base override still beats
+your top-level `rules`; change what an override sets with an override.
 
-- **`settings` go in your root config.** An extended config's top-level
-  `settings`, `env` and `globals` are dropped (verified 2026-10-09 · probe);
-  the base carries no `settings` and puts `env.node` in an override, which
-  survives `extends`.
-- **Your overrides beat the base's file-named ones.** An `extends` cannot
-  re-order them, so a consumer `**/*.tsx` override wins over the Next
-  routing-file exemptions; scope yours to avoid those files.
+### Runtime
+
+Loading a **TypeScript** config requires Node `^20.19.0 || >=22.18.0` —
+oxlint relies on Node's native TypeScript stripping (verified 2026-07-22
+against oxlint 1.74's js_config loader, which emits exactly this requirement
+on an unsupported Node). `bun run` and `bunx` honor the bin's node shebang;
+`bun --bun oxlint` evaluates the config — and every JS plugin — in Bun instead
+(verified 2026-10-09 · probe); that path needs Bun >=1.4: 1.3 cannot resolve
+the JSON `require` inside eslint-plugin-unicorn 77's `@eslint/css-tree` and
+rejects the whole config (verified 2026-10-11 · 1.3.14 fails, 1.4.2 loads).
+Both runtimes are tested (see [Testing](#testing)). An `extends` you pass
+through takes config objects, not path strings (verified 2026-10-13 · probe,
+oxlint 1.87).
 
 ## Philosophy
 
@@ -132,17 +116,11 @@ tolerable: `jgeschwendt/jlg.io`, a Next.js consumer of this base with
 `typeAware: true`, has green CI on `main` at oxlint 1.81 with none of the 22
 disabled (runs 2026-09-07/08, verified 2026-09-08).
 
-None of the 22 is named in `oxlintrc.jsonc`, so none sets a floor under the
-`oxlint` peer (see the peer-coupling note under
-`react/function-component-definition`). A consumer that disagrees turns a rule
-off in its **own** root config:
+None of the 22 is named in `index.js`, so none sets a floor under the
+`oxlint` peer. A consumer that disagrees turns a rule off in its own config:
 
-```jsonc
-// .oxlintrc.json at your repo root
-{
-  "extends": ["./node_modules/@jlg/oxlint/oxlintrc.jsonc"],
-  "rules": { "react/exhaustive-effect-dependencies": "off" },
-}
+```ts
+export default defineConfig({ rules: { 'react/exhaustive-effect-dependencies': 'off' } });
 ```
 
 ## What maps from `@jlg/eslint`
@@ -160,7 +138,7 @@ off in its **own** root config:
 | `react/react-in-jsx-scope` off                                              | `react/react-in-jsx-scope` off                                                                                                   |                                                                                                                                                             |
 | `import/no-default-export` error                                            | `import/no-default-export`                                                                                                       | + `no-named-export` / `prefer-default-export` off                                                                                                           |
 | `eslint-config-prettier` offs                                               | `curly`, `no-unexpected-multiline`, `unicorn/empty-brace-spaces`, `unicorn/no-nested-ternary`, `unicorn/number-literal-case` off | the eslint-config-prettier 10.1.8 rules oxlint ships; oxfmt owns layout                                                                                     |
-| `globals.node`                                                              | `env.node` override on every file                                                                                                | a top-level `env` would be dropped through `extends`                                                                                                        |
+| `globals.node`                                                              | `env.node` override on every file                                                                                                | an override, so a consumer `env` adds to it                                                                                                                 |
 | typescript-eslint on `.ts`/`.tsx` only                                      | every category-enabled `typescript/*` rule off on `**/*.{cjs,js,jsx,mjs}`                                                        | `rule-existence.test.js` keeps the list complete                                                                                                            |
 | TS block: core twins off                                                    | `no-implied-eval`, `prefer-promise-reject-errors`, `require-await` off on TS                                                     | the type-aware `typescript/*` versions stay on                                                                                                              |
 | TS block: `import/consistent-type-specifier-style`, `import/extensions` off | same, off on TS                                                                                                                  |                                                                                                                                                             |
@@ -236,7 +214,7 @@ components. A 41st rule, `inline-config/no-directives`, is the directive ban.
 | `typescript-js` | `plugins/typescript-js.mjs` — `member-ordering`, `naming-convention` |     2 |
 | `inline-config` | `plugins/inline-config.mjs` — the directive ban                      |     1 |
 
-(measured 2026-10-11 · rules named in `oxlintrc.jsonc`)
+(measured 2026-10-11 · rules named in `index.js`)
 
 The `-js` aliases exist because `import`, `react` and `unicorn` collide with
 oxlint's native plugins. Disable or retune one like any rule
@@ -252,11 +230,11 @@ Four are loaded but check nothing without options, as under `@jlg/eslint`:
 How the layer is built, each part guarded by `__tests__/js-plugins.test.js`:
 
 - **Local entries.** Every `jsPlugins` entry is a `./plugins/*.mjs` path.
-  `import-js`, `react-js` and `unicorn-js` are wrappers: a bare specifier in an
-  extended config resolves from the consumer's symlinked
-  `node_modules/@jlg/oxlint`, which holds none of this package's dependencies
-  under an isolated install, while the wrapper's own import resolves from its
-  real path.
+  `import-js`, `react-js` and `unicorn-js` are wrappers: a bare specifier
+  resolves from the consumer's config, which under an isolated install sees
+  none of this package's dependencies, while the wrapper's own import resolves
+  from its real path. `index.js` absolutizes each path: a JS config gives oxlint
+  no file of the base's to resolve them against.
 - **Host adapter.** `plugins/host.mjs` wraps every ESLint-code plugin: each
   file gets a fresh context and `sourceCode` (oxlint reuses one per rule,
   which leaked eslint-plugin-react's `@jsx` pragma and eslint-module-utils'
@@ -274,8 +252,9 @@ How the layer is built, each part guarded by `__tests__/js-plugins.test.js`:
   TypeScript's sanctioned bridge — through `module.registerHooks` on node and
   `Module._resolveFilename` on bun, whose `Bun.plugin` never sees a CommonJS
   `require()` from `node_modules`. The repo, `tsc` and tsgolint stay on 7.
-- **Alpha.** JS plugins sit outside oxlint's semver, so `oxlint` is pinned
-  exactly (peer and dev) — bump it deliberately and let the test speak.
+- **Alpha.** JS plugins sit outside oxlint's semver, yet the `oxlint` peer and
+  dev ranges are `^1.87.0` — a minor can break them, and only this test
+  speaks.
 - **unicorn floats at `^77`** on ESLint 10 (its peer); the exact 60.0.0 pin
   is gone because 77 runs under oxlint. Drift from 60, `@jlg/eslint`'s
   version: `prevent-abbreviations` and `prefer-json-parse-buffer` are renamed
@@ -289,9 +268,9 @@ How the layer is built, each part guarded by `__tests__/js-plugins.test.js`:
   10, so `import-js` loads only the configured rules and that one is dropped.
 
 The test packs the package, installs the tarball next to `typescript@7` and
-the peer `oxlint` under both bun linkers, lints a fixture through both
-entries on node and bun, and fails unless every configured `jsPlugins` rule
-reports. It needs the network or a warm bun cache.
+the peer `oxlint` under both bun linkers, lints a fixture through an
+`oxlint.config.ts` on node and bun, and fails unless every configured
+`jsPlugins` rule reports. It needs the network or a warm bun cache.
 
 ## Inline directives
 
@@ -374,7 +353,8 @@ And from oxlint's JS plugin host:
   pragma.
 - **Settings.** JS plugins see `settings` only from the root config, or from
   the nested config governing the file. Without `settings.react.version`
-  eslint-plugin-react warns "React version not specified" on every run.
+  (no React installed, none passed) eslint-plugin-react warns "React version
+  not specified" on every run.
 - **One fix pass.** ESLint re-runs fixes until a file settles; `oxlint --fix`
   applies one pass, so re-run it until the output is stable (`import-js/order`
   can take several; jlg.io took three, observed 2026-10-08).
@@ -389,18 +369,21 @@ And from oxlint's JS plugin host:
 Facts about oxlint's config merging that a consumer config has to work with
 (verified 2026-10-09 · probes, oxlint 1.87):
 
-- **An extended config's overrides beat the extending config's top-level
-  `rules`.** A consumer rule meant to change what a base override sets — on
-  TS files (`**/*.{cts,mts,ts,tsx}`), JS files, Next or tooling files — must
-  itself be an override.
+- **An override beats top-level `rules`.** A consumer rule meant to change
+  what a base override sets — on TS files (`**/*.{cts,mts,ts,tsx}`), JS
+  files, Next or tooling files — must itself be an override.
 - **Enabling a native plugin**, even through an override's `plugins`, puts
   every rule of that plugin under the root `categories`; overrides take no
   `categories` (schema: `env`, `excludeFiles`, `files`, `globals`,
   `jsPlugins`, `plugins`, `rules`). To match a narrow legacy set — jlg.io's
   `jsx-a11y` — name every other rule of the plugin off.
-- **Nested configs** replace the root for their subtree, so each needs an
-  `extends`. `ignorePatterns` and `settings` do not carry through `extends`,
-  and override globs are relative to the nested config's directory.
+- **Nested configs replace the root.** A nested `.oxlintrc.json` or
+  `oxlint.config.ts` governs its subtree instead of merging with the root
+  (probed 2026-10-13, oxlint 1.87), so each calls `defineConfig` with
+  everything that subtree needs — ignores, `settings`, relaxations — as this
+  repo's `packages/*/oxlint.config.ts` do. `options` are root-only: a nested
+  `options.typeAware` rejects the whole run, while the root's still applies
+  inside nested subtrees (probed 2026-10-13).
 
 ## Type-aware linting
 
@@ -418,18 +401,11 @@ oxlint-tsgolint older than the declared peer breaks type-aware linting
 _silently_ ("Failed to find tsgolint executable"), so probe a type-aware rule
 after any bump rather than trusting a green run.
 
-It is switched on with `"options": { "typeAware": true }` — equivalent to the
-`--type-aware` CLI flag. Set it in **your root config** (`oxlint.config.ts` or
-`.oxlintrc.json`), never in this shared base: the configuration schema documents
-every `options` key as "Only supported in the root configuration file". An
-extended config's `options` were _observed_ to take effect at oxlint 1.78, 1.80
-and 1.82 (probed 2026-09-08 · `typeAware` and `reportUnusedDisableDirectives` both
-fired from a config reached only via `extends`) and still do at 1.87 (observed
-2026-10-09 · `reportUnusedDisableDirectives`, through JSON and JS-object
-`extends`), but this base does not rely on behavior the schema calls
-unsupported — an upstream fix would silently switch type-aware linting off for
-every consumer. The base file instead retunes the type-checked rules (see the
-"type-aware retuning" section in `oxlintrc.jsonc`); currently
+It is switched on with `options: { typeAware: true }` — equivalent to the
+`--type-aware` CLI flag — passed to `defineConfig`. The base never sets
+`options`: type-aware linting needs `oxlint-tsgolint` and TypeScript 7, which
+only the consumer can promise. The base instead retunes the type-checked
+rules; currently
 `typescript/prefer-readonly-parameter-types` is demoted from error to **warn** —
 it demands `readonly` on every non-primitive parameter (including idiomatic
 destructured callback args) and is impractically strict on the React/Next stack
@@ -441,8 +417,7 @@ this config targets.
   (re-verified 2026-10-09 · probe, oxlint 1.87):
   - An unknown/misspelled rule _name_, or an unknown _plugin_ name, makes oxlint
     reject the **entire** config — `Failed to parse … Rule 'x' not found in
-    plugin 'y'` (or `Unknown plugin`), exit 1, nothing lints — the same when the
-    config is consumed via `extends`. Loud but blunt: every rule the config
+    plugin 'y'` (or `Unknown plugin`), exit 1, nothing lints. Loud but blunt: every rule the config
     defined stops applying, and downstream it surfaces as a cryptic parse
     failure, not "you typo'd a rule".
   - A _valid_ rule whose plugin is **not** in `plugins` (e.g. `unicorn/no-null`
@@ -461,7 +436,7 @@ this config targets.
   so an `"error"` config exits 0 (verified 2026-10-09 · probe, oxlint 1.87;
   `--report-unused-disable-directives-severity=error` is the flag form of
   error). This base sets neither, for the same reason it never sets
-  `typeAware`; this repo's root `.oxlintrc.json` sets the key to `"error"` and
+  `typeAware`; this repo's root `oxlint.config.ts` sets the key to `"error"` and
   its `lint` script is plain `oxlint`.
 - **`restriction` is `warn`, not `error`.** oxlint's `restriction` category is
   dominated by the `oxc` plugin's language-feature bans
@@ -469,24 +444,22 @@ this config targets.
   which have no analog in the `@jlg/eslint` stack and would false-positive on
   idiomatic modern JS/TS. Kept at `warn` so they stay visible; promote
   individual restriction rules to `error` in `rules` as desired.
-- **`ignorePatterns` must live in the consuming root config.** oxlint roots an
-  extended config's ignore globs at _that config's own directory_, so patterns
-  set in this shared file would only ever match files under
-  `node_modules/@jlg/oxlint`. Put `**/*.d.ts` and friends in your root config
-  (`oxlint.config.ts` or `.oxlintrc.json`).
+- **The base sets no `ignorePatterns`.** Pass `**/*.d.ts` and friends to
+  `defineConfig`.
 - **Namespaces differ from ESLint.** `@typescript-eslint/x` → `typescript/x`;
   core rules stay bare; `import/x`, `unicorn/x`, `react/x` as-is.
 
 ## Testing
 
-`bun run --filter '@jlg/oxlint' test` runs Bun's built-in test runner
+`bun run --filter '@jlg/lint' test` runs Bun's built-in test runner
 (`bun test`) over `__tests__/`. The first two suites are driven off oxlint's
 own `oxlint --rules --format json` catalog and `configuration_schema.json` and
 guard the two ways an oxlint version bump can change this config's behavior
 invisibly; the rest lint real files end to end:
 
 - **`rule-existence.test.js`** — the footgun guard. Fails, naming the offender,
-  if any rule in `oxlintrc.jsonc` (top-level `rules` or any `overrides[].rules`)
+  if any rule `defineConfig` emits with every environment on (top-level `rules`
+  or any `overrides[].rules`)
   is not a real oxlint rule, if any entry in `plugins` is not a real plugin, or
   if a rule's plugin is not enabled in `plugins`. See the "Rule-name / plugin
   footgun" caveat for why each of those otherwise slips through. Also fails if
@@ -497,27 +470,27 @@ invisibly; the rest lint real files end to end:
   **adds** to `correctness` / `pedantic` / `perf` / `style` / `suspicious`
   silently becomes an error for every consumer the moment they upgrade — the
   snapshot diff surfaces it at review time instead.
-- **`define-config.test.js`** — the JS-entry contract. Asserts `defineConfig`
-  prepends `base` as the first `extends` entry, appends any consumer-supplied
-  `extends` after it, composes the base even with no argument, does not mutate
-  the caller's config, re-appends the base's file-named overrides after the
-  consumer's, and sets `settings.react.version` from the installed React (and
-  leaves it unset without one); and that the exported `base` is the parsed
-  `oxlintrc.jsonc` except for its `jsPlugins` entries, which are absolute
-  paths.
+- **`define-config.test.js`** — the `defineConfig` contract: absolute
+  `jsPlugins` paths; environment detection from a `package.json` found by
+  walking up (none, empty, dependencies vs devDependencies) and its `env`
+  override; consumer keys merged over the base with consumer overrides last;
+  `next`/`react`/`typescript` stripped from `env` while oxlint's own
+  environments pass; `settings.react.version` from the installed React, unset
+  without one, consumer settings winning.
 - **`js-plugins.test.js`** — the `jsPlugins` layer, from a packed and
   installed tarball (see [Restored through JS plugins](#restored-through-js-plugins)).
 - **`parity.test.js`** — `@jlg/eslint` behaviors the base restores through
-  config rather than a rule, linted from the checkout through both entries:
+  config rather than a rule, linted from the checkout through a JS config:
   `env.node`, `no-unused-vars` defaults, `typescript/*` off on JS, the
   eslint-config-prettier offs, `require-await`, `group-exports`, root-only
-  tooling configs, override ordering per entry, and the directive-ban throw.
+  tooling configs, consumer-last override precedence, and the directive-ban
+  throw.
 
 After an **intentional** oxlint bump, review the inventory diff, then regenerate
 (`--update-snapshots`, or the `-u` short form, verified against bun 1.3.14):
 
 ```sh
-bun run --filter '@jlg/oxlint' test --update-snapshots
+bun run --filter '@jlg/lint' test --update-snapshots
 ```
 
 The catalog the tests read comes from the `oxlint` that Node resolution finds

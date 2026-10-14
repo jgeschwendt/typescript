@@ -1,37 +1,33 @@
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
-import { configRuleNames, jsPluginScopes, loadConfig } from './_helpers.js';
-import { base } from '../index.mjs';
+import { config, isJsRule, jsScopes, ruleNames } from './_helpers.js';
+
+const { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } =
+  process.getBuiltinModule('node:fs');
+const { tmpdir } = process.getBuiltinModule('node:os');
+const { dirname, join } = process.getBuiltinModule('node:path');
 
 // packed and installed: a consumer's layout (TS 7, isolated deps) is not the checkout's
 
 const plugins = Object.fromEntries(
   await Promise.all(
-    base.jsPlugins.map(async (entry) => {
+    (config.jsPlugins ?? []).map(async (entry) => {
       const { default: plugin } = await import(typeof entry === 'string' ? entry : entry.specifier);
       return [typeof entry === 'string' ? plugin.meta.name : entry.name, plugin];
     }),
   ),
 );
 
-const configured = (() => {
-  const js = jsPluginScopes(loadConfig());
-  return configRuleNames(loadConfig())
-    .filter((name) => js.has(name.split('/')[0]))
-    .toSorted((left, right) => left.localeCompare(right));
-})();
+const configured = ruleNames.filter((name) => isJsRule(name));
 
 test('local plugin names match the scopes the config uses', () => {
   expect(Object.keys(plugins).toSorted((left, right) => left.localeCompare(right))).toStrictEqual(
-    [...jsPluginScopes(loadConfig())].toSorted((left, right) => left.localeCompare(right)),
+    [...jsScopes].toSorted((left, right) => left.localeCompare(right)),
   );
 });
 
 test('every configured jsPlugins rule exists in its plugin', () => {
   const missing = configured.filter((name) => {
-    const [scope, rule] = name.split('/');
+    const [scope = '', rule = ''] = name.split('/');
     return plugins[scope]?.rules?.[rule] === undefined;
   });
   expect(
@@ -168,29 +164,21 @@ const fixtures = {
   ].join('\n'),
 };
 
-const entries = {
-  // the base arrives as an object: only index.mjs's absolute paths locate the plugins
-  js: {
-    file: 'oxlint.config.mjs',
-    source: `import { defineConfig } from '@jlg/oxlint';\nexport default defineConfig({ rules: ${JSON.stringify(inert)} });\n`,
-  },
-  // plugin paths resolve against the symlinked JSONC
-  json: {
-    file: '.oxlintrc.json',
-    source: JSON.stringify({
-      extends: ['./node_modules/@jlg/oxlint/oxlintrc.jsonc'],
-      rules: inert,
-    }),
-  },
-};
+// the base arrives as an object: only index.js's absolute paths locate the plugins
+const entry = `import { defineConfig } from '@jlg/lint';\nexport default defineConfig({ rules: ${JSON.stringify(inert)} });\n`;
 
-const runtimes = { bun: process.execPath, node: Bun.which('node') };
+const runtimes = { bun: process.execPath, node: Bun.which('node') ?? 'node' };
 const linkers = ['hoisted', 'isolated'];
 const installTimeout = 300_000;
 const lintTimeout = 120_000;
 const scratch = mkdtempSync(join(tmpdir(), 'oxlint-js-plugins-'));
+/** @type {Record<string, string>} */
 const consumers = {};
 
+/**
+ * @param {string} root
+ * @param {Record<string, string>} files
+ */
 const write = (root, files) => {
   for (const [name, source] of Object.entries(files)) {
     mkdirSync(dirname(join(root, name)), { recursive: true });
@@ -198,6 +186,10 @@ const write = (root, files) => {
   }
 };
 
+/**
+ * @param {string[]} command
+ * @param {string} cwd
+ */
 const run = (command, cwd) => {
   const result = Bun.spawnSync(command, {
     cwd,
@@ -215,15 +207,14 @@ beforeAll(() => {
     [process.execPath, 'pm', 'pack', '--destination', scratch, '--quiet'],
     join(import.meta.dirname, '..'),
   );
-  const { oxlint } = JSON.parse(
-    readFileSync(join(import.meta.dirname, '..', 'package.json')),
-  ).peerDependencies;
+  const manifest = String(readFileSync(join(import.meta.dirname, '..', 'package.json')));
+  const { oxlint } = JSON.parse(manifest).peerDependencies;
   for (const linker of linkers) {
     const directory = join(scratch, linker);
     write(directory, {
       'package.json': JSON.stringify({
         devDependencies: {
-          '@jlg/oxlint': `file:${packed.split('\n').pop()}`,
+          '@jlg/lint': `file:${packed.split('\n').pop()}`,
           oxlint,
           typescript: '7.0.2',
         },
@@ -234,7 +225,7 @@ beforeAll(() => {
       }),
     });
     run([process.execPath, 'install', '--linker', linker], directory);
-    write(directory, fixtures);
+    write(directory, { ...fixtures, 'oxlint.config.ts': entry });
     consumers[linker] = directory;
   }
 }, installTimeout);
@@ -243,37 +234,37 @@ afterAll(() => {
   rmSync(scratch, { force: true, recursive: true });
 });
 
-const lint = (runtime, linker, entry) => {
-  const directory = consumers[linker];
-  rmSync(join(directory, '.oxlintrc.json'), { force: true });
-  rmSync(join(directory, 'oxlint.config.mjs'), { force: true });
-  writeFileSync(join(directory, entry.file), entry.source);
+/**
+ * @param {string} runtime
+ * @param {string} linker
+ * @returns {{ code?: string; message: string }[]}
+ */
+const lint = (runtime, linker) => {
+  const directory = consumers[linker] ?? '';
   const out = join(directory, 'report.json');
   const result = Bun.spawnSync(
     [
       runtime,
       join(directory, 'node_modules', 'oxlint', 'bin', 'oxlint'),
-      '-c',
-      entry.file,
       '--format',
       'json',
       'src',
     ],
     { cwd: directory, stderr: 'pipe', stdout: Bun.file(out) },
   );
-  const text = readFileSync(out, 'utf8');
+  const text = String(readFileSync(out));
   if (!text.trim().startsWith('{')) {
     throw new Error(`oxlint exited ${result.exitCode}: ${text}${result.stderr.toString()}`);
   }
   return JSON.parse(text).diagnostics;
 };
 
-describe.each(Object.entries(runtimes))('on %s', (runtimeName, runtime) => {
+describe.each(Object.entries(runtimes))('on %s', (_name, runtime) => {
   describe.each(linkers)('installed %s', (linker) => {
-    test.each(Object.keys(entries))(
-      'every configured jsPlugins rule fires through the %s entry',
-      (kind) => {
-        const diagnostics = lint(runtime, linker, entries[kind]);
+    test(
+      'every configured jsPlugins rule fires',
+      () => {
+        const diagnostics = lint(runtime, linker);
         // a crashed plugin drops every JS rule on the file; a crashed rule reports via host.mjs
         const broken = diagnostics
           .map((diagnostic) => diagnostic.message)

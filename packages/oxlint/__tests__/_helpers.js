@@ -1,18 +1,18 @@
-import { parse } from 'jsonc-parser';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
-import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { defineConfig } from '../index.js';
 
-const require = createRequire(import.meta.url);
-const here = import.meta.dirname;
+const { mkdtempSync, readFileSync, rmSync, writeFileSync } = process.getBuiltinModule('node:fs');
+const { tmpdir } = process.getBuiltinModule('node:os');
+const { basename, dirname, join } = process.getBuiltinModule('node:path');
 
-const oxlintDirectory = dirname(require.resolve('oxlint/package.json'));
-
+const oxlintDirectory = dirname(Bun.fileURLToPath(import.meta.resolve('oxlint/package.json')));
 const oxlintBin = join(oxlintDirectory, 'bin', 'oxlint');
-const schemaPath = join(oxlintDirectory, 'configuration_schema.json');
-const configPath = join(here, '..', 'oxlintrc.jsonc');
 
+/** every environment on: the most any consumer gets */
+const everything = { next: true, react: true, typescript: true };
+const config = defineConfig({ env: everything });
+const overrides = config.overrides ?? [];
+
+/** @returns {{ category: string; scope: string; type_aware: boolean; value: string }[]} */
 const loadRules = () => {
   const directory = mkdtempSync(join(tmpdir(), 'oxlint-rules-'));
   try {
@@ -27,73 +27,56 @@ const loadRules = () => {
     if (result.exitCode !== 0) {
       throw new Error(`oxlint --rules exited ${result.exitCode}: ${result.stderr.toString()}`);
     }
-    return JSON.parse(readFileSync(out));
+    return JSON.parse(String(readFileSync(out)));
   } finally {
     rmSync(directory, { force: true, recursive: true });
   }
 };
 
-/** jsonc-parser is fault-tolerant: surface its errors, or a broken config yields undefined */
-const loadConfig = () => {
-  const errors = [];
-  const config = parse(readFileSync(configPath, 'utf8'), errors, {
-    allowTrailingComma: true,
-  });
-  if (errors.length > 0) {
-    throw new Error(`oxlintrc.jsonc failed to parse: ${JSON.stringify(errors)}`);
-  }
-  return config;
-};
+const schema = String(readFileSync(join(oxlintDirectory, 'configuration_schema.json')));
+/** @type {string[]} */
+const pluginNames = JSON.parse(schema).definitions.LintPluginOptionsSchema.enum;
 
-const loadPluginNames = () => {
-  const schema = JSON.parse(readFileSync(schemaPath));
-  return schema.definitions.LintPluginOptionsSchema.enum;
-};
-
-const configRuleNames = (config) => {
-  const names = new Set(Object.keys(config.rules ?? {}));
-  for (const override of config.overrides ?? []) {
-    for (const name of Object.keys(override.rules ?? {})) {
-      names.add(name);
-    }
-  }
-  return [...names];
-};
-
-/** catalog scopes spell hyphens as underscores (`jsx-a11y` → `jsx_a11y`) */
-const ruleScope = (name) => {
-  const slash = name.indexOf('/');
-  return slash === -1 ? 'eslint' : name.slice(0, slash).replaceAll('-', '_');
-};
-
-const ruleKey = (name) => {
-  const slash = name.indexOf('/');
-  return slash === -1 ? `eslint/${name}` : `${ruleScope(name)}/${name.slice(slash + 1)}`;
-};
-
-const jsPluginScopes = (config) =>
-  new Set(
-    (config.jsPlugins ?? []).map((entry) =>
-      typeof entry === 'string'
-        ? entry
-            .split('/')
-            .pop()
-            .replace(/\.m?js$/u, '')
-        : entry.name,
+const ruleNames = [
+  ...new Set(
+    [config.rules, ...overrides.map((override) => override.rules)].flatMap((rules) =>
+      Object.keys(rules ?? {}),
     ),
-  );
+  ),
+];
 
-const enabledScopes = (config) =>
-  new Set((config.plugins ?? []).map((plugin) => plugin.replaceAll('-', '_')));
+const jsScopes = new Set(
+  (config.jsPlugins ?? []).map((entry) =>
+    typeof entry === 'string' ? basename(entry, '.mjs') : entry.name,
+  ),
+);
+
+/** @param {string} name */
+const isJsRule = (name) => jsScopes.has(name.replace(/\/.*/u, ''));
+
+/**
+ * catalog scopes spell hyphens as underscores (`jsx-a11y` → `jsx_a11y`)
+ * @param {string} name
+ */
+const ruleScope = (name) =>
+  name.includes('/') ? name.replace(/\/.*/u, '').replaceAll('-', '_') : 'eslint';
+
+/** @param {string} name */
+const ruleKey = (name) => `${ruleScope(name)}/${name.replace(/^[^/]*\//u, '')}`;
+
+const enabledScopes = new Set((config.plugins ?? []).map((plugin) => plugin.replaceAll('-', '_')));
 
 export {
-  configRuleNames,
+  config,
   enabledScopes,
-  jsPluginScopes,
-  loadConfig,
-  loadPluginNames,
+  everything,
+  isJsRule,
+  jsScopes,
   loadRules,
   oxlintBin,
+  overrides,
+  pluginNames,
   ruleKey,
+  ruleNames,
   ruleScope,
 };

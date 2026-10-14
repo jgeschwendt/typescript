@@ -13,10 +13,10 @@ test('defineConfig() is a fresh copy of oxfmtrc.json', () => {
 
 test('consumer keys win over the base; the rest of the base stays', () => {
   expect(defineConfig({ singleQuote: false, sortTailwindcss: true })).toStrictEqual({
+    ...base,
     singleQuote: false,
     sortTailwindcss: true,
   });
-  expect(defineConfig({ sortTailwindcss: true })).toStrictEqual({ ...base, sortTailwindcss: true });
 });
 
 test("defineConfig leaves the caller's object untouched", () => {

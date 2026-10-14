@@ -26,8 +26,8 @@ jobs:
       - uses: jdx/mise-action@v2
 
       - run: bun install --frozen-lockfile
-      - run: bun run fmt:check
-      - run: bun run lint
+      - run: bunx oxfmt --check
+      - run: bunx oxlint
       - run: bun test
 
       # ※ changeset-guard

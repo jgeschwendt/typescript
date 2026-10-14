@@ -1,7 +1,0 @@
-{
-  "$schema": "../../node_modules/oxlint/configuration_schema.json",
-  "extends": ["../../.oxlintrc.json"],
-  "ignorePatterns": ["**/*.d.ts"],
-  // eslint-plugin-react warns on runs without a react version
-  "settings": { "react": { "version": "19" } }
-}
