@@ -1,4 +1,4 @@
-import { expect, test } from 'bun:test';
+import { afterAll, expect, test } from 'bun:test';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -49,8 +49,12 @@ function wrap() {
 }
 `;
 
+const directory = mkdtempSync(join(tmpdir(), 'oxlint-host-'));
+afterAll(() => {
+  rmSync(directory, { force: true, recursive: true });
+});
+
 test('host contains a crashing rule and ports getJSDocComment', () => {
-  const directory = mkdtempSync(join(tmpdir(), 'oxlint-host-'));
   write(directory, {
     '.oxlintrc.json': JSON.stringify({
       categories: { correctness: 'off' },
@@ -65,16 +69,15 @@ test('host contains a crashing rule and ports getJSDocComment', () => {
     'probe.mjs': plugin,
     'source.js': source,
   });
-  const { text } = spawnOxlint(directory, [
+  const { report } = spawnOxlint(directory, [
     '--format',
     'json',
     'lead.js',
     'source.js',
   ]);
-  rmSync(directory, { force: true, recursive: true });
   expect(
-    JSON.parse(text)
-      .diagnostics.map(
+    report.diagnostics
+      .map(
         ({ code, labels: [{ span }], message }) =>
           `${code} ${span.line}:${span.column} ${message}`,
       )

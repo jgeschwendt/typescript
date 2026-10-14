@@ -259,13 +259,11 @@ describe.each(Object.entries(runtimes))('on %s', (runtimeName, runtime) => {
       'every configured jsPlugins rule fires through %s',
       (file) => {
         const directory = join(scratch, linker);
-        const { exitCode, output, text } = spawnOxlint(
+        const { diagnostics } = spawnOxlint(
           directory,
           ['-c', file, '--format', 'json', 'src'],
           [runtime, join(directory, 'node_modules', 'oxlint', 'bin', 'oxlint')],
-        );
-        expect(text, `oxlint exited ${exitCode}: ${output}`).toStartWith('{');
-        const { diagnostics } = JSON.parse(text);
+        ).report;
         // a crashed plugin drops every JS rule on the file; a crashed rule
         // reports itself through host.mjs
         const broken = diagnostics

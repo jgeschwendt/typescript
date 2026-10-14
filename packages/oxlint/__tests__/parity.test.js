@@ -65,16 +65,14 @@ const lint = (entry, paths) =>
 
 describe.each(Object.keys(entries))('through the %s entry', (kind) => {
   const files = Object.groupBy(
-    JSON.parse(
-      lint(entries[kind], [
-        'app',
-        'instrumentation.ts',
-        'next.config.js',
-        'oxlint.config.ts',
-        'src',
-        'sub',
-      ]).text,
-    ).diagnostics,
+    lint(entries[kind], [
+      'app',
+      'instrumentation.ts',
+      'next.config.js',
+      'oxlint.config.ts',
+      'src',
+      'sub',
+    ]).report.diagnostics,
     ({ filename }) => filename,
   );
   const codes = (file) => (files[file] ?? []).map(({ code }) => code);
