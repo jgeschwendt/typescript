@@ -247,7 +247,9 @@ plus an `.eslintrc` stub beside it, eslint-plugin-import#3079),
 `react-js/boolean-prop-naming` (`rule`) and `unicorn-js/string-content`
 (`patterns`). Give them options to turn them on.
 
-How the layer is built, each part guarded by `__tests__/js-plugins.test.js`:
+How the layer is built, each part guarded by `__tests__/js-plugins.test.js`
+(the host adapter's crash containment and `getJSDocComment` port also by
+`__tests__/host.test.js`):
 
 - **Local entries.** Every `jsPlugins` entry is a `./plugins/*.mjs` path.
   `import-js`, `react-js` and `unicorn-js` are wrappers: a bare specifier in an
@@ -478,7 +480,8 @@ this config targets.
 (`bun test`) over `__tests__/`. The first two suites are driven off oxlint's
 own `oxlint --rules --format json` catalog and `configuration_schema.json` and
 guard the two ways an oxlint version bump can change this config's behavior
-invisibly; the rest lint real files end to end:
+invisibly; define-config checks the JS entry directly; the rest lint real files
+end to end:
 
 - **`rule-existence.test.js`** — the footgun guard. Fails, naming the offender,
   if any rule in `oxlintrc.jsonc` (top-level `rules` or any `overrides[].rules`)
@@ -502,6 +505,10 @@ invisibly; the rest lint real files end to end:
   paths.
 - **`js-plugins.test.js`** — the `jsPlugins` layer, from a packed and
   installed tarball (see [Restored through JS plugins](#restored-through-js-plugins)).
+- **`host.test.js`** — `plugins/host.mjs` end to end: a probe plugin wrapped by
+  `host` proves a throwing listener reports `Rule crashed under oxlint's JS
+  plugin host: …` once and stops that rule on the file, and that the restored
+  `getJSDocComment` attaches as ESLint's does for every function and class form.
 - **`parity.test.js`** — `@jlg/eslint` behaviors the base restores through
   config rather than a rule, linted from the checkout through both entries:
   `env.node`, `no-unused-vars` defaults, `typescript/*` off on JS, the

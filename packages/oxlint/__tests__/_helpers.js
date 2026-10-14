@@ -33,7 +33,8 @@ const write = (root, files) => {
 };
 
 // Runs `command` (a runtime and oxlint's bin, so the bin's exec bit and PATH
-// never matter) with `flags` in `cwd`. stdout goes to a FILE, not a pipe: on
+// never matter) with `flags` in `cwd` and parses its JSON report; a non-JSON
+// stdout throws with oxlint's own output. stdout goes to a FILE, not a pipe: on
 // the Linux runner a piped ~230 kB report came back truncated mid-string
 // ("JSON Parse error: Unterminated string") in one of two identical spawns — a
 // pipe race, not a size cap. (observed 2026-09-09 · ci run 34302573741, bun
@@ -41,6 +42,7 @@ const write = (root, files) => {
 const spawnOxlint = (cwd, flags, command = [process.execPath, oxlintBin]) => {
   const out = join(cwd, 'oxlint.out');
   // a Bun.file stdout overwrites without truncating: empty it for a reused cwd
+  // (verified 2026-10-14 · probe, bun 1.3.14)
   writeFileSync(out, '');
   const { exitCode, stderr } = Bun.spawnSync([...command, ...flags], {
     cwd,
@@ -48,7 +50,12 @@ const spawnOxlint = (cwd, flags, command = [process.execPath, oxlintBin]) => {
     stdout: Bun.file(out),
   });
   const text = readFileSync(out, 'utf8');
-  return { exitCode, output: `${text}${stderr.toString()}`, text };
+  const output = `${text}${stderr.toString()}`;
+  try {
+    return { exitCode, output, report: JSON.parse(text) };
+  } catch {
+    throw new Error(`oxlint exited ${exitCode}: ${output}`);
+  }
 };
 
 // The full rule catalog: `[{ scope, value, category, type_aware, ... }, …]`.
@@ -60,7 +67,7 @@ const loadRules = () => {
   const directory = mkdtempSync(join(tmpdir(), 'oxlint-rules-'));
   try {
     write(directory, { '.oxlintrc.json': '{}' });
-    const { exitCode, output, text } = spawnOxlint(directory, [
+    const { exitCode, output, report } = spawnOxlint(directory, [
       '--rules',
       '--format',
       'json',
@@ -69,7 +76,7 @@ const loadRules = () => {
     if (exitCode !== 0) {
       throw new Error(`oxlint --rules exited ${exitCode}: ${output}`);
     }
-    return JSON.parse(text);
+    return report;
   } finally {
     rmSync(directory, { force: true, recursive: true });
   }
