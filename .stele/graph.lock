@@ -8,27 +8,27 @@
     },
     "oxlint-base": {
       "file": "packages/oxlint/index.js",
-      "line": 43,
+      "line": 46,
       "node": "packages/oxlint"
     },
     "oxlint-extends-objects": {
       "file": "packages/oxlint/index.js",
-      "line": 450,
+      "line": 543,
       "node": "packages/oxlint"
     },
     "oxlint-js-plugins": {
       "file": "packages/oxlint/index.js",
-      "line": 21,
+      "line": 24,
       "node": "packages/oxlint"
     },
     "oxlint-peer-coupling": {
       "file": "packages/oxlint/index.js",
-      "line": 31,
+      "line": 34,
       "node": "packages/oxlint"
     },
     "oxlint-tsgolint-pairing": {
       "file": "packages/oxlint/index.js",
-      "line": 9,
+      "line": 12,
       "node": "packages/oxlint"
     },
     "release-app-token": {
@@ -48,12 +48,12 @@
     },
     "rule-existence-guard": {
       "file": "packages/oxlint/__tests__/rule-existence.test.js",
-      "line": 15,
+      "line": 14,
       "node": "packages/oxlint"
     },
     "rules-gate": {
       "file": "packages/oxlint/__tests__/rules.test.js",
-      "line": 6,
+      "line": 4,
       "node": "packages/oxlint"
     }
   },
@@ -70,7 +70,7 @@
           "text": "MINIMUM BUMP — pre-1.0 every changeset is patch, or minor for a breaking change; major is forbidden until a deliberate 1.0, and the ci check job fails on one",
           "verified": {
             "digest": null,
-            "sha": "0bf86aa9d48f8b8abe8960351ba82736316bd1e9"
+            "sha": "9e99ee80da76d21f87ff7405197075761ebcb51f"
           }
         },
         {
@@ -82,7 +82,7 @@
           "text": "VERSION PR TOKEN — the Version Packages PR must be opened with the release app token, never GITHUB_TOKEN: GITHUB_TOKEN-created events trigger no workflows, so the required check never runs and the PR can never merge",
           "verified": {
             "digest": null,
-            "sha": "0bf86aa9d48f8b8abe8960351ba82736316bd1e9"
+            "sha": "9e99ee80da76d21f87ff7405197075761ebcb51f"
           }
         },
         {
@@ -94,7 +94,7 @@
           "text": "RELEASE APPROVAL — a patch-only Version Packages PR auto-merges; any minor (or post-1.0 major) bump skips auto-merge, and ci's required check fails on that PR until the owner applies the release:signed-off label — the label is the sign-off, and agents never apply it",
           "verified": {
             "digest": null,
-            "sha": "0bf86aa9d48f8b8abe8960351ba82736316bd1e9"
+            "sha": "9e99ee80da76d21f87ff7405197075761ebcb51f"
           }
         },
         {
@@ -106,7 +106,7 @@
           "text": "ROOT NAME — the workspace root is named jlg, never typescript: changesets treats a workspace named like a dependency (@jlg/tsconfig peers on typescript) as satisfying it, reads its missing version, and every changeset command crashes with ERR_INVALID_ARG_TYPE",
           "verified": {
             "digest": null,
-            "sha": "0bf86aa9d48f8b8abe8960351ba82736316bd1e9"
+            "sha": "9e99ee80da76d21f87ff7405197075761ebcb51f"
           }
         }
       ],
@@ -194,11 +194,11 @@
           "enforced_by": null,
           "id": "oxlint-base",
           "kind": "invariant",
-          "resolved": "packages/oxlint/index.js:43",
+          "resolved": "packages/oxlint/index.js:46",
           "text": "SINGLE SOURCE OF TRUTH — index.js is the only base ruleset and defineConfig its only entry; no JSON copy, no `base` export; consumer overrides always follow the base's; never fork the data",
           "verified": {
-            "digest": "33eb19e2e2276973821befd6d2515a35c138d872544a6b022f74d83910000d42",
-            "sha": "0bf86aa9d48f8b8abe8960351ba82736316bd1e9"
+            "digest": "d49db3271a24d21273215065b4fd9b05cbe4e3176fd825d792ffd377b90ea7fe",
+            "sha": "9e99ee80da76d21f87ff7405197075761ebcb51f"
           }
         },
         {
@@ -206,11 +206,11 @@
           "enforced_by": null,
           "id": "oxlint-extends-objects",
           "kind": "hazard",
-          "resolved": "packages/oxlint/index.js:450",
+          "resolved": "packages/oxlint/index.js:543",
           "text": "JS-CONFIG RUNTIME — oxlint/oxfmt .config.ts files evaluate under Node >=22.18 through the bins' node shebang, plain `bun run`/`bunx` included, but under Bun with `bun --bun` — as do oxlint's JS plugins (probed 2026-10-09); in a JS config oxlint `extends` takes config OBJECTS, not path strings, and a nested config replaces the root for its subtree (options stay root-only, and a nested one fails the run)",
           "verified": {
-            "digest": "33eb19e2e2276973821befd6d2515a35c138d872544a6b022f74d83910000d42",
-            "sha": "0bf86aa9d48f8b8abe8960351ba82736316bd1e9"
+            "digest": "d49db3271a24d21273215065b4fd9b05cbe4e3176fd825d792ffd377b90ea7fe",
+            "sha": "9e99ee80da76d21f87ff7405197075761ebcb51f"
           }
         },
         {
@@ -218,11 +218,11 @@
           "enforced_by": null,
           "id": "oxlint-js-plugins",
           "kind": "hazard",
-          "resolved": "packages/oxlint/index.js:21",
-          "text": "JS PLUGINS — index.js's jsPlugins run 40 dropped @jlg/eslint rules as ESLint rule code, plus the inline-directive ban; every entry is a local plugins/*.mjs (a bare specifier cannot resolve from an isolated install's symlink) adapted to oxlint's host by host.mjs; JS plugins are alpha and outside oxlint's semver, so js-plugins.test.js gates every bump; a plugin that fails to load rejects the WHOLE config, and one that loads can report nothing (unicorn 66 stubbed two rules); unicorn floats at ^77 on eslint ^10, and eslint-plugin-import loads per rule because its index needs ESLint 9 internals — js-plugins.test.js installs the packed tarball under both bun linkers, lints through a consumer oxlint.config.ts on node and bun, and fails unless every configured rule reports; typescript6.mjs redirects typescript-eslint's typescript import to @typescript/typescript6",
+          "resolved": "packages/oxlint/index.js:24",
+          "text": "JS PLUGINS — index.js's jsPlugins run, as ESLint rule code, every live rule of the five wrapped plugins that the installed oxlint's configuration_schema.json does not name, minus typed rules and the reasoned `disabled` opt-out map, plus the inline-directive ban; every entry is a local plugins/*.mjs (a bare specifier cannot resolve from an isolated install's symlink) adapted to oxlint's host by host.mjs; JS plugins are alpha and outside oxlint's semver, so js-plugins.test.js gates every bump; a plugin that fails to load rejects the WHOLE config, and one that loads can report nothing (unicorn 66 stubbed two rules); unicorn floats at ^77 on eslint ^10, and eslint-plugin-import loads per rule because its index needs ESLint 9 internals — js-plugins.test.js installs the packed tarball under both bun linkers, lints through a consumer oxlint.config.ts on node and bun, and fails on any crashed rule or unless every fixtured rule reports; typescript6.mjs redirects typescript-eslint's typescript import to @typescript/typescript6",
           "verified": {
-            "digest": "33eb19e2e2276973821befd6d2515a35c138d872544a6b022f74d83910000d42",
-            "sha": "0bf86aa9d48f8b8abe8960351ba82736316bd1e9"
+            "digest": "d49db3271a24d21273215065b4fd9b05cbe4e3176fd825d792ffd377b90ea7fe",
+            "sha": "9e99ee80da76d21f87ff7405197075761ebcb51f"
           }
         },
         {
@@ -230,11 +230,11 @@
           "enforced_by": null,
           "id": "oxlint-peer-coupling",
           "kind": "hazard",
-          "resolved": "packages/oxlint/index.js:31",
+          "resolved": "packages/oxlint/index.js:34",
           "text": "PEER COUPLING — peerDependencies.oxlint is a caret range though JS plugins are alpha; naming a version-N-only rule in index.js puts a floor of N under any range it widens to (older consumers hard-fail on the unknown name); category-activated rules don't",
           "verified": {
-            "digest": "33eb19e2e2276973821befd6d2515a35c138d872544a6b022f74d83910000d42",
-            "sha": "0bf86aa9d48f8b8abe8960351ba82736316bd1e9"
+            "digest": "d49db3271a24d21273215065b4fd9b05cbe4e3176fd825d792ffd377b90ea7fe",
+            "sha": "9e99ee80da76d21f87ff7405197075761ebcb51f"
           }
         },
         {
@@ -242,11 +242,11 @@
           "enforced_by": null,
           "id": "oxlint-tsgolint-pairing",
           "kind": "hazard",
-          "resolved": "packages/oxlint/index.js:9",
+          "resolved": "packages/oxlint/index.js:12",
           "text": "VERSION PAIRING — oxlint 1.87 declares peer oxlint-tsgolint >=7.0.2003 (probed 2026-10-09); an old tsgolint breaks type-aware SILENTLY ('Failed to find tsgolint executable') and a TS-free repo still lints green; probe type-aware directly when bumping",
           "verified": {
-            "digest": "33eb19e2e2276973821befd6d2515a35c138d872544a6b022f74d83910000d42",
-            "sha": "0bf86aa9d48f8b8abe8960351ba82736316bd1e9"
+            "digest": "d49db3271a24d21273215065b4fd9b05cbe4e3176fd825d792ffd377b90ea7fe",
+            "sha": "9e99ee80da76d21f87ff7405197075761ebcb51f"
           }
         },
         {
@@ -254,11 +254,11 @@
           "enforced_by": null,
           "id": "rule-existence-guard",
           "kind": "hazard",
-          "resolved": "packages/oxlint/__tests__/rule-existence.test.js:15",
+          "resolved": "packages/oxlint/__tests__/rule-existence.test.js:14",
           "text": "FOOTGUN — an unknown rule NAME hard-fails the whole oxlint config (exit 1, nothing lints); a valid rule whose plugin isn't enabled is a SILENT no-op; both guarded by rule-existence.test.js",
           "verified": {
             "digest": "3cde90829cf7bbdd9cdf69d57ca4074d3d8710627f501f310baf1cfc1cdb5118",
-            "sha": "0bf86aa9d48f8b8abe8960351ba82736316bd1e9"
+            "sha": "9e99ee80da76d21f87ff7405197075761ebcb51f"
           }
         },
         {
@@ -266,11 +266,11 @@
           "enforced_by": null,
           "id": "rules-gate",
           "kind": "invariant",
-          "resolved": "packages/oxlint/__tests__/rules.test.js:6",
+          "resolved": "packages/oxlint/__tests__/rules.test.js:4",
           "text": "SNAPSHOT GATE — the rules.test.js bun snapshot (every rule of the enabled oxlint plugins and of @jlg/eslint's catalogs, one line each) is the review gate for oxlint version bumps; a bump adds new rules to on-categories as consumer-facing errors, so regen and review the diff",
           "verified": {
-            "digest": "993cda3643c9a5c8d97832dede2ec7ca4cc4728a3e414416469070518e21c37b",
-            "sha": "0bf86aa9d48f8b8abe8960351ba82736316bd1e9"
+            "digest": "38172ccbbf9e69a6d273447a1ab100c872840ef41c25ccd5d40227e6616acf48",
+            "sha": "9e99ee80da76d21f87ff7405197075761ebcb51f"
           }
         },
         {
@@ -278,11 +278,11 @@
           "enforced_by": null,
           "id": "testing",
           "kind": "hazard",
-          "resolved": "packages/oxlint/README.md:171",
+          "resolved": "packages/oxlint/README.md:176",
           "text": "SNAPSHOT RESOLUTION — the guard tests resolve oxlint from packages/oxlint/node_modules first, so a root-only oxlint bump leaves packages/oxlint's devDependency (and the regenerated rules.test.js snapshot) on the OLD catalog with a silent no-diff; bump both package.json files together",
           "verified": {
             "digest": null,
-            "sha": "0bf86aa9d48f8b8abe8960351ba82736316bd1e9"
+            "sha": "9e99ee80da76d21f87ff7405197075761ebcb51f"
           }
         }
       ],

@@ -1,9 +1,7 @@
 import { expect, test } from 'bun:test';
 import { rows } from './rules.js';
 
-// <rule> | <category> | <old> | <oxlint> | <base> | <options>; categories run at error, so a bump's
-// new rules diff here; regenerate: bun test --update-snapshots, then bun run report
-// ※ rules-gate
+// <rule> | <category> | <old> | <oxlint> | <base> | <options>; categories run at error, so a bump's new rules diff here; regenerate: bun test --update-snapshots, then bun run report ※ rules-gate
 
 /** on in @jlg/eslint and native in oxlint, off here by choice: nursery, or one blanket component style */
 const deliberate = new Set([
@@ -38,16 +36,20 @@ test('rules', () => {
   ).toMatchSnapshot();
 });
 
-test('reasons', () => {
+test('options', () => {
   expect(
     Object.fromEntries(
       rows
-        .filter(({ rule }) => /^eslint\/(?:accessor-pairs|id-length|no-unused-vars)$/u.test(rule))
-        .map(({ reason, rule }) => [rule, reason]),
+        .filter(({ rule }) =>
+          /^eslint\/(?:accessor-pairs|id-length|new-cap|no-unused-vars|radix)$/u.test(rule),
+        )
+        .map(({ options, reason, rule }) => [rule, [options, reason].filter(Boolean).join(': ')]),
     ),
   ).toEqual({
-    'eslint/accessor-pairs': 'base sets none',
-    'eslint/id-length': 'values differ',
-    'eslint/no-unused-vars': 'old sets none',
+    'eslint/accessor-pairs': 'same',
+    'eslint/id-length': 'differs: values differ',
+    'eslint/new-cap': 'differs: off defaults',
+    'eslint/no-unused-vars': 'differs: old sets none',
+    'eslint/radix': 'unverified',
   });
 });

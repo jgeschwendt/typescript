@@ -11,8 +11,7 @@ import {
   ruleScope,
 } from './_helpers.js';
 
-// an unknown rule or plugin rejects the whole config; a rule whose plugin is off never runs
-// ※ rule-existence-guard
+// an unknown rule or plugin rejects the whole config; a rule whose plugin is off never runs ※ rule-existence-guard
 
 /** jsPlugins rules are ESLint rule code, guarded in js-plugins.test.js */
 const native = ruleNames.filter((name) => !isJsRule(name));
@@ -42,7 +41,7 @@ test("every configured rule's plugin is enabled", () => {
   ).toEqual([]);
 });
 
-// oxlint cannot drop a plugin per override, so the JS override must name every typescript rule
+// oxlint cannot drop a plugin per override, so the JS override must name every TypeScript rule
 test('every category-enabled typescript rule is off on JavaScript files', () => {
   const { rules: javascript = {} } =
     overrides.find((override) => override.files.join(',') === '**/*.{cjs,js,jsx,mjs}') ?? {};

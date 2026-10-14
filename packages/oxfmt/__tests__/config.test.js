@@ -13,7 +13,7 @@ test('oxfmtrc.json parses as strict JSON', () => {
 
 test("every oxfmtrc.json key exists in oxfmt's schema", () => {
   const { properties } = read(schemaUrl);
-  const unknown = Object.keys(read(configUrl)).filter((key) => !(key in properties));
+  const unknown = Object.keys(read(configUrl)).filter((key) => !Object.hasOwn(properties, key));
   expect(unknown, `Unknown oxfmt option key(s) — silently ignored: ${unknown.join(', ')}`).toEqual(
     [],
   );

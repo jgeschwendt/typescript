@@ -8,6 +8,11 @@ export default defineConfig({
       files: ['./index.js'],
       rules: { 'sort-keys': ['error', 'asc', { allowLineSeparatedGroups: true }] },
     },
+    // Node 24.21, which consumers load these on, has no Iterator.concat (verified 2026-10-14 · probe); TypeScript 5's lib declares none
+    {
+      files: ['./index.js', '__tests__/*.js', 'plugins/*.mjs'],
+      rules: { 'unicorn-js/prefer-iterator-concat': 'off' },
+    },
     {
       files: ['plugins/*.mjs'],
       rules: {
@@ -16,21 +21,30 @@ export default defineConfig({
           'error',
           { ignore: ['^@typescript-eslint/eslint-plugin$', '^eslint/use-at-your-own-risk$'] },
         ],
-        // jsPlugins load a plugin module's default export
+        // jsPlugins load a plugin module's default export, here a host(…) call
         'import/no-default-export': 'off',
         // imported for its resolve-hook side effect
         'import/no-unassigned-import': ['error', { allow: ['**/typescript6.mjs'] }],
+        'unicorn-js/no-top-level-side-effects': 'off',
       },
     },
     {
       files: ['plugins/host.mjs'],
-      // `jsdoc` is ESLint's getJSDocComment verbatim, kept diffable; its contract returns null
-      rules: { 'max-statements': 'off', 'unicorn/no-null': 'off' },
+      // `jsdoc` is ESLint's getJSDocComment verbatim, kept diffable; its contract returns null;
+      // Node 22, inside the runtime floor, has no Error.isError (verified 2026-10-14 · probe)
+      rules: {
+        'max-statements': 'off',
+        'unicorn-js/prefer-error-is-error': 'off',
+        'unicorn/no-null': 'off',
+      },
     },
     {
       files: ['plugins/typescript6.mjs'],
-      // Node's CommonJS resolver hook, the only one Bun routes through
-      rules: { 'no-underscore-dangle': ['error', { allow: ['_resolveFilename'] }] },
+      // Node's CommonJS resolver hook, the only one Bun routes through, called with Module as `this`
+      rules: {
+        'no-underscore-dangle': ['error', { allow: ['_resolveFilename'] }],
+        'unicorn-js/no-this-outside-of-class': 'off',
+      },
     },
     {
       files: ['__tests__/*.js'],
@@ -48,11 +62,20 @@ export default defineConfig({
         ],
         // a describe callback holds one statement per test it declares
         'max-statements': 'off',
+        // string arrays: the default code-unit order is the snapshot's order
+        'unicorn-js/require-array-sort-compare': 'off',
       },
     },
   ],
-  // everything here runs inside oxlint's Node/Bun process
-  rules: { 'import/no-nodejs-modules': 'off' },
+  rules: {
+    // everything here runs inside oxlint's Node/Bun process, no bundler: chunk names mean nothing
+    'import-js/dynamic-import-chunkname': 'off',
+    'import/no-nodejs-modules': 'off',
+    // house code golf: an expression body over a return statement, however oxfmt wraps it
+    'unicorn-js/consistent-arrow-return-style': 'off',
+    // house comment style (jgeschwendt/claude rules/comments.md): one-line docblocks
+    'unicorn-js/single-line-block-comment-style': ['error', 'single-line'],
+  },
   // no React here: any semver silences eslint-plugin-react's missing-version warning
   settings: { react: { version: '19.2.0' } },
 });

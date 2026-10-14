@@ -52,8 +52,8 @@ await Bun.write(
           ${reasons}
         </div>
         <p class="muted">
-          The baseline spells out every option at its default, so <code class="code">base sets none</code>
-          usually means the base runs the rule at defaults, not a behaviour difference.
+          Where the base passes no options, the old ones are resolved over the rule's declared defaults as ESLint
+          does; <code class="code">unverified</code> marks a rule that declares none, so no difference is claimed.
         </p>
         <div id="filters" class="row">
           <label class="field">
@@ -116,7 +116,7 @@ await Bun.write(
           }),
         ),
       );
-      /** a pill per value but the rule and \`-\`; a \`differs\` pill titles its reason */
+      /** a pill per value but the rule and \`-\`; a \`differs\` pill titles its reason, an \`unverified\` one why */
       const cell = (row, name) =>
         el(
           'td',
@@ -127,7 +127,7 @@ await Bun.write(
             : el('span', {
                 className: \`pill \${pills[row[name]] ? \`pill-\${pills[row[name]]}\` : ''}\`,
                 textContent: row[name],
-                title: row[name] === 'differs' ? row.reason : '',
+                title: { differs: row.reason, unverified: 'the base passes no options and the rule declares no defaults to compare against' }[row[name]] ?? '',
               }),
         );
       /** old and base option arrays side by side */

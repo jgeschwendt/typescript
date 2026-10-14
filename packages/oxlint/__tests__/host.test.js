@@ -80,7 +80,8 @@ test('host contains a crashing rule and ports getJSDocComment', () => {
   expect(
     report.diagnostics
       .map(
-        ({ code, labels: [{ span }], message }) => `${code} ${span.line}:${span.column} ${message}`,
+        ({ code, labels, message }) =>
+          `${code} ${labels[0].span.line}:${labels[0].span.column} ${message}`,
       )
       .toSorted(),
   ).toEqual([

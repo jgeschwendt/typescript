@@ -71,17 +71,17 @@ const adapt = (rule, extend) => ({
       getSourceCode: own(() => sourceCode),
       sourceCode: own(sourceCode),
     });
-    let crashed = false;
+    let hasCrashed = false;
     const contain =
       (listener) =>
       (...listenerArguments) => {
-        if (crashed) {
+        if (hasCrashed) {
           return;
         }
         try {
           listener(...listenerArguments);
         } catch (error) {
-          crashed = true;
+          hasCrashed = true;
           const [node] = listenerArguments;
           local.report({
             loc:

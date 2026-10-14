@@ -30,10 +30,7 @@ const untyped = (rule) => ({
 
 export default host(
   {
-    rules: {
-      'member-ordering': plugin.rules['member-ordering'],
-      'naming-convention': untyped(plugin.rules['naming-convention']),
-    },
+    rules: { ...plugin.rules, 'naming-convention': untyped(plugin.rules['naming-convention']) },
   },
   'typescript-js',
 );
