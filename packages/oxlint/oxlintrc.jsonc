@@ -28,6 +28,8 @@
   },
 
   "rules": {
+    "oxc/no-rest-spread-properties": "off",
+    "oxc/no-optional-chaining": "off",
     "no-magic-numbers": [
       "warn",
       {

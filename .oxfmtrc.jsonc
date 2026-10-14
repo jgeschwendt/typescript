@@ -2,4 +2,7 @@
   // ※ oxfmt-mirror-root
   "ignorePatterns": [".stele/**"],
   "singleQuote": true,
+  "sortPackageJson": {
+    "sortScripts": true,
+  },
 }

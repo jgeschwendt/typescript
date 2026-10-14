@@ -1,5 +1,5 @@
 [tools]
-bun = "1.4.2"
+bun = "1.4.3"
 hk = { version = "2.5.0", workflow = "release.yml" }
 # oxlint/oxfmt launchers run under node
 node = "24"

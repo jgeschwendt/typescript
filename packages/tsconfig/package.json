@@ -16,6 +16,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "@jlg/oxfmt": "^0.1.1",
     "typescript": "^7.0.2"
   },
   "peerDependencies": {
