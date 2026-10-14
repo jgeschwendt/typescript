@@ -68,12 +68,21 @@ const inert = {
 // At least one violation of every configured jsPlugins rule.
 const fixtures = {
   '.eslintrc': '{}\n',
+  // raw JSONC, extended by its installed path: plugin paths resolve against
+  // the symlinked file
+  '.oxlintrc.json': JSON.stringify({
+    extends: ['./node_modules/@jlg/oxlint/oxlintrc.jsonc'],
+    rules: inert,
+  }),
   'node_modules/not-listed/lib/inner.js': 'export default 1;\n',
   'node_modules/not-listed/package.json': JSON.stringify({
     name: 'not-listed',
     type: 'module',
     version: '1.0.0',
   }),
+  // JS config: the base arrives as an object, so index.mjs's absolute paths
+  // are the only thing locating the plugins
+  'oxlint.config.mjs': `import { defineConfig } from '@jlg/oxlint';\nexport default defineConfig({ rules: ${JSON.stringify(inert)} });\n`,
   'packages/inner/index.js': 'export default 1;\n',
   'packages/inner/package.json': JSON.stringify({
     name: 'inner',
@@ -189,31 +198,12 @@ const fixtures = {
   ].join('\n'),
 };
 
-const entries = {
-  // JS config: the base arrives as an object, so index.mjs's absolute paths
-  // are the only thing locating the plugins
-  js: {
-    file: 'oxlint.config.mjs',
-    source: `import { defineConfig } from '@jlg/oxlint';\nexport default defineConfig({ rules: ${JSON.stringify(inert)} });\n`,
-  },
-  // raw JSONC, extended by its installed path: plugin paths resolve against
-  // the symlinked file
-  json: {
-    file: '.oxlintrc.json',
-    source: JSON.stringify({
-      extends: ['./node_modules/@jlg/oxlint/oxlintrc.jsonc'],
-      rules: inert,
-    }),
-  },
-};
-
 const runtimes = { bun: process.execPath, node: Bun.which('node') };
 const linkers = ['hoisted', 'isolated'];
 // timeouts: a cold install of the packed tarball per linker; one lint run
 const installTimeout = 300_000;
 const lintTimeout = 120_000;
 const scratch = mkdtempSync(join(tmpdir(), 'oxlint-js-plugins-'));
-const consumers = {};
 
 const run = (command, cwd) => {
   const result = Bun.spawnSync(command, {
@@ -255,7 +245,6 @@ beforeAll(() => {
     });
     run([process.execPath, 'install', '--linker', linker], directory);
     write(directory, fixtures);
-    consumers[linker] = directory;
   }
 }, installTimeout);
 
@@ -263,28 +252,20 @@ afterAll(() => {
   rmSync(scratch, { force: true, recursive: true });
 });
 
-const lint = (runtime, linker, entry) => {
-  const directory = consumers[linker];
-  rmSync(join(directory, '.oxlintrc.json'), { force: true });
-  rmSync(join(directory, 'oxlint.config.mjs'), { force: true });
-  write(directory, { [entry.file]: entry.source });
-  const { exitCode, output, text } = spawnOxlint(
-    directory,
-    ['-c', entry.file, '--format', 'json', 'src'],
-    [runtime, join(directory, 'node_modules', 'oxlint', 'bin', 'oxlint')],
-  );
-  if (!text.trim().startsWith('{')) {
-    throw new Error(`oxlint exited ${exitCode}: ${output}`);
-  }
-  return JSON.parse(text).diagnostics;
-};
-
 describe.each(Object.entries(runtimes))('on %s', (runtimeName, runtime) => {
   describe.each(linkers)('installed %s', (linker) => {
-    test.each(Object.keys(entries))(
-      'every configured jsPlugins rule fires through the %s entry',
-      (kind) => {
-        const diagnostics = lint(runtime, linker, entries[kind]);
+    // the two configs the fixtures carry, one per entry
+    test.each(['.oxlintrc.json', 'oxlint.config.mjs'])(
+      'every configured jsPlugins rule fires through %s',
+      (file) => {
+        const directory = join(scratch, linker);
+        const { exitCode, output, text } = spawnOxlint(
+          directory,
+          ['-c', file, '--format', 'json', 'src'],
+          [runtime, join(directory, 'node_modules', 'oxlint', 'bin', 'oxlint')],
+        );
+        expect(text, `oxlint exited ${exitCode}: ${output}`).toStartWith('{');
+        const { diagnostics } = JSON.parse(text);
         // a crashed plugin drops every JS rule on the file; a crashed rule
         // reports itself through host.mjs
         const broken = diagnostics
