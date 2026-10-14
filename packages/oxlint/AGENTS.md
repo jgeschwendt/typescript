@@ -11,6 +11,8 @@ invariants:
     anchor: ※ oxlint-base
   - claim: SNAPSHOT GATE — the rules.test.js bun snapshot (every rule of the enabled oxlint plugins and of @jlg/eslint's catalogs, one line each) is the review gate for oxlint version bumps; a bump adds new rules to on-categories as consumer-facing errors, so regen and review the diff
     anchor: ※ rules-gate
+  - claim: MAXIMALIST OPT-OUT — every non-deprecated rule of the wrapped ESLint plugins that oxlint lacks runs through the -js plugins at error by default; the only mechanical exclusion is requiresTypeChecking; every other off is a named entry in `disabled` with a factual one-line reason (crash under the host, duplicate of a native rule, formatting oxfmt owns, non-JS language) — noise is never a reason, the owner walks every entry
+    anchor: ※ opt-out-map
 hazards:
   - claim: FOOTGUN — an unknown rule NAME hard-fails the whole oxlint config (exit 1, nothing lints); a valid rule whose plugin isn't enabled is a SILENT no-op; both guarded by rule-existence.test.js
     anchor: ※ rule-existence-guard

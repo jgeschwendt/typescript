@@ -258,6 +258,7 @@ const typeLike = { format: ['PascalCase'], selector: 'typeLike' };
 off, each for a fact: the JS-plugin rules oxlint lacks run unless named here
 @type {Record<string, string>}
 */
+// ※ opt-out-map
 const disabled = {
   'import-js/enforce-node-protocol-usage':
     'duplicates native unicorn/prefer-node-protocol; without its required option it crashes: Missing option',
