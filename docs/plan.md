@@ -10,20 +10,20 @@ invariants and hazards, `README.md` the contract; this file is what is open.
   `BUN_TMPDIR=$TMPDIR BUN_INSTALL_CACHE_DIR=$TMPDIR/bun-cache`.
 - `stele check` liveness resolves `bun`; run it through `mise x`, or a
   bun-less PATH fails every liveness check.
-- The bare repo's shared `hooks/pre-commit` and `pre-push` are lefthook shims
-  (rewritten 2026-10-13 by a `bun install`); hk's launchers sit in `*.old`.
-  Until 1 lands, any `bun install` on a main-based checkout reruns lefthook's
-  postinstall (`trustedDependencies`) and rewrites them again; `cleanup`'s
-  commits run under a lefthook with no config there, so unchecked.
-- The `cleanup` worktree holds uncommitted edits on top of six unlanded
-  commits. Never clean, reset or remove it.
+- Every checkout shares the bare repo's `hooks/`, which `hk install --mise`
+  fills from `hk.pkl` (each hook runs `mise x -- hk`). A `bun install` in a
+  checkout still at a pre-hk commit reruns lefthook's postinstall (its
+  `trustedDependencies`) and overwrites hk's hooks with lefthook shims for
+  every checkout; rerun `hk install --mise --force` after one. The reverse
+  also bites: hk's hooks fail every commit in a checkout whose `mise.toml`
+  lacks the hk pin.
 
 ## Next
 
-1. Land `cleanup` (hk replaces lefthook, bun 1.4.2, eslint 10 + unicorn 77,
-   terse config comments). Its `@jlg/oxlint` changeset is `minor`, so the
-   Version Packages PR needs the owner's `release:signed-off` label. Until it
-   lands, main still runs lefthook on bun 1.3.14.
+1. Land `cleanup` (hk replaces lefthook, bun 1.4.3, eslint 10 + unicorn 77,
+   `@jlg/oxlint` rebuilt as a dynamic `index.js`, the eslint parity
+   snapshot). Its `@jlg/oxlint` changesets are `minor`, so the Version
+   Packages PR needs the owner's `release:signed-off` label.
 2. After 1: `hk install --mise --force` once — every checkout shares the bare
    repo's hooks dir. Not while any checkout sits at a pre-hk commit (`verax`,
    `js-plugins`, `import-order`, `demo-share`, grove's pool slots): the hook

@@ -1,9 +1,9 @@
 # @jlg/tsconfig
 
-The shared `tsconfig.json` for the `@jlg` stack, consumed by `extends`. Strict
-everything, `ES2024` lib, `node16` module resolution, `noEmit`-friendly, no
-framework assumptions — a Next.js consumer overrides `jsx`, `module`,
-`moduleResolution`, `paths` and `plugins` on top.
+The canonical [tsconfig](https://oxc.rs/docs/guide/usage/formatter) settings for
+`@jlg`
+
+## Usage
 
 ```json
 {
@@ -14,5 +14,3 @@ framework assumptions — a Next.js consumer overrides `jsx`, `module`,
   "include": ["**/*.ts"]
 }
 ```
-
-Peer: `typescript ^7.0.0`.

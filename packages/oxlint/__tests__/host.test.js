@@ -1,12 +1,11 @@
 import { afterAll, expect, test } from 'bun:test';
-import { mkdtempSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 import { spawnOxlint, write } from './_helpers.js';
 
-// host.mjs runs inside oxlint's process, out of bun's coverage: a probe plugin
-// wrapped by it proves the crash containment and the getJSDocComment port
-// end to end.
+const { mkdtempSync, rmSync } = process.getBuiltinModule('node:fs');
+const { tmpdir } = process.getBuiltinModule('node:os');
+const { join } = process.getBuiltinModule('node:path');
+
+// host.mjs runs inside oxlint's process, out of bun's coverage: a probe plugin proves it end to end
 const plugin = `import { host } from ${JSON.stringify(join(import.meta.dirname, '..', 'plugins', 'host.mjs'))};
 const kinds = 'ArrowFunctionExpression, ClassDeclaration, ClassExpression, FunctionDeclaration, FunctionExpression, Program';
 export default host({ rules: {
@@ -56,7 +55,8 @@ afterAll(() => {
 
 test('host contains a crashing rule and ports getJSDocComment', () => {
   write(directory, {
-    '.oxlintrc.json': JSON.stringify({
+    'lead.js': '/** p */\n;\n(() => {});\n',
+    'probe.json': JSON.stringify({
       categories: { correctness: 'off' },
       jsPlugins: ['./probe.mjs'],
       rules: {
@@ -65,11 +65,13 @@ test('host contains a crashing rule and ports getJSDocComment', () => {
         'probe/jsdoc': 'error',
       },
     }),
-    'lead.js': '/** p */\n;\n(() => {});\n',
     'probe.mjs': plugin,
     'source.js': source,
   });
+  /** @type {{ report: { diagnostics: { code: string; labels: [{ span: { column: number; line: number } }]; message: string }[] } }} */
   const { report } = spawnOxlint(directory, [
+    '-c',
+    'probe.json',
     '--format',
     'json',
     'lead.js',
@@ -78,8 +80,7 @@ test('host contains a crashing rule and ports getJSDocComment', () => {
   expect(
     report.diagnostics
       .map(
-        ({ code, labels: [{ span }], message }) =>
-          `${code} ${span.line}:${span.column} ${message}`,
+        ({ code, labels: [{ span }], message }) => `${code} ${span.line}:${span.column} ${message}`,
       )
       .toSorted(),
   ).toEqual([

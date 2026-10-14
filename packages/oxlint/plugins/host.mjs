@@ -1,25 +1,4 @@
-// Adapts ESLint plugins to oxlint's JS plugin host where the two differ in
-// ways a rule can feel. Not a plugin itself: each -js plugin wraps its rules
-// with `host`, and exists so oxlintrc.jsonc names it by a relative path — a bare
-// specifier in an extended config resolves from the consumer's symlinked
-// node_modules/@jlg/oxlint, whose ancestors hold none of this package's
-// dependencies under an isolated install; a -js module's own import resolves
-// from its real path.
-//
-//  - oxlint hands every file the SAME context and sourceCode objects, so a
-//    cache keyed by them — eslint-plugin-react's memoized `@jsx` pragma,
-//    eslint-module-utils' once-per-file resolve errors — leaks from the first
-//    file a thread lints into every later one. Each file gets a fresh context.
-//  - oxlint's `sourceCode.getJSDocComment` throws ("not supported at present
-//    (and deprecated)"). ESLint core's no-invalid-this reads it for `@this`
-//    tags, eslint-plugin-react for `@extends React.Component`; ESLint's own
-//    implementation is restored below.
-//  - One throwing listener aborts every JS plugin on that file ("Error running
-//    JS plugin"), dropping the other rules' reports with it. A throw is
-//    reported as a diagnostic of the rule that threw instead.
-// (verified 2026-10-09 · probe, oxlint 1.87)
-
-/** The export nodes ESLint's `looksLikeExport` matches. */
+/** ESLint's looksLikeExport node set */
 const exported = new Set([
   'ExportAllDeclaration',
   'ExportDefaultDeclaration',
@@ -27,10 +6,7 @@ const exported = new Set([
   'ExportSpecifier',
 ]);
 
-/**
- * ESLint 9.39 SourceCode#getJSDocComment
- * (lib/languages/js/source-code/source-code.js), unchanged but for `this`.
- */
+/** ESLint 9.39 SourceCode#getJSDocComment, unchanged but for `this` */
 const jsdoc = (sourceCode, node) => {
   const find = (astNode) => {
     const before = sourceCode.getTokenBefore(astNode, {
@@ -67,11 +43,7 @@ const jsdoc = (sourceCode, node) => {
             break;
           }
         }
-        if (
-          parent &&
-          parent.type !== 'FunctionDeclaration' &&
-          parent.type !== 'Program'
-        ) {
+        if (parent && parent.type !== 'FunctionDeclaration' && parent.type !== 'Program') {
           return find(parent);
         }
       }
@@ -83,17 +55,10 @@ const jsdoc = (sourceCode, node) => {
   }
 };
 
-/**
- * A property descriptor, configurable unlike oxlint's own context properties:
- * a rule's Proxy over the context (unicorn's expiring-todo-comments wraps
- * ESLint's no-warning-comments) may return a different value for it.
- */
+/** configurable, so a context Proxy (unicorn wrapping no-warning-comments) can override it */
 const own = (value) => ({ configurable: true, value, writable: true });
 
-/**
- * One rule, given a fresh context and sourceCode per file; a listener that
- * throws reports it once and the rule stops running on that file.
- */
+/** after a throw reports once, the rule is silent for the rest of the file */
 const adapt = (rule, extend) => ({
   ...rule,
   create(context) {
@@ -136,10 +101,7 @@ const adapt = (rule, extend) => ({
   },
 });
 
-/**
- * Wraps every rule of an ESLint plugin for oxlint's JS plugin host. `extend`
- * returns extra properties for a file's context.
- */
+/** extend(context) returns extra properties for each file's context */
 export const host = (plugin, name, extend) => ({
   meta: { ...plugin.meta, name },
   rules: Object.fromEntries(

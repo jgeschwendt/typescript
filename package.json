@@ -1,29 +1,27 @@
 {
-  "devDependencies": {
-    "@changesets/changelog-github": "^1.0.1",
-    "@changesets/cli": "^3.0.3",
-    "lefthook": "^2.2.2",
-    "oxfmt": "^0.73.0",
-    "oxlint": "^1.87.0",
-    "oxlint-tsgolint": "^7.0.2004"
-  },
-  "name": "typescript-monorepo",
+  "name": "jlg",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "type": "module",
   "scripts": {
     "changeset": "changeset",
     "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check",
-    "lint": "oxlint",
-    "lint:fix": "oxlint --fix",
+    "lint": "oxlint --fix",
     "ncu": "bunx npm-check-updates -u --workspaces",
     "release": "changeset publish",
     "update": "bunx npm-check-updates -u --workspaces && bun install",
     "version-packages": "changeset version && bun install --lockfile-only"
   },
-  "trustedDependencies": [
-    "lefthook"
-  ],
-  "workspaces": [
-    "packages/*"
-  ]
+  "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
+    "@jlg/oxfmt": "^0.1.1",
+    "@jlg/oxlint": "^0.1.1",
+    "@types/bun": "^1.4.3",
+    "oxfmt": "^0.73.0",
+    "oxlint": "^1.87.0",
+    "oxlint-tsgolint": "^7.0.2004"
+  }
 }

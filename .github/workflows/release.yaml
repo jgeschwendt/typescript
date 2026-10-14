@@ -1,10 +1,5 @@
-# The npm trusted publisher configured for each of @jlg/oxfmt, @jlg/oxlint and
-# @jlg/tsconfig names this file — `release.yaml`, extension included. Renaming or
-# moving it silently breaks OIDC publishing; re-point the publisher first.
-# A record can also exist yet go unmatched: the registry's exchange then answers
-# 404 "OIDC token exchange error - package not found" and npm reports only
-# ENEEDAUTH. Revoking and recreating it (`npm trust revoke` / `npm trust github`)
-# fixed @jlg/oxlint and @jlg/oxfmt (observed 2026-10-09 · release run 37947665795).
+# npm trusted publishers name this file: renaming it silently breaks OIDC publishing
+# ENEEDAUTH despite a publisher: `npm trust revoke` then `npm trust github` (observed 2026-10-09)
 name: release
 
 on:
@@ -14,16 +9,12 @@ on:
 
 permissions: {}
 
-# Never cancel a release mid-flight: a cancelled publish can leave some packages
-# on the registry and others not.
+# a cancelled publish can leave some packages released and others not
 concurrency:
   cancel-in-progress: false
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  # Reads the pending changesets and decides what this push is: `version` (open
-  # or refresh the Version Packages PR), `publish` (versions are already bumped
-  # — pack and ship), or `none`.
   select-mode:
     runs-on: ubuntu-latest
     outputs:
@@ -34,14 +25,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          # changesets reads git history to decide what changed; full history keeps
-          # every job's view identical.
+          # changesets reads git history; full depth keeps every job's view identical
           fetch-depth: 0
           persist-credentials: false
-      # mise pins node 24 (npm 11.9), which the publish job needs for OIDC; never
-      # shadow node with bun here — it would take npm's trusted-publishing path out.
+      # node 24 (npm 11.9) for OIDC publishing: never shadow node with bun
       - uses: jdx/mise-action@v2
       - run: bun install --frozen-lockfile
+      # ※ root-name
       - id: select-mode
         uses: changesets/action/select-mode@v2
 
@@ -61,10 +51,6 @@ jobs:
       - run: bun install --frozen-lockfile
 
       # ※ release-app-token
-      # VERSION PR TOKEN — the Version Packages PR must be opened with this app
-      # token, never GITHUB_TOKEN. GitHub raises no workflow events for anything
-      # GITHUB_TOKEN creates, so a PR opened with it never runs ci.yaml, its
-      # required `check` context never reports, and the PR can never merge.
       - id: app-token
         uses: actions/create-github-app-token@v3
         with:
@@ -74,14 +60,7 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       # ※ release-approval-gate
-      # RELEASE APPROVAL — a patch release lands on its own; a minor (or, after
-      # 1.0, a major) waits for the owner: this step reads the pending changesets
-      # BEFORE `changeset version` consumes them, and the auto-merge step below is
-      # skipped when any of them bumps more than patch. The Version Packages PR
-      # then cannot merge: ci.yaml's changeset guard fails its required check
-      # until the owner applies the `release:signed-off` label — that label is
-      # the approval, and agents never apply it. Patch should almost always be
-      # the answer.
+      # must read the changesets before `changeset version` consumes them
       - id: bumps
         run: |
           if grep -rEq --include='*.md' --exclude=README.md \
@@ -98,23 +77,17 @@ jobs:
           pr-title: 'task(//): version packages'
           script: bun run version-packages
 
-      # Patch only: hands the PR to GitHub's merge queue-of-one, so it lands
-      # itself the moment `check` goes green and the release needs no second
-      # human action.
       - if: steps.version.outputs.pr-number != '' && steps.bumps.outputs.gated != 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: gh pr merge ${{ steps.version.outputs.pr-number }} --auto --rebase
 
-      # Minor or major: no auto-merge; ask the owner to review, and let the
-      # merge be the approval.
       - if: steps.version.outputs.pr-number != '' && steps.bumps.outputs.gated == 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: gh pr edit ${{ steps.version.outputs.pr-number }} --add-reviewer jgeschwendt || true
 
-  # Packs the tarballs in a job with no id-token, so the publish job below is the
-  # only place an OIDC credential exists.
+  # no id-token here, so publish is the only job holding an OIDC credential
   pack:
     if: needs.select-mode.outputs.mode == 'publish'
     needs: select-mode
@@ -139,9 +112,6 @@ jobs:
     needs: pack
     runs-on: ubuntu-latest
     permissions:
-      # The only job in this workflow with id-token: npm mints its trusted-publisher
-      # credential from this OIDC token, and provenance attestation comes with it —
-      # no --provenance flag, no NODE_AUTH_TOKEN, no npm secret anywhere.
       contents: write
       id-token: write
     steps:
@@ -153,7 +123,6 @@ jobs:
       - run: bun install --frozen-lockfile
       - uses: changesets/action/publish@v2
         with:
-          # npm is the release record; the owner keeps no GitHub Releases for
-          # these packages (git tags still mark each published version)
+          # npm is the release record; git tags still mark each version
           create-github-releases: false
           pack-dir-artifact-id: ${{ needs.pack.outputs.pack-dir-artifact-id }}

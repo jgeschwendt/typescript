@@ -1,25 +1,7 @@
 name: update-deps
 
-# Daily dependency refresh: the repo's own `bun run update` (ncu -u + bun
-# install) off main, shipped as an auto-merge PR. The required checks are the
-# merge gate — this workflow never builds or tests. Holds (pins ncu must not
-# bump; jlg.io's `holds` list) live in .ncurc.yaml, which `bun run update`
-# reads. Red runs are repaired on the update-deps branch by the local
-# `github-failures` routine. Copied from jlg.io's update-deps (per-repo copies,
-# no reusable workflow — decided 2026-08-30).
-#
-# The bump is deterministic shell; claude-code-action ships it (commit, push,
-# PR, auto-merge) on the Claude GitHub App's credentials. That identity is
-# the point, not a convenience: events created by GITHUB_TOKEN trigger no
-# workflows, so a GITHUB_TOKEN-opened PR would sit with its required checks
-# forever unstarted, and a GITHUB_TOKEN-armed auto-merge would land on main
-# without triggering push workflows. A real app's token has neither problem.
-# Needs the Claude GitHub App (github.com/apps/claude) installed on the repo
-# and the CLAUDE_CODE_OAUTH_TOKEN secret (`claude setup-token`).
-#
-# The schedule is best-effort: GitHub can fire it hours after the cron under
-# load (~5h observed on jlg.io). Good enough for a daily refresh; for an
-# immediate bump: `gh workflow run update-deps.yaml`.
+# app credentials, not GITHUB_TOKEN: its PRs and auto-merges trigger no workflows
+# a hold (a pin ncu must not bump) goes in .ncurc.yaml's `reject` list
 on:
   schedule:
     - cron: '27 9 * * *'
@@ -40,8 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      # One open update-deps PR at a time — yesterday's red PR is being
-      # repaired, not superseded.
+      # one open PR at a time: yesterday's red PR is being repaired, not superseded
       - id: guard
         env:
           GH_TOKEN: ${{ github.token }}
@@ -68,7 +49,6 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      # Runs only when the bump changed something — quiet days spend nothing.
       - if: steps.bump.outputs.changed == 'true'
         uses: anthropics/claude-code-action@v1
         with:

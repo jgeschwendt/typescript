@@ -4,5 +4,5 @@
 | --- | --- | --- |
 | MINIMUM BUMP — pre-1.0 every changeset is patch, or minor for a breaking change; major is forbidden until a deliberate 1.0, and the ci check job fails on one | / | ※ changeset-guard |
 | RELEASE APPROVAL — a patch-only Version Packages PR auto-merges; any minor (or post-1.0 major) bump skips auto-merge, and ci's required check fails on that PR until the owner applies the release:signed-off label — the label is the sign-off, and agents never apply it | / | ※ release-approval-gate |
-| SINGLE SOURCE OF TRUTH — oxlintrc.jsonc is the only base ruleset; index.mjs parses it at import (absolutizing jsPlugins paths) so the JS and raw-JSONC entries share one ruleset; defineConfig adds only override ordering and root settings; never fork the data | packages/oxlint | ※ oxlint-base |
+| SINGLE SOURCE OF TRUTH — index.js is the only base ruleset and defineConfig its only entry; no JSON copy, no `base` export; consumer overrides always follow the base's; never fork the data | packages/oxlint | ※ oxlint-base |
 | SNAPSHOT GATE — the rule-inventory bun snapshot is the review gate for oxlint version bumps; a bump adds new rules to on-categories as consumer-facing errors, so regen and review the diff | packages/oxlint | ※ rule-inventory-gate |

@@ -5,8 +5,8 @@ kind: system
 purpose: Bun-workspace monorepo that publishes the @jlg toolchain configs to npm — oxlint (lint), oxfmt (format), tsconfig. No app code; the packages ARE the product. Releases are changesets-driven.
 commands:
   changeset: bun run changeset
-  fmt:check: bun run fmt:check
-  lint: bun run lint
+  format-check: bunx oxfmt --check
+  lint: bunx oxlint
   test: bun test
 invariants:
   - claim: MINIMUM BUMP — pre-1.0 every changeset is patch, or minor for a breaking change; major is forbidden until a deliberate 1.0, and the ci check job fails on one
@@ -16,33 +16,33 @@ invariants:
 hazards:
   - claim: "VERSION PR TOKEN — the Version Packages PR must be opened with the release app token, never GITHUB_TOKEN: GITHUB_TOKEN-created events trigger no workflows, so the required check never runs and the PR can never merge"
     anchor: ※ release-app-token
-  - claim: "ROOT NAME — the workspace root is named typescript-monorepo, never typescript: changesets treats a workspace named like a dependency (@jlg/tsconfig peers on typescript) as satisfying it, reads its missing version, and every changeset command crashes with ERR_INVALID_ARG_TYPE"
-    anchor: README.md#releasing
-  - claim: MIRRORED PAIR — every base key in packages/oxfmt/oxfmtrc.json must also appear here in .oxfmtrc.jsonc; oxfmt has no `extends`, so the two files are edited together
-    anchor: ※ oxfmt-mirror-root
+  - claim: "ROOT NAME — the workspace root is named jlg, never typescript: changesets treats a workspace named like a dependency (@jlg/tsconfig peers on typescript) as satisfying it, reads its missing version, and every changeset command crashes with ERR_INVALID_ARG_TYPE"
+    anchor: ※ root-name
+edges:
+  depends: [packages/oxfmt, packages/oxlint]
 ```
 
 <!-- @stele -->
 
-## Hazards (10 active)
+## Hazards (8 active)
 
-- ⚠ `/`: MIRRORED PAIR — every base key in packages/oxfmt/oxfmtrc.json must also appear here in .oxfmtrc.jsonc; oxfmt has no `extends`, so the two files are edited together (→ ※ oxfmt-mirror-root)
-- ⚠ `packages/oxlint`: JS-CONFIG RUNTIME — oxlint/oxfmt .config.ts files evaluate under Node >=22.18 through the bins' node shebang, plain `bun run`/`bunx` included, but under Bun with `bun --bun` — as do oxlint's JS plugins (probed 2026-10-09); in a JS config oxlint `extends` takes config OBJECTS, not path strings (→ ※ oxlint-extends-objects)
-- ⚠ `packages/oxlint`: JS PLUGINS — oxlintrc.jsonc's jsPlugins run 42 dropped @jlg/eslint rules as ESLint rule code, plus the inline-directive ban; every entry is a local plugins/*.mjs (a bare specifier cannot resolve from an isolated install's symlink) adapted to oxlint's host by host.mjs; JS plugins are alpha, so oxlint is pinned exactly; a plugin that fails to load rejects the WHOLE config, and one that loads can report nothing (eslint-plugin-unicorn 77; 66 stubs two rules, hence the 60.0.0 pin) — js-plugins.test.js installs the packed tarball under both bun linkers, lints through JSON and JS consumers on node and bun, and fails unless every configured rule reports; typescript6.mjs redirects typescript-eslint's typescript import to @typescript/typescript6 (→ ※ oxlint-js-plugins)
-- ⚠ `packages/oxlint`: PEER COUPLING — peerDependencies.oxlint is exact while JS plugins are alpha; naming a version-N-only rule in oxlintrc.jsonc puts a floor of N under any range it widens to (older consumers hard-fail on the unknown name); category-activated rules don't (→ ※ oxlint-peer-coupling)
+- ⚠ `packages/oxlint`: JS-CONFIG RUNTIME — oxlint/oxfmt .config.ts files evaluate under Node >=22.18 through the bins' node shebang, plain `bun run`/`bunx` included, but under Bun with `bun --bun` — as do oxlint's JS plugins (probed 2026-10-09); in a JS config oxlint `extends` takes config OBJECTS, not path strings, and a nested config replaces the root for its subtree (options stay root-only, and a nested one fails the run) (→ ※ oxlint-extends-objects)
+- ⚠ `packages/oxlint`: JS PLUGINS — index.js's jsPlugins run 40 dropped @jlg/eslint rules as ESLint rule code, plus the inline-directive ban; every entry is a local plugins/*.mjs (a bare specifier cannot resolve from an isolated install's symlink) adapted to oxlint's host by host.mjs; JS plugins are alpha and outside oxlint's semver, so js-plugins.test.js gates every bump; a plugin that fails to load rejects the WHOLE config, and one that loads can report nothing (unicorn 66 stubbed two rules); unicorn floats at ^77 on eslint ^10, and eslint-plugin-import loads per rule because its index needs ESLint 9 internals — js-plugins.test.js installs the packed tarball under both bun linkers, lints through a consumer oxlint.config.ts on node and bun, and fails unless every configured rule reports; typescript6.mjs redirects typescript-eslint's typescript import to @typescript/typescript6 (→ ※ oxlint-js-plugins)
+- ⚠ `packages/oxlint`: PEER COUPLING — peerDependencies.oxlint is a caret range though JS plugins are alpha; naming a version-N-only rule in index.js puts a floor of N under any range it widens to (older consumers hard-fail on the unknown name); category-activated rules don't (→ ※ oxlint-peer-coupling)
 - ⚠ `packages/oxlint`: VERSION PAIRING — oxlint 1.87 declares peer oxlint-tsgolint >=7.0.2003 (probed 2026-10-09); an old tsgolint breaks type-aware SILENTLY ('Failed to find tsgolint executable') and a TS-free repo still lints green; probe type-aware directly when bumping (→ ※ oxlint-tsgolint-pairing)
-- ⚠ `packages/oxfmt`: MIRRORED PAIR — every key in this oxfmtrc.json must also appear in the repo-root .oxfmtrc.jsonc; oxfmt has no `extends`, so the base cannot compose by reference and the two are edited together (→ packages/oxfmt/README.md#relationship-to-the-repo-root)
 - ⚠ `/`: VERSION PR TOKEN — the Version Packages PR must be opened with the release app token, never GITHUB_TOKEN: GITHUB_TOKEN-created events trigger no workflows, so the required check never runs and the PR can never merge (→ ※ release-app-token)
-- ⚠ `/`: ROOT NAME — the workspace root is named typescript-monorepo, never typescript: changesets treats a workspace named like a dependency (@jlg/tsconfig peers on typescript) as satisfying it, reads its missing version, and every changeset command crashes with ERR_INVALID_ARG_TYPE (→ README.md#releasing)
+- ⚠ `/`: ROOT NAME — the workspace root is named jlg, never typescript: changesets treats a workspace named like a dependency (@jlg/tsconfig peers on typescript) as satisfying it, reads its missing version, and every changeset command crashes with ERR_INVALID_ARG_TYPE (→ ※ root-name)
 - ⚠ `packages/oxlint`: FOOTGUN — an unknown rule NAME hard-fails the whole oxlint config (exit 1, nothing lints); a valid rule whose plugin isn't enabled is a SILENT no-op; both guarded by rule-existence.test.js (→ ※ rule-existence-guard)
 - ⚠ `packages/oxlint`: SNAPSHOT RESOLUTION — the guard tests resolve oxlint from packages/oxlint/node_modules first, so a root-only oxlint bump leaves packages/oxlint's devDependency (and the regenerated snapshot) on the OLD catalog with a silent no-diff; bump both package.json files together (→ packages/oxlint/README.md#testing)
 
 ## Map
 
-| node     | kind      | purpose                                                                                                                                                                                           | unfold                                                 |
-| -------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| docs     | container | plan.md — the active plan: hazards for working here and what is next, in order.                                                                                                                   | `stele unfold docs` · or read `docs/AGENTS.md`         |
-| packages | container | The three shipped configs. oxlint and oxfmt each carry a base ruleset plus the guard tests that keep it honest; tsconfig is a single shared tsconfig.json. Per-package detail lives in each node. | `stele unfold packages` · or read `packages/AGENTS.md` |
+| node            | kind      | purpose                                                                                                                                                                                            | unfold                                                               |
+| --------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| docs            | container | plan.md — the active plan: hazards for working here and what is next, in order.                                                                                                                    | `stele unfold docs` · or read `docs/AGENTS.md`                       |
+| packages        | container | The three shipped configs. oxlint and oxfmt each carry a base ruleset plus the guard tests that keep it honest; tsconfig is a single shared tsconfig.json. Per-package detail lives in each node.  | `stele unfold packages` · or read `packages/AGENTS.md`               |
+| packages/oxfmt  | container | Canonical oxfmt settings — formatter companion to @jlg/oxlint. oxfmtrc.json ships one opinion (singleQuote); index.js merges it in (oxfmt has no `extends`). Repo-local keys stay in the consumer. | `stele unfold packages/oxfmt` · or read `packages/oxfmt/AGENTS.md`   |
+| packages/oxlint | container | Shareable oxlint base config, successor to @jlg/eslint. index.js is the whole base; defineConfig() adds overrides per detected next/react/typescript, returns one flat config. Maximalist.         | `stele unfold packages/oxlint` · or read `packages/oxlint/AGENTS.md` |
 
 ## Indexes
 

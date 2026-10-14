@@ -1,0 +1,25 @@
+amends "package://github.com/jdx/hk/releases/download/v2.5.0/hk@2.5.0#/Config.pkl"
+hooks {
+  ["pre-commit"] {
+    fix = true
+    stage = true
+    stash = "git"
+    steps {
+      ["oxfmt"] {
+        check = "bunx oxfmt --check --no-error-on-unmatched-pattern {{files}}"
+        fix = "bunx oxfmt --no-error-on-unmatched-pattern {{files}}"
+      }
+      ["oxlint"] {
+        check = "bunx oxlint --no-error-on-unmatched-pattern {{files}}"
+        glob = List("*.cjs", "*.cts", "*.js", "*.jsx", "*.mjs", "*.mts", "*.ts", "*.tsx")
+      }
+    }
+  }
+  ["pre-push"] {
+    steps {
+      ["gate"] {
+        check = "unset $(git rev-parse --local-env-vars); bunx oxlint && bunx oxfmt --check && bun test && stele check && stele emit --check"
+      }
+    }
+  }
+}
