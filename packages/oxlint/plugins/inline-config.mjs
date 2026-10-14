@@ -1,40 +1,15 @@
-// Bans inline linter directives — the oxlint stand-in for @jlg/eslint's
-// `linterOptions.noInlineConfig: true`, which oxlint has no setting for
-// (`options.respectEslintDisableDirectives: false` covers only `eslint-*`
-// comments, never `oxlint-*`). Reports every comment ESLint or oxlint would
-// read as configuration: disable/enable in all four forms, eslint-env, inline
-// rule config and the global/exported declarations.
-//
-// A report is filtered through the same directives it reports, so a directive
-// whose range covers its own comment — a blanket or self-naming block
-// `disable`, or `disable-line` — would silence its own report. Those throw
-// instead: oxlint fails the run with "Error running JS plugin", which no
-// comment can suppress. (verified 2026-10-09 · probe, oxlint 1.87: a reported
-// `/* oxlint-disable */` and `// oxlint-disable-line` came back empty)
-
-/** Line or block comments: the disable/enable family and eslint-env. */
+/** line or block: the disable/enable family and eslint-env */
 const anyComment =
   /^\s*(?<prefix>eslint|oxlint)-(?<kind>disable|disable-line|disable-next-line|enable|env)(?:\s|$)/u;
 
-/**
- * Block comments only, as ESLint reads them: inline rule config (an `eslint`
- * comment naming rule severities) and global declarations.
- */
+/** block only, as ESLint reads them: inline rule config and global declarations */
 const blockComment = /^\s*(?:eslint|exported|globals?|oxlint)(?:\s|$)/u;
 
 const name = 'inline-config';
 
-/**
- * A directive whose suppression range includes the comment itself: a block
- * `disable` (a line `// oxlint-disable` starts after its own line) or a
- * `disable-line`, blanket or naming this plugin (rules read up to any
- * `-- description`).
- */
+/** a line `// oxlint-disable` starts after its own line, so only a block one covers itself; rules read up to any `-- description` */
 const selfSuppressing = (comment, { groups: { kind, prefix } }) => {
-  if (
-    kind !== 'disable-line' &&
-    (kind !== 'disable' || comment.type !== 'Block')
-  ) {
+  if (kind !== 'disable-line' && (kind !== 'disable' || comment.type !== 'Block')) {
     return false;
   }
   const directive = `${prefix}-${kind}`;
@@ -43,9 +18,7 @@ const selfSuppressing = (comment, { groups: { kind, prefix } }) => {
     .split('--')[0]
     .split(/[\s,]+/u)
     .filter(Boolean);
-  return (
-    named.length === 0 || named.some((rule) => rule.startsWith(`${name}/`))
-  );
+  return named.length === 0 || named.some((rule) => rule.startsWith(`${name}/`));
 };
 
 const plugin = {
@@ -79,8 +52,7 @@ const plugin = {
             'Disallow inline linter directives (disable, enable, env, rule config, globals)',
         },
         messages: {
-          banned:
-            'Inline linter directives are not allowed; change the config instead.',
+          banned: 'Inline linter directives are not allowed; change the config instead.',
         },
         schema: [],
         type: 'problem',

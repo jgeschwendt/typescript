@@ -1,4 +1,3 @@
-import plugin from 'eslint-plugin-import';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { host } from './host.mjs';
@@ -6,29 +5,41 @@ import './typescript6.mjs';
 
 const require = createRequire(import.meta.url);
 
-/**
- * The parser eslint-module-utils' ExportMap reads imported modules with. It
- * takes the rule context's `languageOptions.parser`, whose `parse` oxlint
- * leaves unimplemented — so no-deprecated, and any rule that follows an
- * import into its target, reported "Parse errors in imported module" instead.
- * typescript-eslint's parser reads JS and TS alike; loaded on first use, by
- * absolute path (Bun's `createRequire` resolves a bare name from the working
- * directory once `Module._resolveFilename` is patched). `require` caches it.
- */
-const parserPath = fileURLToPath(
-  import.meta.resolve('@typescript-eslint/parser'),
-);
+/** resolved, never loaded: the plugin's index throws at load on ESLint 10 */
+const index = import.meta.resolve('eslint-plugin-import');
+const names = [
+  'no-deprecated',
+  'no-extraneous-dependencies',
+  'no-import-module-exports',
+  'no-internal-modules',
+  'no-relative-packages',
+  'no-restricted-paths',
+  'no-unresolved',
+  'no-useless-path-segments',
+  'order',
+];
 
-export default host(plugin, 'import-js', (context) => ({
-  languageOptions: {
-    ...context.languageOptions,
-    get parser() {
-      return require(parserPath);
-    },
-    parserOptions: {
-      ecmaFeatures: { jsx: true },
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-    },
+/** absolute: once _resolveFilename is patched, bun's createRequire resolves bare names from cwd */
+const parserPath = fileURLToPath(import.meta.resolve('@typescript-eslint/parser'));
+
+export default host(
+  {
+    rules: Object.fromEntries(
+      names.map((name) => [name, require(fileURLToPath(new URL(`rules/${name}.js`, index)))]),
+    ),
   },
-}));
+  'import-js',
+  (context) => ({
+    languageOptions: {
+      ...context.languageOptions,
+      get parser() {
+        return require(parserPath);
+      },
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+  }),
+);

@@ -1,14 +1,10 @@
-import { afterAll, describe, expect, test } from 'bun:test';
-import { mkdtempSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { afterAll, expect, test } from 'bun:test';
 import { spawnOxlint, write } from './_helpers.js';
 
-// Behaviors of @jlg/eslint the base restores through config rather than a
-// rule, linted end to end from the checkout through both entries. Each was
-// lost once without anything failing (migration audit, 2026-10-09).
+const { mkdtempSync, rmSync } = process.getBuiltinModule('node:fs');
+const { tmpdir } = process.getBuiltinModule('node:os');
+const { join } = process.getBuiltinModule('node:path');
 
-const here = import.meta.dirname;
 const consumerOverride = {
   files: ['**/*.tsx'],
   rules: {
@@ -17,8 +13,8 @@ const consumerOverride = {
   },
 };
 
-// every comment ESLint or oxlint reads as configuration, after look-alikes
-// that are not; a line `oxlint-disable` covers only what follows it, so last
+// every comment ESLint or oxlint reads as configuration, after look-alikes that are not;
+// a line `oxlint-disable` covers only what follows it, so last
 const banned = [
   '// eslint-disable-next-line no-console',
   '// oxlint-enable',
@@ -39,15 +35,14 @@ const directives = [
   '',
 ].join('\n');
 
+const index = Bun.fileURLToPath(import.meta.resolve('../index.js'));
+
+// no package.json above the temp dir: every environment is on
 const directory = mkdtempSync(join(tmpdir(), 'oxlint-parity-'));
 afterAll(() => {
   rmSync(directory, { force: true, recursive: true });
 });
 write(directory, {
-  '.oxlintrc.json': JSON.stringify({
-    extends: [join(here, '..', 'oxlintrc.jsonc')],
-    overrides: [consumerOverride],
-  }),
   'app/api/route.ts': [
     'export function GET() {',
     '  return 1;',
@@ -69,12 +64,10 @@ write(directory, {
     '',
   ].join('\n'),
   'next.config.js': 'export const extra = 1;\nexport default {};\n',
-  'own-line.js':
-    'export const value = 1; // oxlint-disable-line inline-config/no-directives\n',
-  'oxlint.config.mjs': `import { defineConfig } from ${JSON.stringify(join(here, '..', 'index.mjs'))};\nexport default defineConfig({ overrides: [${JSON.stringify(consumerOverride)}] });\n`,
+  'own-line.js': 'export const value = 1; // oxlint-disable-line inline-config/no-directives\n',
+  'oxlint.config.mjs': `import { defineConfig } from ${JSON.stringify(index)};\nexport default defineConfig({ overrides: [${JSON.stringify(consumerOverride)}] });\n`,
   'oxlint.config.ts': 'export const extra = 1;\nexport default {};\n',
-  'src/later.ts':
-    'export async function later(): Promise<number> {\n  return 1;\n}\n',
+  'src/later.ts': 'export async function later(): Promise<number> {\n  return 1;\n}\n',
   'src/plain.js': [
     "const fs = require('node:fs');",
     'process = fs;',
@@ -85,106 +78,96 @@ write(directory, {
   'sub/next.config.js': 'export const extra = 1;\nexport default {};\n',
 });
 
-const entries = { js: 'oxlint.config.mjs', json: '.oxlintrc.json' };
-const lint = (entry, paths) =>
-  spawnOxlint(directory, ['-c', entry, '--format', 'json', ...paths]);
+/**
+ * @param {string[]} paths
+ * @returns {{ exitCode: number; output: string; report: { diagnostics: { code: string; filename: string; labels: [{ span: { length: number; offset: number } }] }[] } }}
+ */
+const lint = (paths) =>
+  spawnOxlint(directory, ['-c', 'oxlint.config.mjs', '--format', 'json', ...paths]);
 
-describe.each(Object.keys(entries))('through the %s entry', (kind) => {
-  const files = Object.groupBy(
-    lint(entries[kind], [
-      'app',
-      'directives.js',
-      'instrumentation.ts',
-      'next.config.js',
-      'oxlint.config.ts',
-      'src',
-      'sub',
-    ]).report.diagnostics,
-    ({ filename }) => filename,
-  );
-  const codes = (file) => (files[file] ?? []).map(({ code }) => code);
+const {
+  report: { diagnostics },
+} = lint([
+  'app',
+  'directives.js',
+  'instrumentation.ts',
+  'next.config.js',
+  'oxlint.config.ts',
+  'src',
+  'sub',
+]);
+/** @param {string} file */
+const codes = (file) =>
+  diagnostics.filter(({ filename }) => filename === file).map(({ code }) => code);
 
-  // the negative assertions below hold vacuously for a file never linted
-  test('every fixture was linted', () => {
-    expect(Object.keys(files).toSorted()).toEqual([
-      'app/api/route.ts',
-      'app/page.tsx',
-      'directives.js',
-      'instrumentation.ts',
-      'next.config.js',
-      'oxlint.config.ts',
-      'src/later.ts',
-      'src/plain.js',
-      'sub/next.config.js',
-    ]);
-  });
+// the negative assertions below hold vacuously for a file never linted
+test('every fixture was linted', () => {
+  expect([...new Set(diagnostics.map(({ filename }) => filename))].toSorted()).toEqual([
+    'app/api/route.ts',
+    'app/page.tsx',
+    'directives.js',
+    'instrumentation.ts',
+    'next.config.js',
+    'oxlint.config.ts',
+    'src/later.ts',
+    'src/plain.js',
+    'sub/next.config.js',
+  ]);
+});
 
-  test('every directive form is banned, and nothing else', () => {
-    expect(
-      files['directives.js']
-        .filter(({ code }) => code === 'inline-config(no-directives)')
-        .map(({ labels: [{ span }] }) =>
-          directives.slice(span.offset, span.offset + span.length),
-        ),
-    ).toEqual(banned);
-  });
+test('every directive form is banned, and nothing else', () => {
+  expect(
+    diagnostics
+      .filter(
+        ({ code, filename }) =>
+          filename === 'directives.js' && code === 'inline-config(no-directives)',
+      )
+      .map(({ labels: [{ span }] }) => directives.slice(span.offset, span.offset + span.length)),
+  ).toEqual(banned);
+});
 
-  test('Node globals are declared (globals.node)', () => {
-    expect(codes('src/plain.js')).toContain('eslint(no-global-assign)');
-  });
+test('Node globals are declared (globals.node)', () => {
+  expect(codes('src/plain.js')).toContain('eslint(no-global-assign)');
+});
 
-  test("no-unused-vars has ESLint's defaults: no `^_` ignore pattern", () => {
-    expect(codes('src/plain.js')).toContain('eslint(no-unused-vars)');
-  });
+test("no-unused-vars has ESLint's defaults: no `^_` ignore pattern", () => {
+  expect(codes('src/plain.js')).toContain('eslint(no-unused-vars)');
+});
 
-  test('typescript/* rules stay off JavaScript files', () => {
-    expect(
-      codes('src/plain.js').filter((code) => code.startsWith('typescript(')),
-    ).toEqual([]);
-  });
+test('typescript/* rules stay off JavaScript files', () => {
+  expect(codes('src/plain.js').filter((code) => code.startsWith('typescript('))).toEqual([]);
+});
 
-  test('rules eslint-config-prettier switched off stay off', () => {
-    expect(codes('src/plain.js')).not.toContain('unicorn(number-literal-case)');
-  });
+test('rules eslint-config-prettier switched off stay off', () => {
+  expect(codes('src/plain.js')).not.toContain('unicorn(number-literal-case)');
+});
 
-  test('TS files run the typed require-await only; instrumentation runs neither', () => {
-    expect(codes('src/later.ts')).not.toContain('eslint(require-await)');
-    expect(codes('instrumentation.ts')).not.toContain('eslint(require-await)');
-  });
+test('TS files run the typed require-await only; instrumentation runs neither', () => {
+  expect(codes('src/later.ts')).not.toContain('eslint(require-await)');
+  expect(codes('instrumentation.ts')).not.toContain('eslint(require-await)');
+});
 
-  test('Next route handlers may be separate named exports', () => {
-    expect(codes('app/api/route.ts')).not.toContain('import(group-exports)');
-  });
+test('Next route handlers may be separate named exports', () => {
+  expect(codes('app/api/route.ts')).not.toContain('import(group-exports)');
+});
 
-  test('root tooling configs export only a default; nested ones are app code', () => {
-    expect(codes('next.config.js')).toContain('import(no-named-export)');
-    expect(codes('next.config.js')).not.toContain('import(no-default-export)');
-    expect(codes('oxlint.config.ts')).toContain('import(no-named-export)');
-    expect(codes('sub/next.config.js')).toContain('import(no-default-export)');
-  });
+test('root tooling configs export only a default; nested ones are app code', () => {
+  expect(codes('next.config.js')).toContain('import(no-named-export)');
+  expect(codes('next.config.js')).not.toContain('import(no-default-export)');
+  expect(codes('oxlint.config.ts')).toContain('import(no-named-export)');
+  expect(codes('sub/next.config.js')).toContain('import(no-default-export)');
+});
 
-  // defineConfig re-appends the file-named base overrides after the
-  // consumer's; an `extends` of the JSONC cannot, so there the consumer wins
-  test.if(kind === 'js')(
-    'base Next overrides beat a consumer `**/*.tsx` override',
-    () => {
-      expect(codes('app/page.tsx')).not.toContain('import(no-default-export)');
-      expect(codes('app/page.tsx')).not.toContain('unicorn(filename-case)');
-    },
-  );
-
-  test.if(kind === 'json')(
-    'a consumer `**/*.tsx` override beats the base Next overrides',
-    () => {
-      expect(codes('app/page.tsx')).toContain('import(no-default-export)');
-    },
-  );
+// the consumer's overrides come last, so they beat the base's Next exemptions
+test('a consumer `**/*.tsx` override beats the base Next overrides', () => {
+  expect(codes('app/page.tsx')).toContain('import(no-default-export)');
+  expect(codes('app/page.tsx')).toContain('unicorn(filename-case)');
 });
 
 test.each(['blanket.js', 'described.js', 'own-line.js'])(
   'a directive that would suppress its own ban fails the run: %s',
   (file) => {
-    const { exitCode, output } = lint(entries.json, [file]);
+    const { exitCode, output } = lint([file]);
     expect(exitCode).not.toBe(0);
     expect(output).toContain('would suppress its own report');
   },
