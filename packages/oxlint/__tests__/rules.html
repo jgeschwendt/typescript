@@ -34,14 +34,14 @@
         <div class="row">
           <h1 class="h1">@jlg/oxlint rules</h1>
           <output id="count" class="badge"></output>
-          <output class="badge badge-warn">106 base sets none</output
+          <output class="badge badge-warn">4 off defaults</output
           ><output class="badge badge-warn">4 old sets none</output
           ><output class="badge badge-warn">4 values differ</output>
         </div>
         <p class="muted">
-          The baseline spells out every option at its default, so
-          <code class="code">base sets none</code>
-          usually means the base runs the rule at defaults, not a behaviour difference.
+          Where the base passes no options, the old ones are resolved over the rule's declared
+          defaults as ESLint does; <code class="code">unverified</code> marks a rule that declares
+          none, so no difference is claimed.
         </p>
         <div id="filters" class="row">
           <label class="field">
@@ -78,9 +78,8 @@
               "setWithoutGet": true
             }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/accessor-pairs"
         },
         {
@@ -89,9 +88,8 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{ "allowImplicit": false, "allowVoid": false, "checkForEach": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/array-callback-return"
         },
         {
@@ -100,9 +98,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": ["as-needed"],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/arrow-body-style"
         },
         {
@@ -129,9 +126,8 @@
               "properties": "always"
             }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "js",
-          "reason": "base sets none",
           "rule": "eslint/camelcase"
         },
         {
@@ -152,9 +148,8 @@
           "oldOptions": [
             { "enforceForClassFields": true, "exceptMethods": [], "ignoreOverrideMethods": false }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/class-methods-use-this"
         },
         {
@@ -163,20 +158,18 @@
           "category": "restriction",
           "old": "on",
           "oldOptions": [20],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/complexity"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [{ "treatUndefinedAsUnspecified": false }],
-          "options": "differs",
-          "oxlint": "none",
-          "reason": "base sets none",
+          "options": "same",
+          "oxlint": "js",
           "rule": "eslint/consistent-return"
         },
         {
@@ -185,9 +178,8 @@
           "category": "-",
           "old": "on",
           "oldOptions": ["that"],
-          "options": "differs",
+          "options": "same",
           "oxlint": "js",
-          "reason": "base sets none",
           "rule": "eslint/consistent-this"
         },
         {
@@ -216,9 +208,8 @@
           "category": "restriction",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/default-case"
         },
         {
@@ -242,14 +233,13 @@
           "rule": "eslint/default-param-last"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [{ "allowKeywords": true, "allowPattern": "" }],
-          "options": "differs",
-          "oxlint": "none",
-          "reason": "base sets none",
+          "options": "same",
+          "oxlint": "js",
           "rule": "eslint/dot-notation"
         },
         {
@@ -288,9 +278,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": ["always", {}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/func-names"
         },
         {
@@ -302,9 +291,8 @@
             "expression",
             { "allowArrowFunctions": false, "allowTypeAnnotation": false, "overrides": {} }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/func-style"
         },
         {
@@ -313,9 +301,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{ "allowImplicit": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/getter-return"
         },
         {
@@ -324,9 +311,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": ["anyOrder", { "enforceForTSTypes": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/grouped-accessor-pairs"
         },
         {
@@ -376,9 +362,8 @@
               "properties": false
             }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/id-match"
         },
         {
@@ -499,7 +484,7 @@
           ],
           "options": "differs",
           "oxlint": "native",
-          "reason": "base sets none",
+          "reason": "off defaults",
           "rule": "eslint/new-cap"
         },
         {
@@ -548,9 +533,8 @@
           "category": "restriction",
           "old": "on",
           "oldOptions": [{ "allow": [], "int32Hint": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-bitwise"
         },
         {
@@ -599,9 +583,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": ["except-parens"],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-cond-assign"
         },
         {
@@ -610,9 +593,8 @@
           "category": "restriction",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-console"
         },
         {
@@ -641,9 +623,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{ "checkLoops": "allExceptWhileTrue" }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-constant-condition"
         },
         {
@@ -707,13 +688,13 @@
           "rule": "eslint/no-div-regex"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "eslint/no-dupe-args"
         },
         {
@@ -762,9 +743,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": [{ "allowSeparateTypeImports": false, "includeExports": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-duplicate-imports"
         },
         {
@@ -773,9 +753,8 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{ "allowElseIf": true }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-else-return"
         },
         {
@@ -784,9 +763,8 @@
           "category": "restriction",
           "old": "on",
           "oldOptions": [{ "allowEmptyCatch": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-empty"
         },
         {
@@ -805,9 +783,8 @@
           "category": "restriction",
           "old": "on",
           "oldOptions": [{ "allow": [] }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-empty-function"
         },
         {
@@ -816,9 +793,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{ "allowObjectPatternsAsParameters": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-empty-pattern"
         },
         {
@@ -847,9 +823,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{ "allowIndirect": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-eval"
         },
         {
@@ -868,9 +843,8 @@
           "category": "suspicious",
           "old": "on",
           "oldOptions": [{ "exceptions": [] }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-extend-native"
         },
         {
@@ -889,9 +863,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-extra-boolean-cast"
         },
         {
@@ -910,9 +883,8 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{ "allowEmptyCase": false, "reportUnusedFallthroughComment": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-fallthrough"
         },
         {
@@ -931,9 +903,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{ "exceptions": [] }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-global-assign"
         },
         {
@@ -950,9 +921,8 @@
               "string": true
             }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-implicit-coercion"
         },
         {
@@ -961,9 +931,8 @@
           "category": "restriction",
           "old": "on",
           "oldOptions": [{ "lexicalBindings": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-implicit-globals"
         },
         {
@@ -992,9 +961,8 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-inline-comments"
         },
         {
@@ -1013,9 +981,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-invalid-regexp"
         },
         {
@@ -1024,9 +991,8 @@
           "category": "-",
           "old": "on",
           "oldOptions": [{ "capIsConstructor": true }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "js",
-          "reason": "base sets none",
           "rule": "eslint/no-invalid-this"
         },
         {
@@ -1081,9 +1047,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": [{ "allowLoop": false, "allowSwitch": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-labels"
         },
         {
@@ -1168,9 +1133,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{ "allowEscape": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-misleading-character-class"
         },
         {
@@ -1179,9 +1143,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": [{ "ignoreNonDeclaration": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-multi-assign"
         },
         {
@@ -1285,23 +1248,23 @@
           "rule": "eslint/no-object-constructor"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "eslint/no-octal"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "eslint/no-octal-escape"
         },
         {
@@ -1320,9 +1283,8 @@
           "category": "restriction",
           "old": "on",
           "oldOptions": [{ "allowForLoopAfterthoughts": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-plusplus"
         },
         {
@@ -1331,9 +1293,8 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{ "allowVoid": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-promise-executor-return"
         },
         {
@@ -1362,9 +1323,8 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{ "builtinGlobals": true }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-redeclare"
         },
         {
@@ -1433,9 +1393,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": ["except-parens"],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-return-assign"
         },
         {
@@ -1454,9 +1413,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{ "props": true }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-self-assign"
         },
         {
@@ -1475,9 +1433,8 @@
           "category": "restriction",
           "old": "on",
           "oldOptions": [{ "allowInParentheses": true }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-sequences"
         },
         {
@@ -1505,9 +1462,8 @@
               "ignoreTypeValueShadow": true
             }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-shadow"
         },
         {
@@ -1586,9 +1542,8 @@
           "category": "nursery",
           "old": "on",
           "oldOptions": [{ "typeof": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-undef"
         },
         {
@@ -1629,9 +1584,8 @@
               "enforceInMethodNames": false
             }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-underscore-dangle"
         },
         {
@@ -1660,9 +1614,8 @@
           "category": "suspicious",
           "old": "on",
           "oldOptions": [{ "defaultAssignment": true }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-unneeded-ternary"
         },
         {
@@ -1681,9 +1634,8 @@
           "category": "nursery",
           "old": "on",
           "oldOptions": [{ "ignore": [] }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-unreachable-loop"
         },
         {
@@ -1702,9 +1654,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{ "enforceForOrderingRelations": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-unsafe-negation"
         },
         {
@@ -1713,9 +1664,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{ "disallowArithmeticOperators": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-unsafe-optional-chaining"
         },
         {
@@ -1732,9 +1682,8 @@
               "ignoreDirectives": false
             }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-unused-expressions"
         },
         {
@@ -1792,9 +1741,8 @@
               "variables": true
             }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-use-before-define"
         },
         {
@@ -1843,9 +1791,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": [{ "enforceForClassMembers": true }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-useless-computed-key"
         },
         {
@@ -1874,9 +1821,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{ "allowRegexCharacters": [] }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-useless-escape"
         },
         {
@@ -1887,9 +1833,8 @@
           "oldOptions": [
             { "ignoreDestructuring": false, "ignoreExport": false, "ignoreImport": false }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-useless-rename"
         },
         {
@@ -1928,9 +1873,8 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{ "location": "start", "terms": ["todo", "fixme", "xxx"] }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/no-warning-comments"
         },
         {
@@ -1969,9 +1913,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": ["always"],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/operator-assignment"
         },
         {
@@ -1980,9 +1923,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": [{ "allowNamedFunctions": false, "allowUnboundThis": true }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/prefer-arrow-callback"
         },
         {
@@ -1991,9 +1933,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": [{ "destructuring": "any", "ignoreReadBeforeAssign": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/prefer-const"
         },
         {
@@ -2062,9 +2003,8 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{ "allowEmptyReject": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/prefer-promise-reject-errors"
         },
         {
@@ -2073,9 +2013,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": [{ "disallowRedundantWrapping": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/prefer-regex-literals"
         },
         {
@@ -2114,9 +2053,8 @@
           "category": "suspicious",
           "old": "on",
           "oldOptions": [{ "requireCatchParameter": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/preserve-caught-error"
         },
         {
@@ -2125,9 +2063,8 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": ["always"],
-          "options": "differs",
+          "options": "unverified",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/radix"
         },
         {
@@ -2136,9 +2073,8 @@
           "category": "-",
           "old": "on",
           "oldOptions": [{ "allowProperties": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "js",
-          "reason": "base sets none",
           "rule": "eslint/require-atomic-updates"
         },
         {
@@ -2157,9 +2093,8 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/require-unicode-regexp"
         },
         {
@@ -2206,9 +2141,8 @@
               "natural": false
             }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/sort-keys"
         },
         {
@@ -2217,20 +2151,18 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{ "ignoreCase": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/sort-vars"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": ["safe"],
-          "options": "differs",
-          "oxlint": "none",
-          "reason": "base sets none",
+          "options": "same",
+          "oxlint": "js",
           "rule": "eslint/strict"
         },
         {
@@ -2249,9 +2181,8 @@
           "category": "restriction",
           "old": "on",
           "oldOptions": ["never"],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/unicode-bom"
         },
         {
@@ -2260,9 +2191,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{ "enforceForIndexOf": false, "enforceForSwitchCase": true }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/use-isnan"
         },
         {
@@ -2271,9 +2201,8 @@
           "category": "correctness",
           "old": "on",
           "oldOptions": [{ "requireStringLiterals": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/valid-typeof"
         },
         {
@@ -2292,9 +2221,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": ["never", { "exceptRange": false, "onlyEquality": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "eslint/yoda"
         },
         {
@@ -2393,9 +2321,8 @@
           "category": "suspicious",
           "old": "on",
           "oldOptions": [{ "treatUndefinedAsUnspecified": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native (type-aware)",
-          "reason": "base sets none",
           "rule": "typescript/consistent-return"
         },
         {
@@ -2462,9 +2389,8 @@
               "allowProtectedClassPropertyAccess": false
             }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native (type-aware)",
-          "reason": "base sets none",
           "rule": "typescript/dot-notation"
         },
         {
@@ -2677,9 +2603,8 @@
           "category": "-",
           "old": "on",
           "oldOptions": [{ "allow": [] }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "none",
-          "reason": "base sets none",
           "rule": "typescript/no-empty-function"
         },
         {
@@ -2783,14 +2708,13 @@
           "rule": "typescript/no-inferrable-types"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [{ "capIsConstructor": true }],
-          "options": "differs",
-          "oxlint": "none",
-          "reason": "base sets none",
+          "options": "same",
+          "oxlint": "js",
           "rule": "typescript/no-invalid-this"
         },
         {
@@ -2824,7 +2748,7 @@
           ],
           "options": "differs",
           "oxlint": "none",
-          "reason": "base sets none",
+          "reason": "off defaults",
           "rule": "typescript/no-magic-numbers"
         },
         {
@@ -3195,9 +3119,8 @@
           "oldOptions": [
             { "allowShortCircuit": false, "allowTaggedTemplates": false, "allowTernary": false }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "none",
-          "reason": "base sets none",
           "rule": "typescript/no-unused-expressions"
         },
         {
@@ -3888,13 +3811,13 @@
           "rule": "import/enforce-node-protocol-usage"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "import/dynamic-import-chunkname"
         },
         {
@@ -4108,13 +4031,13 @@
           "rule": "react/checked-requires-onchange-or-readonly"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/default-props-match-prop-types"
         },
         {
@@ -4168,23 +4091,23 @@
           "rule": "react/forbid-elements"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/forbid-foreign-prop-types"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/forbid-prop-types"
         },
         {
@@ -4303,9 +4226,8 @@
           "category": "restriction",
           "old": "on",
           "oldOptions": [{ "extensions": [".jsx", ".tsx"] }],
-          "options": "differs",
+          "options": "unverified",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "react/jsx-filename-extension"
         },
         {
@@ -4621,13 +4543,13 @@
           "rule": "react/no-invalid-html-attribute"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/no-access-state-in-setstate"
         },
         {
@@ -4651,13 +4573,13 @@
           "rule": "react/no-array-index-key"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/no-arrow-function-lifecycle"
         },
         {
@@ -4871,13 +4793,13 @@
           "rule": "react/no-unstable-nested-components"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/no-unused-class-component-methods"
         },
         {
@@ -4891,13 +4813,13 @@
           "rule": "react/no-unused-prop-types"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/no-unused-state"
         },
         {
@@ -4931,13 +4853,13 @@
           "rule": "react/prefer-es6-class"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/prefer-exact-props"
         },
         {
@@ -4951,23 +4873,23 @@
           "rule": "react/prefer-read-only-props"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/prefer-stateless-function"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/prop-types"
         },
         {
@@ -4992,13 +4914,13 @@
           "rule": "react/require-default-props"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/require-optimization"
         },
         {
@@ -5022,33 +4944,33 @@
           "rule": "react/self-closing-comp"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/sort-comp"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/sort-default-props"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/sort-prop-types"
         },
         {
@@ -5062,13 +4984,13 @@
           "rule": "react/state-in-constructor"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "react/static-property-placement"
         },
         {
@@ -5092,13 +5014,13 @@
           "rule": "react/void-dom-elements-no-children"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/better-dom-traversing"
         },
         {
@@ -5107,19 +5029,18 @@
           "category": "style",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/catch-error-name"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/class-reference-in-static-methods"
         },
         {
@@ -5133,23 +5054,23 @@
           "rule": "unicorn/comma-spacing"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/comment-content"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/consistent-arrow-return-style"
         },
         {
@@ -5163,43 +5084,43 @@
           "rule": "unicorn/consistent-assert"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/consistent-boolean-name"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/consistent-class-member-order"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/consistent-compound-words"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/consistent-conditional-object-spread"
         },
         {
@@ -5243,13 +5164,13 @@
           "rule": "unicorn/consistent-existence-index-check"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/consistent-export-decorator-position"
         },
         {
@@ -5258,19 +5179,18 @@
           "category": "suspicious",
           "old": "on",
           "oldOptions": [{ "checkArrowFunctions": true }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/consistent-function-scoping"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/consistent-function-style"
         },
         {
@@ -5285,13 +5205,13 @@
           "rule": "unicorn/consistent-json-file-read"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/consistent-optional-chaining"
         },
         {
@@ -5305,13 +5225,13 @@
           "rule": "unicorn/consistent-template-literal-escape"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/consistent-tuple-labels"
         },
         {
@@ -5325,23 +5245,23 @@
           "rule": "unicorn/custom-error-definition"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/default-export-style"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/dom-node-dataset"
         },
         {
@@ -5370,9 +5290,8 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": ["uppercase"],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/escape-case"
         },
         {
@@ -5424,13 +5343,13 @@
           "rule": "unicorn/filename-case"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/id-match"
         },
         {
@@ -5439,9 +5358,8 @@
           "category": "restriction",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/import-style"
         },
         {
@@ -5455,23 +5373,23 @@
           "rule": "unicorn/indent"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/isolated-functions"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/iteration-fallback-style"
         },
         {
@@ -5485,13 +5403,13 @@
           "rule": "unicorn/key-name-casing"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/logical-assignment-operators"
         },
         {
@@ -5545,13 +5463,13 @@
           "rule": "unicorn/no-accessor-recursion"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-accidental-bitwise-operator"
         },
         {
@@ -5575,13 +5493,13 @@
           "rule": "unicorn/no-array-callback-reference"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-array-concat-in-loop"
         },
         {
@@ -5595,23 +5513,23 @@
           "rule": "unicorn/no-array-fill-with-reference-type"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-array-from-fill"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-array-front-mutation"
         },
         {
@@ -5630,9 +5548,8 @@
           "category": "restriction",
           "old": "on",
           "oldOptions": [{ "allowSimpleOperations": true }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/no-array-reduce"
         },
         {
@@ -5641,9 +5558,8 @@
           "category": "suspicious",
           "old": "on",
           "oldOptions": [{ "allowExpressionStatement": true }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/no-array-reverse"
         },
         {
@@ -5657,53 +5573,53 @@
           "rule": "unicorn/no-array-sort"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-array-sort-for-min-max"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-array-splice"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-asterisk-prefix-in-documentation-comments"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-async-iterator-callback"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-async-promise-finally"
         },
         {
@@ -5727,103 +5643,103 @@
           "rule": "unicorn/no-await-in-promise-methods"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-barrel-files"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-blob-to-file"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-boolean-sort-comparator"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-break-in-nested-loop"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-canvas-to-image"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-chained-comparison"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-collection-bracket-access"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-computed-property-existence-check"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-conflicting-constraints"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-confusing-array-splice"
         },
         {
@@ -5847,23 +5763,23 @@
           "rule": "unicorn/no-console-spaces"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-constant-zero-expression"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-declarations-before-early-exit"
         },
         {
@@ -5877,53 +5793,53 @@
           "rule": "unicorn/no-document-cookie"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-double-comparison"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-duplicate-if-branches"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-duplicate-logical-operands"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-duplicate-loops"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-duplicate-set-values"
         },
         {
@@ -5947,33 +5863,33 @@
           "rule": "unicorn/no-empty-link-text"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-error-property-assignment"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-exports-in-scripts"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-for-each"
         },
         {
@@ -5987,13 +5903,13 @@
           "rule": "unicorn/no-for-loop"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-global-object-property-assignment"
         },
         {
@@ -6007,53 +5923,53 @@
           "rule": "unicorn/no-immediate-mutation"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-impossible-length-comparison"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-incomplete-accessor-override"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-incorrect-query-selector"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-incorrect-template-string-interpolation"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-ineffective-csp-directives"
         },
         {
@@ -6064,49 +5980,48 @@
           "oldOptions": [
             { "exclude": [], "include": [], "strategy": "loose", "useErrorIsError": false }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/no-instanceof-builtins"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-invalid-argument-count"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-invalid-boolean-attribute-value"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-invalid-character-comparison"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-invalid-dom-token"
         },
         {
@@ -6120,43 +6035,43 @@
           "rule": "unicorn/no-invalid-fetch-options"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-invalid-file-input-accept"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-invalid-integrity"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-invalid-intl-options"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-invalid-property-descriptor"
         },
         {
@@ -6170,53 +6085,53 @@
           "rule": "unicorn/no-invalid-remove-event-listener"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-invalid-response-options"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-invalid-style-set-property"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-invalid-temporal-arithmetic"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-invalid-url-protocol-comparison"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-invalid-well-known-symbol-methods"
         },
         {
@@ -6235,39 +6150,38 @@
           "category": "-",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "js",
-          "reason": "base sets none",
           "rule": "unicorn/no-keyword-prefix"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-late-current-target-access"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-late-event-control"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-leading-empty-lines"
         },
         {
@@ -6281,13 +6195,13 @@
           "rule": "unicorn/no-lonely-if"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-loop-iterable-mutation"
         },
         {
@@ -6311,53 +6225,53 @@
           "rule": "unicorn/no-magic-array-flat-depth"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-manually-wrapped-comments"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-mismatched-map-key"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-misrefactored-assignment"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-missing-local-resource"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-multiple-promise-resolver-calls"
         },
         {
@@ -6371,23 +6285,23 @@
           "rule": "unicorn/no-named-default"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-negated-array-predicate"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-negated-comparison"
         },
         {
@@ -6451,13 +6365,13 @@
           "rule": "unicorn/no-non-function-verb-prefix"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-nonstandard-builtin-properties"
         },
         {
@@ -6466,9 +6380,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": [{ "checkStrictEquality": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/no-null"
         },
         {
@@ -6482,33 +6395,33 @@
           "rule": "unicorn/no-object-as-default-parameter"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-object-methods-with-collections"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-optional-chaining-on-undeclared-variable"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-prevent-default-in-passive-listener"
         },
         {
@@ -6522,43 +6435,43 @@
           "rule": "unicorn/no-process-exit"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-redundant-comparison"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-return-array-push"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-selector-as-dom-name"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-shorthand-property-overrides"
         },
         {
@@ -6582,13 +6495,13 @@
           "rule": "unicorn/no-static-only-class"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-subtraction-comparison"
         },
         {
@@ -6612,43 +6525,43 @@
           "rule": "unicorn/no-this-assignment"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-this-outside-of-class"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-top-level-assignment-in-function"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-top-level-side-effects"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-transition-all"
         },
         {
@@ -6657,29 +6570,28 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{ "checkGlobalVariables": false }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/no-typeof-undefined"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-uncalled-method"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-undeclared-class-members"
         },
         {
@@ -6693,13 +6605,13 @@
           "rule": "unicorn/no-unnecessary-array-flat-depth"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unnecessary-array-flat-map"
         },
         {
@@ -6723,53 +6635,53 @@
           "rule": "unicorn/no-unnecessary-await"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unnecessary-boolean-comparison"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unnecessary-fetch-options"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unnecessary-global-this"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unnecessary-nested-ternary"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unnecessary-parameters"
         },
         {
@@ -6793,23 +6705,23 @@
           "rule": "unicorn/no-unnecessary-slice-end"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unnecessary-splice"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unnecessary-string-trim"
         },
         {
@@ -6823,13 +6735,13 @@
           "rule": "unicorn/no-unreadable-array-destructuring"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unreadable-for-of-expression"
         },
         {
@@ -6843,113 +6755,113 @@
           "rule": "unicorn/no-unreadable-iife"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unreadable-new-expression"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unreadable-object-destructuring"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unsafe-buffer-conversion"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unsafe-dom-html"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unsafe-json-serialization"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unsafe-promise-all-settled-values"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unsafe-property-key"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unsafe-sqlite-interpolation"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unsafe-string-replacement"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unused-builtin-method-return"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-unused-iterator-helper"
         },
         {
@@ -6963,33 +6875,33 @@
           "rule": "unicorn/no-unused-properties"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-url-in-search-params"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-useless-boolean-cast"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-useless-coercion"
         },
         {
@@ -7003,53 +6915,53 @@
           "rule": "unicorn/no-useless-collection-argument"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-useless-compound-assignment"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-useless-concat"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-useless-continue"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-useless-delete-check"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-useless-else"
         },
         {
@@ -7093,23 +7005,23 @@
           "rule": "unicorn/no-useless-length-check"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-useless-logical-operand"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-useless-override"
         },
         {
@@ -7123,33 +7035,33 @@
           "rule": "unicorn/no-useless-promise-resolve-reject"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-useless-re-export"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-useless-recursion"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-useless-set-construction"
         },
         {
@@ -7173,13 +7085,13 @@
           "rule": "unicorn/no-useless-switch-case"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-useless-template-literals"
         },
         {
@@ -7188,29 +7100,28 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/no-useless-undefined"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-using-resource-escape"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/no-xor-as-exponentiation"
         },
         {
@@ -7247,39 +7158,38 @@
               "onlyIfContainsSeparator": false
             }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/numeric-separators-style"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/operator-assignment"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-abort-signal-any"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-abort-signal-timeout"
         },
         {
@@ -7288,29 +7198,28 @@
           "category": "suspicious",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/prefer-add-event-listener"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-add-event-listener-options"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-aggregate-error"
         },
         {
@@ -7319,9 +7228,8 @@
           "category": "perf",
           "old": "on",
           "oldOptions": [{ "checkFromLast": true }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/prefer-array-find"
         },
         {
@@ -7330,9 +7238,8 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/prefer-array-flat"
         },
         {
@@ -7346,33 +7253,33 @@
           "rule": "unicorn/prefer-array-flat-map"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-array-from-async"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-array-from-map"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-array-from-range"
         },
         {
@@ -7386,33 +7293,33 @@
           "rule": "unicorn/prefer-array-index-of"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-array-iterable-methods"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-array-last-methods"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-array-slice"
         },
         {
@@ -7431,19 +7338,18 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{ "checkAllIndexAccess": false, "getLastElementFunctions": [] }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/prefer-at"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-await"
         },
         {
@@ -7467,23 +7373,23 @@
           "rule": "unicorn/prefer-blob-reading-methods"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-block-statement-over-iife"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-boolean-return"
         },
         {
@@ -7517,23 +7423,23 @@
           "rule": "unicorn/prefer-code-point"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-combined-guards"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-continue"
         },
         {
@@ -7557,23 +7463,23 @@
           "rule": "unicorn/prefer-default-parameters"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-direct-iteration"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-dispose"
         },
         {
@@ -7587,13 +7493,13 @@
           "rule": "unicorn/prefer-dom-node-append"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-dom-node-html-methods"
         },
         {
@@ -7607,13 +7513,13 @@
           "rule": "unicorn/prefer-dom-node-remove"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-dom-node-replace-children"
         },
         {
@@ -7627,43 +7533,43 @@
           "rule": "unicorn/prefer-dom-node-text-content"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-early-return"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-else-if"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-error-is-error"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-escaped-irregular-whitespace"
         },
         {
@@ -7684,37 +7590,37 @@
           "oldOptions": [{ "ignoreUsedVariables": false }],
           "options": "differs",
           "oxlint": "native",
-          "reason": "base sets none",
+          "reason": "off defaults",
           "rule": "unicorn/prefer-export-from"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-flat-math-min-max"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-get-or-insert-computed"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-global-number-constants"
         },
         {
@@ -7728,53 +7634,53 @@
           "rule": "unicorn/prefer-global-this"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-group-by"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-has-check"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-hoisting-branch-code"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-https"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-identifier-import-export-specifiers"
         },
         {
@@ -7798,83 +7704,83 @@
           "rule": "unicorn/prefer-includes"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-includes-over-repeated-comparisons"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-iterable-in-constructor"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-iterator-concat"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-iterator-helpers"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-iterator-to-array"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-iterator-to-array-at-end"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-iterator-zip"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-json-import"
         },
         {
@@ -7888,23 +7794,23 @@
           "rule": "unicorn/prefer-keyboard-event-key"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-literal-ascii"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-location-assign"
         },
         {
@@ -7918,33 +7824,33 @@
           "rule": "unicorn/prefer-logical-operator-over-ternary"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-map-from-entries"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-math-abs"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-math-constants"
         },
         {
@@ -7968,13 +7874,13 @@
           "rule": "unicorn/prefer-math-trunc"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-minimal-ternary"
         },
         {
@@ -8048,13 +7954,13 @@
           "rule": "unicorn/prefer-number-coercion"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-number-is-safe-integer"
         },
         {
@@ -8065,27 +7971,27 @@
           "oldOptions": [{ "checkInfinity": false, "checkNaN": true }],
           "options": "differs",
           "oxlint": "native",
-          "reason": "base sets none",
+          "reason": "off defaults",
           "rule": "unicorn/prefer-number-properties"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-object-define-properties"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-object-destructuring-defaults"
         },
         {
@@ -8094,29 +8000,28 @@
           "category": "style",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/prefer-object-from-entries"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-object-iterable-methods"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-observer-apis"
         },
         {
@@ -8130,53 +8035,53 @@
           "rule": "unicorn/prefer-optional-catch-binding"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-path2d"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-private-class-fields"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-promise-static-methods"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-promise-try"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-promise-with-resolvers"
         },
         {
@@ -8200,13 +8105,13 @@
           "rule": "unicorn/prefer-query-selector"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-queue-microtask"
         },
         {
@@ -8220,13 +8125,13 @@
           "rule": "unicorn/prefer-reflect-apply"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-regexp-escape"
         },
         {
@@ -8250,13 +8155,13 @@
           "rule": "unicorn/prefer-response-static-json"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-scoped-selector"
         },
         {
@@ -8270,13 +8175,13 @@
           "rule": "unicorn/prefer-set-has"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-set-methods"
         },
         {
@@ -8290,63 +8195,63 @@
           "rule": "unicorn/prefer-set-size"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-short-arrow-method"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-short-escape-sequences"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-simple-condition-first"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-simple-sort-comparator"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-simplified-conditions"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-single-array-predicate"
         },
         {
@@ -8355,49 +8260,48 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/prefer-single-call"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-single-object-destructuring"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-single-replace"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-smaller-scope"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-split-limit"
         },
         {
@@ -8411,23 +8315,23 @@
           "rule": "unicorn/prefer-spread"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-string-match-all"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-string-pad-start-end"
         },
         {
@@ -8441,13 +8345,13 @@
           "rule": "unicorn/prefer-string-raw"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-string-repeat"
         },
         {
@@ -8496,9 +8400,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/prefer-structured-clone"
         },
         {
@@ -8507,29 +8410,28 @@
           "category": "-",
           "old": "on",
           "oldOptions": [{ "emptyDefaultCase": "no-default-comment", "minimumCases": 3 }],
-          "options": "differs",
+          "options": "same",
           "oxlint": "js",
-          "reason": "base sets none",
           "rule": "unicorn/prefer-switch"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-temporal"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-temporal-conversion"
         },
         {
@@ -8538,29 +8440,28 @@
           "category": "style",
           "old": "on",
           "oldOptions": ["always"],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/prefer-ternary"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-then-catch"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-toggle-attribute"
         },
         {
@@ -8584,93 +8485,93 @@
           "rule": "unicorn/prefer-type-error"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-type-literal-last"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-uint8array-base64"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-uint8array-hex"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-unary-minus"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-unicode-code-point-escapes"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-url-can-parse"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-url-href"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-url-search-parameters"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/prefer-while-loop-condition"
         },
         {
@@ -8679,9 +8580,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": ["never"],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/relative-url-style"
         },
         {
@@ -8695,23 +8595,23 @@
           "rule": "unicorn/require-array-join-separator"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/require-array-sort-compare"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/require-css-escape"
         },
         {
@@ -8755,13 +8655,13 @@
           "rule": "unicorn/require-number-to-fixed-digits-argument"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/require-passive-events"
         },
         {
@@ -8775,33 +8675,33 @@
           "rule": "unicorn/require-post-message-target-origin"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/require-proxy-trap-boolean-return"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/require-text-decoder-streaming"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/single-line-block-comment-style"
         },
         {
@@ -8810,9 +8710,8 @@
           "category": "-",
           "old": "on",
           "oldOptions": [{}],
-          "options": "differs",
+          "options": "same",
           "oxlint": "js",
-          "reason": "base sets none",
           "rule": "unicorn/string-content"
         },
         {
@@ -8821,9 +8720,8 @@
           "category": "style",
           "old": "on",
           "oldOptions": ["always"],
-          "options": "differs",
+          "options": "same",
           "oxlint": "native",
-          "reason": "base sets none",
           "rule": "unicorn/switch-case-braces"
         },
         {
@@ -8837,13 +8735,13 @@
           "rule": "unicorn/switch-case-break-position"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/template-indent"
         },
         {
@@ -8867,13 +8765,13 @@
           "rule": "unicorn/throw-new-error"
         },
         {
-          "base": "off",
+          "base": "error",
           "baseOptions": [],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
           "options": "none",
-          "oxlint": "none",
+          "oxlint": "js",
           "rule": "unicorn/try-complexity"
         },
         {
@@ -9512,7 +9410,7 @@
           }),
         ),
       );
-      /** a pill per value but the rule and `-`; a `differs` pill titles its reason */
+      /** a pill per value but the rule and `-`; a `differs` pill titles its reason, an `unverified` one why */
       const cell = (row, name) =>
         el(
           'td',
@@ -9523,7 +9421,12 @@
             : el('span', {
                 className: `pill ${pills[row[name]] ? `pill-${pills[row[name]]}` : ''}`,
                 textContent: row[name],
-                title: row[name] === 'differs' ? row.reason : '',
+                title:
+                  {
+                    differs: row.reason,
+                    unverified:
+                      'the base passes no options and the rule declares no defaults to compare against',
+                  }[row[name]] ?? '',
               }),
         );
       /** old and base option arrays side by side */

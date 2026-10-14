@@ -15,7 +15,7 @@ const selfSuppressing = (comment, { groups: { kind, prefix } }) => {
   const directive = `${prefix}-${kind}`;
   const named = comment.value
     .slice(comment.value.indexOf(directive) + directive.length)
-    .split('--')[0]
+    .split('--', 1)[0]
     .split(/[\s,]+/u)
     .filter(Boolean);
   return named.length === 0 || named.some((rule) => rule.startsWith(`${name}/`));
@@ -25,27 +25,22 @@ const plugin = {
   meta: { name },
   rules: {
     'no-directives': {
-      create(context) {
-        return {
-          Program() {
-            for (const comment of context.sourceCode.getAllComments()) {
-              const match = anyComment.exec(comment.value);
-              if (match !== null && selfSuppressing(comment, match)) {
-                const { line } = comment.loc.start;
-                throw new Error(
-                  `${name}/no-directives: ${context.filename}:${line} carries a directive that would suppress its own report; inline linter directives are not allowed — change the config instead.`,
-                );
-              }
-              if (
-                match !== null ||
-                (comment.type === 'Block' && blockComment.test(comment.value))
-              ) {
-                context.report({ loc: comment.loc, messageId: 'banned' });
-              }
+      create: (context) => ({
+        Program() {
+          for (const comment of context.sourceCode.getAllComments()) {
+            const match = anyComment.exec(comment.value);
+            if (match !== null && selfSuppressing(comment, match)) {
+              const { line } = comment.loc.start;
+              throw new Error(
+                `${name}/no-directives: ${context.filename}:${line} carries a directive that would suppress its own report; inline linter directives are not allowed — change the config instead.`,
+              );
             }
-          },
-        };
-      },
+            if (match !== null || (comment.type === 'Block' && blockComment.test(comment.value))) {
+              context.report({ loc: comment.loc, messageId: 'banned' });
+            }
+          }
+        },
+      }),
       meta: {
         docs: {
           description:

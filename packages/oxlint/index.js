@@ -3,7 +3,10 @@
 /** @typedef {import('oxlint').OxlintConfig} Config */
 /** @typedef {import('oxlint').OxlintOverride} Override */
 /** @typedef {{ next: boolean; react: boolean; typescript: boolean }} Env */
+/** @typedef {Record<string, { meta: { deprecated?: unknown; docs?: { extendsBaseRule?: boolean | string; requiresTypeChecking?: boolean } } }>} Rules */
 
+const { existsSync, readFileSync } = process.getBuiltinModule('node:fs');
+const { dirname, join } = process.getBuiltinModule('node:path');
 const { fileURLToPath } = process.getBuiltinModule('node:url');
 
 // ※ oxlint-tsgolint-pairing
@@ -13,9 +16,9 @@ const { fileURLToPath } = process.getBuiltinModule('node:url');
 const plugins = ['eslint', 'import', 'oxc', 'react', 'typescript', 'unicorn'];
 
 /**
- * jsPlugins resolve against their config file, and this base has none
- * @param {string} specifier
- */
+jsPlugins resolve against their config file, and this base has none
+@param {string} specifier
+*/
 const absolute = (specifier) => fileURLToPath(new URL(specifier, import.meta.url));
 
 // ※ oxlint-js-plugins
@@ -121,53 +124,10 @@ const rules = {
   'typescript/no-var-requires': 'off',
   'typescript/prefer-ts-expect-error': 'off',
 
-  'eslint-js/camelcase': 'error',
-  'eslint-js/consistent-this': 'error',
-  'eslint-js/no-restricted-syntax': 'error',
-  'eslint-js/no-undef-init': 'error',
-  'eslint-js/require-atomic-updates': 'error',
-  'import-js/no-deprecated': 'error',
-  'import-js/no-extraneous-dependencies': 'error',
-  'import-js/no-import-module-exports': 'error',
-  'import-js/no-internal-modules': 'error',
-  'import-js/no-relative-packages': 'error',
-  'import-js/no-restricted-paths': 'error',
-  'import-js/no-useless-path-segments': 'error',
-  'import-js/order': [
-    'error',
-    {
-      alphabetize: { caseInsensitive: false, order: 'asc' },
-      groups: [['builtin', 'external'], 'internal', 'index', 'sibling', 'parent'],
-      pathGroups: [{ group: 'internal', pattern: '@/**' }],
-    },
-  ],
   'inline-config/no-directives': 'error',
-  'react-js/boolean-prop-naming': 'error',
-  'react-js/destructuring-assignment': 'error',
-  'react-js/jsx-no-bind': 'error',
-  'react-js/jsx-no-leaked-render': 'error',
-  'react-js/jsx-sort-props': 'error',
-  'react-js/no-adjacent-inline-elements': 'error',
-  'react-js/no-deprecated': 'error',
-  'react-js/no-invalid-html-attribute': 'error',
-  'react-js/no-typos': 'error',
-  'react-js/no-unused-prop-types': 'error',
-  'react-js/prefer-read-only-props': 'error',
-  'react-js/require-default-props': ['error', { functions: 'defaultArguments' }],
-  'unicorn-js/consistent-destructuring': 'error',
-  'unicorn-js/consistent-json-file-read': ['error', 'buffer'],
-  'unicorn-js/expiring-todo-comments': ['error', { checkDates: true }],
-  'unicorn-js/name-replacements': 'error',
-  'unicorn-js/no-for-loop': 'error',
-  'unicorn-js/no-keyword-prefix': 'error',
-  'unicorn-js/no-named-default': 'error',
-  'unicorn-js/no-unnecessary-polyfills': 'error',
-  'unicorn-js/no-unused-properties': 'error',
-  'unicorn-js/prefer-switch': 'error',
-  'unicorn-js/string-content': 'error',
 };
 
-// oxlint cannot drop a plugin per override: every category-enabled typescript rule, by name
+// oxlint cannot drop a plugin per override: every category-enabled TypeScript rule, by name
 const typescriptOnly = [
   'adjacent-overload-signatures',
   'array-type',
@@ -281,11 +241,7 @@ const always = [
   { env: { node: true }, files: ['**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}'] },
   {
     files: ['**/*.{cjs,js,jsx,mjs}'],
-    rules: {
-      'eslint-js/no-invalid-this': 'error',
-      'import-js/no-unresolved': 'error',
-      ...Object.fromEntries(typescriptOnly.map((name) => [`typescript/${name}`, 'off'])),
-    },
+    rules: Object.fromEntries(typescriptOnly.map((name) => [`typescript/${name}`, 'off'])),
   },
 ];
 
@@ -298,6 +254,147 @@ const naming = {
 const parameter = { format: ['camelCase'], leadingUnderscore: 'allow', selector: 'parameter' };
 const typeLike = { format: ['PascalCase'], selector: 'typeLike' };
 
+/**
+off, each for a fact: the JS-plugin rules oxlint lacks run unless named here
+@type {Record<string, string>}
+*/
+const disabled = {
+  'import-js/enforce-node-protocol-usage':
+    'duplicates native unicorn/prefer-node-protocol; without its required option it crashes: Missing option',
+  'import-js/no-unused-modules':
+    'inert without options; with unusedExports it fails every JS rule on the file: ESLint 10 exports no lib/util/glob-utils',
+  'react-js/jsx-child-element-spacing': 'formatting-only: whitespace and line breaks oxfmt owns',
+  'react-js/jsx-closing-bracket-location': 'formatting-only: whitespace and line breaks oxfmt owns',
+  'react-js/jsx-closing-tag-location': 'formatting-only: whitespace and line breaks oxfmt owns',
+  'react-js/jsx-curly-newline': 'formatting-only: whitespace and line breaks oxfmt owns',
+  'react-js/jsx-curly-spacing': 'formatting-only: whitespace and line breaks oxfmt owns',
+  'react-js/jsx-equals-spacing': 'formatting-only: whitespace and line breaks oxfmt owns',
+  'react-js/jsx-first-prop-new-line': 'formatting-only: whitespace and line breaks oxfmt owns',
+  'react-js/jsx-indent':
+    'formatting-only: 81 reports on oxfmt-clean jlg.io TSX (measured 2026-10-14)',
+  'react-js/jsx-indent-props':
+    'formatting-only: 45 reports on oxfmt-clean jlg.io TSX (measured 2026-10-14)',
+  'react-js/jsx-max-props-per-line':
+    'formatting-only: 6 reports on oxfmt-clean jlg.io TSX (measured 2026-10-14)',
+  'react-js/jsx-newline':
+    'formatting-only: 17 reports on oxfmt-clean jlg.io TSX (measured 2026-10-14)',
+  'react-js/jsx-one-expression-per-line':
+    'formatting-only: 9 reports on oxfmt-clean jlg.io TSX (measured 2026-10-14)',
+  'react-js/jsx-props-no-multi-spaces':
+    "crashes under the host: Cannot read properties of null (reading 'type')",
+  'react-js/jsx-tag-spacing': 'formatting-only: whitespace and line breaks oxfmt owns',
+  'react-js/jsx-uses-react':
+    'reports nothing: marks JSX names used for no-unused-vars, native here',
+  'react-js/jsx-uses-vars': 'reports nothing: marks JSX names used for no-unused-vars, native here',
+  'react-js/jsx-wrap-multilines': 'formatting-only: whitespace and line breaks oxfmt owns',
+  'typescript-js/class-methods-use-this':
+    'duplicates native class-methods-use-this (verified 2026-10-14 · TS probe)',
+  'typescript-js/default-param-last':
+    'duplicates native default-param-last (verified 2026-10-14 · TS probe)',
+  'typescript-js/init-declarations':
+    'duplicates native init-declarations (verified 2026-10-14 · TS probe)',
+  'typescript-js/max-params': 'duplicates native max-params (verified 2026-10-14 · TS probe)',
+  'typescript-js/no-array-constructor':
+    'duplicates native no-array-constructor (verified 2026-10-14 · TS probe)',
+  'typescript-js/no-dupe-class-members':
+    'duplicates native no-dupe-class-members (verified 2026-10-14 · TS probe)',
+  'typescript-js/no-empty-function':
+    'duplicates native no-empty-function (verified 2026-10-14 · TS probe)',
+  'typescript-js/no-magic-numbers':
+    'duplicates native no-magic-numbers (verified 2026-10-14 · TS probe)',
+  'typescript-js/no-redeclare': 'duplicates native no-redeclare (verified 2026-10-14 · TS probe)',
+  'typescript-js/no-shadow': 'duplicates native no-shadow (verified 2026-10-14 · TS probe)',
+  'typescript-js/no-unused-expressions':
+    'duplicates native no-unused-expressions (verified 2026-10-14 · TS probe)',
+  'typescript-js/no-unused-private-class-members':
+    'duplicates native no-unused-private-class-members (verified 2026-10-14 · TS probe)',
+  'typescript-js/no-unused-vars':
+    'duplicates native no-unused-vars (verified 2026-10-14 · TS probe)',
+  'typescript-js/no-use-before-define':
+    'duplicates native no-use-before-define (verified 2026-10-14 · TS probe)',
+  'typescript-js/no-useless-constructor':
+    'duplicates native no-useless-constructor (verified 2026-10-14 · TS probe)',
+  'unicorn-js/comma-spacing': 'meta.languages JSON only: never reports on JS',
+  'unicorn-js/indent': 'meta.languages CSS/JSON only: never reports on JS',
+  'unicorn-js/key-name-casing': 'meta.languages JSON/TOML/YAML only: never reports on JS',
+  'unicorn-js/no-empty-link-text': 'meta.languages Markdown only: never reports on JS',
+  'unicorn-js/no-javascript-url': 'meta.languages Markdown only: never reports on JS',
+  'unicorn-js/no-loss-of-precision': 'meta.languages CSS/JSON/TOML only: never reports on JS',
+  'unicorn-js/require-frontmatter-fields': 'meta.languages Markdown only: never reports on JS',
+};
+
+/**
+options and severities other than a bare `error`
+@type {NonNullable<Config['rules']>}
+*/
+const tuned = {
+  'import-js/order': [
+    'error',
+    {
+      alphabetize: { caseInsensitive: false, order: 'asc' },
+      groups: [['builtin', 'external'], 'internal', 'index', 'sibling', 'parent'],
+      pathGroups: [{ group: 'internal', pattern: '@/**' }],
+    },
+  ],
+  'react-js/require-default-props': ['error', { functions: 'defaultArguments' }],
+  // typed upstream, yet needs types only for the `types` option the wrapper refuses
+  'typescript-js/naming-convention': [
+    'warn',
+    naming,
+    { format: ['PascalCase'], selector: 'enumMember' },
+    { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralProperty' },
+    parameter,
+    typeLike,
+    { format: ['camelCase', 'UPPER_CASE'], selector: 'variable' },
+  ],
+  'unicorn-js/consistent-json-file-read': ['error', 'buffer'],
+  'unicorn-js/expiring-todo-comments': ['error', { checkDates: true }],
+};
+
+/** the native rule names of the oxlint that loads this config */
+const schema = new URL('configuration_schema.json', import.meta.resolve('oxlint/package.json'));
+const { definitions } = JSON.parse(String(readFileSync(schema)));
+const native = new Set(Object.keys(definitions.DummyRuleMap.properties));
+
+/** @type {Record<string, Rules> & { typescript: Rules }} */
+const wrapped = Object.fromEntries(
+  await Promise.all(
+    ['eslint', 'import', 'react', 'typescript', 'unicorn'].map(async (scope) => {
+      const { default: plugin } = await import(`./plugins/${scope}-js.mjs`);
+      return [scope, plugin.rules];
+    }),
+  ),
+);
+
+/**
+a wrapper's live rules oxlint lacks, unless opted out; typed ones only when tuned
+@param {string} scope
+@param {string} [prefix] the rules' native oxlint scope
+*/
+const derive = (scope, prefix = `${scope}/`) =>
+  Object.entries(wrapped[scope] ?? {}).flatMap(([name, { meta }]) => {
+    const key = `${scope}-js/${name}`;
+    return meta.deprecated ||
+      native.has(`${prefix}${name}`) ||
+      Object.hasOwn(disabled, key) ||
+      (meta.docs?.requiresTypeChecking && tuned[key] === undefined)
+      ? []
+      : [[key, tuned[key] ?? 'error']];
+  });
+
+const javascript = Object.fromEntries(
+  [derive('eslint', ''), derive('import'), derive('react'), derive('unicorn')].flat(),
+);
+
+/** typescript-eslint's extensions replace their core rule on TS files */
+const twins = Object.entries(wrapped.typescript)
+  .map(
+    ([name, { meta }]) =>
+      `eslint-js/${meta.docs?.extendsBaseRule === true ? name : meta.docs?.extendsBaseRule}`,
+  )
+  .filter((key) => Object.hasOwn(javascript, key))
+  .map((key) => [key, 'off']);
+
 // later overrides win: the .ts, .tsx, then route.ts naming-convention sets, in that order
 /** @type {Override[]} */
 const typescript = [
@@ -309,16 +406,8 @@ const typescript = [
       'no-implied-eval': 'off',
       'prefer-promise-reject-errors': 'off',
       'require-await': 'off',
-      'typescript-js/member-ordering': 'error',
-      'typescript-js/naming-convention': [
-        'warn',
-        naming,
-        { format: ['PascalCase'], selector: 'enumMember' },
-        { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralProperty' },
-        parameter,
-        typeLike,
-        { format: ['camelCase', 'UPPER_CASE'], selector: 'variable' },
-      ],
+      ...Object.fromEntries([...twins, ...derive('typescript')]),
+      'import-js/no-unresolved': 'off',
     },
   },
 ];
@@ -410,14 +499,17 @@ const next = [
 const tooling = [
   {
     files: ['./{eslint,jest,next,oxfmt,oxlint,postcss}.config.{cjs,cts,js,mjs,mts,ts}'],
-    rules: { 'import/no-default-export': 'off', 'import/no-named-export': 'error' },
+    // the config is the default-exported defineConfig(…) call
+    rules: {
+      'import/no-default-export': 'off',
+      'import/no-named-export': 'error',
+      'unicorn-js/no-top-level-side-effects': 'off',
+    },
   },
 ];
 
 /** the nearest package.json from cwd decides; none found turns everything on */
 const detectEnvironment = () => {
-  const { existsSync, readFileSync } = process.getBuiltinModule('node:fs');
-  const { dirname, join } = process.getBuiltinModule('node:path');
   for (let directory = process.cwd(); ; directory = dirname(directory)) {
     const file = join(directory, 'package.json');
     if (existsSync(file)) {
@@ -437,21 +529,22 @@ const detectEnvironment = () => {
 
 /** oxlint rejects version "detect"; without a semver eslint-plugin-react assumes latest */
 const detectReact = () => {
+  const { createRequire } = process.getBuiltinModule('node:module');
+  let version = '';
   try {
-    const { createRequire } = process.getBuiltinModule('node:module');
-    const { version } = createRequire(`${process.cwd()}/package.json`)('react/package.json');
-    const semver = /^\d+\.\d+\.\d+/u.exec(version);
-    return semver === null ? {} : { react: { version: semver[0] } };
+    ({ version } = createRequire(`${process.cwd()}/package.json`)('react/package.json'));
   } catch {
-    return {};
+    // no react installed: no version
   }
+  const semver = /^\d+\.\d+\.\d+/u.exec(version);
+  return semver === null ? {} : { react: { version: semver[0] } };
 };
 
 // ※ oxlint-extends-objects
 /**
- * @param {Config & { env?: Config['env'] & Partial<Env> }} [config]
- * @returns {Config}
- */
+@param {Config & { env?: Config['env'] & Partial<Env> }} [config]
+@returns {Config}
+*/
 const defineConfig = ({
   env: { next: isNext, react: isReact, typescript: isTypescript, ...environments } = {},
   ...config
@@ -472,7 +565,7 @@ const defineConfig = ({
       ...(config.overrides ?? []),
     ],
     plugins: [...new Set([...plugins, ...(config.plugins ?? [])])],
-    rules: { ...rules, ...config.rules },
+    rules: { ...rules, ...javascript, ...config.rules },
     settings: { ...detectReact(), ...config.settings },
   };
 };

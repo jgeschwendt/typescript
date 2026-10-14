@@ -79,9 +79,9 @@ write(directory, {
 });
 
 /**
- * @param {string[]} paths
- * @returns {{ exitCode: number; output: string; report: { diagnostics: { code: string; filename: string; labels: [{ span: { length: number; offset: number } }] }[] } }}
- */
+@param {string[]} paths
+@returns {{ exitCode: number; output: string; report: { diagnostics: { code: string; filename: string; labels: [{ span: { length: number; offset: number } }] }[] } }}
+*/
 const lint = (paths) =>
   spawnOxlint(directory, ['-c', 'oxlint.config.mjs', '--format', 'json', ...paths]);
 
@@ -122,7 +122,8 @@ test('every directive form is banned, and nothing else', () => {
         ({ code, filename }) =>
           filename === 'directives.js' && code === 'inline-config(no-directives)',
       )
-      .map(({ labels: [{ span }] }) => directives.slice(span.offset, span.offset + span.length)),
+      .map(({ labels }) => labels[0].span)
+      .map(({ length, offset }) => directives.slice(offset, offset + length)),
   ).toEqual(banned);
 });
 

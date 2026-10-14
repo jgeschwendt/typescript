@@ -7,20 +7,20 @@ const { tmpdir } = process.getBuiltinModule('node:os');
 const { dirname, isAbsolute, join } = process.getBuiltinModule('node:path');
 
 /**
- * runs `run` one directory below `files`, so detection has to walk up
- * @template T
- * @param {Record<string, unknown>} files
- * @param {() => T} run
- */
+runs `run` one directory below `files`, so detection has to walk up
+@template T
+@param {Record<string, unknown>} files
+@param {() => T} run
+*/
 const within = (files, run) => {
   const directory = mkdtempSync(join(tmpdir(), 'oxlint-define-'));
   const cwd = process.cwd();
+  for (const [name, content] of Object.entries(files)) {
+    mkdirSync(dirname(join(directory, name)), { recursive: true });
+    writeFileSync(join(directory, name), JSON.stringify(content));
+  }
+  mkdirSync(join(directory, 'nested'));
   try {
-    for (const [name, content] of Object.entries(files)) {
-      mkdirSync(dirname(join(directory, name)), { recursive: true });
-      writeFileSync(join(directory, name), JSON.stringify(content));
-    }
-    mkdirSync(join(directory, 'nested'));
     process.chdir(join(directory, 'nested'));
     return run();
   } finally {
@@ -42,6 +42,11 @@ test('jsPlugins entries are absolute paths', () => {
     typeof entry === 'string' ? entry : entry.specifier,
   );
   expect(paths.filter((path) => !isAbsolute(path))).toEqual([]);
+});
+
+test('jsPlugins run the rules oxlint lacks, never one it ports', () => {
+  expect(config.rules).toMatchObject({ 'unicorn-js/consistent-boolean-name': 'error' });
+  expect(config.rules).not.toContainAnyKeys(['eslint-js/no-var', 'unicorn-js/no-null']);
 });
 
 const none = { next: false, react: false, typescript: false };

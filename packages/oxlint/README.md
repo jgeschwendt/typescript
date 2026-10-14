@@ -39,12 +39,12 @@ Read from `dependencies` and `devDependencies` of the nearest `package.json` at 
 working directory; none found turns all three on. Force one with `env: { next: true }`. In a
 monorepo linted from the root, the root `package.json` decides.
 
-| detected     | overrides added                                                                    |
-| ------------ | ---------------------------------------------------------------------------------- |
-| always       | `env.node` on source files; `typescript/*` off on JS files; root tooling configs   |
-| `typescript` | `**/*.{cts,mts,ts,tsx}`: core twins off, `typescript-js/*` naming and member order |
-| `react`      | `**/*.tsx` naming set                                                              |
-| `next`       | `route.ts` naming, segment/route-file exemptions                                   |
+| detected     | overrides added                                                                  |
+| ------------ | -------------------------------------------------------------------------------- |
+| always       | `env.node` on source files; `typescript/*` off on JS files; root tooling configs |
+| `typescript` | `**/*.{cts,mts,ts,tsx}`: core twins off, `typescript-js/*`                       |
+| `react`      | `**/*.tsx` naming set                                                            |
+| `next`       | `route.ts` naming, segment/route-file exemptions                                 |
 
 ## Composing
 
@@ -101,17 +101,22 @@ callback args.
 
 ## Restored through JS plugins
 
-`jsPlugins` run ESLint rule code inside oxlint: rules oxlint never ported (the `js` lines of [the rules table](https://jgeschwendt.github.io/typescript/)) plus
-the directive ban. Retune them like any rule; `oxlint --fix` applies the fixable ones.
+`jsPlugins` run ESLint rule code inside oxlint: at import, `index.js` turns on every non-deprecated
+rule of the five wrapped plugins that the installed oxlint's `configuration_schema.json` does not
+name (the `js` lines of [the rules table](https://jgeschwendt.github.io/typescript/)), except
+type-checked ones (`meta.docs.requiresTypeChecking`; `naming-convention` runs untyped) and its
+`disabled` map, each entry with its reason; plus the directive ban. On TS files typescript-eslint's
+extensions replace their core rule. Retune them like any rule; `oxlint --fix` applies the fixable
+ones.
 
-| plugin          | runs                                                     |
-| --------------- | -------------------------------------------------------- |
-| `eslint-js`     | ESLint core rules                                        |
-| `import-js`     | eslint-plugin-import                                     |
-| `inline-config` | [the directive ban](#inline-directives)                  |
-| `react-js`      | eslint-plugin-react                                      |
-| `typescript-js` | typescript-eslint `member-ordering`, `naming-convention` |
-| `unicorn-js`    | eslint-plugin-unicorn                                    |
+| plugin          | runs                                    |
+| --------------- | --------------------------------------- |
+| `eslint-js`     | ESLint core rules                       |
+| `import-js`     | eslint-plugin-import                    |
+| `inline-config` | [the directive ban](#inline-directives) |
+| `react-js`      | eslint-plugin-react                     |
+| `typescript-js` | typescript-eslint (TS files only)       |
+| `unicorn-js`    | eslint-plugin-unicorn                   |
 
 The `-js` suffix avoids oxlint's native `import`, `react` and `unicorn`. How the layer is built:
 
@@ -129,7 +134,7 @@ The `-js` suffix avoids oxlint's native `import`, `react` and `unicorn`. How the
   on Bun). Everything else stays on 7.
 - JS plugins are alpha, outside oxlint's semver, under a `^1.87.0` peer.
 - unicorn floats at `^77` on ESLint 10. eslint-plugin-import loads per rule: `no-unused-modules`
-  needs ESLint ≤9 internals and is dropped.
+  needs ESLint ≤9 internals and is opted out.
 
 ## Inline directives
 
@@ -179,13 +184,15 @@ From oxlint's JS plugin host:
   fails on a rule that was on, is native, and is off here outside its deliberate list.
   `bun run --filter '@jlg/oxlint' report` renders the same `rules.js` rows to a filterable,
   sortable `__tests__/rules.html` styled by `ui.css` beside it (`ui.css` vendored from
-  jgeschwendt/ui @ 162e78b): each `differs` carries its reason, and a click opens the old and base
-  options side by side; regenerate and commit it after every snapshot change. A push to `main` touching
-  either publishes both to [GitHub Pages](https://jgeschwendt.github.io/typescript/).
+  jgeschwendt/ui @ 162e78b): old options are compared with the base's, or with the rule's declared
+  defaults (resolved as ESLint does) where the base passes none, `unverified` if it declares none;
+  each `differs` carries its reason, and a click opens the old and base options side by side;
+  regenerate and commit it after every snapshot change. A push to `main` touching either publishes
+  both to [GitHub Pages](https://jgeschwendt.github.io/typescript/).
 - `define-config.test.js`: the `defineConfig` contract (detection, merge order, `env`, `settings`).
 - `js-plugins.test.js`: installs the packed tarball beside `typescript@7` and `oxlint` under both
-  bun linkers, lints through `oxlint.config.ts` on Node and Bun, and fails unless every configured
-  JS-plugin rule reports. Needs the network or a warm bun cache.
+  bun linkers, lints through `oxlint.config.ts` on Node and Bun, and fails on any crashed JS-plugin
+  rule or unless every fixtured one reports. Needs the network or a warm bun cache.
 - `host.test.js`: `plugins/host` end to end through a probe plugin: a throwing listener reports
   once and stops that rule on the file; the restored `getJSDocComment` attaches as ESLint's does.
 - `lint.test.js`: config-level behavior linted end to end (`env.node`, `no-unused-vars` options,

@@ -14,9 +14,9 @@ const config = defineConfig({ env: everything });
 const overrides = config.overrides ?? [];
 
 /**
- * @param {string} root
- * @param {Record<string, string>} files
- */
+@param {string} root
+@param {Record<string, string>} files
+*/
 const write = (root, files) => {
   for (const [name, source] of Object.entries(files)) {
     mkdirSync(dirname(join(root, name)), { recursive: true });
@@ -25,11 +25,11 @@ const write = (root, files) => {
 };
 
 /**
- * runs oxlint in `cwd` and parses its JSON report, throwing with oxlint's own output when it is not JSON
- * @param {string} cwd
- * @param {string[]} flags
- * @param {string[]} [command] a runtime and oxlint's bin, so neither the exec bit nor PATH matters
- */
+runs oxlint in `cwd` and parses its JSON report, throwing with oxlint's own output when it is not JSON
+@param {string} cwd
+@param {string[]} flags
+@param {string[]} [command] a runtime and oxlint's bin, so neither the exec bit nor PATH matters
+*/
 const spawnOxlint = (cwd, flags, command = [process.execPath, oxlintBin]) => {
   const out = join(cwd, 'oxlint.out');
   // stdout to a file: a piped read came back truncated on linux CI (observed 2026-09-09);
@@ -52,24 +52,21 @@ const spawnOxlint = (cwd, flags, command = [process.execPath, oxlintBin]) => {
 /** @returns {{ category: string; scope: string; type_aware: boolean; value: string }[]} */
 const loadRules = () => {
   const directory = mkdtempSync(join(tmpdir(), 'oxlint-rules-'));
-  try {
-    // --rules still loads config, so hand it an empty one
-    write(directory, { 'empty.json': '{}' });
-    const { exitCode, output, report } = spawnOxlint(directory, [
-      '-c',
-      'empty.json',
-      '--rules',
-      '--format',
-      'json',
-      '--disable-nested-config',
-    ]);
-    if (exitCode !== 0) {
-      throw new Error(`oxlint --rules exited ${exitCode}: ${output}`);
-    }
-    return report;
-  } finally {
-    rmSync(directory, { force: true, recursive: true });
+  // --rules still loads config, so hand it an empty one
+  write(directory, { 'empty.json': '{}' });
+  const { exitCode, output, report } = spawnOxlint(directory, [
+    '-c',
+    'empty.json',
+    '--rules',
+    '--format',
+    'json',
+    '--disable-nested-config',
+  ]);
+  rmSync(directory, { force: true, recursive: true });
+  if (exitCode !== 0) {
+    throw new Error(`oxlint --rules exited ${exitCode}: ${output}`);
   }
+  return report;
 };
 
 const schema = String(readFileSync(join(oxlintDirectory, 'configuration_schema.json')));
@@ -94,9 +91,9 @@ const jsScopes = new Set(
 const isJsRule = (name) => jsScopes.has(name.replace(/\/.*/u, ''));
 
 /**
- * catalog scopes spell hyphens as underscores (`jsx-a11y` → `jsx_a11y`)
- * @param {string} name
- */
+catalog scopes spell hyphens as underscores (`jsx-a11y` → `jsx_a11y`)
+@param {string} name
+*/
 const ruleScope = (name) =>
   name.includes('/') ? name.replace(/\/.*/u, '').replaceAll('-', '_') : 'eslint';
 

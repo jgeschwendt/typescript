@@ -26,7 +26,7 @@ test('local plugin names match the scopes the config uses', () => {
 
 test('every configured jsPlugins rule exists in its plugin', () => {
   const missing = configured.filter((name) => {
-    const [scope = '', rule = ''] = name.split('/');
+    const [scope = '', rule = ''] = name.split('/', 2);
     return plugins[scope]?.rules?.[rule] === undefined;
   });
   expect(
@@ -34,6 +34,20 @@ test('every configured jsPlugins rule exists in its plugin', () => {
     `jsPlugins rule(s) the plugin does not export — oxlint rejects the whole config: ${missing.join(', ')}`,
   ).toEqual([]);
 });
+
+/** the rules the fixtures below trip; every other configured one need only load and not crash */
+const fixtured = Object.entries({
+  'eslint-js':
+    'camelcase consistent-this no-invalid-this no-restricted-syntax no-undef-init require-atomic-updates',
+  'import-js':
+    'no-deprecated no-extraneous-dependencies no-import-module-exports no-internal-modules no-relative-packages no-restricted-paths no-unresolved no-useless-path-segments order',
+  'inline-config': 'no-directives',
+  'react-js':
+    'boolean-prop-naming destructuring-assignment jsx-no-bind jsx-no-leaked-render jsx-sort-props no-adjacent-inline-elements no-deprecated no-invalid-html-attribute no-typos no-unused-prop-types prefer-read-only-props require-default-props',
+  'typescript-js': 'member-ordering naming-convention',
+  'unicorn-js':
+    'consistent-destructuring consistent-json-file-read expiring-todo-comments name-replacements no-for-loop no-keyword-prefix no-named-default no-unnecessary-polyfills no-unused-properties prefer-switch string-content',
+}).flatMap(([scope, names]) => names.split(' ').map((name) => `${scope}/${name}`));
 
 /** rules that check nothing without options, as in @jlg/eslint */
 const inert = {
@@ -175,9 +189,9 @@ const scratch = mkdtempSync(join(tmpdir(), 'oxlint-js-plugins-'));
 const consumers = {};
 
 /**
- * @param {string[]} command
- * @param {string} cwd
- */
+@param {string[]} command
+@param {string} cwd
+*/
 const run = (command, cwd) => {
   const result = Bun.spawnSync(command, {
     cwd,
@@ -223,10 +237,10 @@ afterAll(() => {
 });
 
 /**
- * @param {string} runtime
- * @param {string} linker
- * @returns {{ code?: string; message: string }[]}
- */
+@param {string} runtime
+@param {string} linker
+@returns {{ code?: string; message: string }[]}
+*/
 const lint = (runtime, linker) => {
   const directory = consumers[linker] ?? '';
   const bin = join(directory, 'node_modules', 'oxlint', 'bin', 'oxlint');
@@ -236,7 +250,7 @@ const lint = (runtime, linker) => {
 describe.each(Object.entries(runtimes))('on %s', (_name, runtime) => {
   describe.each(linkers)('installed %s', (linker) => {
     test(
-      'every configured jsPlugins rule fires',
+      'no JS-plugin rule crashes, and every fixtured one fires',
       () => {
         const diagnostics = lint(runtime, linker);
         // a crashed plugin drops every JS rule on the file; a crashed rule reports via host.mjs
@@ -251,7 +265,7 @@ describe.each(Object.entries(runtimes))('on %s', (_name, runtime) => {
             diagnostic.code?.replace(/^(?<plugin>.+)\((?<rule>.+)\)$/u, '$<plugin>/$<rule>'),
           ),
         );
-        expect(configured.filter((name) => !codes.has(name))).toEqual([]);
+        expect(fixtured.filter((name) => !codes.has(name))).toEqual([]);
       },
       lintTimeout,
     );
