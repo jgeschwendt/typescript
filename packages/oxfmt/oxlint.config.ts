@@ -2,11 +2,15 @@ import { defineConfig } from '@jlg/oxlint';
 
 export default defineConfig({
   ignorePatterns: ['**/*.d.ts'],
-  // bun:test is a runtime builtin eslint-module-utils cannot resolve
   overrides: [
     {
       files: ['__tests__/*.js'],
-      rules: { 'import-js/no-unresolved': ['error', { ignore: ['^bun:'] }] },
+      rules: {
+        // bun:test is a runtime builtin eslint-module-utils cannot resolve
+        'import-js/no-unresolved': ['error', { ignore: ['^bun:'] }],
+        // the tests import the package root, ../index.js
+        'import/no-relative-parent-imports': 'off',
+      },
     },
   ],
   rules: {

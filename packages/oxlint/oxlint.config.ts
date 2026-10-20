@@ -23,6 +23,8 @@ export default defineConfig({
         ],
         // jsPlugins load a plugin module's default export, here a host(…) call
         'import/no-default-export': 'off',
+        // eslint-plugin-import loads per rule by path: its index needs ESLint 9 internals
+        'import/no-dynamic-require': 'off',
         // imported for its resolve-hook side effect
         'import/no-unassigned-import': ['error', { allow: ['**/typescript6.mjs'] }],
         'unicorn-js/no-top-level-side-effects': 'off',
@@ -60,6 +62,8 @@ export default defineConfig({
             ],
           },
         ],
+        // the tests import the package root, ../index.js
+        'import/no-relative-parent-imports': 'off',
         // a describe callback holds one statement per test it declares
         'max-statements': 'off',
         // string arrays: the default code-unit order is the snapshot's order
