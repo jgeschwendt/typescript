@@ -1,5 +1,13 @@
 import { expect, test } from 'bun:test';
-import { config, jsScopes, loadRules, overrides, ruleKey, ruleNames } from './_helpers.js';
+import {
+  config,
+  enabledScopes,
+  jsScopes,
+  loadRules,
+  overrides,
+  ruleKey,
+  ruleNames,
+} from './_helpers.js';
 
 // an unknown rule or plugin rejects the whole config; a rule whose plugin is off never runs ※ rule-existence-guard
 
@@ -14,6 +22,11 @@ test('every configured rule exists in an enabled oxlint plugin', () => {
     missing,
     `Rule(s) oxlint lacks (rejects the whole config) or whose plugin is not in \`plugins\` (silent no-op): ${missing.join(', ')}`,
   ).toEqual([]);
+});
+
+test('every enabled plugin has rules in the catalog', () => {
+  const scopes = new Set(Array.from(catalog.values(), ({ scope }) => scope));
+  expect([...enabledScopes].filter((scope) => !scopes.has(scope))).toEqual([]);
 });
 
 // oxlint cannot drop a plugin per override, so the JS override must name every TypeScript rule
