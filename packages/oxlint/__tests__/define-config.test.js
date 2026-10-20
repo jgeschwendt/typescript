@@ -25,11 +25,23 @@ const within = (files, run) => {
   }
 };
 
-const markers = { next: '**/route.ts', react: '**/*.tsx', typescript: '**/*.{cts,mts,ts,tsx}' };
+/** a glob or global only that environment's overrides carry */
+const markers = {
+  bun: 'Bun',
+  next: '**/route.ts',
+  react: '**/*.tsx',
+  typescript: '**/*.{cts,mts,ts,tsx}',
+};
 /** @param {import('oxlint').OxlintConfig} built */
 const environment = (built) => {
-  const globs = new Set((built.overrides ?? []).flatMap((override) => override.files));
-  return Object.fromEntries(Object.entries(markers).map(([key, glob]) => [key, globs.has(glob)]));
+  const list = built.overrides ?? [];
+  const seen = new Set([
+    ...list.flatMap((override) => override.files),
+    ...list.flatMap((override) => Object.keys(override.globals ?? {})),
+  ]);
+  return Object.fromEntries(
+    Object.entries(markers).map(([key, marker]) => [key, seen.has(marker)]),
+  );
 };
 
 test('jsPlugins never run a rule oxlint ports or upstream deprecated', () => {
@@ -44,7 +56,7 @@ test('overrides', () => {
   expect(overrides).toMatchSnapshot();
 });
 
-const none = { next: false, react: false, typescript: false };
+const none = { bun: false, next: false, react: false, typescript: false };
 test.each([
   { expected: everything, files: {}, title: 'no package.json turns everything on' },
   { expected: none, files: { 'package.json': {} }, title: 'no dependencies turn everything off' },
@@ -56,13 +68,68 @@ test.each([
     title: 'dependencies and devDependencies both count',
   },
   {
+    expected: { ...none, bun: true },
+    files: { 'package.json': { devDependencies: { '@types/bun': '*' } } },
+    title: '@types/bun detects Bun',
+  },
+  {
+    expected: { ...none, bun: true },
+    files: { 'bun.lock': {}, 'package.json': {} },
+    title: 'bun.lock detects Bun',
+  },
+  {
+    expected: { ...none, bun: true },
+    files: { 'bun.lockb': {}, 'package.json': {} },
+    title: 'bun.lockb detects Bun',
+  },
+  {
     expected: { ...none, next: true },
     files: { 'package.json': {} },
-    forced: { next: true },
+    forced: { bun: false, next: true },
     title: 'env overrides detection',
   },
 ])('$title', ({ expected, files, forced }) => {
   expect(within(files, () => environment(defineConfig({ env: forced })))).toStrictEqual(expected);
+});
+
+/** Node's LTS, below every floor */
+const lts = 24;
+const gated = [
+  'unicorn-js/prefer-get-or-insert-computed',
+  'unicorn-js/prefer-iterator-concat',
+  'unicorn-js/prefer-iterator-zip',
+  'unicorn-js/prefer-temporal',
+  'unicorn-js/prefer-temporal-conversion',
+  'unicorn-js/prefer-uint8array-base64',
+  'unicorn-js/prefer-uint8array-hex',
+];
+/** @param {Record<string, unknown>} engines */
+const manifest = (engines) => ({ 'package.json': { engines } });
+test.each([
+  { expected: [], files: { 'package.json': {} }, title: 'no engines keeps every API rule' },
+  { expected: [], files: manifest({ node: '*' }), title: 'an unparsable engines.node keeps them' },
+  { expected: gated, files: manifest({ node: '>=24' }), title: 'Node 24 is below every floor' },
+  {
+    expected: ['unicorn-js/prefer-iterator-zip'],
+    files: manifest({ node: '^26.1.0' }),
+    title: 'Node 26 lacks only Iterator.zip',
+  },
+  { expected: [], files: manifest({ bun: '>=1.4' }), title: 'engines.bun alone meets every floor' },
+  {
+    expected: gated,
+    files: manifest({ node: '>=26' }),
+    forced: { node: lts },
+    title: 'env.node forces the major',
+  },
+  {
+    expected: [],
+    files: manifest({ node: '24.x' }),
+    forced: { bun: true },
+    title: 'env.bun meets every floor',
+  },
+])('$title', ({ expected, files, forced }) => {
+  const { rules = {} } = within(files, () => defineConfig({ env: forced }));
+  expect(gated.filter((key) => rules[key] === 'off')).toStrictEqual([...expected]);
 });
 
 test('consumer config merges over the base; its overrides come last', () => {
@@ -81,9 +148,12 @@ test('consumer config merges over the base; its overrides come last', () => {
   expect(built.categories).toStrictEqual({ ...config.categories, style: 'off' });
 });
 
-test("env keeps oxlint's own environments and drops next/react/typescript", () => {
-  expect(defineConfig({ env: { browser: true, next: true } }).env).toStrictEqual({ browser: true });
-  expect(defineConfig({ env: { react: false } })).not.toHaveProperty('env');
+test("env keeps oxlint's own environments and drops bun/next/react/typescript and a numeric node", () => {
+  expect(defineConfig({ env: { browser: true, next: true, node: false } }).env).toStrictEqual({
+    browser: true,
+    node: false,
+  });
+  expect(defineConfig({ env: { node: lts, react: false } })).not.toHaveProperty('env');
 });
 
 test('settings.react.version comes from the installed React, else a far-future semver; consumer settings win', () => {

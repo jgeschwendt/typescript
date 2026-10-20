@@ -35,8 +35,8 @@
           <h1 class="h1">@jlg/oxlint rules</h1>
           <output id="count" class="badge"></output>
           <output class="badge badge-warn">2 off defaults</output
-          ><output class="badge badge-warn">1 old sets none</output
-          ><output class="badge badge-warn">1 values differ</output>
+          ><output class="badge badge-warn">4 old sets none</output
+          ><output class="badge badge-warn">2 values differ</output>
         </div>
         <p class="muted">
           Old and base options are resolved over the rule's declared defaults as ESLint does and
@@ -164,13 +164,13 @@
           "rule": "eslint/complexity"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [{ "treatUndefinedAsUnspecified": false }],
-          "options": "same",
-          "oxlint": "js",
+          "options": "-",
+          "oxlint": "none",
           "rule": "eslint/consistent-return"
         },
         {
@@ -194,12 +194,12 @@
           "rule": "eslint/constructor-super"
         },
         {
-          "base": "off",
-          "baseOptions": [],
+          "base": "error",
+          "baseOptions": ["all"],
           "category": "style",
           "old": "absent",
           "oldOptions": [],
-          "options": "-",
+          "options": "same",
           "oxlint": "native",
           "rule": "eslint/curly"
         },
@@ -407,13 +407,14 @@
           "rule": "eslint/max-depth"
         },
         {
-          "base": "off",
-          "baseOptions": [],
+          "base": "error",
+          "baseOptions": [{ "max": 2000, "skipBlankLines": true, "skipComments": true }],
           "category": "pedantic",
           "old": "absent",
           "oldOptions": [],
-          "options": "-",
+          "options": "differs",
           "oxlint": "native",
+          "reason": "old sets none",
           "rule": "eslint/max-lines"
         },
         {
@@ -638,12 +639,12 @@
           "rule": "eslint/no-constructor-return"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "style",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "-",
           "oxlint": "native",
           "rule": "eslint/no-continue"
         },
@@ -1092,7 +1093,7 @@
           "rule": "eslint/no-loss-of-precision"
         },
         {
-          "base": "warn",
+          "base": "error",
           "baseOptions": [
             {
               "detectObjects": true,
@@ -1338,12 +1339,12 @@
           "rule": "eslint/no-regex-spaces"
         },
         {
-          "base": "off",
+          "base": "warn",
           "baseOptions": [],
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "-",
+          "options": "none",
           "oxlint": "native",
           "rule": "eslint/no-restricted-exports"
         },
@@ -1537,12 +1538,12 @@
           "rule": "eslint/no-unassigned-vars"
         },
         {
-          "base": "off",
+          "base": "warn",
           "baseOptions": [],
           "category": "nursery",
           "old": "on",
           "oldOptions": [{ "typeof": false }],
-          "options": "-",
+          "options": "same",
           "oxlint": "native",
           "rule": "eslint/no-undef"
         },
@@ -1629,12 +1630,12 @@
           "rule": "eslint/no-unreachable"
         },
         {
-          "base": "off",
+          "base": "warn",
           "baseOptions": [],
           "category": "nursery",
           "old": "on",
           "oldOptions": [{ "ignore": [] }],
-          "options": "-",
+          "options": "same",
           "oxlint": "native",
           "rule": "eslint/no-unreachable-loop"
         },
@@ -1745,12 +1746,12 @@
           "rule": "eslint/no-use-before-define"
         },
         {
-          "base": "off",
+          "base": "warn",
           "baseOptions": [],
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "-",
+          "options": "none",
           "oxlint": "native",
           "rule": "eslint/no-useless-assignment"
         },
@@ -2285,12 +2286,12 @@
           "rule": "import/no-nodejs-modules"
         },
         {
-          "base": "off",
+          "base": "warn",
           "baseOptions": [],
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "-",
+          "options": "none",
           "oxlint": "native",
           "rule": "import/export"
         },
@@ -2525,12 +2526,12 @@
           "rule": "import/no-namespace"
         },
         {
-          "base": "off",
+          "base": "warn",
           "baseOptions": [],
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "-",
+          "options": "none",
           "oxlint": "native",
           "rule": "import/named"
         },
@@ -3598,12 +3599,12 @@
           "rule": "react/require-optimization"
         },
         {
-          "base": "off",
+          "base": "warn",
           "baseOptions": [],
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "-",
+          "options": "none",
           "oxlint": "native",
           "rule": "react/require-render-return"
         },
@@ -3907,12 +3908,32 @@
         },
         {
           "base": "error",
-          "baseOptions": [],
+          "baseOptions": [
+            {
+              "default": {
+                "memberTypes": [
+                  "signature",
+                  "call-signature",
+                  "static-field",
+                  "public-field",
+                  "protected-field",
+                  "private-field",
+                  "#private-field",
+                  "static-initialization",
+                  "constructor",
+                  "static-method",
+                  ["get", "set", "accessor", "public-method", "protected-method"],
+                  ["private-method", "#private-method"]
+                ]
+              }
+            }
+          ],
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "none",
+          "options": "differs",
           "oxlint": "js",
+          "reason": "old sets none",
           "rule": "typescript/member-ordering"
         },
         {
@@ -3936,6 +3957,7 @@
             },
             { "format": ["PascalCase"], "selector": "enumMember" },
             { "format": ["camelCase", "PascalCase"], "selector": "objectLiteralProperty" },
+            { "format": [], "modifiers": ["requiresQuotes"], "selector": "objectLiteralProperty" },
             { "format": ["camelCase"], "leadingUnderscore": "allow", "selector": "parameter" },
             { "format": ["PascalCase"], "selector": "typeLike" },
             { "format": ["camelCase", "UPPER_CASE"], "selector": "variable" }
@@ -3955,8 +3977,9 @@
             { "format": ["PascalCase"], "selector": "typeLike" },
             { "format": ["camelCase", "UPPER_CASE"], "selector": "variable" }
           ],
-          "options": "same",
+          "options": "differs",
           "oxlint": "js",
+          "reason": "values differ",
           "rule": "typescript/naming-convention"
         },
         {
@@ -4373,12 +4396,12 @@
           "rule": "typescript/no-unnecessary-boolean-literal-compare"
         },
         {
-          "base": "off",
+          "base": "warn",
           "baseOptions": [],
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "-",
+          "options": "none",
           "oxlint": "native (type-aware)",
           "rule": "typescript/no-unnecessary-condition"
         },
@@ -4785,12 +4808,12 @@
           "rule": "typescript/prefer-nullish-coalescing"
         },
         {
-          "base": "off",
+          "base": "warn",
           "baseOptions": [],
           "category": "nursery",
           "old": "on",
           "oldOptions": [],
-          "options": "-",
+          "options": "none",
           "oxlint": "native (type-aware)",
           "rule": "typescript/prefer-optional-chain"
         },
@@ -5086,12 +5109,26 @@
         },
         {
           "base": "error",
-          "baseOptions": [],
+          "baseOptions": [
+            {
+              "order": [
+                "static-field",
+                "public-field",
+                "private-field",
+                "static-block",
+                "constructor",
+                "static-method",
+                "public-method",
+                "private-method"
+              ]
+            }
+          ],
           "category": "-",
           "old": "absent",
           "oldOptions": [],
-          "options": "none",
+          "options": "differs",
           "oxlint": "js",
+          "reason": "old sets none",
           "rule": "unicorn/consistent-class-member-order"
         },
         {
@@ -6995,12 +7032,12 @@
           "rule": "unicorn/no-useless-fallback-in-spread"
         },
         {
-          "base": "off",
+          "base": "warn",
           "baseOptions": [],
           "category": "nursery",
           "old": "absent",
           "oldOptions": [],
-          "options": "-",
+          "options": "none",
           "oxlint": "native",
           "rule": "unicorn/no-useless-iterator-to-array"
         },
@@ -8787,6 +8824,519 @@
         {
           "base": "error",
           "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/alt-text"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "restriction",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/anchor-ambiguous-text"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/anchor-has-content"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/anchor-is-valid"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/aria-activedescendant-has-tabindex"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/aria-props"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/aria-proptypes"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/aria-role"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/aria-unsupported-elements"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/autocomplete-valid"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/click-events-have-key-events"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/control-has-associated-label"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/heading-has-content"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/html-has-lang"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/iframe-has-title"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/img-redundant-alt"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/interactive-supports-focus"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/label-has-associated-control"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/lang"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/media-has-caption"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/mouse-events-have-key-events"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/no-access-key"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/no-aria-hidden-on-focusable"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/no-autofocus"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/no-distracting-elements"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/no-interactive-element-to-noninteractive-role"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/no-noninteractive-element-interactions"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/no-noninteractive-element-to-interactive-role"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/no-noninteractive-tabindex"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/no-redundant-roles"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/no-static-element-interactions"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/prefer-tag-over-role"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/role-has-required-aria-props"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/role-supports-aria-props"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/scope"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "jsx_a11y/tabindex-no-positive"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/google-font-display"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/google-font-preconnect"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/inline-script-id"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/next-script-for-ga"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-assign-module-variable"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-async-client-component"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-before-interactive-script-outside-document"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-css-tags"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-document-import-in-page"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-duplicate-head"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-head-element"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-head-import-in-document"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-html-link-for-pages"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-img-element"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-page-custom-font"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-script-component-in-head"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-styled-jsx-in-document"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-sync-scripts"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-title-in-document-head"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-typos"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "correctness",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "nextjs/no-unwanted-polyfillio"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
           "category": "suspicious",
           "old": "-",
           "options": "-",
@@ -9278,6 +9828,42 @@
           "options": "-",
           "oxlint": "native",
           "rule": "react/void-use-memo"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "perf",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "react_perf/jsx-no-jsx-as-prop"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "perf",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "react_perf/jsx-no-new-array-as-prop"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "perf",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "react_perf/jsx-no-new-function-as-prop"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "perf",
+          "old": "-",
+          "options": "-",
+          "oxlint": "native",
+          "rule": "react_perf/jsx-no-new-object-as-prop"
         },
         {
           "base": "off",

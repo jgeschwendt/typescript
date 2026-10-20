@@ -24,27 +24,33 @@ export default defineConfig({
 });
 ```
 
-| key                    | result                                                                      |
-| ---------------------- | --------------------------------------------------------------------------- |
-| `categories`, `rules`  | base, yours merged over                                                     |
-| `plugins`, `jsPlugins` | base, plus yours                                                            |
-| `overrides`            | base's for the detected environment, then yours (last, so they win)         |
-| `settings`             | `react.version` from the `react` your project resolves, then yours          |
-| `env`                  | oxlint's own pass through; `next`, `react`, `typescript` override detection |
-| anything else          | passes through                                                              |
+| key                    | result                                                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------- |
+| `categories`, `rules`  | base, yours merged over                                                                                 |
+| `plugins`, `jsPlugins` | base, plus yours                                                                                        |
+| `overrides`            | base's for the detected environment, then yours (last, so they win)                                     |
+| `settings`             | `react.version` from the `react` your project resolves, then yours                                      |
+| `env`                  | oxlint's own pass through; `bun`, `next`, `react`, `typescript` and a numeric `node` override detection |
+| anything else          | passes through                                                                                          |
 
 ### Environment detection
 
 Read from `dependencies` and `devDependencies` of the nearest `package.json` at or above the
-working directory; none found turns all three on. Force one with `env: { next: true }`. In a
-monorepo linted from the root, the root `package.json` decides.
+working directory, Bun also from `@types/bun` or a `bun.lock`/`bun.lockb` beside it; none found
+turns all four on. Force one with `env: { next: true }`. In a monorepo linted from the root, the
+root `package.json` decides.
 
-| detected     | overrides added                                                                  |
-| ------------ | -------------------------------------------------------------------------------- |
-| always       | `env.node` on source files; `typescript/*` off on JS files; root tooling configs |
-| `typescript` | `**/*.{cts,mts,ts,tsx}`: core twins off, `typescript-js/*`                       |
-| `react`      | `**/*.tsx` naming set                                                            |
-| `next`       | `route.ts` naming, segment/route-file exemptions                                 |
+The same file's `engines.node` sets the runtime floor: its lowest major turns off the unicorn rules
+naming a newer API (`floors` in `index.js`); `engines.bun` alone, `env.bun` or no `engines` keeps
+them all, and `env: { node: 26 }` forces the major.
+
+| detected     | overrides added                                                                                                 |
+| ------------ | --------------------------------------------------------------------------------------------------------------- |
+| always       | `env.node` on source files; `typescript/*` off on JS files; root tooling configs; `max-statements` off in tests |
+| `bun`        | source files: the `Bun` global, `bun:` builtins resolve                                                         |
+| `typescript` | `**/*.{cts,mts,ts,tsx}`: core twins off, `typescript-js/*`                                                      |
+| `react`      | `**/*.{jsx,tsx}`: `jsx-a11y`, `react-perf`; `**/*.tsx` naming set                                               |
+| `next`       | `nextjs` on source files; `route.ts` naming, segment/route-file exemptions                                      |
 
 ## Composing
 
@@ -74,7 +80,8 @@ rejects the config (verified 2026-10-11 · probe, 1.3.14 fails, 1.4.2 loads).
 ## Policy
 
 Every category is on at error: `correctness`, `pedantic`, `perf`, `restriction`, `style`,
-`suspicious`; `nursery` off. `index.js` then retunes rules, each off with its reason.
+`suspicious`; `nursery` at warn. `index.js` then retunes rules, each off with its reason;
+`max-lines` 2000 (code lines) is the only size ceiling.
 
 A rule an oxlint release adds to an on category activates unnamed and sets no floor under the
 `oxlint` peer. That includes the React Compiler rules (oxlint ≥1.80), five of which upstream's
@@ -165,8 +172,9 @@ From oxlint's JS plugin host:
   top level, eslint-plugin-react detection can crash, octals pass. Add `export {}`.
 - oxc sets `importKind` on JS imports: `unicorn-js/no-keyword-prefix` reports a shorthand
   specifier twice.
-- `import-js/no-unresolved` ignores package `exports`, so it flags exports-only packages and `bun:`
-  builtins in JS files; relax it with `ignore` in a JS-files override.
+- `import-js/no-unresolved` ignores package `exports`, so it flags exports-only packages in JS
+  files; relax it with `ignore` in a JS-files override, restating `^bun:` under Bun: an override's
+  options replace the base's.
 - eslint-plugin-react reads `@jsx <word>` in any comment as a pragma.
 - JS plugins see `settings` only from the root or the governing nested config; the base sets
   `settings.react.version` from the installed react, or a far-future semver without one.
@@ -192,9 +200,10 @@ From oxlint's JS plugin host:
   reason, and a click opens the old and base options side by side;
   regenerate and commit it after every snapshot change. A push to `main` touching either publishes
   both to [GitHub Pages](https://jgeschwendt.github.io/typescript/).
-- `define-config.test.js`: the `defineConfig` contract (detection, merge order, `env`, `settings`),
-  and a snapshot of every base override; the typescript override is derived from the catalogs, so
-  an override edit or an oxlint or typescript-eslint bump moves it: regenerate as below.
+- `define-config.test.js`: the `defineConfig` contract (detection, runtime floors, merge order,
+  `env`, `settings`), and a snapshot of every base override; the typescript override is derived
+  from the catalogs, so an override edit or an oxlint or typescript-eslint bump moves it:
+  regenerate as below.
 - `js-plugins.test.js`: installs the packed tarball beside `typescript@7` and `oxlint` under both
   bun linkers, lints through `oxlint.config.ts` on Node and Bun, and fails on any crashed JS-plugin
   rule or unless every fixtured one reports. Needs the network or a warm bun cache.

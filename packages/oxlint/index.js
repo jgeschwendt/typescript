@@ -2,7 +2,7 @@
 
 /** @typedef {import('oxlint').OxlintConfig} Config */
 /** @typedef {import('oxlint').OxlintOverride} Override */
-/** @typedef {{ next: boolean; react: boolean; typescript: boolean }} Env */
+/** @typedef {{ bun: boolean; next: boolean; node: boolean | number; react: boolean; typescript: boolean }} Env */
 /** @typedef {Record<string, { meta: { deprecated?: unknown; docs?: { extendsBaseRule?: boolean | string; requiresTypeChecking?: boolean } } }>} Rules */
 
 const { existsSync, readFileSync } = process.getBuiltinModule('node:fs');
@@ -36,7 +36,7 @@ const jsPlugins = [
 /** @type {NonNullable<Config['categories']>} */
 const categories = {
   correctness: 'error',
-  nursery: 'off',
+  nursery: 'warn',
   pedantic: 'error',
   perf: 'error',
   restriction: 'error',
@@ -44,16 +44,22 @@ const categories = {
   suspicious: 'error',
 };
 
+/** code lines per file, blanks and comments aside: the only size ceiling */
+const maxLines = 2000;
+
 // ※ oxlint-base
 /** @type {NonNullable<Config['rules']>} */
 const rules = {
-  // oxc bans of syntax the house writes: async/await, ?., object rest/spread
+  // bans syntax the house writes: ternaries, undefined, async/await, ?., object rest/spread
+  'no-ternary': 'off',
+  'no-undefined': 'off',
   'oxc/no-async-await': 'off',
   'oxc/no-optional-chaining': 'off',
   'oxc/no-rest-spread-properties': 'off',
 
+  curly: ['error', 'all'],
   'no-magic-numbers': [
-    'warn',
+    'error',
     {
       detectObjects: true,
       enforceConst: true,
@@ -98,13 +104,15 @@ const rules = {
   ],
   'no-shadow-restricted-names': ['error', { reportGlobalThis: false }],
 
+  // house inline comments are lowercase fragments
   'capitalized-comments': 'off',
-  'max-lines': 'off',
+  'max-lines': ['error', { max: maxLines, skipBlankLines: true, skipComments: true }],
+  // max-lines is the ceiling: a function is at most its file
   'max-lines-per-function': 'off',
-  'no-ternary': 'off',
-  'no-undefined': 'off',
+  // contradicts unicorn/prefer-continue, which wants the guard-continue this forbids
+  'no-continue': 'off',
 
-  curly: 'off',
+  // eslint-config-prettier's residue, each probed against oxfmt: multiline is unreachable after semicolons, brace spaces are formatted, nested ternaries are eslint/no-nested-ternary's, 0xff vs 0xFF is a real conflict
   'no-unexpected-multiline': 'off',
   'unicorn/empty-brace-spaces': 'off',
   'unicorn/no-nested-ternary': 'off',
@@ -186,6 +194,7 @@ const typescriptOnly = [
   'no-restricted-types',
   'no-this-alias',
   'no-unnecessary-boolean-literal-compare',
+  'no-unnecessary-condition',
   'no-unnecessary-parameter-property-assignment',
   'no-unnecessary-qualifier',
   'no-unnecessary-template-expression',
@@ -219,6 +228,7 @@ const typescriptOnly = [
   'prefer-literal-enum-member',
   'prefer-namespace-keyword',
   'prefer-nullish-coalescing',
+  'prefer-optional-chain',
   'prefer-promise-reject-errors',
   'prefer-readonly',
   'prefer-readonly-parameter-types',
@@ -249,6 +259,8 @@ const always = [
     files: ['**/*.{cjs,js,jsx,mjs}'],
     rules: Object.fromEntries(typescriptOnly.map((name) => [`typescript/${name}`, 'off'])),
   },
+  // a describe body holds one statement per test
+  { files: ['**/*.test.*', '**/__tests__/**'], rules: { 'max-statements': 'off' } },
 ];
 
 const naming = {
@@ -257,6 +269,7 @@ const naming = {
   selector: 'default',
   trailingUnderscore: 'forbid',
 };
+const quoted = { format: [], modifiers: ['requiresQuotes'], selector: 'objectLiteralProperty' };
 const parameter = { format: ['camelCase'], leadingUnderscore: 'allow', selector: 'parameter' };
 const typeLike = { format: ['PascalCase'], selector: 'typeLike' };
 
@@ -266,10 +279,12 @@ off, each for a fact: the JS-plugin rules oxlint lacks run unless named here
 */
 // ※ opt-out-map
 const disabled = {
+  'eslint-js/consistent-return':
+    'with no-useless-return, no-useless-undefined and no-null a value-or-nothing function has no passing form; the ts override already drops it',
   'import-js/enforce-node-protocol-usage':
     'duplicates native unicorn/prefer-node-protocol; without its required option it crashes: Missing option',
   'import-js/no-unused-modules':
-    'inert without options; with unusedExports it fails every JS rule on the file: ESLint 10 exports no lib/util/glob-utils',
+    'inert without options; with unusedExports it fails every JS rule on the file (ESLint 10 exports no lib/util/glob-utils)',
   'import-js/order': 'formatting-only: import order oxfmt sortImports owns',
   'react-js/jsx-child-element-spacing': 'formatting-only: whitespace and line breaks oxfmt owns',
   'react-js/jsx-closing-bracket-location': 'formatting-only: whitespace and line breaks oxfmt owns',
@@ -345,11 +360,62 @@ const tuned = {
     naming,
     { format: ['PascalCase'], selector: 'enumMember' },
     { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralProperty' },
+    quoted,
     parameter,
     typeLike,
     { format: ['camelCase', 'UPPER_CASE'], selector: 'variable' },
   ],
   'unicorn-js/expiring-todo-comments': ['error', { checkDates: true }],
+
+  // one member order for js and ts: public before private, accessors with public methods (unicorn has no accessor group)
+  'typescript-js/member-ordering': [
+    'error',
+    {
+      default: {
+        memberTypes: [
+          'signature',
+          'call-signature',
+          'static-field',
+          'public-field',
+          'protected-field',
+          'private-field',
+          '#private-field',
+          'static-initialization',
+          'constructor',
+          'static-method',
+          ['get', 'set', 'accessor', 'public-method', 'protected-method'],
+          ['private-method', '#private-method'],
+        ],
+      },
+    },
+  ],
+  'unicorn-js/consistent-class-member-order': [
+    'error',
+    {
+      order: [
+        'static-field',
+        'public-field',
+        'private-field',
+        'static-block',
+        'constructor',
+        'static-method',
+        'public-method',
+        'private-method',
+      ],
+    },
+  ],
+};
+
+const node26 = 26;
+/** unicorn rules that name an API, keyed by the first Node major that has it (probed 2026-10-20: 22 lacks all, 24 has none of these, 26 has all but Iterator.zip; Bun 1.4 has every one) */
+const floors = {
+  'unicorn-js/prefer-get-or-insert-computed': node26,
+  'unicorn-js/prefer-iterator-concat': node26,
+  'unicorn-js/prefer-iterator-zip': Infinity,
+  'unicorn-js/prefer-temporal': node26,
+  'unicorn-js/prefer-temporal-conversion': node26,
+  'unicorn-js/prefer-uint8array-base64': node26,
+  'unicorn-js/prefer-uint8array-hex': node26,
 };
 
 /** the native rule names of the oxlint that loads this config */
@@ -411,29 +477,41 @@ const typescript = {
 };
 
 /** @type {Override} */
-const react = {
-  files: ['**/*.tsx'],
-  rules: {
-    'typescript-js/naming-convention': [
-      'warn',
-      naming,
-      { format: ['camelCase', 'PascalCase'], selector: 'function' },
-      { format: ['camelCase', 'PascalCase'], selector: 'import' },
-      { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralMethod' },
-      { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralProperty' },
-      parameter,
-      typeLike,
-      { format: ['camelCase', 'PascalCase'], selector: 'typeProperty' },
-      { format: ['camelCase', 'PascalCase', 'UPPER_CASE'], selector: 'variable' },
-    ],
-  },
+const bun = {
+  files: ['**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}'],
+  globals: { Bun: 'readonly' },
+  rules: { 'import-js/no-unresolved': ['error', { ignore: ['^bun:'] }] },
 };
+
+/** @type {Override[]} */
+const react = [
+  { files: ['**/*.{jsx,tsx}'], plugins: ['jsx-a11y', 'react-perf'] },
+  {
+    files: ['**/*.tsx'],
+    rules: {
+      'typescript-js/naming-convention': [
+        'warn',
+        naming,
+        { format: ['camelCase', 'PascalCase'], selector: 'function' },
+        { format: ['camelCase', 'PascalCase'], selector: 'import' },
+        { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralMethod' },
+        { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralProperty' },
+        quoted,
+        parameter,
+        typeLike,
+        { format: ['camelCase', 'PascalCase'], selector: 'typeProperty' },
+        { format: ['camelCase', 'PascalCase', 'UPPER_CASE'], selector: 'variable' },
+      ],
+    },
+  },
+];
 
 /** Next's segment files */
 const segments = '**/{default,error,global-error,layout,loading,not-found,page,template}.{jsx,tsx}';
 
 /** @type {Override[]} */
 const next = [
+  { files: ['**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}'], plugins: ['nextjs'] },
   {
     files: ['**/route.ts'],
     rules: {
@@ -441,6 +519,7 @@ const next = [
         'warn',
         naming,
         { format: ['UPPER_CASE'], selector: 'function' },
+        quoted,
         parameter,
         typeLike,
         { format: ['camelCase', 'UPPER_CASE'], selector: 'variable' },
@@ -507,16 +586,23 @@ const detectEnvironment = () => {
   for (let directory = process.cwd(); ; directory = dirname(directory)) {
     const file = join(directory, 'package.json');
     if (existsSync(file)) {
-      const { dependencies, devDependencies } = JSON.parse(String(readFileSync(file)));
+      const { dependencies, devDependencies, engines } = JSON.parse(String(readFileSync(file)));
       const installed = { ...dependencies, ...devDependencies };
+      const major = /^(?:>=|[>^~])?\s*(?<major>\d+)/u.exec(engines?.node ?? '')?.[1];
       return {
+        bun:
+          '@types/bun' in installed ||
+          existsSync(join(directory, 'bun.lock')) ||
+          existsSync(join(directory, 'bun.lockb')),
         next: 'next' in installed,
+        // Bun has every floored API
+        node: major ? Number(major) : engines?.bun && Infinity,
         react: 'react' in installed,
         typescript: 'typescript' in installed,
       };
     }
     if (dirname(directory) === directory) {
-      return { next: true, react: true, typescript: true };
+      return { bun: true, next: true, react: true, typescript: true };
     }
   }
 };
@@ -539,26 +625,48 @@ const detectReact = () => {
 @returns {Config}
 */
 const defineConfig = ({
-  env: { next: isNext, react: isReact, typescript: isTypescript, ...environments } = {},
+  env: {
+    bun: isBun,
+    next: isNext,
+    node: isNode,
+    react: isReact,
+    typescript: isTypescript,
+    ...others
+  } = {},
   ...config
 } = {}) => {
   const detected = detectEnvironment();
+  // an unknown runtime keeps every rule
+  const major =
+    [isNode, isBun && Infinity, detected.node].find((value) => typeof value === 'number') ??
+    Infinity;
+  // a boolean env.node is oxlint's globals; a numeric one, the runtime floor, is ours
+  const environments = { ...others, ...(typeof isNode === 'boolean' && { node: isNode }) };
   return {
     ...config,
-    // oxlint's own env keys pass through; next/react/typescript are ours
+    // oxlint's own env keys pass through; bun/next/react/typescript are ours
     ...(Object.keys(environments).length > 0 && { env: environments }),
     categories: { ...categories, ...config.categories },
     jsPlugins: [...jsPlugins, ...(config.jsPlugins ?? [])],
     overrides: [
       ...always,
+      // before the TypeScript override, whose import-js/no-unresolved off must win on TS files
+      ...((isBun ?? detected.bun) ? [bun] : []),
       ...((isTypescript ?? detected.typescript) ? [typescript] : []),
-      ...((isReact ?? detected.react) ? [react] : []),
+      ...((isReact ?? detected.react) ? react : []),
       ...((isNext ?? detected.next) ? next : []),
       tooling,
       ...(config.overrides ?? []),
     ],
     plugins: [...new Set([...plugins, ...(config.plugins ?? [])])],
-    rules: { ...rules, ...javascript, ...config.rules },
+    rules: {
+      ...rules,
+      ...javascript,
+      ...Object.fromEntries(
+        Object.entries(floors).flatMap(([key, floor]) => (major < floor ? [[key, 'off']] : [])),
+      ),
+      ...config.rules,
+    },
     settings: { ...detectReact(), ...config.settings },
   };
 };

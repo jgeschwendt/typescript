@@ -3,19 +3,8 @@ import { rows } from './rules.js';
 
 // <rule> | <category> | <old> | <oxlint> | <base> | <options>[: <reason>]; categories run at error, so a bump's new rules diff here; regenerate: bun test --update-snapshots, then bun run report ※ rules-gate
 
-/** on in @jlg/eslint and native in oxlint, off here by choice: nursery, or one blanket component style */
-const deliberate = new Set([
-  'eslint/no-restricted-exports',
-  'eslint/no-undef',
-  'eslint/no-unreachable-loop',
-  'eslint/no-useless-assignment',
-  'import/export',
-  'import/named',
-  'react/function-component-definition',
-  'react/require-render-return',
-  'typescript/no-unnecessary-condition',
-  'typescript/prefer-optional-chain',
-]);
+/** on in @jlg/eslint and native in oxlint, off here by choice; nursery runs at warn, so only the non-nursery offs remain: one blanket component style, and no-continue against unicorn/prefer-continue */
+const deliberate = new Set(['eslint/no-continue', 'react/function-component-definition']);
 
 test('rules', () => {
   const dropped = rows

@@ -27,8 +27,8 @@ export default defineConfig({
     },
     {
       files: ['plugins/host.mjs'],
-      // `jsdoc` is ESLint's getJSDocComment verbatim, kept diffable; its contract returns null;
-      // Node 22, inside the runtime floor, has no Error.isError (verified 2026-10-14 · probe)
+      // `jsdoc` is ESLint's getJSDocComment, kept diffable; its contract returns null;
+      // consumers load this on Node 22, which ESLint and unicorn admit, with no Error.isError (verified 2026-10-20 · 22.23.3 probe)
       rules: {
         'max-statements': 'off',
         'unicorn-js/prefer-error-is-error': 'off',
@@ -50,22 +50,14 @@ export default defineConfig({
     },
     {
       files: ['__tests__/*.js'],
-      rules: {
-        // bun:test is a runtime builtin
-        'import-js/no-unresolved': ['error', { ignore: ['^bun:'] }],
-        // rules.js's compare returns each options verdict from one guard chain
-        'max-statements': 'off',
-        // string arrays: the default code-unit order is the snapshot's order
-        'unicorn-js/require-array-sort-compare': 'off',
-      },
+      // string arrays: the default code-unit order is the snapshot's order
+      rules: { 'unicorn-js/require-array-sort-compare': 'off' },
     },
   ],
   rules: {
     // everything here runs inside oxlint's Node/Bun process, no bundler: chunk names mean nothing
     'import-js/dynamic-import-chunkname': 'off',
     'import/no-nodejs-modules': 'off',
-    // Node 24.21, which consumers load these on, has no Iterator.concat (verified 2026-10-14 · probe); TypeScript 5's lib declares none
-    'unicorn-js/prefer-iterator-concat': 'off',
     // house comment style (jgeschwendt/claude rules/comments.md): one-line docblocks
     'unicorn-js/single-line-block-comment-style': ['error', 'single-line'],
   },
