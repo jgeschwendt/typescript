@@ -34,11 +34,8 @@
         <div class="row">
           <h1 class="h1">@jlg/oxlint rules</h1>
           <output id="count" class="badge"></output>
-          <output class="badge badge-warn">1 no declared defaults</output
-          ><output class="badge badge-warn">2 off defaults</output
-          ><output class="badge badge-warn">1 old sets none</output
-          ><output class="badge badge-warn">1 schema drift: ignoreDatesOnPullRequests</output
-          ><output class="badge badge-warn">1 schema drift: ignoreUsedVariables</output>
+          <output class="badge badge-warn">2 off defaults</output
+          ><output class="badge badge-warn">1 old sets none</output>
         </div>
         <p class="muted">
           Old and base options are resolved over the rule's declared defaults as ESLint does and
@@ -2064,9 +2061,9 @@
           "category": "pedantic",
           "old": "on",
           "oldOptions": ["always"],
-          "options": "unverified",
+          "options": "same",
           "oxlint": "native",
-          "reason": "no declared defaults",
+          "reason": "oxlint's default mode is always (radix.rs)",
           "rule": "eslint/radix"
         },
         {
@@ -5299,9 +5296,9 @@
               "terms": ["todo", "fixme", "xxx"]
             }
           ],
-          "options": "unverified",
+          "options": "same",
           "oxlint": "js",
-          "reason": "schema drift: ignoreDatesOnPullRequests",
+          "reason": "ignoreDatesOnPullRequests became checkDates, which the base sets",
           "rule": "unicorn/expiring-todo-comments"
         },
         {
@@ -7600,9 +7597,9 @@
           "category": "style",
           "old": "on",
           "oldOptions": [{ "ignoreUsedVariables": false }],
-          "options": "unverified",
+          "options": "same",
           "oxlint": "native",
-          "reason": "schema drift: ignoreUsedVariables",
+          "reason": "ignoreUsedVariables: false is checkUsedVariables: true, the default",
           "rule": "unicorn/prefer-export-from"
         },
         {

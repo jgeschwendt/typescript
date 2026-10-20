@@ -42,15 +42,17 @@ test('options', () => {
     'eslint/id-length': 'same',
     'eslint/new-cap': 'differs: off defaults',
     'eslint/no-unused-vars': 'same',
-    'eslint/radix': 'unverified: no declared defaults',
+    'eslint/radix': "same: oxlint's default mode is always (radix.rs)",
     'eslint/sort-imports': 'same',
     'react/jsx-filename-extension': 'same',
     'react/require-default-props': 'differs: old sets none',
     'typescript/naming-convention': 'same',
     'typescript/no-magic-numbers': '-',
     'unicorn/consistent-json-file-read': 'none',
-    'unicorn/expiring-todo-comments': 'unverified: schema drift: ignoreDatesOnPullRequests',
-    'unicorn/prefer-export-from': 'unverified: schema drift: ignoreUsedVariables',
+    'unicorn/expiring-todo-comments':
+      'same: ignoreDatesOnPullRequests became checkDates, which the base sets',
+    'unicorn/prefer-export-from':
+      'same: ignoreUsedVariables: false is checkUsedVariables: true, the default',
     'unicorn/prefer-number-properties': 'differs: off defaults',
   };
   expect(
