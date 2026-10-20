@@ -176,7 +176,7 @@ From oxlint's JS plugin host:
 
 `bun run --filter '@jlg/oxlint' test` runs `bun test` over `__tests__/`:
 
-- `rule-existence.test.js`: every emitted rule and plugin exists in `oxlint --rules`, every rule's
+- `rule-existence.test.js`: every emitted rule exists in `oxlint --rules`, every rule's
   plugin is enabled, and no category-enabled `typescript/*` rule stays on for JS files.
 - `rules.test.js`: snapshots every rule of the enabled plugins and of `@jlg/eslint`'s catalogs
   against this base, so a rule a bump adds to an error category shows as a diff at review, and
