@@ -82,6 +82,7 @@ await Bun.write(
         js: 'info',
         native: 'ok',
         'native (type-aware)': 'ok',
+        none: 'ok',
         same: 'ok',
         warn: 'warn',
       };
