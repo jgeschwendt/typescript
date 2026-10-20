@@ -243,7 +243,7 @@ exports[`rules 1`] = `
   "import/no-unused-modules | - | on | none | off | -",
   "import/no-useless-path-segments | - | on | js | error | none",
   "import/no-webpack-loader-syntax | restriction | on | native | warn | none",
-  "import/order | - | on | js | error | differs",
+  "import/order | - | on | none | off | -",
   "import/prefer-default-export | style | absent | native | off | -",
   "import/unambiguous | restriction | on | native | warn | none",
   "oxc/approx-constant | suspicious | - | native | error | -",

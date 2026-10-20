@@ -1,5 +1,10 @@
 {
   "singleQuote": true,
+  "sortImports": {
+    "groups": [["builtin", "external"], "internal", "index", "sibling", "parent"],
+    "ignoreCase": false,
+    "newlinesBetween": false
+  },
   "sortPackageJson": {
     "sortScripts": true
   }

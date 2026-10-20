@@ -157,15 +157,15 @@ every JS-plugin report on the file dropped, and `-f unix` prints only an empty `
 - Set `options.reportUnusedDisableDirectives` in the root config. The bare
   `--report-unused-disable-directives` flag overrides it to warn (exit 0 on an `"error"` config);
   use `--report-unused-disable-directives-severity=error` (verified 2026-10-09 · probe).
-- `oxlint --fix` applies one pass; re-run until stable (`import-js/order` can take several).
+- `oxlint --fix` applies one pass; re-run until stable.
 - Columns count UTF-8 bytes after non-ASCII text (verified 2026-10-09 · probe).
 
 From oxlint's JS plugin host:
 
 - A file with no `import`/`export` parses as a script: `unicorn-js/no-unused-properties` skips its
   top level, eslint-plugin-react detection can crash, octals pass. Add `export {}`.
-- oxc sets `importKind` on JS imports: `import-js/order` ranks a `require` and an `import` of one
-  module apart; `unicorn-js/no-keyword-prefix` reports a shorthand specifier twice.
+- oxc sets `importKind` on JS imports: `unicorn-js/no-keyword-prefix` reports a shorthand
+  specifier twice.
 - `import-js/no-unresolved` ignores package `exports`, so it flags exports-only packages and `bun:`
   builtins in JS files; relax it with `ignore` in a JS-files override.
 - eslint-plugin-react reads `@jsx <word>` in any comment as a pragma.

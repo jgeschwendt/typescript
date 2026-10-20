@@ -40,7 +40,7 @@ const fixtured = Object.entries({
   'eslint-js':
     'camelcase consistent-this no-invalid-this no-restricted-syntax no-undef-init require-atomic-updates',
   'import-js':
-    'no-deprecated no-extraneous-dependencies no-import-module-exports no-internal-modules no-relative-packages no-restricted-paths no-unresolved no-useless-path-segments order',
+    'no-deprecated no-extraneous-dependencies no-import-module-exports no-internal-modules no-relative-packages no-restricted-paths no-unresolved no-useless-path-segments',
   'inline-config': 'no-directives',
   'react-js':
     'boolean-prop-naming destructuring-assignment jsx-no-bind jsx-no-leaked-render jsx-sort-props no-adjacent-inline-elements no-deprecated no-invalid-html-attribute no-typos no-unused-prop-types prefer-read-only-props require-default-props',
