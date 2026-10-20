@@ -49,6 +49,11 @@ export default defineConfig({
       },
     },
     {
+      files: ['__tests__/{_helpers,define-config.test}.js'],
+      // the two files that import the module under test, ../index.js
+      rules: { 'import/no-relative-parent-imports': 'off' },
+    },
+    {
       files: ['__tests__/*.js'],
       rules: {
         // bun:test is a runtime builtin; the other two resolve only through `exports` maps
@@ -62,8 +67,6 @@ export default defineConfig({
             ],
           },
         ],
-        // the tests import the package root, ../index.js
-        'import/no-relative-parent-imports': 'off',
         // a describe callback holds one statement per test it declares
         'max-statements': 'off',
         // string arrays: the default code-unit order is the snapshot's order
@@ -75,8 +78,6 @@ export default defineConfig({
     // everything here runs inside oxlint's Node/Bun process, no bundler: chunk names mean nothing
     'import-js/dynamic-import-chunkname': 'off',
     'import/no-nodejs-modules': 'off',
-    // house code golf: an expression body over a return statement, however oxfmt wraps it
-    'unicorn-js/consistent-arrow-return-style': 'off',
     // house comment style (jgeschwendt/claude rules/comments.md): one-line docblocks
     'unicorn-js/single-line-block-comment-style': ['error', 'single-line'],
   },

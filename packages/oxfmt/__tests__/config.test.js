@@ -3,8 +3,7 @@ import { expect, test } from 'bun:test';
 const { readFileSync } = process.getBuiltinModule('node:fs');
 const configUrl = new URL('../oxfmtrc.json', import.meta.url);
 const schemaUrl = new URL('configuration_schema.json', import.meta.resolve('oxfmt/package.json'));
-/** @param {URL} url */
-const read = (url) => JSON.parse(String(readFileSync(url)));
+const read = (url = configUrl) => JSON.parse(String(readFileSync(url)));
 
 // consumed via `-c` and `import … with { type: "json" }`, both strict JSON, never JSONC
 test('oxfmtrc.json parses as strict JSON', () => {

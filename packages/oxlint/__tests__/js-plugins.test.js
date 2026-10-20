@@ -204,6 +204,9 @@ const run = (command, cwd) => {
   return result.stdout.toString().trim();
 };
 
+/** ms: a pack plus two installs, well past the 5 s hook default under a full-suite run */
+const packing = 60_000;
+
 beforeAll(() => {
   const packed = run(
     [process.execPath, 'pm', 'pack', '--destination', scratch, '--quiet'],
@@ -234,7 +237,7 @@ beforeAll(() => {
 
 afterAll(() => {
   rmSync(scratch, { force: true, recursive: true });
-});
+}, packing);
 
 /**
 @param {string} runtime

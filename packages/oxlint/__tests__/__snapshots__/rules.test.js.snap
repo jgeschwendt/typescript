@@ -538,7 +538,7 @@ exports[`rules 1`] = `
   "unicorn/class-reference-in-static-methods | - | absent | js | error | none",
   "unicorn/comma-spacing | - | absent | none | off | -",
   "unicorn/comment-content | - | absent | js | error | none",
-  "unicorn/consistent-arrow-return-style | - | absent | js | error | none",
+  "unicorn/consistent-arrow-return-style | - | absent | none | off | -",
   "unicorn/consistent-assert | pedantic | on | native | error | none",
   "unicorn/consistent-boolean-name | - | absent | js | error | none",
   "unicorn/consistent-class-member-order | - | absent | js | error | none",

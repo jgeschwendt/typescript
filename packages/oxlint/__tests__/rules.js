@@ -47,13 +47,13 @@ const native = new Map(
     .map((rule) => [`${rule.scope}/${rule.value}`, rule]),
 );
 
+/** @type {(name: string, value: unknown) => [string, unknown[]]} */
+const pair = (name, value) => [ruleKey(name), [value].flat()];
 /** first set wins: overrides narrow from the whole language down to one file name @param {Record<string, unknown>[]} sets */
 const entries = (sets) =>
   new Map(
     sets
-      .flatMap((rules) =>
-        Object.entries(rules).map(([name, value]) => [ruleKey(name), [value].flat()]),
-      )
+      .flatMap((rules) => Object.entries(rules).map(([name, value]) => pair(name, value)))
       .toReversed(),
   );
 const top = entries([config.rules ?? {}]);
