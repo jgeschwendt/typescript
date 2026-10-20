@@ -80,6 +80,4 @@ export default defineConfig({
     // house comment style (jgeschwendt/claude rules/comments.md): one-line docblocks
     'unicorn-js/single-line-block-comment-style': ['error', 'single-line'],
   },
-  // no React here: any semver silences eslint-plugin-react's missing-version warning
-  settings: { react: { version: '19.2.0' } },
 });

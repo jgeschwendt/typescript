@@ -19,6 +19,4 @@ export default defineConfig({
     // house comment style (jgeschwendt/claude rules/comments.md): one-line docblocks
     'unicorn-js/single-line-block-comment-style': ['error', 'single-line'],
   },
-  // eslint-plugin-react warns on runs without a react version
-  settings: { react: { version: '19' } },
 });
