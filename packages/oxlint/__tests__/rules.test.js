@@ -46,7 +46,7 @@ test('options', () => {
     'eslint/sort-imports': 'same',
     'import/order': 'differs: old sets none',
     'react/require-default-props': 'differs: old sets none',
-    'typescript/naming-convention': 'differs: values differ',
+    'typescript/naming-convention': 'same',
     'typescript/no-magic-numbers': '-',
     'unicorn/consistent-json-file-read': 'differs: old sets none',
     'unicorn/expiring-todo-comments': 'unverified: schema drift: ignoreDatesOnPullRequests',

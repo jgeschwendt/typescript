@@ -38,8 +38,7 @@
           ><output class="badge badge-warn">2 off defaults</output
           ><output class="badge badge-warn">3 old sets none</output
           ><output class="badge badge-warn">1 schema drift: ignoreDatesOnPullRequests</output
-          ><output class="badge badge-warn">1 schema drift: ignoreUsedVariables</output
-          ><output class="badge badge-warn">1 values differ</output>
+          ><output class="badge badge-warn">1 schema drift: ignoreUsedVariables</output>
         </div>
         <p class="muted">
           Old and base options are resolved over the rule's declared defaults as ESLint does and
@@ -2474,10 +2473,11 @@
               "selector": "default",
               "trailingUnderscore": "forbid"
             },
-            { "format": ["UPPER_CASE"], "selector": "function" },
+            { "format": ["PascalCase"], "selector": "enumMember" },
+            { "format": ["camelCase", "PascalCase"], "selector": "objectLiteralProperty" },
             { "format": ["camelCase"], "leadingUnderscore": "allow", "selector": "parameter" },
             { "format": ["PascalCase"], "selector": "typeLike" },
-            { "format": ["UPPER_CASE", "camelCase"], "selector": "variable" }
+            { "format": ["camelCase", "UPPER_CASE"], "selector": "variable" }
           ],
           "category": "-",
           "old": "on",
@@ -2494,9 +2494,8 @@
             { "format": ["PascalCase"], "selector": "typeLike" },
             { "format": ["camelCase", "UPPER_CASE"], "selector": "variable" }
           ],
-          "options": "differs",
+          "options": "same",
           "oxlint": "js",
-          "reason": "values differ",
           "rule": "typescript/naming-convention"
         },
         {
