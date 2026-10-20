@@ -73,9 +73,8 @@ rejects the config (verified 2026-10-11 · probe, 1.3.14 fails, 1.4.2 loads).
 
 ## Policy
 
-Every category is on: `correctness`, `pedantic`, `perf`, `style`, `suspicious` at error;
-`restriction` at warn, since its oxc language-feature bans (`no-async-await`, …) flag idiomatic
-code, so promote individual ones in `rules`; `nursery` off. `index.js` then retunes rules.
+Every category is on at error: `correctness`, `pedantic`, `perf`, `restriction`, `style`,
+`suspicious`; `nursery` off. `index.js` then retunes rules, each off with its reason.
 
 A rule an oxlint release adds to an on category activates unnamed and sets no floor under the
 `oxlint` peer. That includes the React Compiler rules (oxlint ≥1.80), five of which upstream's

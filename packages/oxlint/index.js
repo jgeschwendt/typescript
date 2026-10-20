@@ -38,7 +38,7 @@ const categories = {
   nursery: 'off',
   pedantic: 'error',
   perf: 'error',
-  restriction: 'warn',
+  restriction: 'error',
   style: 'error',
   suspicious: 'error',
 };
@@ -46,6 +46,8 @@ const categories = {
 // ※ oxlint-base
 /** @type {NonNullable<Config['rules']>} */
 const rules = {
+  // oxc bans of syntax the house writes: async/await, ?., object rest/spread
+  'oxc/no-async-await': 'off',
   'oxc/no-optional-chaining': 'off',
   'oxc/no-rest-spread-properties': 'off',
 
@@ -114,7 +116,7 @@ const rules = {
     'error',
     { children: 'always', propElementValues: 'always', props: 'never' },
   ],
-  'react/jsx-filename-extension': ['warn', { extensions: ['.jsx', '.tsx'] }],
+  'react/jsx-filename-extension': ['error', { extensions: ['.jsx', '.tsx'] }],
   'react/react-in-jsx-scope': 'off',
 
   'typescript/prefer-readonly-parameter-types': 'warn',
@@ -447,7 +449,7 @@ const next = [
     files: ['**/{default,error,global-error,layout,loading,not-found,page,template}.{jsx,tsx}'],
     rules: {
       'react/only-export-components': [
-        'warn',
+        'error',
         {
           allowExportNames: [
             'dynamic',
