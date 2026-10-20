@@ -9,11 +9,15 @@ const oxlintDirectory = dirname(Bun.fileURLToPath(import.meta.resolve('oxlint/pa
 const oxlintBin = join(oxlintDirectory, 'bin', 'oxlint');
 
 /** every environment on: the most any consumer gets */
-const everything = { next: true, react: true, typescript: true };
+const everything = { bun: true, next: true, react: true, typescript: true };
 const config = defineConfig({ env: everything });
 const overrides = config.overrides ?? [];
-/** @type {Set<string>} */
-const enabledScopes = new Set(config.plugins?.map((plugin) => plugin.replaceAll('-', '_')));
+/** @type {Set<string>} the root's plugins and every override's, as catalog scopes */
+const enabledScopes = new Set(
+  [config, ...overrides].flatMap(({ plugins = [] }) =>
+    plugins.map((plugin) => plugin.replaceAll('-', '_')),
+  ),
+);
 
 /**
 @param {string} root

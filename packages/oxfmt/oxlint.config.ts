@@ -7,9 +7,5 @@ export default defineConfig({
       files: ['__tests__/define-config.test.js'],
       rules: { 'import/no-relative-parent-imports': 'off' },
     },
-    {
-      files: ['__tests__/*.js'],
-      rules: { 'import-js/no-unresolved': ['error', { ignore: ['^bun:'] }] },
-    },
   ],
 });

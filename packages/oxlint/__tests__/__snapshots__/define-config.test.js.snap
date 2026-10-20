@@ -66,6 +66,7 @@ exports[`overrides 1`] = `
       "typescript/no-restricted-types": "off",
       "typescript/no-this-alias": "off",
       "typescript/no-unnecessary-boolean-literal-compare": "off",
+      "typescript/no-unnecessary-condition": "off",
       "typescript/no-unnecessary-parameter-property-assignment": "off",
       "typescript/no-unnecessary-qualifier": "off",
       "typescript/no-unnecessary-template-expression": "off",
@@ -99,6 +100,7 @@ exports[`overrides 1`] = `
       "typescript/prefer-literal-enum-member": "off",
       "typescript/prefer-namespace-keyword": "off",
       "typescript/prefer-nullish-coalescing": "off",
+      "typescript/prefer-optional-chain": "off",
       "typescript/prefer-promise-reject-errors": "off",
       "typescript/prefer-readonly": "off",
       "typescript/prefer-readonly-parameter-types": "off",
@@ -124,10 +126,36 @@ exports[`overrides 1`] = `
   },
   {
     "files": [
+      "**/*.test.*",
+      "**/__tests__/**",
+    ],
+    "rules": {
+      "max-statements": "off",
+    },
+  },
+  {
+    "files": [
+      "**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}",
+    ],
+    "globals": {
+      "Bun": "readonly",
+    },
+    "rules": {
+      "import-js/no-unresolved": [
+        "error",
+        {
+          "ignore": [
+            "^bun:",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    "files": [
       "**/*.{cts,mts,ts,tsx}",
     ],
     "rules": {
-      "eslint-js/consistent-return": "off",
       "eslint-js/dot-notation": "off",
       "eslint-js/no-invalid-this": "off",
       "import-js/no-unresolved": "off",
@@ -136,7 +164,36 @@ exports[`overrides 1`] = `
       "no-implied-eval": "off",
       "prefer-promise-reject-errors": "off",
       "require-await": "off",
-      "typescript-js/member-ordering": "error",
+      "typescript-js/member-ordering": [
+        "error",
+        {
+          "default": {
+            "memberTypes": [
+              "signature",
+              "call-signature",
+              "static-field",
+              "public-field",
+              "protected-field",
+              "private-field",
+              "#private-field",
+              "static-initialization",
+              "constructor",
+              "static-method",
+              [
+                "get",
+                "set",
+                "accessor",
+                "public-method",
+                "protected-method",
+              ],
+              [
+                "private-method",
+                "#private-method",
+              ],
+            ],
+          },
+        },
+      ],
       "typescript-js/naming-convention": [
         "warn",
         {
@@ -157,6 +214,13 @@ exports[`overrides 1`] = `
           "format": [
             "camelCase",
             "PascalCase",
+          ],
+          "selector": "objectLiteralProperty",
+        },
+        {
+          "format": [],
+          "modifiers": [
+            "requiresQuotes",
           ],
           "selector": "objectLiteralProperty",
         },
@@ -183,6 +247,15 @@ exports[`overrides 1`] = `
       ],
       "typescript-js/no-invalid-this": "error",
     },
+  },
+  {
+    "files": [
+      "**/*.{jsx,tsx}",
+    ],
+    "plugins": [
+      "jsx-a11y",
+      "react-perf",
+    ],
   },
   {
     "files": [
@@ -228,6 +301,13 @@ exports[`overrides 1`] = `
           "selector": "objectLiteralProperty",
         },
         {
+          "format": [],
+          "modifiers": [
+            "requiresQuotes",
+          ],
+          "selector": "objectLiteralProperty",
+        },
+        {
           "format": [
             "camelCase",
           ],
@@ -260,6 +340,14 @@ exports[`overrides 1`] = `
   },
   {
     "files": [
+      "**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}",
+    ],
+    "plugins": [
+      "nextjs",
+    ],
+  },
+  {
+    "files": [
       "**/route.ts",
     ],
     "rules": {
@@ -278,6 +366,13 @@ exports[`overrides 1`] = `
             "UPPER_CASE",
           ],
           "selector": "function",
+        },
+        {
+          "format": [],
+          "modifiers": [
+            "requiresQuotes",
+          ],
+          "selector": "objectLiteralProperty",
         },
         {
           "format": [

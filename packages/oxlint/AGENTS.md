@@ -2,7 +2,7 @@
 
 ```stele
 kind: container
-purpose: Shareable oxlint base config, successor to @jlg/eslint. index.js is the whole base; defineConfig() adds overrides per detected next/react/typescript, returns one flat config. Maximalist.
+purpose: Shareable oxlint base config, successor to @jlg/eslint. index.js is the whole base; defineConfig() adds overrides per detected bun/next/react/typescript, returns one flat config. Maximalist.
 commands:
   test: bun run --filter '@jlg/oxlint' test
   snapshot-regen: bun run --filter '@jlg/oxlint' test --update-snapshots
