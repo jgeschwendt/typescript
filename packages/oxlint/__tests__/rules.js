@@ -47,18 +47,20 @@ const native = new Map(
     .map((rule) => [`${rule.scope}/${rule.value}`, rule]),
 );
 
-/** @param {Record<string, unknown>[]} sets */
+/** first set wins: overrides narrow from the whole language down to one file name @param {Record<string, unknown>[]} sets */
 const entries = (sets) =>
   new Map(
-    sets.flatMap((rules) =>
-      Object.entries(rules).map(([name, value]) => [ruleKey(name), [value].flat()]),
-    ),
+    sets
+      .flatMap((rules) =>
+        Object.entries(rules).map(([name, value]) => [ruleKey(name), [value].flat()]),
+      )
+      .toReversed(),
   );
 const top = entries([config.rules ?? {}]);
 const scoped = entries(overrides.map((override) => override.rules ?? {}));
 
 /**
-top-level rules, then the category, then any override: `[severity, ...options]`
+top-level rules, then the category, then the broadest override: `[severity, ...options]`
 @param {string} key
 */
 const entry = (key) => {

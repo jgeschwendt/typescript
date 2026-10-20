@@ -426,7 +426,7 @@ exports[`rules 1`] = `
   "typescript/max-params | - | on | none | off | -",
   "typescript/member-ordering | - | on | js | error | none",
   "typescript/method-signature-style | style | on | native | error | none",
-  "typescript/naming-convention | - | on | js | warn | differs",
+  "typescript/naming-convention | - | on | js | warn | same",
   "typescript/no-array-constructor | - | on | none | off | -",
   "typescript/no-array-delete | correctness | on | native (type-aware) | error | none",
   "typescript/no-base-to-string | correctness | on | native (type-aware) | error | none",
