@@ -1,14 +1,14 @@
-import { config, enabledScopes, loadRules, overrides, ruleKey } from './_helpers.js';
+import { config, loadRules, overrides, ruleKey } from './_helpers.js';
 
 /** @type {[string, string, Record<string, { defaultOptions?: unknown[]; meta?: { defaultOptions?: unknown[]; deprecated?: unknown; schema?: unknown } }>][]} */
 const catalogs = await Promise.all(
-  [
-    ['', 'eslint'],
-    ['@typescript-eslint/', 'typescript'],
-    ['import/', 'import'],
-    ['react/', 'react'],
-    ['unicorn/', 'unicorn'],
-  ].map(async ([prefix = '', scope = '']) => {
+  Object.entries({
+    eslint: '',
+    import: 'import/',
+    react: 'react/',
+    typescript: '@typescript-eslint/',
+    unicorn: 'unicorn/',
+  }).map(async ([scope, prefix]) => {
     const { default: plugin } = await import(`../plugins/${scope}-js.mjs`);
     return [prefix, scope, plugin.rules];
   }),
@@ -41,11 +41,7 @@ const eslint = new Map(
 );
 
 const levels = new Map(Object.entries(config.categories ?? {}));
-const native = new Map(
-  loadRules()
-    .filter((rule) => enabledScopes.has(rule.scope))
-    .map((rule) => [`${rule.scope}/${rule.value}`, rule]),
-);
+const native = loadRules();
 
 /** @type {(name: string, value: unknown) => [string, unknown[]]} */
 const pair = (name, value) => [ruleKey(name), [value].flat()];

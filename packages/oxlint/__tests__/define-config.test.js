@@ -32,8 +32,16 @@ const environment = (built) => {
   return Object.fromEntries(Object.entries(markers).map(([key, glob]) => [key, globs.has(glob)]));
 };
 
-test('jsPlugins run the rules oxlint lacks, never one it ports', () => {
-  expect(config.rules).not.toContainAnyKeys(['eslint-js/no-var', 'unicorn-js/no-null']);
+test('jsPlugins never run a rule oxlint ports or upstream deprecated', () => {
+  expect(config.rules).not.toContainAnyKeys([
+    'eslint-js/arrow-parens',
+    'eslint-js/no-var',
+    'unicorn-js/no-null',
+  ]);
+});
+
+test('overrides', () => {
+  expect(overrides).toMatchSnapshot();
 });
 
 const none = { next: false, react: false, typescript: false };
@@ -63,9 +71,11 @@ test('consumer config merges over the base; its overrides come last', () => {
   const built = defineConfig({
     categories: { style: 'off' },
     env: everything,
+    jsPlugins: ['./own.mjs'],
     overrides: [own],
     rules: { 'no-void': 'off' },
   });
+  expect(built.jsPlugins).toStrictEqual([...(config.jsPlugins ?? []), './own.mjs']);
   expect(built.overrides).toStrictEqual([...overrides, own]);
   expect(built.rules).toStrictEqual({ ...config.rules, 'no-void': 'off' });
   expect(built.categories).toStrictEqual({ ...config.categories, style: 'off' });

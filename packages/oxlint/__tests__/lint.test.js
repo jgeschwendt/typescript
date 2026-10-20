@@ -79,7 +79,7 @@ write(directory, {
 const lint = (paths) =>
   spawnOxlint(directory, ['-c', 'oxlint.config.mjs', '--format', 'json', ...paths]);
 
-/** per linted file, whether each code (or code prefix) reports there; a negative holds vacuously for a file never linted */
+/** per linted file, whether each code (or code prefix) reports there; each file must report something, so no negative holds vacuously */
 const expected = {
   // Next route handlers may be separate named exports
   'app/api/route.ts': { 'import(group-exports)': false },
@@ -108,12 +108,6 @@ const {
   report: { diagnostics },
 } = lint(Object.keys(expected));
 
-test('every fixture was linted', () => {
-  expect([...new Set(diagnostics.map(({ filename }) => filename))].toSorted()).toEqual(
-    Object.keys(expected),
-  );
-});
-
 test('every directive form is banned, and nothing else', () => {
   expect(
     diagnostics
@@ -128,6 +122,7 @@ test('every directive form is banned, and nothing else', () => {
 
 test.each(Object.entries(expected))('%s', (file, want) => {
   const found = diagnostics.filter(({ filename }) => filename === file).map(({ code }) => code);
+  expect(found).not.toEqual([]);
   expect(
     Object.fromEntries(
       Object.keys(want).map((code) => [code, found.some((each) => each.startsWith(code))]),

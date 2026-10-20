@@ -5,13 +5,8 @@ export default defineConfig({
   overrides: [
     // rules are grouped by plugin, each group sorted
     {
-      files: ['./index.js'],
+      files: ['index.js'],
       rules: { 'sort-keys': ['error', 'asc', { allowLineSeparatedGroups: true }] },
-    },
-    // Node 24.21, which consumers load these on, has no Iterator.concat (verified 2026-10-14 · probe); TypeScript 5's lib declares none
-    {
-      files: ['./index.js', '__tests__/*.js', 'plugins/*.mjs'],
-      rules: { 'unicorn-js/prefer-iterator-concat': 'off' },
     },
     {
       files: ['plugins/*.mjs'],
@@ -56,17 +51,8 @@ export default defineConfig({
     {
       files: ['__tests__/*.js'],
       rules: {
-        // bun:test is a runtime builtin; the other two resolve only through `exports` maps
-        'import-js/no-unresolved': [
-          'error',
-          {
-            ignore: [
-              '^@typescript-eslint/eslint-plugin$',
-              '^bun:',
-              '^eslint/use-at-your-own-risk$',
-            ],
-          },
-        ],
+        // bun:test is a runtime builtin
+        'import-js/no-unresolved': ['error', { ignore: ['^bun:'] }],
         // rules.js's compare returns each options verdict from one guard chain
         'max-statements': 'off',
         // string arrays: the default code-unit order is the snapshot's order
@@ -78,6 +64,8 @@ export default defineConfig({
     // everything here runs inside oxlint's Node/Bun process, no bundler: chunk names mean nothing
     'import-js/dynamic-import-chunkname': 'off',
     'import/no-nodejs-modules': 'off',
+    // Node 24.21, which consumers load these on, has no Iterator.concat (verified 2026-10-14 · probe); TypeScript 5's lib declares none
+    'unicorn-js/prefer-iterator-concat': 'off',
     // house comment style (jgeschwendt/claude rules/comments.md): one-line docblocks
     'unicorn-js/single-line-block-comment-style': ['error', 'single-line'],
   },

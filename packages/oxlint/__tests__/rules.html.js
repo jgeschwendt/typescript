@@ -1,4 +1,3 @@
-// regenerate after every snapshot change: bun run --filter '@jlg/oxlint' report
 // ui.css vendored from jgeschwendt/ui @ 162e78b
 import { rows } from './rules.js';
 
