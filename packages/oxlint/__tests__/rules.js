@@ -125,6 +125,18 @@ const compare = (was, now, { defaults = [], schema }) => {
 };
 
 /**
+read by hand where the schema cannot settle it: a renamed key, or a default the rule never declares
+@type {Record<string, string>}
+*/
+const reviewed = {
+  'eslint/radix': "oxlint's default mode is always (radix.rs)",
+  'unicorn/expiring-todo-comments':
+    'ignoreDatesOnPullRequests became checkDates, which the base sets',
+  'unicorn/prefer-export-from':
+    'ignoreUsedVariables: false is checkUsedVariables: true, the default',
+};
+
+/**
 every non-deprecated rule of @jlg/eslint's catalogs and every oxlint rule of the enabled plugins
 @type {{ base: unknown; baseOptions: unknown[]; category: string; old: string; oldOptions?: unknown[]; options: string; oxlint: string; reason?: string; rule: string }[]}
 */
@@ -137,10 +149,14 @@ const rows = [...new Set([...eslint.keys(), ...native.keys()])].map((rule) => {
     ? `native${typed ? ' (type-aware)' : ''}`
     : ((entry(js) && 'js') ?? 'none');
   /** `-` without an ESLint counterpart or where the base runs no such rule */
-  const [options = '', reason] =
+  const [verdict = '', drift] =
     !oldOptions || base === 'off' || oxlint === 'none'
       ? ['-']
       : compare(oldOptions, baseOptions, declared);
+  const [options, reason] =
+    verdict === 'unverified' && Object.hasOwn(reviewed, rule)
+      ? ['same', reviewed[rule]]
+      : [verdict, drift];
   return { base, baseOptions, category, old, oldOptions, options, oxlint, reason, rule };
 });
 

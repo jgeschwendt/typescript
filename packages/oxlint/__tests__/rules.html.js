@@ -2,7 +2,9 @@
 // ui.css vendored from jgeschwendt/ui @ 162e78b
 import { rows } from './rules.js';
 
-const reasons = [...new Set(rows.flatMap(({ reason }) => reason ?? []))]
+const reasons = [
+  ...new Set(rows.flatMap(({ options, reason }) => (options === 'same' ? [] : (reason ?? [])))),
+]
   .toSorted()
   .map(
     (reason) =>
