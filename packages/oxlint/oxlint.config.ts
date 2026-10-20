@@ -67,7 +67,7 @@ export default defineConfig({
             ],
           },
         ],
-        // a describe callback holds one statement per test it declares
+        // rules.js's compare returns each options verdict from one guard chain
         'max-statements': 'off',
         // string arrays: the default code-unit order is the snapshot's order
         'unicorn-js/require-array-sort-compare': 'off',

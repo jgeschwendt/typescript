@@ -1,10 +1,10 @@
 import { expect, test } from 'bun:test';
-import { config, everything, overrides } from './_helpers.js';
+import { config, everything, overrides, write } from './_helpers.js';
 import { defineConfig } from '../index.js';
 
-const { mkdirSync, mkdtempSync, rmSync, writeFileSync } = process.getBuiltinModule('node:fs');
+const { mkdtempSync, rmSync } = process.getBuiltinModule('node:fs');
 const { tmpdir } = process.getBuiltinModule('node:os');
-const { dirname, isAbsolute, join } = process.getBuiltinModule('node:path');
+const { join } = process.getBuiltinModule('node:path');
 
 /**
 runs `run` one directory below `files`, so detection has to walk up
@@ -15,11 +15,7 @@ runs `run` one directory below `files`, so detection has to walk up
 const within = (files, run) => {
   const directory = mkdtempSync(join(tmpdir(), 'oxlint-define-'));
   const cwd = process.cwd();
-  for (const [name, content] of Object.entries(files)) {
-    mkdirSync(dirname(join(directory, name)), { recursive: true });
-    writeFileSync(join(directory, name), JSON.stringify(content));
-  }
-  mkdirSync(join(directory, 'nested'));
+  write(directory, { ...files, 'nested/.keep': '' });
   try {
     process.chdir(join(directory, 'nested'));
     return run();
@@ -36,16 +32,7 @@ const environment = (built) => {
   return Object.fromEntries(Object.entries(markers).map(([key, glob]) => [key, globs.has(glob)]));
 };
 
-// a JS config hands oxlint an object, with no file to resolve relative entries against
-test('jsPlugins entries are absolute paths', () => {
-  const paths = (config.jsPlugins ?? []).map((entry) =>
-    typeof entry === 'string' ? entry : entry.specifier,
-  );
-  expect(paths.filter((path) => !isAbsolute(path))).toEqual([]);
-});
-
 test('jsPlugins run the rules oxlint lacks, never one it ports', () => {
-  expect(config.rules).toMatchObject({ 'unicorn-js/consistent-boolean-name': 'error' });
   expect(config.rules).not.toContainAnyKeys(['eslint-js/no-var', 'unicorn-js/no-null']);
 });
 

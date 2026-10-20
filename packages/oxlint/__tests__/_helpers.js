@@ -15,12 +15,12 @@ const overrides = config.overrides ?? [];
 
 /**
 @param {string} root
-@param {Record<string, string>} files
+@param {Record<string, unknown>} files a string is written as is, anything else as JSON
 */
 const write = (root, files) => {
   for (const [name, source] of Object.entries(files)) {
     mkdirSync(dirname(join(root, name)), { recursive: true });
-    writeFileSync(join(root, name), source);
+    writeFileSync(join(root, name), typeof source === 'string' ? source : JSON.stringify(source));
   }
 };
 
@@ -37,7 +37,6 @@ const spawnOxlint = (cwd, flags, command = [process.execPath, oxlintBin]) => {
   writeFileSync(out, '');
   const { exitCode, stderr } = Bun.spawnSync([...command, ...flags], {
     cwd,
-    stderr: 'pipe',
     stdout: Bun.file(out),
   });
   const text = String(readFileSync(out));
@@ -54,7 +53,7 @@ const loadRules = () => {
   const directory = mkdtempSync(join(tmpdir(), 'oxlint-rules-'));
   // --rules still loads config, so hand it an empty one
   write(directory, { 'empty.json': '{}' });
-  const { exitCode, output, report } = spawnOxlint(directory, [
+  const { report } = spawnOxlint(directory, [
     '-c',
     'empty.json',
     '--rules',
@@ -63,15 +62,8 @@ const loadRules = () => {
     '--disable-nested-config',
   ]);
   rmSync(directory, { force: true, recursive: true });
-  if (exitCode !== 0) {
-    throw new Error(`oxlint --rules exited ${exitCode}: ${output}`);
-  }
   return report;
 };
-
-const schema = String(readFileSync(join(oxlintDirectory, 'configuration_schema.json')));
-/** @type {string[]} */
-const pluginNames = JSON.parse(schema).definitions.LintPluginOptionsSchema.enum;
 
 const ruleNames = [
   ...new Set(
@@ -81,10 +73,12 @@ const ruleNames = [
   ),
 ];
 
+/** @type {{ name?: string; specifier: string }[]} jsPlugins entries, a bare path as an unnamed one */
+const jsEntries = (config.jsPlugins ?? []).map((entry) =>
+  typeof entry === 'string' ? { specifier: entry } : entry,
+);
 const jsScopes = new Set(
-  (config.jsPlugins ?? []).map((entry) =>
-    typeof entry === 'string' ? basename(entry, '.mjs') : entry.name,
-  ),
+  jsEntries.map(({ name, specifier }) => name ?? basename(specifier, '.mjs')),
 );
 
 /** @param {string} name */
@@ -107,13 +101,12 @@ export {
   enabledScopes,
   everything,
   isJsRule,
+  jsEntries,
   jsScopes,
   loadRules,
   overrides,
-  pluginNames,
   ruleKey,
   ruleNames,
-  ruleScope,
   spawnOxlint,
   write,
 };

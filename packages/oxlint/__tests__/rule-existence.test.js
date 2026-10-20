@@ -5,10 +5,8 @@ import {
   isJsRule,
   loadRules,
   overrides,
-  pluginNames,
   ruleKey,
   ruleNames,
-  ruleScope,
 } from './_helpers.js';
 
 // an unknown rule or plugin rejects the whole config; a rule whose plugin is off never runs ※ rule-existence-guard
@@ -16,28 +14,16 @@ import {
 /** jsPlugins rules are ESLint rule code, guarded in js-plugins.test.js */
 const native = ruleNames.filter((name) => !isJsRule(name));
 
-test('every configured rule exists in oxlint', () => {
-  const known = new Set(loadRules().map((rule) => `${rule.scope}/${rule.value}`));
+test('every configured rule exists in an enabled oxlint plugin', () => {
+  const known = new Set(
+    loadRules()
+      .filter((rule) => enabledScopes.has(rule.scope))
+      .map((rule) => `${rule.scope}/${rule.value}`),
+  );
   const missing = native.filter((name) => !known.has(ruleKey(name)));
   expect(
     missing,
-    `Unknown oxlint rule name(s) — oxlint rejects the whole config: ${missing.join(', ')}`,
-  ).toEqual([]);
-});
-
-test('every configured plugin is a valid oxlint plugin', () => {
-  const invalid = (config.plugins ?? []).filter((plugin) => !pluginNames.includes(plugin));
-  expect(
-    invalid,
-    `Unknown oxlint plugin name(s) — oxlint rejects the whole config: ${invalid.join(', ')}`,
-  ).toEqual([]);
-});
-
-test("every configured rule's plugin is enabled", () => {
-  const orphaned = native.filter((name) => !enabledScopes.has(ruleScope(name)));
-  expect(
-    orphaned,
-    `Rule(s) whose plugin is not in \`plugins\` — silent no-op, never run: ${orphaned.join(', ')}`,
+    `Rule(s) oxlint lacks (rejects the whole config) or whose plugin is not in \`plugins\` (silent no-op): ${missing.join(', ')}`,
   ).toEqual([]);
 });
 

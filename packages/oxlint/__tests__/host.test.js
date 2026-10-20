@@ -56,7 +56,7 @@ afterAll(() => {
 test('host contains a crashing rule and ports getJSDocComment', () => {
   write(directory, {
     'lead.js': '/** p */\n;\n(() => {});\n',
-    'probe.json': JSON.stringify({
+    'probe.json': {
       categories: { correctness: 'off' },
       jsPlugins: ['./probe.mjs'],
       rules: {
@@ -64,7 +64,7 @@ test('host contains a crashing rule and ports getJSDocComment', () => {
         'probe/crash': 'error',
         'probe/jsdoc': 'error',
       },
-    }),
+    },
     'probe.mjs': plugin,
     'source.js': source,
   });

@@ -6,15 +6,11 @@ const exported = new Set([
   'ExportSpecifier',
 ]);
 
-/** ESLint 9.39 SourceCode#getJSDocComment, unchanged but for `this` */
+/** ESLint 9.39 SourceCode#getJSDocComment, `this` made a parameter and its checks respelled */
 const jsdoc = (sourceCode, node) => {
   const find = (astNode) => {
-    const before = sourceCode.getTokenBefore(astNode, {
-      includeComments: true,
-    });
-    return before !== null &&
-      before !== undefined &&
-      before.type === 'Block' &&
+    const before = sourceCode.getTokenBefore(astNode, { includeComments: true });
+    return before?.type === 'Block' &&
       before.value.startsWith('*') &&
       astNode.loc.start.line - before.loc.end.line <= 1
       ? before
@@ -33,15 +29,13 @@ const jsdoc = (sourceCode, node) => {
     case 'FunctionExpression': {
       if (parent.type !== 'CallExpression' && parent.type !== 'NewExpression') {
         while (
+          parent &&
           sourceCode.getCommentsBefore(parent).length === 0 &&
           !/Function/u.test(parent.type) &&
           parent.type !== 'MethodDefinition' &&
           parent.type !== 'Property'
         ) {
           ({ parent } = parent);
-          if (!parent) {
-            break;
-          }
         }
         if (parent && parent.type !== 'FunctionDeclaration' && parent.type !== 'Program') {
           return find(parent);

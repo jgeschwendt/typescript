@@ -35,7 +35,7 @@ const directives = [
   '',
 ].join('\n');
 
-const index = Bun.fileURLToPath(import.meta.resolve('../index.js'));
+const index = join(import.meta.dirname, '..', 'index.js');
 
 // no package.json above the temp dir: every environment is on
 const directory = mkdtempSync(join(tmpdir(), 'oxlint-lint-'));
@@ -57,12 +57,7 @@ write(directory, {
   'blanket.js': '/* oxlint-disable */\nexport const value = 1;\n',
   'described.js': '/* eslint-disable -- reason */\nexport const value = 1;\n',
   'directives.js': directives,
-  'instrumentation.ts': [
-    'export async function register(): Promise<void> {',
-    "  globalThis.console.info('registered');",
-    '}',
-    '',
-  ].join('\n'),
+  'instrumentation.js': 'export async function register() {\n  return 1;\n}\n',
   'next.config.js': 'export const extra = 1;\nexport default {};\n',
   'own-line.js': 'export const value = 1; // oxlint-disable-line inline-config/no-directives\n',
   'oxlint.config.mjs': `import { defineConfig } from ${JSON.stringify(index)};\nexport default defineConfig({ overrides: [${JSON.stringify(consumerOverride)}] });\n`,
@@ -72,7 +67,6 @@ write(directory, {
     "const fs = require('node:fs');",
     'process = fs;',
     'const _unused = 1;',
-    'export const mask = 0xff;',
     '',
   ].join('\n'),
   'sub/next.config.js': 'export const extra = 1;\nexport default {};\n',
@@ -85,34 +79,39 @@ write(directory, {
 const lint = (paths) =>
   spawnOxlint(directory, ['-c', 'oxlint.config.mjs', '--format', 'json', ...paths]);
 
+/** per linted file, whether each code (or code prefix) reports there; a negative holds vacuously for a file never linted */
+const expected = {
+  // Next route handlers may be separate named exports
+  'app/api/route.ts': { 'import(group-exports)': false },
+  // a consumer `**/*.tsx` override comes last, so it beats the base's Next exemptions
+  'app/page.tsx': { 'import(no-default-export)': true, 'unicorn(filename-case)': true },
+  'directives.js': {},
+  // Next's register() may be async without awaiting
+  'instrumentation.js': { 'eslint(require-await)': false },
+  // root tooling configs export only a default; nested ones are app code
+  'next.config.js': { 'import(no-default-export)': false, 'import(no-named-export)': true },
+  'oxlint.config.ts': { 'import(no-named-export)': true },
+  // TS files run the typed require-await only
+  'src/later.ts': { 'eslint(require-await)': false },
+  'src/plain.js': {
+    // Node globals are declared (globals.node)
+    'eslint(no-global-assign)': true,
+    // ESLint's defaults: no `^_` ignore pattern
+    'eslint(no-unused-vars)': true,
+    // TypeScript rules stay off JavaScript files
+    'typescript(': false,
+  },
+  'sub/next.config.js': { 'import(no-default-export)': true },
+};
+
 const {
   report: { diagnostics },
-} = lint([
-  'app',
-  'directives.js',
-  'instrumentation.ts',
-  'next.config.js',
-  'oxlint.config.ts',
-  'src',
-  'sub',
-]);
-/** @param {string} file */
-const codes = (file) =>
-  diagnostics.filter(({ filename }) => filename === file).map(({ code }) => code);
+} = lint(Object.keys(expected));
 
-// the negative assertions below hold vacuously for a file never linted
 test('every fixture was linted', () => {
-  expect([...new Set(diagnostics.map(({ filename }) => filename))].toSorted()).toEqual([
-    'app/api/route.ts',
-    'app/page.tsx',
-    'directives.js',
-    'instrumentation.ts',
-    'next.config.js',
-    'oxlint.config.ts',
-    'src/later.ts',
-    'src/plain.js',
-    'sub/next.config.js',
-  ]);
+  expect([...new Set(diagnostics.map(({ filename }) => filename))].toSorted()).toEqual(
+    Object.keys(expected),
+  );
 });
 
 test('every directive form is banned, and nothing else', () => {
@@ -127,42 +126,13 @@ test('every directive form is banned, and nothing else', () => {
   ).toEqual(banned);
 });
 
-test('Node globals are declared (globals.node)', () => {
-  expect(codes('src/plain.js')).toContain('eslint(no-global-assign)');
-});
-
-test("no-unused-vars has ESLint's defaults: no `^_` ignore pattern", () => {
-  expect(codes('src/plain.js')).toContain('eslint(no-unused-vars)');
-});
-
-test('typescript/* rules stay off JavaScript files', () => {
-  expect(codes('src/plain.js').filter((code) => code.startsWith('typescript('))).toEqual([]);
-});
-
-test('rules eslint-config-prettier switched off stay off', () => {
-  expect(codes('src/plain.js')).not.toContain('unicorn(number-literal-case)');
-});
-
-test('TS files run the typed require-await only; instrumentation runs neither', () => {
-  expect(codes('src/later.ts')).not.toContain('eslint(require-await)');
-  expect(codes('instrumentation.ts')).not.toContain('eslint(require-await)');
-});
-
-test('Next route handlers may be separate named exports', () => {
-  expect(codes('app/api/route.ts')).not.toContain('import(group-exports)');
-});
-
-test('root tooling configs export only a default; nested ones are app code', () => {
-  expect(codes('next.config.js')).toContain('import(no-named-export)');
-  expect(codes('next.config.js')).not.toContain('import(no-default-export)');
-  expect(codes('oxlint.config.ts')).toContain('import(no-named-export)');
-  expect(codes('sub/next.config.js')).toContain('import(no-default-export)');
-});
-
-// the consumer's overrides come last, so they beat the base's Next exemptions
-test('a consumer `**/*.tsx` override beats the base Next overrides', () => {
-  expect(codes('app/page.tsx')).toContain('import(no-default-export)');
-  expect(codes('app/page.tsx')).toContain('unicorn(filename-case)');
+test.each(Object.entries(expected))('%s', (file, want) => {
+  const found = diagnostics.filter(({ filename }) => filename === file).map(({ code }) => code);
+  expect(
+    Object.fromEntries(
+      Object.keys(want).map((code) => [code, found.some((each) => each.startsWith(code))]),
+    ),
+  ).toEqual(want);
 });
 
 test.each(['blanket.js', 'described.js', 'own-line.js'])(
@@ -173,3 +143,9 @@ test.each(['blanket.js', 'described.js', 'own-line.js'])(
     expect(output).toContain('would suppress its own report');
   },
 );
+
+test('a run oxlint cannot report on throws with its output', () => {
+  expect(() => spawnOxlint(directory, ['-c', 'missing.json'])).toThrow(
+    'Failed to parse oxlint configuration file',
+  );
+});

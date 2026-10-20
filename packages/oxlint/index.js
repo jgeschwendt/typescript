@@ -396,42 +396,41 @@ const twins = Object.entries(wrapped.typescript)
   .map((key) => [key, 'off']);
 
 // later overrides win: the .ts, .tsx, then route.ts naming-convention sets, in that order
-/** @type {Override[]} */
-const typescript = [
-  {
-    files: ['**/*.{cts,mts,ts,tsx}'],
-    rules: {
-      'import/consistent-type-specifier-style': 'off',
-      'import/extensions': 'off',
-      'no-implied-eval': 'off',
-      'prefer-promise-reject-errors': 'off',
-      'require-await': 'off',
-      ...Object.fromEntries([...twins, ...derive('typescript')]),
-      'import-js/no-unresolved': 'off',
-    },
+/** @type {Override} */
+const typescript = {
+  files: ['**/*.{cts,mts,ts,tsx}'],
+  rules: {
+    'import/consistent-type-specifier-style': 'off',
+    'import/extensions': 'off',
+    'no-implied-eval': 'off',
+    'prefer-promise-reject-errors': 'off',
+    'require-await': 'off',
+    ...Object.fromEntries([...twins, ...derive('typescript')]),
+    'import-js/no-unresolved': 'off',
   },
-];
+};
 
-/** @type {Override[]} */
-const react = [
-  {
-    files: ['**/*.tsx'],
-    rules: {
-      'typescript-js/naming-convention': [
-        'warn',
-        naming,
-        { format: ['camelCase', 'PascalCase'], selector: 'function' },
-        { format: ['camelCase', 'PascalCase'], selector: 'import' },
-        { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralMethod' },
-        { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralProperty' },
-        parameter,
-        typeLike,
-        { format: ['camelCase', 'PascalCase'], selector: 'typeProperty' },
-        { format: ['camelCase', 'PascalCase', 'UPPER_CASE'], selector: 'variable' },
-      ],
-    },
+/** @type {Override} */
+const react = {
+  files: ['**/*.tsx'],
+  rules: {
+    'typescript-js/naming-convention': [
+      'warn',
+      naming,
+      { format: ['camelCase', 'PascalCase'], selector: 'function' },
+      { format: ['camelCase', 'PascalCase'], selector: 'import' },
+      { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralMethod' },
+      { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralProperty' },
+      parameter,
+      typeLike,
+      { format: ['camelCase', 'PascalCase'], selector: 'typeProperty' },
+      { format: ['camelCase', 'PascalCase', 'UPPER_CASE'], selector: 'variable' },
+    ],
   },
-];
+};
+
+/** Next's segment files */
+const segments = '**/{default,error,global-error,layout,loading,not-found,page,template}.{jsx,tsx}';
 
 /** @type {Override[]} */
 const next = [
@@ -444,13 +443,13 @@ const next = [
         { format: ['UPPER_CASE'], selector: 'function' },
         parameter,
         typeLike,
-        { format: ['UPPER_CASE', 'camelCase'], selector: 'variable' },
+        { format: ['camelCase', 'UPPER_CASE'], selector: 'variable' },
       ],
     },
   },
   // segment files export reserved names (metadata, segment config) beside the component
   {
-    files: ['**/{default,error,global-error,layout,loading,not-found,page,template}.{jsx,tsx}'],
+    files: [segments],
     rules: {
       'react/only-export-components': [
         'error',
@@ -475,14 +474,11 @@ const next = [
     },
   },
   {
-    files: [
-      '**/{layout,page,loading,not-found,error,global-error,template,default}.{jsx,tsx}',
-      '**/mdx-components.{jsx,tsx}',
-    ],
+    files: [segments, '**/mdx-components.{jsx,tsx}'],
     rules: { 'unicorn/filename-case': ['error', { case: 'kebabCase' }] },
   },
   {
-    files: ['**/{layout,page,middleware,instrumentation,robots,route}.{js,jsx,ts,tsx}'],
+    files: ['**/{instrumentation,layout,middleware,page,robots,route}.{js,jsx,ts,tsx}'],
     rules: { 'import/no-default-export': 'off' },
   },
   {
@@ -495,18 +491,16 @@ const next = [
   },
 ];
 
-/** @type {Override[]} */
-const tooling = [
-  {
-    files: ['./{eslint,jest,next,oxfmt,oxlint,postcss}.config.{cjs,cts,js,mjs,mts,ts}'],
-    // the config is the default-exported defineConfig(…) call
-    rules: {
-      'import/no-default-export': 'off',
-      'import/no-named-export': 'error',
-      'unicorn-js/no-top-level-side-effects': 'off',
-    },
+/** @type {Override} */
+const tooling = {
+  files: ['./{eslint,jest,next,oxfmt,oxlint,postcss}.config.{cjs,cts,js,mjs,mts,ts}'],
+  // the config is the default-exported defineConfig(…) call
+  rules: {
+    'import/no-default-export': 'off',
+    'import/no-named-export': 'error',
+    'unicorn-js/no-top-level-side-effects': 'off',
   },
-];
+};
 
 /** the nearest package.json from cwd decides; none found turns everything on */
 const detectEnvironment = () => {
@@ -558,10 +552,10 @@ const defineConfig = ({
     jsPlugins: [...jsPlugins, ...(config.jsPlugins ?? [])],
     overrides: [
       ...always,
-      ...((isTypescript ?? detected.typescript) ? typescript : []),
-      ...((isReact ?? detected.react) ? react : []),
+      ...((isTypescript ?? detected.typescript) ? [typescript] : []),
+      ...((isReact ?? detected.react) ? [react] : []),
       ...((isNext ?? detected.next) ? next : []),
-      ...tooling,
+      tooling,
       ...(config.overrides ?? []),
     ],
     plugins: [...new Set([...plugins, ...(config.plugins ?? [])])],
