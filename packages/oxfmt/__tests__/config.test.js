@@ -18,3 +18,21 @@ test("every oxfmtrc.json key exists in oxfmt's schema", () => {
     [],
   );
 });
+
+test('sortImports: builtin+external, internal, index, sibling, parent; case-sensitive; no blank lines', () => {
+  const sorted = [
+    "import fs from 'node:fs';",
+    "import type { T } from 'zod';",
+    "import alias from '@/alias';",
+    "import index from './index.js';",
+    "import B from './B.js';",
+    "import a from './a.js';",
+    "import up from '../up.js';",
+  ];
+  const bin = new URL('bin/oxfmt', import.meta.resolve('oxfmt/package.json'));
+  const { stdout } = Bun.spawnSync(
+    [process.execPath, bin.pathname, '-c', configUrl.pathname, '--stdin-filepath', 'x.ts'],
+    { stdin: Buffer.from(sorted.toReversed().join('\n')) },
+  );
+  expect(String(stdout)).toBe(`${sorted.join('\n')}\n`);
+});

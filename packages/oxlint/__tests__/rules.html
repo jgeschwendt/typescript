@@ -36,7 +36,7 @@
           <output id="count" class="badge"></output>
           <output class="badge badge-warn">2 no declared defaults</output
           ><output class="badge badge-warn">2 off defaults</output
-          ><output class="badge badge-warn">2 old sets none</output
+          ><output class="badge badge-warn">1 old sets none</output
           ><output class="badge badge-warn">1 schema drift: ignoreDatesOnPullRequests</output
           ><output class="badge badge-warn">1 schema drift: ignoreUsedVariables</output>
         </div>
@@ -3544,20 +3544,13 @@
           "rule": "typescript/use-unknown-in-catch-callback-variable"
         },
         {
-          "base": "error",
-          "baseOptions": [
-            {
-              "alphabetize": { "caseInsensitive": false, "order": "asc" },
-              "groups": [["builtin", "external"], "internal", "index", "sibling", "parent"],
-              "pathGroups": [{ "group": "internal", "pattern": "@/**" }]
-            }
-          ],
+          "base": "off",
+          "baseOptions": [],
           "category": "-",
           "old": "on",
           "oldOptions": [],
-          "options": "differs",
-          "oxlint": "js",
-          "reason": "old sets none",
+          "options": "-",
+          "oxlint": "none",
           "rule": "import/order"
         },
         {

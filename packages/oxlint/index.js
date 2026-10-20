@@ -264,6 +264,7 @@ const disabled = {
     'duplicates native unicorn/prefer-node-protocol; without its required option it crashes: Missing option',
   'import-js/no-unused-modules':
     'inert without options; with unusedExports it fails every JS rule on the file: ESLint 10 exports no lib/util/glob-utils',
+  'import-js/order': 'formatting-only: import order oxfmt sortImports owns',
   'react-js/jsx-child-element-spacing': 'formatting-only: whitespace and line breaks oxfmt owns',
   'react-js/jsx-closing-bracket-location': 'formatting-only: whitespace and line breaks oxfmt owns',
   'react-js/jsx-closing-tag-location': 'formatting-only: whitespace and line breaks oxfmt owns',
@@ -329,14 +330,6 @@ options and severities other than a bare `error`
 @type {NonNullable<Config['rules']>}
 */
 const tuned = {
-  'import-js/order': [
-    'error',
-    {
-      alphabetize: { caseInsensitive: false, order: 'asc' },
-      groups: [['builtin', 'external'], 'internal', 'index', 'sibling', 'parent'],
-      pathGroups: [{ group: 'internal', pattern: '@/**' }],
-    },
-  ],
   'react-js/require-default-props': ['error', { functions: 'defaultArguments' }],
   // typed upstream, yet needs types only for the `types` option the wrapper refuses
   'typescript-js/naming-convention': [

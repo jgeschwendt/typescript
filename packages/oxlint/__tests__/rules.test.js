@@ -44,7 +44,6 @@ test('options', () => {
     'eslint/no-unused-vars': 'same',
     'eslint/radix': 'unverified: no declared defaults',
     'eslint/sort-imports': 'same',
-    'import/order': 'differs: old sets none',
     'react/require-default-props': 'differs: old sets none',
     'typescript/naming-convention': 'same',
     'typescript/no-magic-numbers': '-',
