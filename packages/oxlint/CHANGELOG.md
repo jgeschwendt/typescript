@@ -1,5 +1,11 @@
 # @jlg/oxlint
 
+## 0.1.4
+
+### Patch Changes
+
+- [#43](https://github.com/jgeschwendt/typescript/pull/43) [`3e303ea`](https://github.com/jgeschwendt/typescript/commit/3e303eab55005dff93f6db2d1765562ddb72db5b) Thanks [@jgeschwendt](https://github.com/jgeschwendt)! - unicorn/consistent-json-file-read runs at its default (`string`): `JSON.parse(Buffer)` fails tsc
+
 ## 0.1.3
 
 ### Patch Changes
