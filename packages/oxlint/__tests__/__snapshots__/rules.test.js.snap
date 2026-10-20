@@ -551,7 +551,7 @@ exports[`rules 1`] = `
   "unicorn/consistent-export-decorator-position | - | absent | js | error | none",
   "unicorn/consistent-function-scoping | suspicious | on | native | error | same",
   "unicorn/consistent-function-style | - | absent | js | error | none",
-  "unicorn/consistent-json-file-read | - | absent | js | error | differs",
+  "unicorn/consistent-json-file-read | - | absent | js | error | none",
   "unicorn/consistent-optional-chaining | - | absent | js | error | none",
   "unicorn/consistent-template-literal-escape | style | absent | native | error | none",
   "unicorn/consistent-tuple-labels | - | absent | js | error | none",

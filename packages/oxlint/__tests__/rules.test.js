@@ -48,7 +48,7 @@ test('options', () => {
     'react/require-default-props': 'differs: old sets none',
     'typescript/naming-convention': 'same',
     'typescript/no-magic-numbers': '-',
-    'unicorn/consistent-json-file-read': 'differs: old sets none',
+    'unicorn/consistent-json-file-read': 'none',
     'unicorn/expiring-todo-comments': 'unverified: schema drift: ignoreDatesOnPullRequests',
     'unicorn/prefer-export-from': 'unverified: schema drift: ignoreUsedVariables',
     'unicorn/prefer-number-properties': 'differs: off defaults',
