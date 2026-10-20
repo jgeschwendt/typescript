@@ -348,7 +348,6 @@ const tuned = {
     typeLike,
     { format: ['camelCase', 'UPPER_CASE'], selector: 'variable' },
   ],
-  'unicorn-js/consistent-json-file-read': ['error', 'buffer'],
   'unicorn-js/expiring-todo-comments': ['error', { checkDates: true }],
 };
 

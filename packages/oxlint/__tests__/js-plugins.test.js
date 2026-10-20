@@ -132,7 +132,7 @@ const fixtures = {
     '// eslint-disable-next-line no-console',
     'let my_var = undefined;',
     'const obj = { a: 1, unused: 2 };',
-    "export const json = JSON.parse(fs.readFileSync('./package.json', 'utf8'));",
+    "export const json = JSON.parse(fs.readFileSync('./package.json'));",
     "export const str = 'unicorn';",
     'export const newThing = [inner, packaged, fresh, old, missing, sibling, assign, obj.a, my_var];',
     '',
