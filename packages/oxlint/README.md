@@ -193,7 +193,8 @@ From oxlint's JS plugin host:
   regenerate and commit it after every snapshot change. A push to `main` touching either publishes
   both to [GitHub Pages](https://jgeschwendt.github.io/typescript/).
 - `define-config.test.js`: the `defineConfig` contract (detection, merge order, `env`, `settings`),
-  and a snapshot of every base override; regenerate it as below after an override edit.
+  and a snapshot of every base override; the typescript override is derived from the catalogs, so
+  an override edit or an oxlint or typescript-eslint bump moves it: regenerate as below.
 - `js-plugins.test.js`: installs the packed tarball beside `typescript@7` and `oxlint` under both
   bun linkers, lints through `oxlint.config.ts` on Node and Bun, and fails on any crashed JS-plugin
   rule or unless every fixtured one reports. Needs the network or a warm bun cache.
@@ -203,7 +204,8 @@ From oxlint's JS plugin host:
   a consumer config (`env.node`, `no-unused-vars` options, Next and tooling exemptions, override
   order, TypeScript rules off JS), plus the directive ban and its self-suppression throw.
 
-After an intentional oxlint bump, review the rules snapshot diff, then regenerate:
+After an intentional oxlint or typescript-eslint bump, review the rules snapshot diff and the
+overrides snapshot diff (`define-config.test.js.snap`) together, then regenerate:
 
 ```sh
 bun run --filter '@jlg/oxlint' test --update-snapshots

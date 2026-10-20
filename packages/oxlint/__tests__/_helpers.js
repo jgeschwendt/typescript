@@ -13,7 +13,7 @@ const everything = { next: true, react: true, typescript: true };
 const config = defineConfig({ env: everything });
 const overrides = config.overrides ?? [];
 /** @type {Set<string>} */
-const enabledScopes = new Set(config.plugins);
+const enabledScopes = new Set(config.plugins?.map((plugin) => plugin.replaceAll('-', '_')));
 
 /**
 @param {string} root
@@ -83,11 +83,18 @@ const jsScopes = new Set(
   jsEntries.map(({ name, specifier }) => name ?? basename(specifier, '.mjs')),
 );
 
-/** @param {string} name */
-const ruleKey = (name) => (name.includes('/') ? name : `eslint/${name}`);
+/**
+the catalog spells scope hyphens as underscores (`jsx-a11y` → `jsx_a11y`)
+@param {string} name
+*/
+const ruleKey = (name) =>
+  name.includes('/')
+    ? name.replace(/^[^/]*/u, (scope) => scope.replaceAll('-', '_'))
+    : `eslint/${name}`;
 
 export {
   config,
+  enabledScopes,
   everything,
   jsEntries,
   jsScopes,
