@@ -305,7 +305,7 @@ exports[`rules 1`] = `
   "react/jsx-curly-newline | - | absent | none | off | -",
   "react/jsx-curly-spacing | - | absent | none | off | -",
   "react/jsx-equals-spacing | - | absent | none | off | -",
-  "react/jsx-filename-extension | restriction | on | native | warn | unverified",
+  "react/jsx-filename-extension | restriction | on | native | warn | same",
   "react/jsx-first-prop-new-line | - | absent | none | off | -",
   "react/jsx-fragments | style | on | native | error | none",
   "react/jsx-handler-names | style | on | native | error | none",

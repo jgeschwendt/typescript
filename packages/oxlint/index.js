@@ -114,6 +114,7 @@ const rules = {
     'error',
     { children: 'always', propElementValues: 'always', props: 'never' },
   ],
+  'react/jsx-filename-extension': ['warn', { extensions: ['.jsx', '.tsx'] }],
   'react/react-in-jsx-scope': 'off',
 
   'typescript/prefer-readonly-parameter-types': 'warn',
