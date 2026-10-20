@@ -28,8 +28,8 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.71.2",
-    "@typescript-eslint/parser": "^8.71.2",
+    "@typescript-eslint/eslint-plugin": "^8.72.0",
+    "@typescript-eslint/parser": "^8.72.0",
     "@typescript/typescript6": "^6.0.2",
     "eslint": "^10.13.0",
     "eslint-plugin-import": "^2.32.0",
@@ -39,7 +39,7 @@
   "devDependencies": {
     "@jlg/oxfmt": "^0.1.1",
     "@jlg/tsconfig": "^0.1.1",
-    "oxlint": "^1.88.0"
+    "oxlint": "^1.89.0"
   },
   "peerDependencies": {
     "oxlint": "^1.87.0"

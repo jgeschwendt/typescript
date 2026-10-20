@@ -31,7 +31,7 @@
     "@jlg/oxlint": "^0.1.1",
     "@jlg/tsconfig": "^0.1.0",
     "@types/bun": "^1.4.3",
-    "oxfmt": "^0.73.0"
+    "oxfmt": "^0.74.0"
   },
   "peerDependencies": {
     "oxfmt": ">=0.59.0 <1.0.0"
