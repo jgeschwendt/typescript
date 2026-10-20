@@ -1,6 +1,7 @@
 import { host } from './host.mjs';
 import './typescript6.mjs';
 
+// dynamic: a static import evaluates the plugin's CommonJS before ./typescript6.mjs patches the resolver on bun
 const { default: plugin } = await import('@typescript-eslint/eslint-plugin');
 
 /** oxlint has no parser services; naming-convention needs them only for types, so stub them */
@@ -16,13 +17,11 @@ const untyped = (rule) => ({
         'typescript-js/naming-convention: the `types` option needs type information, which oxlint JS plugins cannot provide',
       );
     }
-    const parserServices = {
-      esTreeNodeToTSNodeMap: new WeakMap(),
-      tsNodeToESTreeNodeMap: new WeakMap(),
-    };
     // not a Proxy: oxlint's parserServices is a non-configurable data property
     const sourceCode = Object.create(context.sourceCode, {
-      parserServices: { value: parserServices },
+      parserServices: {
+        value: { esTreeNodeToTSNodeMap: new WeakMap(), tsNodeToESTreeNodeMap: new WeakMap() },
+      },
     });
     return rule.create(Object.create(context, { sourceCode: { value: sourceCode } }));
   },

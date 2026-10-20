@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, expect, test } from 'bun:test';
-import { isJsRule, jsEntries, jsScopes, ruleNames, spawnOxlint, write } from './_helpers.js';
+import { jsEntries, jsScopes, ruleNames, spawnOxlint, write } from './_helpers.js';
 
 const { mkdtempSync, rmSync } = process.getBuiltinModule('node:fs');
 const { tmpdir } = process.getBuiltinModule('node:os');
@@ -16,21 +16,28 @@ const plugins = Object.fromEntries(
   ),
 );
 
-const configured = ruleNames.filter((name) => isJsRule(name));
-
 test('local plugin names match the scopes the config uses', () => {
   expect(new Set(Object.keys(plugins))).toEqual(jsScopes);
 });
 
 test('every configured jsPlugins rule exists in its plugin', () => {
-  const missing = configured.filter((name) => {
+  const missing = ruleNames.filter((name) => {
     const [scope = '', rule = ''] = name.split('/', 2);
-    return plugins[scope]?.rules?.[rule] === undefined;
+    return jsScopes.has(scope) && plugins[scope]?.rules?.[rule] === undefined;
   });
   expect(
     missing,
     `jsPlugins rule(s) the plugin does not export — oxlint rejects the whole config: ${missing.join(', ')}`,
   ).toEqual([]);
+});
+
+test('typescript-js/naming-convention refuses the typed `types` option', () => {
+  expect(() =>
+    plugins['typescript-js'].rules['naming-convention'].create({
+      options: [{ types: ['boolean'] }],
+      sourceCode: {},
+    }),
+  ).toThrow('needs type information');
 });
 
 /** the rules the fixtures below trip; every other configured one need only load and not crash */
@@ -172,7 +179,7 @@ const entry = `import { defineConfig } from '@jlg/oxlint';\nexport default defin
 
 const runtimes = { bun: process.execPath, node: Bun.which('node') ?? 'node' };
 const linkers = ['hoisted', 'isolated'];
-/** ms: a pack plus two installs, well past the 5 s hook default under a full-suite run */
+/** ms: a pack plus two installs, or removing them; well past the 5 s hook default under a full-suite run */
 const installTimeout = 300_000;
 const lintTimeout = 120_000;
 const scratch = mkdtempSync(join(tmpdir(), 'oxlint-js-plugins-'));

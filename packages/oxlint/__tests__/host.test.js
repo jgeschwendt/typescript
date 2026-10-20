@@ -12,7 +12,8 @@ export default host({ rules: {
   bare: { create: () => ({ onCodePathStart() { throw 'bare'; } }) },
   crash: { create: () => ({ Identifier(node) { throw new Error(node.name); } }) },
   jsdoc: { create: (context) => ({ [kinds](node) {
-    context.report({ message: String(context.sourceCode.getJSDocComment(node)?.value), node });
+    const sourceCode = context.getSourceCode();
+    context.report({ message: String(sourceCode === context.sourceCode && sourceCode.getJSDocComment(node)?.value), node });
   } }) },
 } }, 'probe');
 `;
@@ -45,6 +46,10 @@ const outer = function () {
 /** k */
 function wrap() {
   return () => {};
+}
+/** l */
+class Klass {
+  method() {}
 }
 `;
 
@@ -103,6 +108,8 @@ test('host contains a crashing rule and ports getJSDocComment', () => {
     'probe(jsdoc) 28:10 undefined',
     'probe(jsdoc) 2:1 undefined',
     'probe(jsdoc) 2:7 undefined',
+    'probe(jsdoc) 31:1 * l ',
+    'probe(jsdoc) 32:9 undefined',
     'probe(jsdoc) 3:2 undefined',
     'probe(jsdoc) 4:1 * a ',
     'probe(jsdoc) 6:8 * b ',

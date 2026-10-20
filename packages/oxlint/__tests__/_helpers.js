@@ -12,6 +12,7 @@ const oxlintBin = join(oxlintDirectory, 'bin', 'oxlint');
 const everything = { next: true, react: true, typescript: true };
 const config = defineConfig({ env: everything });
 const overrides = config.overrides ?? [];
+const enabledScopes = new Set(config.plugins);
 
 /**
 @param {string} root
@@ -48,7 +49,7 @@ const spawnOxlint = (cwd, flags, command = [process.execPath, oxlintBin]) => {
   }
 };
 
-/** @returns {{ category: string; scope: string; type_aware: boolean; value: string }[]} */
+/** @returns {Map<string, { category: string; scope: string; type_aware: boolean; value: string }>} the enabled plugins' rules by `scope/name` */
 const loadRules = () => {
   const directory = mkdtempSync(join(tmpdir(), 'oxlint-rules-'));
   // --rules still loads config, so hand it an empty one
@@ -62,7 +63,11 @@ const loadRules = () => {
     '--disable-nested-config',
   ]);
   rmSync(directory, { force: true, recursive: true });
-  return report;
+  return new Map(
+    report
+      .filter((rule) => enabledScopes.has(rule.scope))
+      .map((rule) => [`${rule.scope}/${rule.value}`, rule]),
+  );
 };
 
 const ruleNames = [
@@ -82,25 +87,11 @@ const jsScopes = new Set(
 );
 
 /** @param {string} name */
-const isJsRule = (name) => jsScopes.has(name.replace(/\/.*/u, ''));
-
-/**
-catalog scopes spell hyphens as underscores (`jsx-a11y` → `jsx_a11y`)
-@param {string} name
-*/
-const ruleScope = (name) =>
-  name.includes('/') ? name.replace(/\/.*/u, '').replaceAll('-', '_') : 'eslint';
-
-/** @param {string} name */
-const ruleKey = (name) => `${ruleScope(name)}/${name.replace(/^[^/]*\//u, '')}`;
-
-const enabledScopes = new Set((config.plugins ?? []).map((plugin) => plugin.replaceAll('-', '_')));
+const ruleKey = (name) => (name.includes('/') ? name : `eslint/${name}`);
 
 export {
   config,
-  enabledScopes,
   everything,
-  isJsRule,
   jsEntries,
   jsScopes,
   loadRules,
