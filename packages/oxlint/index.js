@@ -79,6 +79,8 @@ const rules = {
   ],
   'no-void': ['error', { allowAsStatement: true }],
   'one-var': ['error', 'never'],
+  // ES5 ended the octal reading of a leading 0, so a 10 says nothing; the real checks stay
+  radix: ['error', 'as-needed'],
   'sort-imports': ['error', { ignoreDeclarationSort: true }],
 
   'id-length': ['error', { checkGeneric: false }],

@@ -129,7 +129,6 @@ read by hand where the schema cannot settle it: a renamed key, or a default the 
 @type {Record<string, string>}
 */
 const reviewed = {
-  'eslint/radix': "oxlint's default mode is always (radix.rs)",
   'unicorn/expiring-todo-comments':
     'ignoreDatesOnPullRequests became checkDates, which the base sets',
   'unicorn/prefer-export-from':

@@ -186,7 +186,7 @@ exports[`rules 1`] = `
   "eslint/prefer-spread | style | on | native | error | none",
   "eslint/prefer-template | style | on | native | error | none",
   "eslint/preserve-caught-error | suspicious | on | native | error | same",
-  "eslint/radix | pedantic | on | native | error | same",
+  "eslint/radix | pedantic | on | native | error | differs",
   "eslint/require-atomic-updates | - | on | js | error | same",
   "eslint/require-await | pedantic | on | native | error | none",
   "eslint/require-unicode-regexp | pedantic | on | native | error | same",

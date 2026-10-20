@@ -42,7 +42,7 @@ test('options', () => {
     'eslint/id-length': 'same',
     'eslint/new-cap': 'differs: off defaults',
     'eslint/no-unused-vars': 'same',
-    'eslint/radix': "same: oxlint's default mode is always (radix.rs)",
+    'eslint/radix': 'differs: values differ',
     'eslint/sort-imports': 'same',
     'react/jsx-filename-extension': 'same',
     'react/require-default-props': 'differs: old sets none',
