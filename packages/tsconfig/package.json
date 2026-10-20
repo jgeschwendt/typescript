@@ -15,6 +15,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "format": "oxfmt"
+  },
   "devDependencies": {
     "@jlg/oxfmt": "^0.1.1",
     "@jlg/oxlint": "^0.1.1",

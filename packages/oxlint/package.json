@@ -23,6 +23,7 @@
     "access": "public"
   },
   "scripts": {
+    "format": "oxfmt",
     "report": "bun __tests__/rules.html.js",
     "test": "bun test"
   },
@@ -36,6 +37,7 @@
     "eslint-plugin-unicorn": "^78.0.0"
   },
   "devDependencies": {
+    "@jlg/oxfmt": "^0.1.1",
     "@jlg/tsconfig": "^0.1.1",
     "oxlint": "^1.88.0"
   },

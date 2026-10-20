@@ -26,6 +26,8 @@ hazards:
     anchor: ※ oxlint-js-plugins
   - claim: JS-CONFIG RUNTIME — oxlint/oxfmt .config.ts files evaluate under Node >=22.18 through the bins' node shebang, plain `bun run`/`bunx` included, but under Bun with `bun --bun` — as do oxlint's JS plugins (probed 2026-10-09); in a JS config oxlint `extends` takes config OBJECTS, not path strings, and a nested config replaces the root for its subtree (options stay root-only, and a nested one fails the run)
     anchor: ※ oxlint-extends-objects
+edges:
+  depends: [packages/oxfmt]
 ```
 
 <!-- @stele -->

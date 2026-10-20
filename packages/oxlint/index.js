@@ -525,7 +525,7 @@ const detectEnvironment = () => {
   }
 };
 
-/** oxlint rejects version "detect"; without a semver eslint-plugin-react assumes latest */
+/** oxlint rejects version "detect"; no react installed gets a semver that keeps every version gate open and silences the plugin's warning */
 const detectReact = () => {
   const { createRequire } = process.getBuiltinModule('node:module');
   let version = '';
@@ -535,7 +535,7 @@ const detectReact = () => {
     // no react installed: no version
   }
   const semver = /^\d+\.\d+\.\d+/u.exec(version);
-  return semver === null ? {} : { react: { version: semver[0] } };
+  return { react: { version: semver?.[0] ?? '999.999.999' } };
 };
 
 // ※ oxlint-extends-objects

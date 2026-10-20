@@ -24,6 +24,7 @@
     "access": "public"
   },
   "scripts": {
+    "format": "oxfmt",
     "test": "bun test"
   },
   "devDependencies": {

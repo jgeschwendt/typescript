@@ -89,7 +89,7 @@ test("env keeps oxlint's own environments and drops next/react/typescript", () =
   expect(defineConfig({ env: { react: false } })).not.toHaveProperty('env');
 });
 
-test('settings.react.version comes from the installed React; consumer settings win', () => {
+test('settings.react.version comes from the installed React, else a far-future semver; consumer settings win', () => {
   within(
     { 'node_modules/react/package.json': { name: 'react', version: '19.3.0-canary-1' } },
     () => {
@@ -99,5 +99,7 @@ test('settings.react.version comes from the installed React; consumer settings w
       ).toStrictEqual({ next: {}, react: { version: '18.2.0' } });
     },
   );
-  expect(within({}, () => defineConfig().settings)).toStrictEqual({});
+  expect(within({}, () => defineConfig().settings)).toStrictEqual({
+    react: { version: '999.999.999' },
+  });
 });

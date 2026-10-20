@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "changeset": "changeset",
-    "fmt": "oxfmt",
+    "format": "oxfmt",
     "lint": "oxlint --fix",
     "ncu": "bunx npm-check-updates -u --workspaces",
     "release": "changeset publish",

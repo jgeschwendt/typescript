@@ -168,8 +168,8 @@ From oxlint's JS plugin host:
 - `import-js/no-unresolved` ignores package `exports`, so it flags exports-only packages and `bun:`
   builtins in JS files; relax it with `ignore` in a JS-files override.
 - eslint-plugin-react reads `@jsx <word>` in any comment as a pragma.
-- JS plugins see `settings` only from the root or the governing nested config; without
-  `settings.react.version`, eslint-plugin-react warns on every run.
+- JS plugins see `settings` only from the root or the governing nested config; the base sets
+  `settings.react.version` from the installed react, or a far-future semver without one.
 - JS plugins get no types: `typescript-js/naming-convention` refuses the `types` option.
 
 ## Testing
