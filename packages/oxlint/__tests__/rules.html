@@ -34,7 +34,7 @@
         <div class="row">
           <h1 class="h1">@jlg/oxlint rules</h1>
           <output id="count" class="badge"></output>
-          <output class="badge badge-warn">2 no declared defaults</output
+          <output class="badge badge-warn">1 no declared defaults</output
           ><output class="badge badge-warn">2 off defaults</output
           ><output class="badge badge-warn">1 old sets none</output
           ><output class="badge badge-warn">1 schema drift: ignoreDatesOnPullRequests</output
@@ -4215,13 +4215,12 @@
         },
         {
           "base": "warn",
-          "baseOptions": [],
+          "baseOptions": [{ "extensions": [".jsx", ".tsx"] }],
           "category": "restriction",
           "old": "on",
           "oldOptions": [{ "extensions": [".jsx", ".tsx"] }],
-          "options": "unverified",
+          "options": "same",
           "oxlint": "native",
-          "reason": "no declared defaults",
           "rule": "react/jsx-filename-extension"
         },
         {
