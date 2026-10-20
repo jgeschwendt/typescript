@@ -322,6 +322,8 @@ const disabled = {
   'typescript-js/no-useless-constructor':
     'duplicates native no-useless-constructor (verified 2026-10-14 · TS probe)',
   'unicorn-js/comma-spacing': 'meta.languages JSON only: never reports on JS',
+  'unicorn-js/consistent-arrow-return-style':
+    'contradicts native arrow-body-style: the explicit return it demands on a multiline body is the block as-needed forbids',
   'unicorn-js/indent': 'meta.languages CSS/JSON only: never reports on JS',
   'unicorn-js/key-name-casing': 'meta.languages JSON/TOML/YAML only: never reports on JS',
   'unicorn-js/no-empty-link-text': 'meta.languages Markdown only: never reports on JS',

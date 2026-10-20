@@ -53,8 +53,6 @@
       "name": "@jlg/tsconfig",
       "version": "0.1.1",
       "devDependencies": {
-        "@jlg/oxfmt": "^0.1.1",
-        "@jlg/oxlint": "^0.1.1",
         "typescript": "^7.0.2",
       },
       "peerDependencies": {
