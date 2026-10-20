@@ -43,16 +43,8 @@ afterAll(() => {
   rmSync(directory, { force: true, recursive: true });
 });
 write(directory, {
-  'app/api/route.ts': [
-    'export function GET() {',
-    '  return 1;',
-    '}',
-    '',
-    'export function POST() {',
-    '  return 2;',
-    '}',
-    '',
-  ].join('\n'),
+  'app/api/route.ts':
+    'export function GET() {\n  return 1;\n}\n\nexport function POST() {\n  return 2;\n}\n',
   'app/page.tsx': 'export default function Page() {\n  return null;\n}\n',
   'blanket.js': '/* oxlint-disable */\nexport const value = 1;\n',
   'described.js': '/* eslint-disable -- reason */\nexport const value = 1;\n',
@@ -63,12 +55,7 @@ write(directory, {
   'oxlint.config.mjs': `import { defineConfig } from ${JSON.stringify(index)};\nexport default defineConfig({ overrides: [${JSON.stringify(consumerOverride)}] });\n`,
   'oxlint.config.ts': 'export const extra = 1;\nexport default {};\n',
   'src/later.ts': 'export async function later(): Promise<number> {\n  return 1;\n}\n',
-  'src/plain.js': [
-    "const fs = require('node:fs');",
-    'process = fs;',
-    'const _unused = 1;',
-    '',
-  ].join('\n'),
+  'src/plain.js': "const fs = require('node:fs');\nprocess = fs;\nconst _unused = 1;\n",
   'sub/next.config.js': 'export const extra = 1;\nexport default {};\n',
 });
 
@@ -76,8 +63,7 @@ write(directory, {
 @param {string[]} paths
 @returns {{ exitCode: number; output: string; report: { diagnostics: { code: string; filename: string; labels: [{ span: { length: number; offset: number } }] }[] } }}
 */
-const lint = (paths) =>
-  spawnOxlint(directory, ['-c', 'oxlint.config.mjs', '--format', 'json', ...paths]);
+const lint = (paths) => spawnOxlint(directory, ['-c', 'oxlint.config.mjs', ...paths]);
 
 /** per linted file, whether each code (or code prefix) reports there; each file must report something, so no negative holds vacuously */
 const expected = {

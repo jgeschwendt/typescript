@@ -6,6 +6,7 @@
 /** @typedef {Record<string, { meta: { deprecated?: unknown; docs?: { extendsBaseRule?: boolean | string; requiresTypeChecking?: boolean } } }>} Rules */
 
 const { existsSync, readFileSync } = process.getBuiltinModule('node:fs');
+const { createRequire } = process.getBuiltinModule('node:module');
 const { dirname, join } = process.getBuiltinModule('node:path');
 const { fileURLToPath } = process.getBuiltinModule('node:url');
 
@@ -356,7 +357,7 @@ const schema = new URL('configuration_schema.json', import.meta.resolve('oxlint/
 const { definitions } = JSON.parse(String(readFileSync(schema)));
 const native = new Set(Object.keys(definitions.DummyRuleMap.properties));
 
-/** @type {Record<string, Rules> & { typescript: Rules }} */
+/** @type {Record<'eslint' | 'import' | 'react' | 'typescript' | 'unicorn', Rules>} */
 const wrapped = Object.fromEntries(
   await Promise.all(
     ['eslint', 'import', 'react', 'typescript', 'unicorn'].map(async (scope) => {
@@ -368,14 +369,13 @@ const wrapped = Object.fromEntries(
 
 /**
 a wrapper's live rules oxlint lacks, unless opted out; typed ones only when tuned
-@param {string} scope
-@param {string} [prefix] the rules' native oxlint scope
+@param {keyof typeof wrapped} scope
 */
-const derive = (scope, prefix = `${scope}/`) =>
-  Object.entries(wrapped[scope] ?? {}).flatMap(([name, { meta }]) => {
+const derive = (scope) =>
+  Object.entries(wrapped[scope]).flatMap(([name, { meta }]) => {
     const key = `${scope}-js/${name}`;
     return meta.deprecated ||
-      native.has(`${prefix}${name}`) ||
+      native.has(scope === 'eslint' ? name : `${scope}/${name}`) ||
       Object.hasOwn(disabled, key) ||
       (meta.docs?.requiresTypeChecking && tuned[key] === undefined)
       ? []
@@ -383,7 +383,7 @@ const derive = (scope, prefix = `${scope}/`) =>
   });
 
 const javascript = Object.fromEntries(
-  [derive('eslint', ''), derive('import'), derive('react'), derive('unicorn')].flat(),
+  [derive('eslint'), derive('import'), derive('react'), derive('unicorn')].flat(),
 );
 
 /** typescript-eslint's extensions replace their core rule on TS files */
@@ -523,7 +523,6 @@ const detectEnvironment = () => {
 
 /** oxlint rejects version "detect"; no react installed gets a semver that keeps every version gate open and silences the plugin's warning */
 const detectReact = () => {
-  const { createRequire } = process.getBuiltinModule('node:module');
   let version = '';
   try {
     ({ version } = createRequire(`${process.cwd()}/package.json`)('react/package.json'));

@@ -16,7 +16,7 @@ export default defineConfig({
           'error',
           { ignore: ['^@typescript-eslint/eslint-plugin$', '^eslint/use-at-your-own-risk$'] },
         ],
-        // jsPlugins load a plugin module's default export, here a host(…) call
+        // jsPlugins load a plugin module's default export
         'import/no-default-export': 'off',
         // eslint-plugin-import loads per rule by path: its index needs ESLint 9 internals
         'import/no-dynamic-require': 'off',
