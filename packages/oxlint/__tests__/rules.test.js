@@ -45,6 +45,7 @@ test('options', () => {
     'eslint/radix': 'unverified: no declared defaults',
     'eslint/sort-imports': 'same',
     'import/order': 'differs: old sets none',
+    'react/jsx-filename-extension': 'same',
     'react/require-default-props': 'differs: old sets none',
     'typescript/naming-convention': 'same',
     'typescript/no-magic-numbers': '-',
