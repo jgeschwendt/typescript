@@ -236,11 +236,7 @@ test.each(
     const directory = join(scratch, linker);
     const bin = join(directory, 'node_modules', 'oxlint', 'bin', 'oxlint');
     /** @type {{ diagnostics: { code?: string; message: string }[] }} */
-    const { diagnostics } = spawnOxlint(
-      directory,
-      ['--format', 'json', 'src'],
-      [runtime, bin],
-    ).report;
+    const { diagnostics } = spawnOxlint(directory, ['src'], [runtime, bin]).report;
     // a crashed plugin drops every JS rule on the file; a crashed rule reports via host.mjs
     const broken = diagnostics
       .map((diagnostic) => diagnostic.message)

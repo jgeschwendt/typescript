@@ -74,14 +74,7 @@ test('host contains a crashing rule and ports getJSDocComment', () => {
     'source.js': source,
   });
   /** @type {{ report: { diagnostics: { code: string; labels: [{ span: { column: number; line: number } }]; message: string }[] } }} */
-  const { report } = spawnOxlint(directory, [
-    '-c',
-    'probe.json',
-    '--format',
-    'json',
-    'lead.js',
-    'source.js',
-  ]);
+  const { report } = spawnOxlint(directory, ['-c', 'probe.json', 'lead.js', 'source.js']);
   expect(
     report.diagnostics
       .map(

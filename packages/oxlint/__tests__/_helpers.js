@@ -12,6 +12,7 @@ const oxlintBin = join(oxlintDirectory, 'bin', 'oxlint');
 const everything = { next: true, react: true, typescript: true };
 const config = defineConfig({ env: everything });
 const overrides = config.overrides ?? [];
+/** @type {Set<string>} */
 const enabledScopes = new Set(config.plugins);
 
 /**
@@ -26,7 +27,7 @@ const write = (root, files) => {
 };
 
 /**
-runs oxlint in `cwd` and parses its JSON report, throwing with oxlint's own output when it is not JSON
+runs oxlint in `cwd` for a JSON report and parses it, throwing with oxlint's own output when it is not JSON
 @param {string} cwd
 @param {string[]} flags
 @param {string[]} [command] a runtime and oxlint's bin, so neither the exec bit nor PATH matters
@@ -36,7 +37,7 @@ const spawnOxlint = (cwd, flags, command = [process.execPath, oxlintBin]) => {
   // stdout to a file: a piped read came back truncated on linux CI (observed 2026-09-09);
   // a Bun.file stdout overwrites without truncating, so empty it for a reused cwd (verified 2026-10-14 · probe)
   writeFileSync(out, '');
-  const { exitCode, stderr } = Bun.spawnSync([...command, ...flags], {
+  const { exitCode, stderr } = Bun.spawnSync([...command, '--format', 'json', ...flags], {
     cwd,
     stdout: Bun.file(out),
   });
@@ -49,19 +50,15 @@ const spawnOxlint = (cwd, flags, command = [process.execPath, oxlintBin]) => {
   }
 };
 
-/** @returns {Map<string, { category: string; scope: string; type_aware: boolean; value: string }>} the enabled plugins' rules by `scope/name` */
+/** @typedef {{ category: string; scope: string; type_aware: boolean; value: string }} Rule */
+
+/** @returns {Map<string, Rule>} the enabled plugins' rules by `scope/name` */
 const loadRules = () => {
   const directory = mkdtempSync(join(tmpdir(), 'oxlint-rules-'));
   // --rules still loads config, so hand it an empty one
   write(directory, { 'empty.json': '{}' });
-  const { report } = spawnOxlint(directory, [
-    '-c',
-    'empty.json',
-    '--rules',
-    '--format',
-    'json',
-    '--disable-nested-config',
-  ]);
+  /** @type {{ report: Rule[] }} */
+  const { report } = spawnOxlint(directory, ['-c', 'empty.json', '--rules']);
   rmSync(directory, { force: true, recursive: true });
   return new Map(
     report
