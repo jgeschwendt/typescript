@@ -73,6 +73,7 @@ const off = Object.freeze({
   'react/function-component-definition':
     'contradicts native func-style: the function declaration it demands is the one func-style forbids (verified 2026-10-20 · probe)',
   'react/react-in-jsx-scope': 'the automatic JSX runtime needs no React in scope',
+  'react/todo': "reports the React Compiler's own unimplemented syntax, not the code's",
   'typescript/ban-types':
     'removed upstream in typescript-eslint 8: double-reports with its successors no-empty-object-type, no-unsafe-function-type and no-wrapper-object-types',
   'typescript/no-empty-interface':
@@ -492,7 +493,7 @@ const bun = {
 
 /** @type {Override[]} */
 const react = [
-  { files: ['**/*.{jsx,tsx}'], plugins: ['jsx-a11y', 'react-perf'] },
+  { env: { browser: true }, files: ['**/*.{jsx,tsx}'], plugins: ['jsx-a11y', 'react-perf'] },
   {
     files: ['**/*.tsx'],
     rules: {
