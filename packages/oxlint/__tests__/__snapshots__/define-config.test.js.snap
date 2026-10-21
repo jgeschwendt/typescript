@@ -474,6 +474,7 @@ exports[`overrides 1`] = `
     "rules": {
       "import/no-default-export": "off",
       "import/no-named-export": "error",
+      "import/no-nodejs-modules": "off",
       "unicorn-js/no-top-level-side-effects": "off",
     },
   },

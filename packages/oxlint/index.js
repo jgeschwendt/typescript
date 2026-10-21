@@ -589,6 +589,8 @@ const tooling = {
   rules: {
     'import/no-default-export': 'off',
     'import/no-named-export': 'error',
+    // a config runs under node: node:fs is how it reads beside itself
+    'import/no-nodejs-modules': 'off',
     'unicorn-js/no-top-level-side-effects': 'off',
   },
 };
