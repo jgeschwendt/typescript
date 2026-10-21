@@ -55,7 +55,7 @@
       "version": "0.1.1",
       "devDependencies": {
         "@jlg/oxfmt": "^0.1.1",
-        "oxfmt": "^0.73.0",
+        "oxfmt": "^0.74.0",
         "typescript": "^7.0.2",
       },
       "peerDependencies": {
