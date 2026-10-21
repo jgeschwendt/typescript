@@ -454,7 +454,7 @@ exports[`rules 1`] = `
   "react/static-property-placement | - | js | error | - | ",
   "react/style-prop-object | suspicious | native | error | - | ",
   "react/syntax | restriction | native | error | - | ",
-  "react/todo | restriction | native | error | - | ",
+  "react/todo | restriction | native | off | - | reports the React Compiler's own unimplemented syntax, not the code's",
   "react/unsupported-syntax | restriction | native | error | - | ",
   "react/use-memo | correctness | native | error | - | ",
   "react/void-dom-elements-no-children | correctness | native | error | - | ",
