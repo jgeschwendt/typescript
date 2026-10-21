@@ -55,8 +55,6 @@ export default defineConfig({
     },
   ],
   rules: {
-    // everything here runs inside oxlint's Node/Bun process, no bundler: chunk names mean nothing
-    'import-js/dynamic-import-chunkname': 'off',
     'import/no-nodejs-modules': 'off',
     // house comment style (jgeschwendt/claude rules/comments.md): one-line docblocks
     'unicorn-js/single-line-block-comment-style': ['error', 'single-line'],
