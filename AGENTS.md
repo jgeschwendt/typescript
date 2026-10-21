@@ -41,7 +41,7 @@ edges:
 | --------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | packages        | container | The three shipped configs. oxlint and oxfmt each carry a base ruleset plus the guard tests that keep it honest; tsconfig is a single shared tsconfig.json. Per-package detail lives in each node. | `stele unfold packages` · or read `packages/AGENTS.md`               |
 | packages/oxfmt  | container | Canonical oxfmt settings — formatter companion to @jlg/oxlint. oxfmtrc.json holds the opinions; index.js merges it in (oxfmt has no `extends`). Repo-local keys stay in the consumer.             | `stele unfold packages/oxfmt` · or read `packages/oxfmt/AGENTS.md`   |
-| packages/oxlint | container | Shareable oxlint base config, successor to @jlg/eslint. index.js is the whole base; defineConfig() adds overrides per detected bun/next/react/typescript, returns one flat config. Maximalist.    | `stele unfold packages/oxlint` · or read `packages/oxlint/AGENTS.md` |
+| packages/oxlint | container | Shareable oxlint base config. index.js is the whole base; defineConfig() adds overrides per detected bun/next/react/typescript, returns one flat config. Maximalist.                              | `stele unfold packages/oxlint` · or read `packages/oxlint/AGENTS.md` |
 
 ## Indexes
 
