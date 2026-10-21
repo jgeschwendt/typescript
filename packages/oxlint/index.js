@@ -91,6 +91,8 @@ const off = Object.freeze({
 
   'eslint-js/consistent-return':
     'with no-useless-return, no-useless-undefined and no-null a value-or-nothing function has no passing form; the ts override already drops it',
+  'import-js/dynamic-import-chunkname':
+    "demands webpack's magic comment; Next, Turbopack and Bun name chunks themselves",
   'import-js/enforce-node-protocol-usage':
     'duplicates native unicorn/prefer-node-protocol; without its required option it crashes: Missing option',
   'import-js/no-unused-modules':

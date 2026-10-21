@@ -203,7 +203,7 @@ exports[`rules 1`] = `
   "eslint/yoda | style | native | error | - | ",
   "import/consistent-type-specifier-style | style | native | error | - | ",
   "import/default | correctness | native | error | - | ",
-  "import/dynamic-import-chunkname | - | js | error | - | ",
+  "import/dynamic-import-chunkname | - | none | off | - | demands webpack's magic comment; Next, Turbopack and Bun name chunks themselves",
   "import/enforce-node-protocol-usage | - | none | off | - | duplicates native unicorn/prefer-node-protocol; without its required option it crashes: Missing option",
   "import/export | nursery | native | warn | - | ",
   "import/exports-last | style | native | error | - | ",
