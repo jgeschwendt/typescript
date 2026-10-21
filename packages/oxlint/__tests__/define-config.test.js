@@ -175,3 +175,43 @@ test('settings.react.version comes from the installed React, else a far-future s
     react: { version: '999.999.999' },
   });
 });
+
+/** @type {import('oxlint').OxlintConfig['options']} */
+const options = { reportUnusedDisableDirectives: 'error', typeAware: false };
+const typed = { devDependencies: { 'oxlint-tsgolint': '*', typescript: '*' } };
+test.each([
+  { title: 'a config outside the lint root sets no options' },
+  { expected: options, root: true, title: 'root forces them' },
+  {
+    expected: options,
+    files: { 'package.json': { devDependencies: { typescript: '*' } } },
+    root: true,
+    title: 'typescript without oxlint-tsgolint is not type-aware',
+  },
+  {
+    expected: { ...options, typeAware: true },
+    files: { 'package.json': typed },
+    root: true,
+    title: 'typescript and oxlint-tsgolint are type-aware',
+  },
+  {
+    expected: options,
+    files: { 'package.json': typed },
+    options: { typeAware: false },
+    root: true,
+    title: "the consumer's options win",
+  },
+])('$title', ({ expected, files = {}, ...own }) => {
+  expect(within(files, () => defineConfig(own).options)).toStrictEqual(expected);
+});
+
+test("the config in oxlint's cwd is the root unless root: false", () => {
+  const cwd = process.cwd();
+  process.chdir(import.meta.dirname);
+  try {
+    expect(defineConfig().options).toStrictEqual(options);
+    expect(defineConfig({ root: false })).not.toHaveProperty('options');
+  } finally {
+    process.chdir(cwd);
+  }
+});
