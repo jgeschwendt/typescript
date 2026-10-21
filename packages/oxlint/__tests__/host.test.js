@@ -25,7 +25,7 @@ const arrow = () => {};
 /** d */
 const expression = class {};
 /** e */
-call(() => {}, new Call(() => {}));
+call(/** n */ () => {}, new Call(() => {}));
 /* f */
 function block() {}
 //* g
@@ -66,10 +66,10 @@ test('host contains a crashing rule and ports getJSDocComment', () => {
     'probe.mjs': plugin,
     'source.js': source,
   });
-  /** @type {{ report: { diagnostics: { code: string; labels: [{ span: { column: number; line: number } }]; message: string }[] } }} */
-  const { report } = spawnOxlint(directory, ['-c', 'probe.json', 'lead.js', 'source.js']);
+  /** @type {{ diagnostics: { code: string; labels: [{ span: { column: number; line: number } }]; message: string }[] }} */
+  const { diagnostics } = spawnOxlint(directory, ['-c', 'probe.json', 'lead.js', 'source.js']);
   expect(
-    report.diagnostics
+    diagnostics
       .map(
         ({ code, labels, message }) =>
           `${code} ${labels[0].span.line}:${labels[0].span.column} ${message}`,
@@ -79,8 +79,8 @@ test('host contains a crashing rule and ports getJSDocComment', () => {
     "probe(bare) 1:1 Rule crashed under oxlint's JS plugin host: bare",
     "probe(bare) 1:1 Rule crashed under oxlint's JS plugin host: bare",
     "probe(crash) 1:10 Rule crashed under oxlint's JS plugin host: first",
-    'probe(jsdoc) 10:25 undefined',
-    'probe(jsdoc) 10:6 undefined',
+    'probe(jsdoc) 10:15 * n ',
+    'probe(jsdoc) 10:34 undefined',
     'probe(jsdoc) 12:1 undefined',
     'probe(jsdoc) 14:1 undefined',
     'probe(jsdoc) 17:1 undefined',

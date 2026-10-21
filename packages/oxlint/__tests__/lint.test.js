@@ -15,7 +15,7 @@ const consumerOverride = {
 // a line `oxlint-disable` covers only what follows it, so last
 const banned = [
   '// eslint-disable-next-line no-console',
-  '// oxlint-enable',
+  '/* oxlint-enable */',
   '// eslint-env node',
   '// oxlint-disable-line no-console',
   '/* eslint no-console: "off" */',
@@ -33,8 +33,6 @@ const directives = [
   '',
 ].join('\n');
 
-const index = join(import.meta.dirname, '..', 'index.js');
-
 // no package.json above the temp dir: every environment is on
 const directory = scratch('oxlint-lint-');
 write(directory, {
@@ -45,8 +43,9 @@ write(directory, {
   'directives.js': directives,
   'instrumentation.js': 'export async function register() {\n  return 1;\n}\n',
   'next.config.js': 'export const extra = 1;\nexport default {};\n',
-  'own-line.js': 'export const value = 1; // oxlint-disable-line inline-config/no-directives\n',
-  'oxlint.config.mjs': `import { defineConfig } from ${JSON.stringify(index)};\nexport default defineConfig({ overrides: [${JSON.stringify(consumerOverride)}] });\n`,
+  'own-line.js':
+    'export const value = 1; // oxlint-disable-line no-console,inline-config/no-directives\n',
+  'oxlint.config.mjs': `import { defineConfig } from ${JSON.stringify(join(import.meta.dirname, '..', 'index.js'))};\nexport default defineConfig({ overrides: [${JSON.stringify(consumerOverride)}] });\n`,
   'oxlint.config.ts': 'export const extra = 1;\nexport default {};\n',
   'src/later.ts': 'export async function later(): Promise<number> {\n  return 1;\n}\n',
   'src/plain.js': "const fs = require('node:fs');\nprocess = fs;\nconst _unused = 1;\n",
@@ -80,10 +79,13 @@ const expected = {
 
 const suppressing = ['described.js', 'own-line.js'];
 
-/** @type {{ report: { diagnostics: { code: string; filename: string; labels: [{ span: { length: number; offset: number } }]; message: string; severity: string }[] } }} */
-const {
-  report: { diagnostics },
-} = spawnOxlint(directory, ['-c', 'oxlint.config.mjs', ...Object.keys(expected), ...suppressing]);
+/** @type {{ diagnostics: { code: string; filename: string; labels: [{ span: { length: number; offset: number } }]; message: string; severity: string }[] }} */
+const { diagnostics } = spawnOxlint(directory, [
+  '-c',
+  'oxlint.config.mjs',
+  ...Object.keys(expected),
+  ...suppressing,
+]);
 
 test('every directive form is banned, and nothing else', () => {
   expect(
@@ -110,7 +112,9 @@ test.each(Object.entries(expected))('%s', (file, want) => {
 test.each(suppressing)('a directive that would suppress its own ban fails the run: %s', (file) =>
   expect(diagnostics.filter(({ filename }) => filename === file)).toContainEqual(
     expect.objectContaining({
-      message: expect.stringContaining('would suppress its own report'),
+      message: expect.stringContaining(
+        `${file}:1 carries a directive that would suppress its own report`,
+      ),
       severity: 'error',
     }),
   ),
