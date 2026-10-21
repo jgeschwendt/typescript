@@ -476,7 +476,7 @@ const typescript = {
   },
 };
 
-/** @type {Override} */
+/** an override's options replace the base's: a consumer relaxing no-unresolved restates ^bun: @type {Override} */
 const bun = {
   files: ['**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}'],
   globals: { Bun: 'readonly' },

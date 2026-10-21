@@ -5,6 +5,7 @@ const { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } =
 const { tmpdir } = process.getBuiltinModule('node:os');
 const { basename, dirname, join } = process.getBuiltinModule('node:path');
 
+// ※ snapshot-resolution
 const oxlintDirectory = dirname(Bun.fileURLToPath(import.meta.resolve('oxlint/package.json')));
 const oxlintBin = join(oxlintDirectory, 'bin', 'oxlint');
 

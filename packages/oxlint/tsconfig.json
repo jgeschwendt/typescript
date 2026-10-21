@@ -1,10 +1,5 @@
 {
   "extends": "@jlg/tsconfig",
-  "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
-    "noEmit": true,
-    "types": ["bun"]
-  },
+  "compilerOptions": { "allowJs": true, "checkJs": true, "noEmit": true, "types": ["bun"] },
   "include": ["__tests__", "index.d.ts", "index.js"]
 }
