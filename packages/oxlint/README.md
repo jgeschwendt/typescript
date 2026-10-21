@@ -20,3 +20,5 @@ export default defineConfig({
 ```
 
 > Runs under Node ≥24 or Bun ≥1.4 (`bun --bun oxlint`)—JS plugins included.
+
+`off`, the other export, maps every rule the base turns off to the fact that turns it off.
