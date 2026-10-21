@@ -7,7 +7,7 @@
 
 const { existsSync, readFileSync } = process.getBuiltinModule('node:fs');
 const { createRequire } = process.getBuiltinModule('node:module');
-const { dirname, join } = process.getBuiltinModule('node:path');
+const { basename, dirname, join } = process.getBuiltinModule('node:path');
 const { fileURLToPath } = process.getBuiltinModule('node:url');
 
 // ※ oxlint-tsgolint-pairing
@@ -423,12 +423,26 @@ const tuned = {
   ],
 };
 
+const node22 = 22;
+const node24 = 24;
 const node26 = 26;
-/** unicorn rules that name an API, keyed by the first Node major that has it (probed 2026-10-20: 22 lacks all, 24 has none of these, 26 has all but Iterator.zip; Bun 1.4 has every one) */
+/** unicorn rules that name an API or syntax, keyed by the first Node major that runs it (probed 2026-10-21 on 20.20.2, 22.23.3, 24.21.0, 26.12.0; Bun 1.4 has every one; nothing has Iterator.zip) */
 const floors = {
+  'unicorn-js/prefer-array-from-async': node22,
+  // `using` is syntax Node 22 rejects; a compiler that downlevels it can set env.node
+  'unicorn-js/prefer-dispose': node24,
+  'unicorn-js/prefer-error-is-error': node24,
   'unicorn-js/prefer-get-or-insert-computed': node26,
+  'unicorn-js/prefer-group-by': node22,
   'unicorn-js/prefer-iterator-concat': node26,
+  'unicorn-js/prefer-iterator-helpers': node22,
+  'unicorn-js/prefer-iterator-to-array': node22,
+  'unicorn-js/prefer-iterator-to-array-at-end': node22,
   'unicorn-js/prefer-iterator-zip': Infinity,
+  'unicorn-js/prefer-promise-try': node24,
+  'unicorn-js/prefer-promise-with-resolvers': node22,
+  'unicorn-js/prefer-regexp-escape': node24,
+  'unicorn-js/prefer-set-methods': node22,
   'unicorn-js/prefer-temporal': node26,
   'unicorn-js/prefer-temporal-conversion': node26,
   'unicorn-js/prefer-uint8array-base64': node26,
@@ -647,17 +661,16 @@ const detectReact = () => {
   return { react: { version: semver?.[0] ?? '999.999.999' } };
 };
 
-/** the first file on the stack other than this one: defineConfig's caller */
+/** the oxlint config on the stack, else the first file other than this one: defineConfig's caller through any wrapper */
 const caller = () => {
   const { stack } = new Error('the caller');
-  return (
-    String(stack)
-      .split('\n')
-      // Node's frames carry file:// URLs (oxlint appends ?cache=), Bun's bare paths
-      .flatMap((frame) => /(?<=[\s(])(?:file:\/\/)?\/[^()]*(?=:\d+:\d+\)?$)/u.exec(frame) ?? [])
-      .map((location) => fileURLToPath(new URL(location, import.meta.url)))
-      .find((file) => file !== import.meta.filename)
-  );
+  const files = String(stack)
+    .split('\n')
+    // Node's frames carry file:// URLs (oxlint appends ?cache=), Bun's bare paths
+    .flatMap((frame) => /(?<=[\s(])(?:file:\/\/)?\/[^()]*(?=:\d+:\d+\)?$)/u.exec(frame) ?? [])
+    .map((location) => fileURLToPath(new URL(location, import.meta.url)))
+    .filter((file) => file !== import.meta.filename);
+  return files.find((file) => /^oxlint\.config\.[cm]?[jt]s$/u.test(basename(file))) ?? files[0];
 };
 
 /**
