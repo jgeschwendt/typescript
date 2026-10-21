@@ -32,6 +32,14 @@ await Bun.write(
       .is-muted {
         opacity: 0.55;
       }
+      /* the table scrolls sideways inside .table-wrap; only the reason wraps */
+      td {
+        white-space: nowrap;
+      }
+      td.muted {
+        min-width: 32ch;
+        white-space: normal;
+      }
     </style>
   </head>
   <body class="ui">
@@ -44,23 +52,25 @@ await Bun.write(
         <div id="filters" class="row">
           <label class="field">
             <span class="label">rule</span>
-            <input id="filter" class="input input-sm" type="search" placeholder="filter rules" autofocus />
+            <input id="filter" class="input input-sm" type="search" placeholder="filter rules and reasons" autofocus />
           </label>
         </div>
       </header>
-      <table data-table class="table-hover table-mono">
-        <thead>
-          <tr id="head"></tr>
-        </thead>
-        <tbody id="body"></tbody>
-      </table>
+      <div class="table-wrap">
+        <table data-table class="table-hover table-mono">
+          <thead>
+            <tr id="head"></tr>
+          </thead>
+          <tbody id="body"></tbody>
+        </table>
+      </div>
     </main>
     <script id="rows" type="application/json">
       ${JSON.stringify(rows)}
     </script>
     <script>
       const rows = JSON.parse(document.querySelector('#rows').textContent);
-      const columns = ['rule', 'category', 'oxlint', 'base', 'options'];
+      const columns = ['rule', 'category', 'oxlint', 'base', 'options', 'reason'];
       const pills = {
         error: 'danger',
         js: 'info',
@@ -80,7 +90,7 @@ await Bun.write(
         node.append(...children);
         return node;
       };
-      const selects = columns.slice(1).map((name) => {
+      const selects = columns.slice(1, -1).map((name) => {
         const select = el(
           'select',
           { className: 'select select-sm', oninput: render },
@@ -103,9 +113,9 @@ await Bun.write(
       const cell = (row, name) =>
         el(
           'td',
-          {},
+          { className: name === 'reason' ? 'muted' : '' },
           row.options === 'set' && name === 'options' ? (open.has(row.rule) ? '▾ ' : '▸ ') : '',
-          name === 'rule' || row[name] === '-'
+          ['reason', 'rule'].includes(name) || row[name] === '-'
             ? row[name]
             : el('span', {
                 className: \`pill \${pills[row[name]] ? \`pill-\${pills[row[name]]}\` : ''}\`,
@@ -119,7 +129,7 @@ await Bun.write(
         const shown = rows
           .filter(
             (row) =>
-              row.rule.includes(query) &&
+              [row.rule, row.reason].some((text) => text.toLowerCase().includes(query)) &&
               selects.every((select, index) => select.value === 'any' || row[columns[index + 1]] === select.value),
           )
           .sort((a, b) => dir * a[columns[sort]].localeCompare(b[columns[sort]]) || a.rule.localeCompare(b.rule));

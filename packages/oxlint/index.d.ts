@@ -14,3 +14,6 @@ export declare function defineConfig(
     root?: boolean;
   },
 ): OxlintConfig;
+
+/** every rule the base turns off, keyed by its config name, to the fact that turns it off: a native rule off in `rules`, a `-js/` rule its JS plugin never runs */
+export declare const off: Readonly<Record<string, string>>;

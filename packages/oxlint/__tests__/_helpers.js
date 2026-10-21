@@ -110,3 +110,4 @@ export {
   spawnOxlint,
   write,
 };
+export { off } from '../index.js';
