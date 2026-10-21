@@ -1,7 +1,7 @@
-import { host } from './host.mjs';
-import './typescript6.mjs';
+import { host } from './host.js';
+import './typescript6.js';
 
-// dynamic: a static import evaluates the plugin's CommonJS before ./typescript6.mjs patches the resolver on bun
+// dynamic: a static import evaluates the plugin's CommonJS before ./typescript6.js patches the resolver on bun
 const { default: plugin } = await import('@typescript-eslint/eslint-plugin');
 
 /** oxlint has no parser services; naming-convention needs them only for types, so stub them */

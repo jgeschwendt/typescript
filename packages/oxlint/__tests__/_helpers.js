@@ -84,7 +84,7 @@ const jsEntries = (config.jsPlugins ?? []).map((entry) =>
   typeof entry === 'string' ? { specifier: entry } : entry,
 );
 const jsScopes = new Set(
-  jsEntries.map(({ name, specifier }) => name ?? basename(specifier, '.mjs')),
+  jsEntries.map(({ name, specifier }) => name ?? basename(specifier, '.js')),
 );
 
 /**

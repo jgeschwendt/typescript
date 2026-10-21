@@ -1,8 +1,8 @@
 import { readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import { host } from './host.mjs';
-import './typescript6.mjs';
+import { host } from './host.js';
+import './typescript6.js';
 
 const require = createRequire(import.meta.url);
 

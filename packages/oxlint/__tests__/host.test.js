@@ -5,8 +5,8 @@ const { mkdtempSync, rmSync } = process.getBuiltinModule('node:fs');
 const { tmpdir } = process.getBuiltinModule('node:os');
 const { join } = process.getBuiltinModule('node:path');
 
-// host.mjs runs inside oxlint's process, out of bun's coverage: a probe plugin proves it end to end
-const plugin = `import { host } from ${JSON.stringify(join(import.meta.dirname, '..', 'plugins', 'host.mjs'))};
+// host.js runs inside oxlint's process, out of bun's coverage: a probe plugin proves it end to end
+const plugin = `import { host } from ${JSON.stringify(join(import.meta.dirname, '..', 'plugins', 'host.js'))};
 const kinds = 'ArrowFunctionExpression, ClassDeclaration, ClassExpression, FunctionDeclaration, FunctionExpression, Program';
 export default host({ rules: {
   bare: { create: () => ({ onCodePathStart() { throw 'bare'; } }) },
