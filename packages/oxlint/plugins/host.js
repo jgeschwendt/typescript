@@ -1,11 +1,3 @@
-/** ESLint's looksLikeExport node set */
-const exported = new Set([
-  'ExportAllDeclaration',
-  'ExportDefaultDeclaration',
-  'ExportNamedDeclaration',
-  'ExportSpecifier',
-]);
-
 /** ESLint 9.39 SourceCode#getJSDocComment, `this` made a parameter and its checks respelled */
 const jsdoc = (sourceCode, node) => {
   const find = (astNode) => {
@@ -20,7 +12,7 @@ const jsdoc = (sourceCode, node) => {
   switch (node.type) {
     case 'ClassDeclaration':
     case 'FunctionDeclaration': {
-      return find(exported.has(parent.type) ? parent : node);
+      return find(parent.type.startsWith('Export') ? parent : node);
     }
     case 'ClassExpression': {
       return find(parent.parent);
@@ -59,7 +51,7 @@ const adapt = (rule, extend) => ({
     const sourceCode = Object.create(context.sourceCode, {
       getJSDocComment: own((node) => jsdoc(sourceCode, node)),
     });
-    const extra = Object.entries(extend?.(context) ?? {});
+    const extra = Object.entries({ ...extend?.(context) });
     const local = Object.create(context, {
       ...Object.fromEntries(extra.map(([key, value]) => [key, own(value)])),
       getSourceCode: own(() => sourceCode),
@@ -76,12 +68,8 @@ const adapt = (rule, extend) => ({
           listener(...listenerArguments);
         } catch (error) {
           hasCrashed = true;
-          const [node] = listenerArguments;
           local.report({
-            loc:
-              node !== null && typeof node === 'object' && 'loc' in node
-                ? node.loc
-                : { column: 0, line: 1 },
+            loc: listenerArguments[0]?.loc ?? { column: 0, line: 1 },
             message: `Rule crashed under oxlint's JS plugin host: ${error instanceof Error ? error.message : String(error)}`,
           });
         }

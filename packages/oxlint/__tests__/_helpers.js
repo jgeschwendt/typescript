@@ -1,3 +1,4 @@
+import { afterAll } from 'bun:test';
 import { defineConfig } from '../index.js';
 
 const { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } =
@@ -80,13 +81,24 @@ const ruleNames = [
   ),
 ];
 
-/** @type {{ name?: string; specifier: string }[]} jsPlugins entries, a bare path as an unnamed one */
-const jsEntries = (config.jsPlugins ?? []).map((entry) =>
-  typeof entry === 'string' ? { specifier: entry } : entry,
-);
 const jsScopes = new Set(
-  jsEntries.map(({ name, specifier }) => name ?? basename(specifier, '.js')),
+  (config.jsPlugins ?? []).map((entry) =>
+    typeof entry === 'string' ? basename(entry, '.js') : entry.name,
+  ),
 );
+
+/**
+a fresh temp dir, removed after the calling file's tests
+@param {string} prefix
+@param {number} [timeout]
+*/
+const scratch = (prefix, timeout) => {
+  const directory = mkdtempSync(join(tmpdir(), prefix));
+  afterAll(() => {
+    rmSync(directory, { force: true, recursive: true });
+  }, timeout);
+  return directory;
+};
 
 /**
 the catalog spells scope hyphens as underscores (`jsx-a11y` → `jsx_a11y`)
@@ -101,12 +113,12 @@ export {
   config,
   enabledScopes,
   everything,
-  jsEntries,
   jsScopes,
   loadRules,
   overrides,
   ruleKey,
   ruleNames,
+  scratch,
   spawnOxlint,
   write,
 };

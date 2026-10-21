@@ -15,7 +15,7 @@ const catalog = loadRules();
 
 test('every configured rule exists in an enabled oxlint plugin', () => {
   const missing = ruleNames.filter(
-    // jsPlugins rules are ESLint rule code, guarded in js-plugins.test.js
+    // jsPlugins rules are guarded by oxlint at config load, through lint.test.js
     (name) => !jsScopes.has(name.replace(/\/.*/u, '')) && !catalog.has(ruleKey(name)),
   );
   expect(

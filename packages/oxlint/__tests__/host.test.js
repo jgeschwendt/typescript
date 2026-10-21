@@ -1,27 +1,23 @@
-import { afterAll, expect, test } from 'bun:test';
-import { spawnOxlint, write } from './_helpers.js';
+import { expect, test } from 'bun:test';
+import { scratch, spawnOxlint, write } from './_helpers.js';
 
-const { mkdtempSync, rmSync } = process.getBuiltinModule('node:fs');
-const { tmpdir } = process.getBuiltinModule('node:os');
 const { join } = process.getBuiltinModule('node:path');
 
 // host.js runs inside oxlint's process, out of bun's coverage: a probe plugin proves it end to end
 const plugin = `import { host } from ${JSON.stringify(join(import.meta.dirname, '..', 'plugins', 'host.js'))};
 const kinds = 'ArrowFunctionExpression, ClassDeclaration, ClassExpression, FunctionDeclaration, FunctionExpression, Program';
 export default host({ rules: {
-  bare: { create: () => ({ onCodePathStart() { throw 'bare'; } }) },
+  bare: { create: (context) => ({ onCodePathStart() { throw context.extra; } }) },
   crash: { create: () => ({ Identifier(node) { throw new Error(node.name); } }) },
   jsdoc: { create: (context) => ({ [kinds](node) {
     const sourceCode = context.getSourceCode();
     context.report({ message: String(sourceCode === context.sourceCode && sourceCode.getJSDocComment(node)?.value), node });
   } }) },
-} }, 'probe');
+} }, 'probe', () => ({ extra: 'bare' }));
 `;
 
 const source = `function first() {}
 void (() => {});
-/** a */
-function declared() {}
 /** b */
 export class Exported {}
 /** c */
@@ -53,10 +49,7 @@ class Klass {
 }
 `;
 
-const directory = mkdtempSync(join(tmpdir(), 'oxlint-host-'));
-afterAll(() => {
-  rmSync(directory, { force: true, recursive: true });
-});
+const directory = scratch('oxlint-host-');
 
 test('host contains a crashing rule and ports getJSDocComment', () => {
   write(directory, {
@@ -86,26 +79,25 @@ test('host contains a crashing rule and ports getJSDocComment', () => {
     "probe(bare) 1:1 Rule crashed under oxlint's JS plugin host: bare",
     "probe(bare) 1:1 Rule crashed under oxlint's JS plugin host: bare",
     "probe(crash) 1:10 Rule crashed under oxlint's JS plugin host: first",
-    'probe(jsdoc) 10:20 * d ',
-    'probe(jsdoc) 12:25 undefined',
-    'probe(jsdoc) 12:6 undefined',
+    'probe(jsdoc) 10:25 undefined',
+    'probe(jsdoc) 10:6 undefined',
+    'probe(jsdoc) 12:1 undefined',
     'probe(jsdoc) 14:1 undefined',
-    'probe(jsdoc) 16:1 undefined',
-    'probe(jsdoc) 19:1 undefined',
+    'probe(jsdoc) 17:1 undefined',
+    'probe(jsdoc) 19:24 undefined',
     'probe(jsdoc) 1:1 undefined',
     'probe(jsdoc) 1:1 undefined',
-    'probe(jsdoc) 21:24 undefined',
-    'probe(jsdoc) 23:15 * j ',
-    'probe(jsdoc) 24:10 undefined',
-    'probe(jsdoc) 27:1 * k ',
-    'probe(jsdoc) 28:10 undefined',
+    'probe(jsdoc) 21:15 * j ',
+    'probe(jsdoc) 22:10 undefined',
+    'probe(jsdoc) 25:1 * k ',
+    'probe(jsdoc) 26:10 undefined',
+    'probe(jsdoc) 29:1 * l ',
     'probe(jsdoc) 2:1 undefined',
     'probe(jsdoc) 2:7 undefined',
-    'probe(jsdoc) 31:1 * l ',
-    'probe(jsdoc) 32:9 undefined',
+    'probe(jsdoc) 30:9 undefined',
     'probe(jsdoc) 3:2 undefined',
-    'probe(jsdoc) 4:1 * a ',
-    'probe(jsdoc) 6:8 * b ',
-    'probe(jsdoc) 8:15 * c ',
+    'probe(jsdoc) 4:8 * b ',
+    'probe(jsdoc) 6:15 * c ',
+    'probe(jsdoc) 8:20 * d ',
   ]);
 });

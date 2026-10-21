@@ -1,8 +1,6 @@
-import { afterAll, expect, test } from 'bun:test';
-import { spawnOxlint, write } from './_helpers.js';
+import { expect, test } from 'bun:test';
+import { scratch, spawnOxlint, write } from './_helpers.js';
 
-const { mkdtempSync, rmSync } = process.getBuiltinModule('node:fs');
-const { tmpdir } = process.getBuiltinModule('node:os');
 const { join } = process.getBuiltinModule('node:path');
 
 const consumerOverride = {
@@ -38,16 +36,12 @@ const directives = [
 const index = join(import.meta.dirname, '..', 'index.js');
 
 // no package.json above the temp dir: every environment is on
-const directory = mkdtempSync(join(tmpdir(), 'oxlint-lint-'));
-afterAll(() => {
-  rmSync(directory, { force: true, recursive: true });
-});
+const directory = scratch('oxlint-lint-');
 write(directory, {
   'app/api/route.ts':
     'export function GET() {\n  return 1;\n}\n\nexport function POST() {\n  return 2;\n}\n',
   'app/page.tsx': 'export default function Page() {\n  return null;\n}\n',
-  'blanket.js': '/* oxlint-disable */\nexport const value = 1;\n',
-  'described.js': '/* eslint-disable -- reason */\nexport const value = 1;\n',
+  'described.js': '/* oxlint-disable -- reason */\nexport const value = 1;\n',
   'directives.js': directives,
   'instrumentation.js': 'export async function register() {\n  return 1;\n}\n',
   'next.config.js': 'export const extra = 1;\nexport default {};\n',
@@ -58,12 +52,6 @@ write(directory, {
   'src/plain.js': "const fs = require('node:fs');\nprocess = fs;\nconst _unused = 1;\n",
   'sub/next.config.js': 'export const extra = 1;\nexport default {};\n',
 });
-
-/**
-@param {string[]} paths
-@returns {{ exitCode: number; output: string; report: { diagnostics: { code: string; filename: string; labels: [{ span: { length: number; offset: number } }] }[] } }}
-*/
-const lint = (paths) => spawnOxlint(directory, ['-c', 'oxlint.config.mjs', ...paths]);
 
 /** per linted file, whether each code (or code prefix) reports there; each file must report something, so no negative holds vacuously */
 const expected = {
@@ -90,9 +78,12 @@ const expected = {
   'sub/next.config.js': { 'import(no-default-export)': true },
 };
 
+const suppressing = ['described.js', 'own-line.js'];
+
+/** @type {{ report: { diagnostics: { code: string; filename: string; labels: [{ span: { length: number; offset: number } }]; message: string; severity: string }[] } }} */
 const {
   report: { diagnostics },
-} = lint(Object.keys(expected));
+} = spawnOxlint(directory, ['-c', 'oxlint.config.mjs', ...Object.keys(expected), ...suppressing]);
 
 test('every directive form is banned, and nothing else', () => {
   expect(
@@ -116,13 +107,13 @@ test.each(Object.entries(expected))('%s', (file, want) => {
   ).toEqual(want);
 });
 
-test.each(['blanket.js', 'described.js', 'own-line.js'])(
-  'a directive that would suppress its own ban fails the run: %s',
-  (file) => {
-    const { exitCode, output } = lint([file]);
-    expect(exitCode).not.toBe(0);
-    expect(output).toContain('would suppress its own report');
-  },
+test.each(suppressing)('a directive that would suppress its own ban fails the run: %s', (file) =>
+  expect(diagnostics.filter(({ filename }) => filename === file)).toContainEqual(
+    expect.objectContaining({
+      message: expect.stringContaining('would suppress its own report'),
+      severity: 'error',
+    }),
+  ),
 );
 
 test('a run oxlint cannot report on throws with its output', () => {
