@@ -1888,96 +1888,6 @@
           "rule": "eslint/yoda"
         },
         {
-          "base": "off",
-          "baseOptions": [],
-          "category": "-",
-          "options": "-",
-          "oxlint": "none",
-          "reason": "formatting-only: import order oxfmt sortImports owns",
-          "rule": "import/order"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "restriction",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-relative-parent-imports"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "suspicious",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-named-as-default-member"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "restriction",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-webpack-loader-syntax"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "style",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-mutable-exports"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "style",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-nodejs-modules"
-        },
-        {
-          "base": "warn",
-          "baseOptions": [],
-          "category": "nursery",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/export"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "style",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/consistent-type-specifier-style"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "-",
-          "options": "-",
-          "oxlint": "js",
-          "reason": "",
-          "rule": "import/no-relative-packages"
-        },
-        {
-          "base": "off",
-          "baseOptions": [],
-          "category": "-",
-          "options": "-",
-          "oxlint": "none",
-          "reason": "inert without options; with unusedExports it fails every JS rule on the file (ESLint 10 exports no lib/util/glob-utils)",
-          "rule": "import/no-unused-modules"
-        },
-        {
           "base": "error",
           "baseOptions": [],
           "category": "-",
@@ -1987,121 +1897,22 @@
           "rule": "import/no-unresolved"
         },
         {
-          "base": "error",
+          "base": "warn",
           "baseOptions": [],
-          "category": "-",
-          "options": "-",
-          "oxlint": "js",
-          "reason": "",
-          "rule": "import/no-deprecated"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "style",
+          "category": "nursery",
           "options": "-",
           "oxlint": "native",
           "reason": "",
-          "rule": "import/group-exports"
+          "rule": "import/named"
         },
         {
           "base": "error",
           "baseOptions": [],
-          "category": "style",
+          "category": "correctness",
           "options": "-",
           "oxlint": "native",
           "reason": "",
-          "rule": "import/no-anonymous-default-export"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "suspicious",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-empty-named-blocks"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "suspicious",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-absolute-path"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "-",
-          "options": "-",
-          "oxlint": "js",
-          "reason": "",
-          "rule": "import/no-extraneous-dependencies"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "restriction",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-dynamic-require"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "-",
-          "options": "-",
-          "oxlint": "js",
-          "reason": "",
-          "rule": "import/no-restricted-paths"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "restriction",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-amd"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "suspicious",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-unassigned-import"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "style",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-duplicates"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "pedantic",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/max-dependencies"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "-",
-          "options": "-",
-          "oxlint": "js",
-          "reason": "",
-          "rule": "import/no-useless-path-segments"
+          "rule": "import/default"
         },
         {
           "base": "error",
@@ -2111,42 +1922,6 @@
           "oxlint": "native",
           "reason": "",
           "rule": "import/namespace"
-        },
-        {
-          "base": "off",
-          "baseOptions": [],
-          "category": "-",
-          "options": "-",
-          "oxlint": "none",
-          "reason": "duplicates native unicorn/prefer-node-protocol; without its required option it crashes: Missing option",
-          "rule": "import/enforce-node-protocol-usage"
-        },
-        {
-          "base": "off",
-          "baseOptions": [],
-          "category": "-",
-          "options": "-",
-          "oxlint": "none",
-          "reason": "demands webpack's magic comment; Next, Turbopack and Bun name chunks themselves",
-          "rule": "import/dynamic-import-chunkname"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "restriction",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-cycle"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "restriction",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-commonjs"
         },
         {
           "base": "error",
@@ -2164,7 +1939,250 @@
           "options": "-",
           "oxlint": "native",
           "reason": "",
-          "rule": "import/named"
+          "rule": "import/export"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "style",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-mutable-exports"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "restriction",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/extensions"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "-",
+          "options": "-",
+          "oxlint": "js",
+          "reason": "",
+          "rule": "import/no-restricted-paths"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "-",
+          "options": "-",
+          "oxlint": "js",
+          "reason": "",
+          "rule": "import/no-internal-modules"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "style",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/group-exports"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "-",
+          "options": "-",
+          "oxlint": "js",
+          "reason": "",
+          "rule": "import/no-relative-packages"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "restriction",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-relative-parent-imports"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "style",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/consistent-type-specifier-style"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "suspicious",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-self-import"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "restriction",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-cycle"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "style",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-named-default"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "suspicious",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-named-as-default"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "suspicious",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-named-as-default-member"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "style",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-anonymous-default-export"
+        },
+        {
+          "base": "off",
+          "baseOptions": [],
+          "category": "-",
+          "options": "-",
+          "oxlint": "none",
+          "reason": "inert without options; with unusedExports it fails every JS rule on the file (ESLint 10 exports no lib/util/glob-utils)",
+          "rule": "import/no-unused-modules"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "restriction",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-commonjs"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "restriction",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-amd"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "style",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-duplicates"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "style",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/first"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "pedantic",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/max-dependencies"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "-",
+          "options": "-",
+          "oxlint": "js",
+          "reason": "",
+          "rule": "import/no-extraneous-dependencies"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "suspicious",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-absolute-path"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "style",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-nodejs-modules"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "restriction",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-webpack-loader-syntax"
+        },
+        {
+          "base": "off",
+          "baseOptions": [],
+          "category": "-",
+          "options": "-",
+          "oxlint": "none",
+          "reason": "formatting-only: import order oxfmt sortImports owns",
+          "rule": "import/order"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "style",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/newline-after-import"
+        },
+        {
+          "base": "off",
+          "baseOptions": [],
+          "category": "style",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "contradicts import/no-default-export, which the base enforces",
+          "rule": "import/prefer-default-export"
         },
         {
           "base": "error",
@@ -2187,65 +2205,11 @@
         {
           "base": "error",
           "baseOptions": [],
-          "category": "style",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-named-default"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "-",
-          "options": "-",
-          "oxlint": "js",
-          "reason": "",
-          "rule": "import/no-internal-modules"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "-",
-          "options": "-",
-          "oxlint": "js",
-          "reason": "",
-          "rule": "import/no-import-module-exports"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "style",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/first"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
           "category": "restriction",
           "options": "-",
           "oxlint": "native",
           "reason": "",
-          "rule": "import/extensions"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "correctness",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/default"
-        },
-        {
-          "base": "off",
-          "baseOptions": [],
-          "category": "style",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "contradicts import/no-default-export, which the base enforces",
-          "rule": "import/prefer-default-export"
+          "rule": "import/no-dynamic-require"
         },
         {
           "base": "error",
@@ -2259,6 +2223,60 @@
         {
           "base": "error",
           "baseOptions": [],
+          "category": "suspicious",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-unassigned-import"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "-",
+          "options": "-",
+          "oxlint": "js",
+          "reason": "",
+          "rule": "import/no-useless-path-segments"
+        },
+        {
+          "base": "off",
+          "baseOptions": [],
+          "category": "-",
+          "options": "-",
+          "oxlint": "none",
+          "reason": "demands webpack's magic comment; Next, Turbopack and Bun name chunks themselves",
+          "rule": "import/dynamic-import-chunkname"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "-",
+          "options": "-",
+          "oxlint": "js",
+          "reason": "",
+          "rule": "import/no-import-module-exports"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "suspicious",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "import/no-empty-named-blocks"
+        },
+        {
+          "base": "off",
+          "baseOptions": [],
+          "category": "-",
+          "options": "-",
+          "oxlint": "none",
+          "reason": "duplicates native unicorn/prefer-node-protocol; without its required option it crashes: Missing option",
+          "rule": "import/enforce-node-protocol-usage"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
           "category": "style",
           "options": "-",
           "oxlint": "native",
@@ -2268,29 +2286,11 @@
         {
           "base": "error",
           "baseOptions": [],
-          "category": "suspicious",
+          "category": "-",
           "options": "-",
-          "oxlint": "native",
+          "oxlint": "js",
           "reason": "",
-          "rule": "import/no-self-import"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "suspicious",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/no-named-as-default"
-        },
-        {
-          "base": "error",
-          "baseOptions": [],
-          "category": "style",
-          "options": "-",
-          "oxlint": "native",
-          "reason": "",
-          "rule": "import/newline-after-import"
+          "rule": "import/no-deprecated"
         },
         {
           "base": "error",

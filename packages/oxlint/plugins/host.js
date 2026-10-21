@@ -41,43 +41,41 @@ const jsdoc = (sourceCode, node) => {
   }
 };
 
-/** configurable, so a context Proxy (unicorn wrapping no-warning-comments) can override it */
-const own = (value) => ({ configurable: true, value, writable: true });
-
 /** after a throw reports once, the rule is silent for the rest of the file */
 const adapt = (rule, extend) => ({
   ...rule,
   create(context) {
-    const sourceCode = Object.create(context.sourceCode, {
-      getJSDocComment: own((node) => jsdoc(sourceCode, node)),
-    });
-    const extra = Object.entries({ ...extend?.(context) });
-    const local = Object.create(context, {
-      ...Object.fromEntries(extra.map(([key, value]) => [key, own(value)])),
-      getSourceCode: own(() => sourceCode),
-      sourceCode: own(sourceCode),
-    });
+    // oxlint defines these as getters, so assignment throws; a literal's descriptors are configurable, so a context Proxy (unicorn wrapping no-warning-comments) can override them
+    const sourceCode = Object.create(
+      context.sourceCode,
+      Object.getOwnPropertyDescriptors({ getJSDocComment: (node) => jsdoc(sourceCode, node) }),
+    );
+    const local = Object.create(
+      context,
+      Object.getOwnPropertyDescriptors({
+        ...extend?.(context),
+        getSourceCode: () => sourceCode,
+        sourceCode,
+      }),
+    );
     let hasCrashed = false;
-    const contain =
-      (listener) =>
-      (...listenerArguments) => {
-        if (hasCrashed) {
-          return;
-        }
-        try {
-          listener(...listenerArguments);
-        } catch (error) {
-          hasCrashed = true;
-          local.report({
-            loc: listenerArguments[0]?.loc ?? { column: 0, line: 1 },
-            message: `Rule crashed under oxlint's JS plugin host: ${error instanceof Error ? error.message : String(error)}`,
-          });
-        }
-      };
     return Object.fromEntries(
       Object.entries(rule.create(local)).map(([selector, listener]) => [
         selector,
-        contain(listener),
+        (...listenerArguments) => {
+          if (hasCrashed) {
+            return;
+          }
+          try {
+            listener(...listenerArguments);
+          } catch (error) {
+            hasCrashed = true;
+            local.report({
+              loc: listenerArguments[0].loc ?? { column: 0, line: 1 },
+              message: `Rule crashed under oxlint's JS plugin host: ${error instanceof Error ? error.message : String(error)}`,
+            });
+          }
+        },
       ]),
     );
   },
@@ -85,7 +83,7 @@ const adapt = (rule, extend) => ({
 
 /** extend(context) returns extra properties for each file's context */
 export const host = (plugin, name, extend) => ({
-  meta: { ...plugin.meta, name },
+  meta: { name },
   rules: Object.fromEntries(
     Object.entries(plugin.rules).map(([id, rule]) => [id, adapt(rule, extend)]),
   ),

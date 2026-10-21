@@ -48,11 +48,10 @@ const spawnOxlint = (cwd, flags, command = [process.execPath, oxlintBin]) => {
     stdout: Bun.file(out),
   });
   const text = String(readFileSync(out));
-  const output = `${text}${stderr.toString()}`;
   try {
-    return { exitCode, output, report: JSON.parse(text) };
+    return JSON.parse(text);
   } catch {
-    throw new Error(`oxlint exited ${exitCode}: ${output}`);
+    throw new Error(`oxlint exited ${exitCode}: ${text}${stderr.toString()}`);
   }
 };
 
@@ -63,8 +62,8 @@ const loadRules = () => {
   const directory = mkdtempSync(join(tmpdir(), 'oxlint-rules-'));
   // --rules still loads config, so hand it an empty one
   write(directory, { 'empty.json': '{}' });
-  /** @type {{ report: Rule[] }} */
-  const { report } = spawnOxlint(directory, ['-c', 'empty.json', '--rules']);
+  /** @type {Rule[]} */
+  const report = spawnOxlint(directory, ['-c', 'empty.json', '--rules']);
   rmSync(directory, { force: true, recursive: true });
   return new Map(
     report

@@ -8,7 +8,7 @@ const { default: plugin } = await import('@typescript-eslint/eslint-plugin');
 const untyped = (rule) => ({
   ...rule,
   create(context) {
-    if (context.options.some((option) => option?.types !== undefined)) {
+    if (context.options.some((option) => option.types !== undefined)) {
       throw new Error(
         'typescript-js/naming-convention: the `types` option needs type information, which oxlint JS plugins cannot provide',
       );

@@ -29,7 +29,7 @@ const fixtured = Object.entries({
   'typescript-js': 'member-ordering naming-convention',
   'unicorn-js':
     'consistent-destructuring consistent-json-file-read expiring-todo-comments name-replacements no-for-loop no-keyword-prefix no-named-default no-unnecessary-polyfills no-unused-properties prefer-switch string-content',
-}).flatMap(([scope, names]) => names.split(' ').map((name) => `${scope}/${name}`));
+}).flatMap(([scope, names]) => names.split(' ').map((name) => `${scope}(${name})`));
 
 /** rules that check nothing without options */
 const inert = {
@@ -209,7 +209,7 @@ test.each(
     const directory = join(consumers, linker);
     const bin = join(directory, 'node_modules', 'oxlint', 'bin', 'oxlint');
     /** @type {{ diagnostics: { code?: string; message: string }[] }} */
-    const { diagnostics } = spawnOxlint(directory, ['src'], [runtime, bin]).report;
+    const { diagnostics } = spawnOxlint(directory, ['src'], [runtime, bin]);
     // a crashed plugin drops every JS rule on the file; a crashed rule reports via host.js
     const broken = diagnostics
       .map((diagnostic) => diagnostic.message)
@@ -217,12 +217,9 @@ test.each(
         /Error running JS plugin|Rule crashed|Parse errors in imported module/u.test(message),
       );
     expect(broken).toEqual([]);
-    const codes = new Set(
-      diagnostics.map((diagnostic) =>
-        diagnostic.code?.replace(/^(?<plugin>.+)\((?<rule>.+)\)$/u, '$<plugin>/$<rule>'),
-      ),
-    );
-    expect(fixtured.filter((name) => !codes.has(name))).toEqual([]);
+    expect(
+      fixtured.filter((code) => diagnostics.every((diagnostic) => diagnostic.code !== code)),
+    ).toEqual([]);
   },
   lintTimeout,
 );
