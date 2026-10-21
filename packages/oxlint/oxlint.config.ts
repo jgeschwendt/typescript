@@ -8,8 +8,6 @@ export default defineConfig({
       rules: {
         // jsPlugins load a plugin module's default export
         'import/no-default-export': 'off',
-        // import-js.js requires the parser by absolute path
-        'import/no-dynamic-require': 'off',
         // imported for its resolve-hook side effect
         'import/no-unassigned-import': ['error', { allow: ['**/typescript6.js'] }],
         // eslint-module-utils ignores `exports` maps, the only way these two resolve

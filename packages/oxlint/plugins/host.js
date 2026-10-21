@@ -45,7 +45,7 @@ const jsdoc = (sourceCode, node) => {
 const adapt = (rule, extend) => ({
   ...rule,
   create(context) {
-    // oxlint defines these as getters, so assignment throws; a literal's descriptors are configurable, so a context Proxy (unicorn wrapping no-warning-comments) can override them
+    // oxlint's context and sourceCode are frozen (sourceCode and languageOptions are getters), so assignment throws; a literal's descriptors are configurable, so a context Proxy (unicorn wrapping no-warning-comments) can override them
     const sourceCode = Object.create(
       context.sourceCode,
       Object.getOwnPropertyDescriptors({ getJSDocComment: (node) => jsdoc(sourceCode, node) }),
