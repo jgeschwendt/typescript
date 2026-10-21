@@ -600,7 +600,7 @@ const manifests = () => {
 const detectEnvironment = () => {
   const [nearest, ...above] = manifests();
   if (nearest === undefined) {
-    return { bun: true, next: true, react: true, typescript: true };
+    return { bun: true, next: true, react: true, tsgolint: false, typescript: true };
   }
   const { dependencies, devDependencies, directory } = nearest;
   const installed = { ...dependencies, ...devDependencies };
@@ -615,6 +615,8 @@ const detectEnvironment = () => {
     // Bun has every floored API
     node: major ? Number(major) : engines?.bun && Infinity,
     react: 'react' in installed,
+    // type-aware needs its binary: without it oxlint fails "Failed to find tsgolint executable"
+    tsgolint: 'oxlint-tsgolint' in installed,
     typescript: 'typescript' in installed,
   };
 };
@@ -631,9 +633,34 @@ const detectReact = () => {
   return { react: { version: semver?.[0] ?? '999.999.999' } };
 };
 
+/** the first file on the stack other than this one: defineConfig's caller */
+const caller = () => {
+  const { stack } = new Error('the caller');
+  return (
+    String(stack)
+      .split('\n')
+      // Node's frames carry file:// URLs (oxlint appends ?cache=), Bun's bare paths
+      .flatMap((frame) => /(?<=[\s(])(?:file:\/\/)?\/[^()]*(?=:\d+:\d+\)?$)/u.exec(frame) ?? [])
+      .map((location) => fileURLToPath(new URL(location, import.meta.url)))
+      .find((file) => file !== import.meta.filename)
+  );
+};
+
+/**
+oxlint's root-only options, for the config in its cwd unless `root` says otherwise: a nested config naming any fails the run
+@param {boolean | undefined} root
+@param {boolean} typeAware
+@param {Config['options']} options
+@returns {false | Pick<Config, 'options'>}
+*/
+const rootOptions = (root, typeAware, options) =>
+  (root ?? dirname(caller() ?? '') === process.cwd()) && {
+    options: { reportUnusedDisableDirectives: 'error', typeAware, ...options },
+  };
+
 // ※ oxlint-extends-objects
 /**
-@param {Config & { env?: Config['env'] & Partial<Env> }} [config]
+@param {Config & { env?: Config['env'] & Partial<Env>; root?: boolean }} [config]
 @returns {Config}
 */
 const defineConfig = ({
@@ -645,9 +672,11 @@ const defineConfig = ({
     typescript: isTypescript,
     ...others
   } = {},
+  root: isRoot,
   ...config
 } = {}) => {
   const detected = detectEnvironment();
+  const typed = isTypescript ?? detected.typescript;
   // an unknown runtime keeps every rule
   const major =
     [isNode, isBun && Infinity, detected.node].find((value) => typeof value === 'number') ??
@@ -660,11 +689,12 @@ const defineConfig = ({
     ...(Object.keys(environments).length > 0 && { env: environments }),
     categories: { ...categories, ...config.categories },
     jsPlugins: [...jsPlugins, ...(config.jsPlugins ?? [])],
+    ...rootOptions(isRoot, typed && detected.tsgolint, config.options),
     overrides: [
       ...always,
       // before the TypeScript override, whose import-js/no-unresolved off must win on TS files
       ...((isBun ?? detected.bun) ? [bun] : []),
-      ...((isTypescript ?? detected.typescript) ? [typescript] : []),
+      ...(typed ? [typescript] : []),
       ...((isReact ?? detected.react) ? react : []),
       ...((isNext ?? detected.next) ? next : []),
       tooling,

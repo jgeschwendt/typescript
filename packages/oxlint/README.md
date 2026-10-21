@@ -9,17 +9,17 @@ The canonical [oxlint](https://oxc.rs/docs/guide/usage/linter) settings for `@jl
 import { defineConfig } from '@jlg/oxlint';
 
 export default defineConfig({
-  // bun, next, react and typescript are read from the nearest package.json; name one to force it
-  env: { react: true },
   ignorePatterns: ['**/*.d.ts'],
-  // root-only: a nested config naming options fails the run; type-aware needs oxlint-tsgolint
-  options: { reportUnusedDisableDirectives: 'error', typeAware: true },
   // the base's overrides come first, so yours win, and an override beats top-level rules
   overrides: [],
   // merged over the base's; a nested oxlint.config.ts replaces the root for its subtree
   rules: {},
 });
 ```
+
+`options` are set for the root config: unused directives are errors, type-aware when `typescript`
+and `oxlint-tsgolint` are installed; a nested `oxlint.config.ts` gets none (oxlint allows them at
+the root only).
 
 Runs under Node ≥22.18 or Bun ≥1.4 (`bun --bun oxlint`), the JS plugins included.
 
