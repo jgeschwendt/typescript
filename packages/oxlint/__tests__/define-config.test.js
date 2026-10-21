@@ -117,6 +117,11 @@ test.each([
   { expected: [], files: manifest({ bun: '>=1.4' }), title: 'engines.bun alone meets every floor' },
   {
     expected: gated,
+    files: { ...manifest({ node: '>=24' }), 'nested/package.json': { name: 'leaf' } },
+    title: 'a workspace package without engines takes the floor from above',
+  },
+  {
+    expected: gated,
     files: manifest({ node: '>=26' }),
     forced: { node: lts },
     title: 'env.node forces the major',

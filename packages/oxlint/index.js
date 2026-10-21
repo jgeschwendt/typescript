@@ -581,30 +581,42 @@ const tooling = {
   },
 };
 
-/** the nearest package.json from cwd decides; none found turns everything on */
-const detectEnvironment = () => {
+/** every package.json from cwd up, nearest first; a workspace declares engines at its root */
+const manifests = () => {
+  const found = [];
   for (let directory = process.cwd(); ; directory = dirname(directory)) {
     const file = join(directory, 'package.json');
     if (existsSync(file)) {
-      const { dependencies, devDependencies, engines } = JSON.parse(String(readFileSync(file)));
-      const installed = { ...dependencies, ...devDependencies };
-      const major = /^(?:>=|[>^~])?\s*(?<major>\d+)/u.exec(engines?.node ?? '')?.[1];
-      return {
-        bun:
-          '@types/bun' in installed ||
-          existsSync(join(directory, 'bun.lock')) ||
-          existsSync(join(directory, 'bun.lockb')),
-        next: 'next' in installed,
-        // Bun has every floored API
-        node: major ? Number(major) : engines?.bun && Infinity,
-        react: 'react' in installed,
-        typescript: 'typescript' in installed,
-      };
+      const manifest = JSON.parse(String(readFileSync(file)));
+      found.push({ directory, ...manifest });
     }
     if (dirname(directory) === directory) {
-      return { bun: true, next: true, react: true, typescript: true };
+      return found;
     }
   }
+};
+
+/** the nearest package.json decides the dependencies, the nearest with `engines` the floor; none found turns everything on */
+const detectEnvironment = () => {
+  const [nearest, ...above] = manifests();
+  if (nearest === undefined) {
+    return { bun: true, next: true, react: true, typescript: true };
+  }
+  const { dependencies, devDependencies, directory } = nearest;
+  const installed = { ...dependencies, ...devDependencies };
+  const { engines } = [nearest, ...above].find((manifest) => manifest.engines) ?? {};
+  const major = /^(?:>=|[>^~])?\s*(?<major>\d+)/u.exec(engines?.node ?? '')?.[1];
+  return {
+    bun:
+      '@types/bun' in installed ||
+      existsSync(join(directory, 'bun.lock')) ||
+      existsSync(join(directory, 'bun.lockb')),
+    next: 'next' in installed,
+    // Bun has every floored API
+    node: major ? Number(major) : engines?.bun && Infinity,
+    react: 'react' in installed,
+    typescript: 'typescript' in installed,
+  };
 };
 
 /** oxlint rejects version "detect"; no react installed gets a semver that keeps every version gate open and silences the plugin's warning */
