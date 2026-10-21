@@ -15,7 +15,7 @@ const catalog = loadRules();
 
 test('every configured rule exists in an enabled oxlint plugin', () => {
   const missing = ruleNames.filter(
-    // jsPlugins rules are guarded by oxlint at config load, through lint.test.js
+    // jsPlugins rules: lint.test.js (oxlint's config load) guards them, js-plugins.test.js's Node-20 consumer the `floors` offs
     (name) => !jsScopes.has(name.replace(/\/.*/u, '')) && !catalog.has(ruleKey(name)),
   );
   expect(

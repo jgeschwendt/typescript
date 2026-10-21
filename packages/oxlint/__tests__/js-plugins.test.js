@@ -3,8 +3,6 @@ import { scratch, spawnOxlint, write } from './_helpers.js';
 
 const { join } = process.getBuiltinModule('node:path');
 
-// packed and installed under both linkers: only the published files ship, and dependencies resolve from the consumer's tree
-
 test('typescript-js/naming-convention refuses the typed `types` option', async () => {
   const { default: plugin } = await import(
     join(import.meta.dirname, '..', 'plugins', 'typescript-js.js')
@@ -154,6 +152,7 @@ const fixtures = {
 // the base arrives as an object: only index.js's absolute paths locate the plugins
 const entry = `import { defineConfig } from '@jlg/oxlint';\nexport default defineConfig({ rules: ${JSON.stringify(inert)} });\n`;
 
+// packed and installed under both linkers: only the published files ship, and dependencies resolve from the consumer's tree
 const runtimes = { bun: process.execPath, node: Bun.which('node') ?? 'node' };
 const linkers = ['hoisted', 'isolated'];
 /** ms: a pack plus two installs, or removing them; well past the 5 s hook default under a full-suite run */
