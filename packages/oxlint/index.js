@@ -24,12 +24,12 @@ const absolute = (specifier) => fileURLToPath(new URL(specifier, import.meta.url
 
 // ※ oxlint-js-plugins
 const jsPlugins = [
-  { name: 'import-js', specifier: absolute('./plugins/import-js.mjs') },
-  { name: 'react-js', specifier: absolute('./plugins/react-js.mjs') },
-  { name: 'unicorn-js', specifier: absolute('./plugins/unicorn-js.mjs') },
-  absolute('./plugins/eslint-js.mjs'),
-  absolute('./plugins/inline-config.mjs'),
-  absolute('./plugins/typescript-js.mjs'),
+  { name: 'import-js', specifier: absolute('./plugins/import-js.js') },
+  { name: 'react-js', specifier: absolute('./plugins/react-js.js') },
+  { name: 'unicorn-js', specifier: absolute('./plugins/unicorn-js.js') },
+  absolute('./plugins/eslint-js.js'),
+  absolute('./plugins/inline-config.js'),
+  absolute('./plugins/typescript-js.js'),
 ];
 
 // ※ oxlint-peer-coupling
@@ -427,7 +427,7 @@ const native = new Set(Object.keys(definitions.DummyRuleMap.properties));
 const wrapped = Object.fromEntries(
   await Promise.all(
     ['eslint', 'import', 'react', 'typescript', 'unicorn'].map(async (scope) => {
-      const { default: plugin } = await import(`./plugins/${scope}-js.mjs`);
+      const { default: plugin } = await import(`./plugins/${scope}-js.js`);
       return [scope, plugin.rules];
     }),
   ),

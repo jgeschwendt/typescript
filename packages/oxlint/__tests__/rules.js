@@ -9,7 +9,7 @@ const catalogs = await Promise.all(
     typescript: '@typescript-eslint/',
     unicorn: 'unicorn/',
   }).map(async ([scope, prefix]) => {
-    const { default: plugin } = await import(`../plugins/${scope}-js.mjs`);
+    const { default: plugin } = await import(`../plugins/${scope}-js.js`);
     return [prefix, scope, plugin.rules];
   }),
 );

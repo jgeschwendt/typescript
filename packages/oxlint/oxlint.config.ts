@@ -9,7 +9,7 @@ export default defineConfig({
       rules: { 'sort-keys': ['error', 'asc', { allowLineSeparatedGroups: true }] },
     },
     {
-      files: ['plugins/*.mjs'],
+      files: ['plugins/*.js'],
       rules: {
         // eslint-module-utils ignores `exports` maps, the only way these two resolve
         'import-js/no-unresolved': [
@@ -21,12 +21,12 @@ export default defineConfig({
         // eslint-plugin-import loads per rule by path: its index needs ESLint 9 internals
         'import/no-dynamic-require': 'off',
         // imported for its resolve-hook side effect
-        'import/no-unassigned-import': ['error', { allow: ['**/typescript6.mjs'] }],
+        'import/no-unassigned-import': ['error', { allow: ['**/typescript6.js'] }],
         'unicorn-js/no-top-level-side-effects': 'off',
       },
     },
     {
-      files: ['plugins/host.mjs'],
+      files: ['plugins/host.js'],
       // `jsdoc` is ESLint's getJSDocComment, kept diffable; its contract returns null;
       // consumers load this on Node 22, which ESLint and unicorn admit, with no Error.isError (verified 2026-10-20 · 22.23.3 probe)
       rules: {
@@ -36,7 +36,7 @@ export default defineConfig({
       },
     },
     {
-      files: ['plugins/typescript6.mjs'],
+      files: ['plugins/typescript6.js'],
       // Node's CommonJS resolver hook, the only one Bun routes through, called with Module as `this`
       rules: {
         'no-underscore-dangle': ['error', { allow: ['_resolveFilename'] }],
