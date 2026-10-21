@@ -54,7 +54,7 @@ const fixtured = Object.entries({
     'consistent-destructuring consistent-json-file-read expiring-todo-comments name-replacements no-for-loop no-keyword-prefix no-named-default no-unnecessary-polyfills no-unused-properties prefer-switch string-content',
 }).flatMap(([scope, names]) => names.split(' ').map((name) => `${scope}/${name}`));
 
-/** rules that check nothing without options, as in @jlg/eslint */
+/** rules that check nothing without options */
 const inert = {
   'eslint-js/no-restricted-syntax': ['error', 'DebuggerStatement'],
   'import-js/no-restricted-paths': ['error', { zones: [{ from: './packages', target: './src' }] }],

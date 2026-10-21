@@ -2,14 +2,14 @@
 
 ```stele
 kind: container
-purpose: Shareable oxlint base config, successor to @jlg/eslint. index.js is the whole base; defineConfig() adds overrides per detected bun/next/react/typescript, returns one flat config. Maximalist.
+purpose: Shareable oxlint base config. index.js is the whole base; defineConfig() adds overrides per detected bun/next/react/typescript, returns one flat config. Maximalist.
 commands:
   test: bun run --filter '@jlg/oxlint' test
   snapshot-regen: bun run --filter '@jlg/oxlint' test --update-snapshots
 invariants:
   - claim: SINGLE SOURCE OF TRUTH — index.js is the only base ruleset and defineConfig its only entry; no JSON copy, no `base` export; consumer overrides always follow the base's; never fork the data
     anchor: ※ oxlint-base
-  - claim: SNAPSHOT GATE — the rules.test.js bun snapshot (every rule of the enabled oxlint plugins and of @jlg/eslint's catalogs, one line each) and the define-config.test.js overrides snapshot (its typescript override derives from the catalogs) are the review gate for oxlint and typescript-eslint bumps; a bump adds new rules to on-categories as consumer-facing errors, so regen and review both diffs
+  - claim: SNAPSHOT GATE — the rules.test.js bun snapshot (every rule of the enabled oxlint plugins and of the wrapped ESLint plugins' catalogs, one line each) and the define-config.test.js overrides snapshot (its typescript override derives from the catalogs) are the review gate for oxlint and typescript-eslint bumps; a bump adds new rules to on-categories as consumer-facing errors, so regen and review both diffs
     anchor: ※ rules-gate
   - claim: MAXIMALIST OPT-OUT — every non-deprecated rule of the wrapped ESLint plugins that oxlint lacks runs through the -js plugins at error by default; the only mechanical exclusion is requiresTypeChecking; every other off is a named entry in `disabled` with a factual one-line reason (crash under the host, duplicate of a native rule, formatting oxfmt owns, non-JS language) — noise is never a reason, the owner walks every entry
     anchor: ※ opt-out-map
