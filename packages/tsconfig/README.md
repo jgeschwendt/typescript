@@ -1,6 +1,6 @@
 # @jlg/tsconfig
 
-The canonical [tsconfig](https://oxc.rs/docs/guide/usage/formatter) settings for
+The canonical [tsconfig](https://www.typescriptlang.org/tsconfig/) settings for
 `@jlg`
 
 ## Usage
