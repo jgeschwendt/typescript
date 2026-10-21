@@ -192,7 +192,7 @@ exports[`rules 1`] = `
   "eslint/require-unicode-regexp | pedantic | native | error | - | ",
   "eslint/require-yield | correctness | native | error | - | ",
   "eslint/sort-imports | style | native | error | set | ",
-  "eslint/sort-keys | style | native | error | - | ",
+  "eslint/sort-keys | style | native | error | set | ",
   "eslint/sort-vars | pedantic | native | error | - | ",
   "eslint/strict | - | js | error | - | ",
   "eslint/symbol-description | pedantic | native | error | - | ",

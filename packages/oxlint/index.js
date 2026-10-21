@@ -201,6 +201,8 @@ const rules = {
   // ES5 ended the octal reading of a leading 0, so a 10 says nothing; the real checks stay
   radix: ['error', 'as-needed'],
   'sort-imports': ['error', { ignoreDeclarationSort: true }],
+  // natural: a2 before a10; a blank line opens a group whose order encodes meaning
+  'sort-keys': ['error', 'asc', { allowLineSeparatedGroups: true, natural: true }],
 
   'id-length': ['error', { checkGeneric: false }],
   'no-inner-declarations': ['error', 'functions', { blockScopedFunctions: 'allow' }],

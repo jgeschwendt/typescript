@@ -3,25 +3,20 @@ import { defineConfig } from './index.js';
 export default defineConfig({
   ignorePatterns: ['**/*.d.ts'],
   overrides: [
-    // rules are grouped by plugin, each group sorted
-    {
-      files: ['index.js'],
-      rules: { 'sort-keys': ['error', 'asc', { allowLineSeparatedGroups: true }] },
-    },
     {
       files: ['plugins/*.js'],
       rules: {
-        // eslint-module-utils ignores `exports` maps, the only way these two resolve
-        'import-js/no-unresolved': [
-          'error',
-          { ignore: ['^@typescript-eslint/eslint-plugin$', '^eslint/use-at-your-own-risk$'] },
-        ],
         // jsPlugins load a plugin module's default export
         'import/no-default-export': 'off',
         // eslint-plugin-import loads per rule by path: its index needs ESLint 9 internals
         'import/no-dynamic-require': 'off',
         // imported for its resolve-hook side effect
         'import/no-unassigned-import': ['error', { allow: ['**/typescript6.js'] }],
+        // eslint-module-utils ignores `exports` maps, the only way these two resolve
+        'import-js/no-unresolved': [
+          'error',
+          { ignore: ['^@typescript-eslint/eslint-plugin$', '^eslint/use-at-your-own-risk$'] },
+        ],
         'unicorn-js/no-top-level-side-effects': 'off',
       },
     },
@@ -31,8 +26,8 @@ export default defineConfig({
       // consumers load this on Node 22, which ESLint and unicorn admit, with no Error.isError (verified 2026-10-20 · 22.23.3 probe)
       rules: {
         'max-statements': 'off',
-        'unicorn-js/prefer-error-is-error': 'off',
         'unicorn/no-null': 'off',
+        'unicorn-js/prefer-error-is-error': 'off',
       },
     },
     {
