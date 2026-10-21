@@ -12,13 +12,13 @@ runs `run` one directory below `files`, so detection has to walk up
 @param {Record<string, unknown>} files
 @param {() => T} run
 */
-const within = (files, run) => {
+const within = async (files, run) => {
   const directory = mkdtempSync(join(tmpdir(), 'oxlint-define-'));
   const cwd = process.cwd();
   write(directory, { ...files, 'nested/.keep': '' });
   try {
     process.chdir(join(directory, 'nested'));
-    return run();
+    return await run();
   } finally {
     process.chdir(cwd);
     rmSync(directory, { force: true, recursive: true });
@@ -88,40 +88,66 @@ test.each([
     forced: { bun: false, next: true },
     title: 'env overrides detection',
   },
-])('$title', ({ expected, files, forced }) => {
-  expect(within(files, () => environment(defineConfig({ env: forced })))).toStrictEqual(expected);
+])('$title', async ({ expected, files, forced }) => {
+  expect(await within(files, () => environment(defineConfig({ env: forced })))).toStrictEqual(
+    expected,
+  );
 });
 
-/** Node's LTS, below every floor */
+/** Node's LTS, below the 26 floors */
 const lts = 24;
-const gated = [
+const above26 = ['unicorn-js/prefer-iterator-zip'];
+const above24 = [
+  ...above26,
   'unicorn-js/prefer-get-or-insert-computed',
   'unicorn-js/prefer-iterator-concat',
-  'unicorn-js/prefer-iterator-zip',
   'unicorn-js/prefer-temporal',
   'unicorn-js/prefer-temporal-conversion',
   'unicorn-js/prefer-uint8array-base64',
   'unicorn-js/prefer-uint8array-hex',
+];
+const above22 = [
+  ...above24,
+  'unicorn-js/prefer-dispose',
+  'unicorn-js/prefer-error-is-error',
+  'unicorn-js/prefer-promise-try',
+  'unicorn-js/prefer-regexp-escape',
+];
+const gated = [
+  ...above22,
+  'unicorn-js/prefer-array-from-async',
+  'unicorn-js/prefer-group-by',
+  'unicorn-js/prefer-iterator-helpers',
+  'unicorn-js/prefer-iterator-to-array',
+  'unicorn-js/prefer-iterator-to-array-at-end',
+  'unicorn-js/prefer-promise-with-resolvers',
+  'unicorn-js/prefer-set-methods',
 ];
 /** @param {Record<string, unknown>} engines */
 const manifest = (engines) => ({ 'package.json': { engines } });
 test.each([
   { expected: [], files: { 'package.json': {} }, title: 'no engines keeps every API rule' },
   { expected: [], files: manifest({ node: '*' }), title: 'an unparsable engines.node keeps them' },
-  { expected: gated, files: manifest({ node: '>=24' }), title: 'Node 24 is below every floor' },
+  { expected: gated, files: manifest({ node: '>=20' }), title: 'Node 20 is below every floor' },
   {
-    expected: ['unicorn-js/prefer-iterator-zip'],
+    expected: above22,
+    files: manifest({ node: '^22.22.1 || >=24' }),
+    title: 'Node 22 clears its floor',
+  },
+  { expected: above24, files: manifest({ node: '>=24' }), title: 'Node 24 clears Error.isError' },
+  {
+    expected: above26,
     files: manifest({ node: '^26.1.0' }),
     title: 'Node 26 lacks only Iterator.zip',
   },
   { expected: [], files: manifest({ bun: '>=1.4' }), title: 'engines.bun alone meets every floor' },
   {
-    expected: gated,
+    expected: above24,
     files: { ...manifest({ node: '>=24' }), 'nested/package.json': { name: 'leaf' } },
     title: 'a workspace package without engines takes the floor from above',
   },
   {
-    expected: gated,
+    expected: above24,
     files: manifest({ node: '>=26' }),
     forced: { node: lts },
     title: 'env.node forces the major',
@@ -132,8 +158,8 @@ test.each([
     forced: { bun: true },
     title: 'env.bun meets every floor',
   },
-])('$title', ({ expected, files, forced }) => {
-  const { rules = {} } = within(files, () => defineConfig({ env: forced }));
+])('$title', async ({ expected, files, forced }) => {
+  const { rules = {} } = await within(files, () => defineConfig({ env: forced }));
   expect(gated.filter((key) => rules[key] === 'off')).toStrictEqual([...expected]);
 });
 
@@ -161,8 +187,8 @@ test("env keeps oxlint's own environments and drops bun/next/react/typescript an
   expect(defineConfig({ env: { node: lts, react: false } })).not.toHaveProperty('env');
 });
 
-test('settings.react.version comes from the installed React, else a far-future semver; consumer settings win', () => {
-  within(
+test('settings.react.version comes from the installed React, else a far-future semver; consumer settings win', async () => {
+  await within(
     { 'node_modules/react/package.json': { name: 'react', version: '19.3.0-canary-1' } },
     () => {
       expect(defineConfig().settings).toStrictEqual({ react: { version: '19.3.0' } });
@@ -171,7 +197,7 @@ test('settings.react.version comes from the installed React, else a far-future s
       ).toStrictEqual({ next: {}, react: { version: '18.2.0' } });
     },
   );
-  expect(within({}, () => defineConfig().settings)).toStrictEqual({
+  expect(await within({}, () => defineConfig().settings)).toStrictEqual({
     react: { version: '999.999.999' },
   });
 });
@@ -201,8 +227,28 @@ test.each([
     root: true,
     title: "the consumer's options win",
   },
-])('$title', ({ expected, files = {}, ...own }) => {
-  expect(within(files, () => defineConfig(own).options)).toStrictEqual(expected);
+])('$title', async ({ expected, files = {}, ...own }) => {
+  expect(await within(files, () => defineConfig(own).options)).toStrictEqual(expected);
+});
+
+/** a shared config wrapping the base, as a consumer's oxlint.config.js loads it */
+const wrapper = `import { defineConfig } from '${join(import.meta.dirname, '..', 'index.js')}';
+export default (config) => defineConfig(config);`;
+test.each([
+  {
+    expected: options,
+    path: 'oxlint.config.js',
+    title: 'the config in cwd through a wrapper is the root',
+  },
+  { path: 'sub/oxlint.config.js', title: 'a config below cwd through a wrapper is not' },
+])('$title', async ({ expected, path }) => {
+  const entry = `import wrap from '${path.includes('/') ? '../' : './'}wrapper.js';
+export default wrap();`;
+  const { default: wrapped } = await within(
+    { [`nested/${path}`]: entry, 'nested/wrapper.js': wrapper },
+    () => import(join(process.cwd(), path)),
+  );
+  expect(wrapped.options).toStrictEqual(expected);
 });
 
 test("the config in oxlint's cwd is the root unless root: false", () => {

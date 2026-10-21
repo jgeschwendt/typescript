@@ -21,4 +21,6 @@ export default defineConfig({
 
 > Runs under Node ≥24 or Bun ≥1.4 (`bun --bun oxlint`)—JS plugins included.
 
+A rule oxlint lacks natively is keyed by its `-js` scope—`import-js/no-internal-modules`, not `import/`—and a name oxlint has no rule for fails the whole config load.
+
 `off`, the other export, maps every rule the base turns off to the fact that turns it off.
