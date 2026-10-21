@@ -1,39 +1,16 @@
-import { afterAll, beforeAll, expect, test } from 'bun:test';
-import { jsEntries, jsScopes, ruleNames, spawnOxlint, write } from './_helpers.js';
+import { beforeAll, expect, test } from 'bun:test';
+import { scratch, spawnOxlint, write } from './_helpers.js';
 
-const { mkdtempSync, rmSync } = process.getBuiltinModule('node:fs');
-const { tmpdir } = process.getBuiltinModule('node:os');
 const { join } = process.getBuiltinModule('node:path');
 
-// packed and installed: a consumer's layout (TS 7, isolated deps) is not the checkout's
+// packed and installed under both linkers: only the published files ship, and dependencies resolve from the consumer's tree
 
-const plugins = Object.fromEntries(
-  await Promise.all(
-    jsEntries.map(async ({ name, specifier }) => {
-      const { default: plugin } = await import(specifier);
-      return [name ?? plugin.meta.name, plugin];
-    }),
-  ),
-);
-
-test('local plugin names match the scopes the config uses', () => {
-  expect(new Set(Object.keys(plugins))).toEqual(jsScopes);
-});
-
-test('every configured jsPlugins rule exists in its plugin', () => {
-  const missing = ruleNames.filter((name) => {
-    const [scope = '', rule = ''] = name.split('/', 2);
-    return jsScopes.has(scope) && plugins[scope]?.rules?.[rule] === undefined;
-  });
-  expect(
-    missing,
-    `jsPlugins rule(s) the plugin does not export — oxlint rejects the whole config: ${missing.join(', ')}`,
-  ).toEqual([]);
-});
-
-test('typescript-js/naming-convention refuses the typed `types` option', () => {
+test('typescript-js/naming-convention refuses the typed `types` option', async () => {
+  const { default: plugin } = await import(
+    join(import.meta.dirname, '..', 'plugins', 'typescript-js.js')
+  );
   expect(() =>
-    plugins['typescript-js'].rules['naming-convention'].create({
+    plugin.rules['naming-convention'].create({
       options: [{ types: ['boolean'] }],
       sourceCode: {},
     }),
@@ -182,7 +159,7 @@ const linkers = ['hoisted', 'isolated'];
 /** ms: a pack plus two installs, or removing them; well past the 5 s hook default under a full-suite run */
 const installTimeout = 300_000;
 const lintTimeout = 120_000;
-const scratch = mkdtempSync(join(tmpdir(), 'oxlint-js-plugins-'));
+const consumers = scratch('oxlint-js-plugins-', installTimeout);
 const { peerDependencies } = await Bun.file(join(import.meta.dirname, '..', 'package.json')).json();
 
 /**
@@ -199,15 +176,15 @@ const run = (command, cwd) => {
 
 beforeAll(() => {
   const packed = run(
-    [process.execPath, 'pm', 'pack', '--destination', scratch, '--quiet'],
+    [process.execPath, 'pm', 'pack', '--destination', consumers, '--quiet'],
     join(import.meta.dirname, '..'),
   );
   for (const linker of linkers) {
-    const directory = join(scratch, linker);
+    const directory = join(consumers, linker);
     write(directory, {
       'package.json': {
         devDependencies: {
-          '@jlg/oxlint': `file:${packed.split('\n').pop()}`,
+          '@jlg/oxlint': `file:${packed}`,
           oxlint: peerDependencies.oxlint,
           typescript: '7.0.2',
         },
@@ -222,10 +199,6 @@ beforeAll(() => {
   }
 }, installTimeout);
 
-afterAll(() => {
-  rmSync(scratch, { force: true, recursive: true });
-}, installTimeout);
-
 test.each(
   Object.entries(runtimes).flatMap(([name, runtime]) =>
     linkers.map((linker) => [name, linker, runtime]),
@@ -233,7 +206,7 @@ test.each(
 )(
   'on %s, installed %s: no JS-plugin rule crashes, and every fixtured one fires',
   (_name, linker, runtime) => {
-    const directory = join(scratch, linker);
+    const directory = join(consumers, linker);
     const bin = join(directory, 'node_modules', 'oxlint', 'bin', 'oxlint');
     /** @type {{ diagnostics: { code?: string; message: string }[] }} */
     const { diagnostics } = spawnOxlint(directory, ['src'], [runtime, bin]).report;

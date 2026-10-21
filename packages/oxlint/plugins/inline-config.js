@@ -1,9 +1,9 @@
 /** line or block: the disable/enable family and eslint-env */
-const anyComment =
+const anyDirective =
   /^\s*(?<prefix>eslint|oxlint)-(?<kind>disable|disable-line|disable-next-line|enable|env)(?:\s|$)/u;
 
 /** block only, as ESLint reads them: inline rule config and global declarations */
-const blockComment = /^\s*(?:eslint|exported|globals?|oxlint)(?:\s|$)/u;
+const blockDirective = /^\s*(?:eslint|exported|globals?|oxlint)(?:\s|$)/u;
 
 const name = 'inline-config';
 
@@ -28,14 +28,17 @@ const plugin = {
       create: (context) => ({
         Program() {
           for (const comment of context.sourceCode.getAllComments()) {
-            const match = anyComment.exec(comment.value);
+            const match = anyDirective.exec(comment.value);
             if (match !== null && selfSuppressing(comment, match)) {
               const { line } = comment.loc.start;
               throw new Error(
                 `${name}/no-directives: ${context.filename}:${line} carries a directive that would suppress its own report; inline linter directives are not allowed — change the config instead.`,
               );
             }
-            if (match !== null || (comment.type === 'Block' && blockComment.test(comment.value))) {
+            if (
+              match !== null ||
+              (comment.type === 'Block' && blockDirective.test(comment.value))
+            ) {
               context.report({ loc: comment.loc, messageId: 'banned' });
             }
           }

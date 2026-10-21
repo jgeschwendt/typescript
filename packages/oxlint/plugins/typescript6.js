@@ -1,10 +1,10 @@
-import Module from 'node:module';
-import { fileURLToPath } from 'node:url';
+const Module = process.getBuiltinModule('node:module');
+const { fileURLToPath } = process.getBuiltinModule('node:url');
 
 /** typescript-eslint throws on TS 7, which ships no JS API */
 const typescript6 = fileURLToPath(import.meta.resolve('@typescript/typescript6'));
 
-const isFromTypescriptEslint = (importer = '') =>
+const isFromTypescriptEslint = (importer) =>
   /[/\\](?:@typescript-eslint|ts-api-utils)[/\\]/u.test(importer);
 
 if (typeof Module.registerHooks === 'function') {

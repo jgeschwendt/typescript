@@ -8,7 +8,7 @@ export default defineConfig({
       rules: {
         // jsPlugins load a plugin module's default export
         'import/no-default-export': 'off',
-        // eslint-plugin-import loads per rule by path: its index needs ESLint 9 internals
+        // import-js.js requires the parser by absolute path
         'import/no-dynamic-require': 'off',
         // imported for its resolve-hook side effect
         'import/no-unassigned-import': ['error', { allow: ['**/typescript6.js'] }],
@@ -50,7 +50,6 @@ export default defineConfig({
     },
   ],
   rules: {
-    'import/no-nodejs-modules': 'off',
     // house comment style (jgeschwendt/claude rules/comments.md): one-line docblocks
     'unicorn-js/single-line-block-comment-style': ['error', 'single-line'],
   },
