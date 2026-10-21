@@ -16,7 +16,7 @@ invariants:
 hazards:
   - claim: FOOTGUN — an unknown rule NAME hard-fails the whole oxlint config (exit 1, nothing lints); a valid rule whose plugin isn't enabled is a SILENT no-op; both guarded by rule-existence.test.js
     anchor: ※ rule-existence-guard
-  - claim: VERSION PAIRING — oxlint 1.87 declares peer oxlint-tsgolint >=7.0.2003 (probed 2026-10-09); an old tsgolint breaks type-aware SILENTLY ('Failed to find tsgolint executable') and a TS-free repo still lints green; probe type-aware directly when bumping
+  - claim: VERSION PAIRING — oxlint 1.89 declares peer oxlint-tsgolint >=7.0.2003 (probed 2026-10-20); an old tsgolint breaks type-aware SILENTLY ('Failed to find tsgolint executable') and a TS-free repo still lints green; probe type-aware directly when bumping
     anchor: ※ oxlint-tsgolint-pairing
   - claim: PEER COUPLING — peerDependencies.oxlint is a caret range though JS plugins are alpha; naming a version-N-only rule in index.js puts a floor of N under any range it widens to (older consumers hard-fail on the unknown name); category-activated rules don't
     anchor: ※ oxlint-peer-coupling
