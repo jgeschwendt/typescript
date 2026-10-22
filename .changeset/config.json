@@ -10,6 +10,6 @@
   ],
   "commit": false,
   "format": "oxfmt",
-  "ignore": [],
+  "ignore": ["@jlg/hud"],
   "updateInternalDependencies": "patch"
 }

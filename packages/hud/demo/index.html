@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
+    <title>@jlg/hud demo</title>
+    <link rel="stylesheet" href="/page.css" />
+    <script type="module" src="/main.js"></script>
+  </head>
+  <body>
+    <main>
+      <h1 id="title">Quarterly report</h1>
+      <p>
+        Press <kbd>c</kbd> to pick an element, click to pin a comment. Drag a pin to re-anchor it.
+      </p>
+      <h2>Summary</h2>
+      <p>
+        Revenue grew on the back of the new pricing tiers, while support volume held flat. The
+        second half carries the migration work deferred from spring.
+      </p>
+      <p>Headcount stays level; contractors cover the migration peak.</p>
+      <h2>Figures</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>quarter</th>
+            <th>revenue</th>
+            <th>tickets</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>q1</td>
+            <td>1.2m</td>
+            <td>340</td>
+          </tr>
+          <tr>
+            <td>q2</td>
+            <td>1.5m</td>
+            <td>352</td>
+          </tr>
+          <tr>
+            <td>q3</td>
+            <td>1.9m</td>
+            <td>338</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Feedback</h2>
+      <form>
+        <label>name <input name="name" /></label>
+        <label>notes <textarea name="notes" rows="3"></textarea></label>
+        <button type="button">send</button>
+      </form>
+    </main>
+    <hud></hud>
+  </body>
+</html>

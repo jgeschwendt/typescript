@@ -1,0 +1,34 @@
+import { defineConfig } from '@jlg/oxlint';
+
+export default defineConfig({
+  env: { browser: true },
+  ignorePatterns: ['dist/**'],
+  overrides: [
+    // the package entry is a re-export list by design
+    { files: ['src/index.ts'], rules: { 'unicorn-js/no-barrel-files': 'off' } },
+    // the demo runs the source as a page: seeded coordinates, a port, a printed URL
+    {
+      files: ['demo/**'],
+      rules: {
+        'import/no-relative-parent-imports': 'off',
+        'no-console': 'off',
+        'no-magic-numbers': 'off',
+      },
+    },
+    // a test's geometry is literal pixels and percentages; its lookups are known to hit
+    {
+      files: ['src/*.test.ts'],
+      rules: { 'no-magic-numbers': 'off', 'typescript/no-non-null-assertion': 'off' },
+    },
+  ],
+  rules: {
+    // the API's coordinates are x and y
+    'id-length': ['error', { checkGeneric: false, exceptions: ['x', 'y'] }],
+    // a global event map is augmented only by an interface extending a mapped type
+    'typescript/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
+    // DOM nodes are mutable by nature: no Element type is deeply readonly
+    'typescript/prefer-readonly-parameter-types': 'off',
+    // the exported predicates are named by the API: unique, visible
+    'unicorn-js/consistent-boolean-name': 'off',
+  },
+});
