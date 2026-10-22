@@ -1,0 +1,29 @@
+{
+  "name": "@jlg/hud",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "demo": "bun demo/serve.ts",
+    "test": "bun test",
+    "typecheck": "tsc -p ."
+  },
+  "devDependencies": {
+    "@happy-dom/global-registrator": "^21.0.4",
+    "@jlg/oxlint": "^0.1.4",
+    "@jlg/tsconfig": "^0.1.1",
+    "@types/bun": "^1.4.3",
+    "typescript": "^7.0.2"
+  }
+}
