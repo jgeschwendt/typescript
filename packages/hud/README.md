@@ -28,7 +28,7 @@ hud.threads = await load(); // setting threads or page re-renders
 | `select(id)`      | open the panel on a thread and scroll its pin into view; `''` closes it |
 | `destroy()`       | remove the layer and every listener and observer                        |
 
-Press `c` (outside inputs, textareas, contenteditable) or call `pick()`: the element under the cursor is outlined, Escape cancels, a click pins the spot and opens a compose box — Enter sends, Shift+Enter breaks the line, Escape cancels. Pins for the current `page` sit where their selector resolves (none when it resolves to nothing or a hidden element), follow resize, scroll and DOM changes, and drag to re-anchor. An open pin shows its 1-based place among the page's open threads, a resolved one a dimmed `✓`. Clicking a pin opens the panel: the page's threads, open first, each with its messages, a reply box and a resolve button.
+Press `c` (outside inputs, textareas, contenteditable) or call `pick()`: the cursor turns to a crosshair and the element under it is outlined, Escape cancels, a click drops a hollow draft pin numbered as the next thread and opens a compose box — Enter sends, Shift+Enter breaks the line, Escape cancels and drops the draft, which the real pin replaces once the host sets `threads`. Pins for the current `page` sit where their selector resolves (none when it resolves to nothing or a hidden element), follow resize, scroll and DOM changes, and drag to re-anchor. An open pin shows its 1-based place among the page's open threads, a resolved one a dimmed `✓`. Clicking a pin opens the panel: the page's threads, open first, each with its messages, a reply box and a resolve button.
 
 ## Events
 

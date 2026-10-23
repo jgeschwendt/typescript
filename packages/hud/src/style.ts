@@ -35,6 +35,7 @@ button { cursor: pointer; }
 #pins [data-status="resolved"] { opacity: 0.35; }
 #pins [data-on="true"] { outline: 1px solid var(--accent); outline-offset: 2px; }
 #pins [data-drag="true"] { cursor: grabbing; pointer-events: none; }
+#pins [data-draft="true"] { background: var(--bg); border-color: var(--accent); color: var(--accent); pointer-events: none; }
 #box {
   background: color-mix(in srgb, var(--accent) 8%, transparent);
   border: 1px solid var(--accent);

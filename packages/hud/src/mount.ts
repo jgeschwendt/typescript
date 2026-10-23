@@ -49,14 +49,15 @@ interface Options {
 
 interface Layer {
   box: HTMLElement;
-  compose?: HTMLElement;
+  close?: () => void;
+  cursor: string;
   frame: number;
   host: Element;
   isPicking: boolean;
   page: string;
   panel: HTMLElement;
   pins: HTMLElement;
-  placed: Map<HTMLElement, Thread>;
+  placed: Map<HTMLElement, Pick<Thread, 'selector' | 'x' | 'y'>>;
   replies: Map<string, HTMLTextAreaElement>;
   selected?: string;
   shadow: ShadowRoot;
@@ -269,11 +270,16 @@ const onSelect = (layer: Layer, { target }: Event): void => {
 const stopPicking = (layer: Layer): void => {
   layer.isPicking = false;
   layer.box.hidden = true;
+  document.documentElement.style.cursor = layer.cursor;
 };
 
 const pick = (layer: Layer): void => {
-  layer.compose?.remove();
+  layer.close?.();
+  if (!layer.isPicking) {
+    layer.cursor = document.documentElement.style.cursor;
+  }
   layer.isPicking = true;
+  document.documentElement.style.cursor = 'crosshair';
 };
 
 const pickable = (layer: Layer, { target }: Event): Element | undefined =>
@@ -309,27 +315,43 @@ const onHover = (layer: Layer, event: PointerEvent): void => {
   Object.assign(layer.box.style, { height: `${height}px`, width: `${width}px` });
 };
 
+/**
+A hollow pin numbered as the next open thread, standing in until render replaces it with the real one.
+*/
+const drafted = (layer: Layer, at: Pick<Thread, 'selector' | 'x' | 'y'>): HTMLElement => {
+  const draft = create('button', {
+    textContent: String(layer.pins.querySelectorAll('[data-status="open"]').length + 1),
+  });
+  draft.dataset['draft'] = 'true';
+  layer.placed.set(draft, at);
+  layer.pins.append(draft);
+  place(layer);
+  return draft;
+};
+
 const openCompose = (layer: Layer, target: Element, { clientX, clientY }: MouseEvent): void => {
   const at = { selector: selectorFor(target), ...pinOf(target, clientX, clientY) };
-  const close = (): void => {
-    layer.compose?.remove();
+  const draft = drafted(layer, at);
+  const compose = create('div', { id: 'compose' });
+  layer.close = (): void => {
+    compose.remove();
+    draft.remove();
   };
   const area = field(
     'comment',
     (text) => {
-      close();
+      compose.remove();
       emit(layer, 'open', { ...at, text });
     },
-    close,
+    layer.close,
   );
-  const hint = create('small', { textContent: 'enter to send · esc to cancel' });
-  layer.compose = create('div', { id: 'compose' }, area, hint);
+  compose.append(area, create('small', { textContent: 'enter to send · esc to cancel' }));
   moveTo(
-    layer.compose,
+    compose,
     Math.min(clientX, innerWidth - composeWidth),
     Math.min(clientY, innerHeight - composeHeight),
   );
-  layer.shadow.append(layer.compose);
+  layer.shadow.append(compose);
   area.focus();
 };
 
@@ -407,6 +429,7 @@ const createLayer = (
   shadow.adoptedStyleSheets = [sheet];
   const layer: Layer = {
     box: create('div', { hidden: true, id: 'box' }),
+    cursor: '',
     frame: 0,
     host,
     isPicking: false,
@@ -441,6 +464,9 @@ const mount = (
   render(layer);
   return {
     destroy: () => {
+      if (layer.isPicking) {
+        stopPicking(layer);
+      }
       controller.abort();
       root.remove();
     },
