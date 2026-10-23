@@ -161,6 +161,55 @@ test('the picker opens a compose popover and submits hud:open', () => {
   expect(shadow.querySelector('#compose')).toBeNull();
 });
 
+test('picking sets a crosshair; a click drafts the next pin until the thread arrives', () => {
+  const { style } = document.documentElement;
+  style.cursor = 'help';
+  const threads = [thread('a', '#top'), thread('r', 'p', { status: 'resolved' })];
+  const { hud, shadow } = setup(threads);
+  const cursors: string[] = [];
+  const draft = (): HTMLElement | undefined =>
+    shadow.querySelector<HTMLElement>('[data-draft="true"]') ?? undefined;
+  const pickH1 = (): void => {
+    hud.pick();
+    cursors.push(style.cursor);
+    query('h1').dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 25, clientY: 10 }));
+    cursors.push(style.cursor);
+  };
+  box(query('h1'), new DOMRect(0, 0, 100, 40));
+  hud.pick();
+  key({ key: 'Escape' });
+  cursors.push(style.cursor);
+  hud.pick();
+  pickH1();
+  expect([draft()!.textContent, draft()!.style.left, draft()!.style.top]).toEqual([
+    '2',
+    '25px',
+    '10px',
+  ]);
+  key({ key: 'Escape' }, shadow.querySelector('[placeholder="comment"]')!);
+  expect(draft()).toBeUndefined();
+  pickH1();
+  const area = shadow.querySelector<HTMLTextAreaElement>('[placeholder="comment"]')!;
+  area.value = 'here';
+  key({ key: 'Enter' }, area);
+  expect(draft()).toBeDefined();
+  hud.threads = [...threads, thread('b', '#top')];
+  expect([
+    draft(),
+    ...[...shadow.querySelectorAll('button[data-status]')].map((pin) => pin.textContent),
+  ]).toEqual([undefined, '1', '2', '✓']);
+  hud.pick();
+  hud.destroy();
+  expect([...cursors, style.cursor]).toEqual([
+    'help',
+    'crosshair',
+    'help',
+    'crosshair',
+    'help',
+    'help',
+  ]);
+});
+
 test('pins, panel, reply, resolve, re-anchor', async () => {
   const threads = [
     thread('r', 'p', { status: 'resolved' }),
