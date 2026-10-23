@@ -38,7 +38,11 @@ export default defineConfig({
   // engines.node >=22: rules naming an API Node 22 lacks (Error.isError among them) stay off
   env: { node: 22 },
   ignorePatterns: ['dist/**'],
+  // section dividers end at column 100, oxfmt's width; comments are the one thing oxfmt never wraps
+  jsPlugins: ['./lint/divider.js'],
   overrides: [
+    // oxlint loads a jsPlugin's default export
+    { files: ['lint/*.js'], rules: { 'import/no-default-export': 'off' } },
     // `new Set(tags).size` is the unique count; prefer-set-size refuses the spread that would avoid it
     { files: ['src/bounds.test.ts'], rules: { 'unicorn-js/no-unreadable-new-expression': 'off' } },
     {
@@ -186,5 +190,6 @@ export default defineConfig({
     'unicorn-js/prefer-global-number-constants': 'off',
     // a try spans the walk it guards: one handler per call, never one per item
     'unicorn-js/try-complexity': 'off',
+    'verax/divider': 'error',
   },
 });

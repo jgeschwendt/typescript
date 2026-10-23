@@ -27,7 +27,7 @@ import {
 } from './core.js';
 import type { StandardSchemaV1 } from './standard.js';
 
-// ─── leaves: one predicate decides, and the output is the input ────────────
+// ─── leaves: one predicate decides, and the output is the input ──────────────────────────────────
 
 /**
 Each leaf's predicate and the noun its issue names: containers call `test`
@@ -131,7 +131,7 @@ export const literal = <const TValue extends Primitive>(value: TValue): Schema<T
 
 export const unknown = (): Schema => leaf({ kind: 'unknown' }, 'unknown', () => true);
 
-// ─── wrappers: non-null is the default, as in GraphQL ────────────────────────
+// ─── wrappers: non-null is the default, as in GraphQL ────────────────────────────────────────────
 
 /**
 Checks items by index, never through the input's own methods or iterator, so holes are checked too. Each item is read once; the output is a fresh array of what was read.
@@ -297,7 +297,7 @@ export const optional = <TSchema extends StandardSchemaV1>(
 ): Optional<Infer<TSchema>, Input<TSchema>> =>
   wrap({ kind: 'optional', of }, of) as Optional<Infer<TSchema>, Input<TSchema>>;
 
-// ─── named composites ────────────────────────────────────────────────────────
+// ─── named composites ────────────────────────────────────────────────────────────────────────────
 
 /**
 Splits `(body)` or `(name, body)`; the name reaches the def only when given.
@@ -1028,7 +1028,7 @@ export function union<const TMembers extends readonly StandardSchemaV1[]>(
 }
 
 // ※ verax-def-identity
-// ─── refine and coerce keep the def — sdl() sees through them ────────────────
+// ─── refine and coerce keep the def — sdl() sees through them ────────────────────────────────────
 
 /**
 Narrows accepted values without changing the type. Skipped once the inner schema fails.

@@ -75,7 +75,7 @@ export interface Impl<TOut = unknown> {
   readonly run: (value: unknown, context: Context) => TOut;
 }
 
-// ─── issues ─────────────────────────────────────────────────────────────────
+// ─── issues ──────────────────────────────────────────────────────────────────────────────────────
 
 const MAX_ISSUES = 100;
 const TOO_COMPLEX = 'Too complex';
@@ -97,7 +97,7 @@ export const issue = (context: Context, message: string, path?: PropertyKey[]): 
   }
 };
 
-// ─── the containers being walked ────────────────────────────────────────────
+// ─── the containers being walked ─────────────────────────────────────────────────────────────────
 
 const MAX_DEPTH = 512;
 /**
@@ -268,7 +268,7 @@ const close = (from: number): void => {
   frames -= 1;
 };
 
-// ─── describing values in messages ──────────────────────────────────────────
+// ─── describing values in messages ───────────────────────────────────────────────────────────────
 
 const MAX_STRING = 40;
 /**
@@ -329,7 +329,7 @@ export const describe = (value: unknown): string => {
   }
 };
 
-// ─── unions ─────────────────────────────────────────────────────────────────
+// ─── unions ──────────────────────────────────────────────────────────────────────────────────────
 
 const OVERFLOW = /call stack/iu;
 
@@ -423,7 +423,7 @@ const explain = (error: unknown): string => {
   return describe(error);
 };
 
-// ─── schemas, and schemas from elsewhere ────────────────────────────────────
+// ─── schemas, and schemas from elsewhere ─────────────────────────────────────────────────────────
 
 /**
 Keyed by the `~standard` object, which a spread or copy of the schema shares.
@@ -523,7 +523,7 @@ export const impl = (spec: StandardSchemaV1): Impl => {
   return impls.get(properties as object) ?? foreign(spec);
 };
 
-// ─── the verbs ──────────────────────────────────────────────────────────────
+// ─── the verbs ───────────────────────────────────────────────────────────────────────────────────
 
 type Result<TOut> =
   | { readonly issues?: undefined; readonly value: TOut }

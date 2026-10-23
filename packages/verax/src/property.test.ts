@@ -30,7 +30,7 @@ import {
   validate,
 } from './index.js';
 
-// ─── schema descriptions ─────────────────────────────────────────────────────
+// ─── schema descriptions ─────────────────────────────────────────────────────────────────────────
 
 type Primitive = bigint | boolean | number | string | null | undefined;
 type Shape = readonly (readonly [string, Desc])[];
@@ -137,7 +137,7 @@ const CONVERTERS = {
 } as const;
 type Convert = keyof typeof CONVERTERS;
 
-// ─── the reference model ─────────────────────────────────────────────────────
+// ─── the reference model ─────────────────────────────────────────────────────────────────────────
 
 type Verdict = { readonly ok: false } | { readonly ok: true; readonly out: unknown };
 const REJECT: Verdict = { ok: false };
@@ -385,7 +385,7 @@ const mirrors = (model: unknown, output: unknown, inputs: ReadonlySet<object>): 
   );
 };
 
-// ─── description → verax ─────────────────────────────────────────────────────
+// ─── description → verax ─────────────────────────────────────────────────────────────────────────
 
 const COMPILERS: Table<Schema, []> = {
   boolean: () => boolean(),
@@ -411,7 +411,7 @@ const COMPILERS: Table<Schema, []> = {
 
 const compile = (desc: Desc): Schema => dispatch(COMPILERS, desc);
 
-// ─── description arbitraries ─────────────────────────────────────────────────
+// ─── description arbitraries ─────────────────────────────────────────────────────────────────────
 
 const MAX_DEPTH = 4;
 const MAX_FIELDS = 4;
@@ -556,7 +556,9 @@ const { desc: descArb } = fc.letrec<{ desc: Desc }>((tie) => {
   };
 });
 
-// ─── value arbitraries, biased toward the schema ───────────────────────────── Values are recipes, built fresh per run: fast-check probes and prints what it generates, and a revoked proxy or poisoned getter would throw inside it.
+// ─── value arbitraries, biased toward the schema ─────────────────────────────────────────────────
+
+// Values are recipes, built fresh per run: fast-check probes and prints what it generates, and a revoked proxy or poisoned getter would throw inside it.
 
 interface Recipe {
   readonly make: () => unknown;
@@ -883,7 +885,7 @@ const near = (desc: Desc, hostile: boolean): fc.Arbitrary<Recipe> =>
 const caseArb = (hostile: boolean): fc.Arbitrary<{ desc: Desc; value: Recipe }> =>
   descArb.chain((desc) => near(desc, hostile).map((value) => ({ desc, value })));
 
-// ─── properties ──────────────────────────────────────────────────────────────
+// ─── properties ──────────────────────────────────────────────────────────────────────────────────
 
 const RUNS: fc.Parameters<unknown> = {
   numRuns: 3000,
