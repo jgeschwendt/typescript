@@ -99,7 +99,10 @@ but an engine may step over an object's non-enumerable or symbol keys, uncounted
   16× the match never trip it. Waste that compounds does: a recursive union whose members differ
   only below the recursion tries every path, so input some 20 levels deep is `Too complex` even
   when valid — give its members a discriminant.
-- A union that fails for a limit reports it at the union's own path, not where it was met.
+- A union that fails for the budget reports `Too complex` at its own path, not where it was met.
+  Explaining a failed union tries each member's full check, charged as failed members are, and
+  each issue's path is work; an explanation that runs past the budget is undone — the mismatch
+  stands — and is the call's last.
 - `parse` and `validate` copy each path: an object shared along many paths is copied along
   each, so their memory, like their time, grows with paths — within the budget, up to roughly
   600 MB for one large shared object or record.
@@ -127,6 +130,17 @@ but an engine may step over an object's non-enumerable or symbol keys, uncounted
   failure, checking leaf fields, then unknown keys, before nested ones — so a discriminant field
   makes recursive unions linear regardless of key order. A member that throws failed, except on
   stack exhaustion (a `RangeError` about the call stack), which fails the whole check.
+- A union that rejects says why, in a top-level call only — a validation nested in a callback
+  reports the mismatch alone, as its caller's verdict is still open. Tagged — every member an
+  `object`, or a `refine` of one (never a `coerce`, which may rewrite the tag), holding a distinct
+  literal at one key — it reports the member the value's tag names, or one issue at that key
+  naming the tags it accepts: `__typename: Expected "Ping" | "Track", received "Pong"`. Otherwise
+  it reports its closest member: of those failing below the value itself and knowing every key
+  it holds, the one with the fewest issues, the first on a tie. Only the outermost failing
+  untagged union explains itself: comparing members, a union nested in one is taken to pass, and
+  in the closest member's issues a nested untagged union is its mismatch, at its path (a tagged
+  one still reports its member). When no member qualifies, it is `Expected User, received
+  object` (or `Too deep`) at the union's path. A member's throw is its issue, at its path.
 - A discriminated union finds its member by lookup: when every member is a verax `object` (not
   refined or coerced) holding a defined `literal` at one key, a distinct value in each (`0` and
   `-0` count as one), read after only built-in leaf fields, the value's key is read once, first,
@@ -143,7 +157,8 @@ but an engine may step over an object's non-enumerable or symbol keys, uncounted
   the input's cyclic references. `is` builds only what a `refine` test must see.
 - Rejection costs a second pass: a fast check decides, then a full check collects the issues —
   so on invalid input `refine`/`coerce` callbacks and input getters run again, and inside a
-  union once per member tried.
+  union once per member tried — then, to explain a union that rejects, once more per member
+  compared and again for the closest.
 - Schemas come from verax's factories; a spread or copy of one is that schema. A Standard Schema
   from elsewhere nests as a field, list item, union member, or under `nullable`/`optional`, typed
   by its own `~standard.types`; `refine`, `coerce` and `sdl()` need verax's own.

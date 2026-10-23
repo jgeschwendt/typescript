@@ -1040,8 +1040,9 @@ describe('a discriminated union finds its member by lookup, with the verdict of 
   });
   test('J1 lookup keeps what trying each rejects: 0 and -0 are distinct literals, and a refined member is not an object', () => {
     const Signed = union([object({ k: literal(0) }), object({ k: literal(-0), x: int() })]);
+    // Tried in turn: each member fails one field below, and the first is closest.
     expect(validate({ k: -0 }, Signed).issues).toEqual([
-      { message: 'Expected union member, received object', path: [] },
+      { message: 'Expected 0, received -0', path: ['k'] },
     ]);
     expect(Object.is(parse({ k: -0, x: 1 }, Signed).k, -0)).toBe(true);
     expect(is({ k: 0 }, Signed)).toBe(true);
@@ -1320,5 +1321,61 @@ describe('record keeps the guarantees object does', () => {
     expect(parse({ type: 'a' }, Either)).toEqual({ type: 'a' });
     expect(parse({ type: 'b' }, Either)).toEqual({ type: 'b' });
     expect(is({ type: 1 }, Either)).toBe(false);
+  });
+});
+
+describe('a failed union explains itself within the budget', () => {
+  test('U4 only the outermost untagged union explains, and a union nested in a member tried is taken to pass: linear in width and depth', () => {
+    const levels = 511;
+    const cost = (width: number): { calls: number; issues: readonly Issue[] | undefined } => {
+      const budget = steps(Infinity);
+      // Member 0's tag passes at every level: its fast check descends; the rest fail on the tag.
+      const Link: Schema = union(
+        Array.from({ length: width }, (_value, at) =>
+          object({
+            get next(): Schema {
+              return coerce(nullable(Link), budget.tick);
+            },
+            [`t${at}`]: literal(1),
+          }),
+        ),
+      );
+      const value = chain(levels, (next) => ({ next: next ?? 'bottom', t0: 1 }));
+      const { issues } = validate(value, Link);
+      return { calls: budget.calls, issues };
+    };
+    const [narrow, wide] = [cost(3), cost(400)];
+    for (const { issues } of [narrow, wide]) {
+      expect(issues).toEqual([
+        { message: 'Expected union member, received object', path: ['next'] },
+      ]);
+    }
+    // A pass to judge, one to find issues, one for the closest's: 3 per level, and one per member tried.
+    expect(narrow.calls).toBeLessThanOrEqual(3 * (levels + 1) + 3);
+    expect(wide.calls).toBeLessThanOrEqual(3 * (levels + 1) + 400);
+  });
+  test('U4 an explanation that runs past the budget is undone: the mismatch stands, and the rest of the call is judged as before', () => {
+    const budget = steps(Infinity);
+    // `items` before the tag: each member tried walks the whole list before failing.
+    const members = Array.from({ length: 40 }, (_value, at) =>
+      object({ items: list(coerce(int(), budget.tick)), [`t${at}`]: literal(1) }),
+    );
+    const items = Array.from({ length: 50_000 }, (_value, at) => at);
+    expect(
+      validate({ first: { items }, second: 'x' }, object({ first: union(members), second: int() }))
+        .issues,
+    ).toEqual([
+      { message: 'Expected union member, received object', path: ['first'] },
+      { message: 'Expected Int, received "x"', path: ['second'] },
+    ]);
+    // Short of every member's full walk, 2 million items.
+    expect(budget.calls).toBeLessThanOrEqual(1_200_000);
+    // A nested call never explains: its caller's verdict is still open, and shares the budget.
+    const Logs = refine(
+      unknown(),
+      'logs',
+      (value) => validate(value, union(members)).issues !== undefined,
+    );
+    expect(validate({ items }, Logs)).toEqual({ value: { items } });
   });
 });

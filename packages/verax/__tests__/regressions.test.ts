@@ -141,7 +141,7 @@ describe('lists and hostile input', () => {
   test('#9 a throwing member leaves path and depth as it found them; every callback is guarded', () => {
     expect(
       validate({ inner: { item: 1 } }, object({ inner: union([object({ item: Throws })]) })).issues,
-    ).toEqual([{ message: 'Expected union member, received object', path: ['inner'] }]);
+    ).toEqual([{ message: 'Threw: 1', path: ['inner', 'item'] }]);
     expect(
       is(
         [{ item: 1 }, { item: 1 }],
@@ -357,7 +357,7 @@ describe('a union member stops at its first issue', () => {
     expect(steps).toBeLessThanOrEqual(budget);
     steps = 0;
     expect(validate({ child: { child: null, kind: 'x' }, kind: 'b' }, Tree).issues).toEqual([
-      { message: 'Expected Tree, received object', path: [] },
+      { message: 'Expected "a" | "b", received "x"', path: ['child', 'kind'] },
     ]);
     // Getters are read once per object schema, on first use — never per validation.
     expect(reads).toBe(2);
@@ -1122,5 +1122,153 @@ describe('a union verdict depends on its path', () => {
     expect(is(value.right, object({ back: Tried }))).toBe(true);
     expect(is(value, Root)).toBe(true);
     expect(validate(value, Root).issues).toBeUndefined();
+  });
+});
+
+// The 2026-10-23 union-errors pass: a failed union says why, not only that it failed.
+describe('a failed union reports why', () => {
+  const Email = scalar('Email', (value): value is string => String(value).includes('@'));
+  const Phone = scalar('Phone', (value): value is string => String(value).startsWith('+'));
+  const User = union('User', [
+    object('EmailUser', { email: Email, name: string(), phone: optional(Phone) }),
+    object('PhoneUser', { email: optional(Email), name: string(), phone: Phone }),
+  ]);
+  const Message = union('Message', [
+    object('Ping', { __typename: literal('Ping'), at: int() }),
+    object('Track', { __typename: literal('Track'), event: string(), props: object({ n: int() }) }),
+  ]);
+  test('U1 tried in turn: the closest member’s issues — fewest, first on a tie, never one failing at the value itself', () => {
+    expect(validate({ name: 'A', phone: '555' }, User).issues).toEqual([
+      { message: 'Expected Phone, received "555"', path: ['phone'] },
+    ]);
+    expect(validate([{ name: 1 }], list(User)).issues).toEqual([
+      { message: 'Expected Email, received undefined', path: [0, 'email'] },
+      { message: 'Expected String, received 1', path: [0, 'name'] },
+    ]);
+    expect(validate({ a: 'x' }, union([string(), object({ a: int() })])).issues).toEqual([
+      { message: 'Expected Int, received "x"', path: ['a'] },
+    ]);
+    // A member that does not know a key the value holds is not it.
+    const Response = union('Response', [
+      object('Ok', { age: int(), id: int() }),
+      object('Err', { error: string() }),
+    ]);
+    expect(validate({ id: '1' }, Response).issues).toEqual([
+      { message: 'Expected Int, received undefined', path: ['age'] },
+      { message: 'Expected Int, received "1"', path: ['id'] },
+    ]);
+    // No member gets past the value, or knows its keys: the mismatch, as before.
+    expect(validate(5, User).issues).toEqual([{ message: 'Expected User, received 5', path: [] }]);
+    const Positive = union([
+      refine(object({ a: int() }), 'a must be positive', ({ a }) => a > 0),
+      object({ b: int() }),
+    ]);
+    expect(validate({ a: -1 }, Positive).issues).toEqual([
+      { message: 'Expected union member, received object', path: [] },
+    ]);
+  });
+  test('U2 tagged: the member the tag names, refined too, else the tags accepted; a coerce reads another tag', () => {
+    const track = { __typename: 'Track', event: 1, props: { n: 'x' } };
+    const issues = [
+      { message: 'Expected String, received 1', path: ['event'] },
+      { message: 'Expected Int, received "x"', path: ['props', 'n'] },
+    ];
+    expect(validate(track, Message).issues).toEqual(issues);
+    const [Ping, Track] = Message.def.kind === 'union' ? (Message.def.of as Schema[]) : [];
+    const Tried = union([
+      refine(Ping as Schema, 'never', () => true),
+      refine(Track as Schema, 'never', () => true),
+    ]);
+    expect(validate(track, Tried).issues).toEqual(issues);
+    expect(validate({ __typename: 'Pong' }, Message).issues).toEqual([
+      { message: 'Expected "Ping" | "Track", received "Pong"', path: ['__typename'] },
+    ]);
+    expect(validate({}, Tried).issues).toEqual([
+      { message: 'Expected "Ping" | "Track", received undefined', path: ['__typename'] },
+    ]);
+    expect(validate([], Message).issues).toEqual([
+      { message: 'Expected Message, received list', path: [] },
+    ]);
+    // A coerce may rewrite the tag it checks: tried in turn, the closest.
+    expect(
+      validate(
+        { __typename: 'Pong' },
+        union([Ping as Schema, coerce(Track as Schema, (value) => value)]),
+      ).issues,
+    ).toEqual([
+      { message: 'Expected "Ping", received "Pong"', path: ['__typename'] },
+      { message: 'Expected Int, received undefined', path: ['at'] },
+    ]);
+    // The member named is the explanation, even where it fails at the value itself.
+    const Refined = union([
+      refine(object({ k: literal('a') }), 'not this a', () => false),
+      object({ k: literal('b') }),
+    ]);
+    expect(validate({ k: 'a' }, Refined).issues).toEqual([{ message: 'not this a', path: [] }]);
+  });
+  test('U3 explaining never throws: a member’s throw is its issue, at its path; a limit is the union’s', () => {
+    const boom = {
+      get name(): string {
+        throw new Error('getter');
+      },
+    };
+    expect(validate(boom, union([int(), object({ name: string() })])).issues).toEqual([
+      { message: 'Threw: getter', path: ['name'] },
+    ]);
+    // A shape that throws while the union explains itself is the explanation.
+    let reads = 0;
+    const Late = union([
+      object({ k: literal('a') }),
+      object({
+        get k(): Schema {
+          reads += 1;
+          if (reads <= 5) {
+            throw new Error('not ready');
+          }
+          return literal('b');
+        },
+      }),
+    ]);
+    expect(validate({ k: 'c' }, Late).issues).toEqual([{ message: 'Threw: not ready', path: [] }]);
+    expect(validate({ k: 'c' }, Late).issues).toEqual([
+      { message: 'Expected "a" | "b", received "c"', path: ['k'] },
+    ]);
+    // A validation nested in a member being tried judges as anywhere: the mismatch, never a disagreement.
+    const seen = new Set<string>();
+    const Inner = union([object({ a: int() }), object({ b: string() })]);
+    const Spy = refine(unknown(), 'spy', (value) => {
+      seen.add(JSON.stringify(validate(value, Inner).issues));
+      return false;
+    });
+    validate(
+      { p: { a: 'no' }, q: 'x' },
+      union([object({ p: Spy, q: int() }), object({ r: int() })]),
+    );
+    expect([...seen]).toEqual(['[{"message":"Expected union member, received object","path":[]}]']);
+    // A union taken to pass while its member is tried is unjudged: a refine above it never tests it.
+    const tested: unknown[] = [];
+    const Tested = refine(object({ u: Inner }), 'r', ({ u }) => {
+      tested.push(u);
+      return true;
+    });
+    validate({ u: { n: 'x' } }, union([Tested, object({ z: int() })]));
+    expect(tested).toEqual([]);
+    // Stack exhaustion met explaining is never a failed member: it fails the whole check.
+    let calls = 0;
+    const Edge = refine(int(), 'edge', () => {
+      calls += 1;
+      if (calls > 2) {
+        throw new RangeError('Maximum call stack size exceeded');
+      }
+      return false;
+    });
+    expect(validate({ a: 1 }, union([object({ a: Edge })])).issues).toEqual([
+      { message: 'Threw: Maximum call stack size exceeded', path: [] },
+    ]);
+    // Issues still stop at 100, inside the member explained.
+    const Wide = union([int(), object({ items: list(int()) })]);
+    expect(validate({ items: Array.from({ length: 300 }, () => 'x') }, Wide).issues).toHaveLength(
+      100,
+    );
   });
 });

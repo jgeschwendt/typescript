@@ -11,6 +11,7 @@ import {
   type Shape,
   admit,
   choose,
+  closest,
   describe,
   enter,
   forfeit,
@@ -23,7 +24,9 @@ import {
   refund,
   schema,
   spend,
+  stray,
   tick,
+  unjudged,
 } from './core.js';
 import type { StandardSchemaV1 } from './standard.js';
 
@@ -569,6 +572,11 @@ Each object schema's plan, by its checks: a union reads its members' plans.
 const plans = new WeakMap<Impl, () => Plan>();
 
 /**
+Objects, and refines of them: checks that see the value as given, so a tag read from it names them.
+*/
+const raw = new WeakSet<Impl>();
+
+/**
 Exact plain object — unknown keys are issues, like a GraphQL input object.
 Only own keys count, each read once; an absent key is validated as
 `undefined`, and kept in the output only if its schema produced a value (a
@@ -658,7 +666,7 @@ export function object<TShape extends Shape>(
       if (strays(value, known)) {
         for (const key in value) {
           if (known[key] === undefined && Object.hasOwn(value, key)) {
-            issue(context, `Unknown field on ${label}`, [...path, key]);
+            stray(context, key, `Unknown field on ${label}`);
           }
         }
       }
@@ -676,6 +684,7 @@ export function object<TShape extends Shape>(
     },
   );
   plans.set(impl(made), resolve);
+  raw.add(impl(made));
   return made;
 }
 
@@ -973,6 +982,48 @@ const discriminate = (members: readonly Impl[]): Members | undefined => {
   return undefined;
 };
 
+/**
+How a failed union explains itself. When every member is an `object` of
+this copy — refined too, never coerced — holding a distinct literal at one key, by the
+member the value's key names, else that key's accepted values; otherwise
+by the closest member.
+*/
+const tell = (of: readonly StandardSchemaV1[], own: readonly Impl[]): Impl['run'] => {
+  const runs = own.map(({ run }) => run);
+  const shapes = of.map(({ def }: Partial<Schema>, at) =>
+    raw.has(own[at] as Impl) && def?.kind === 'object' ? def.shape : {},
+  );
+  for (const key in shapes[0]) {
+    const table = new Map<unknown, readonly [Primitive, Impl['run']]>();
+    for (const [index, shape] of shapes.entries()) {
+      const tag = literals.get(shape[key] as StandardSchemaV1);
+      if (tag !== undefined && !table.has(tag.value)) {
+        table.set(tag.value, [tag.value, runs[index] as Impl['run']]);
+      }
+    }
+    if (table.size === shapes.length) {
+      const expected = Array.from(table.values(), ([tag]) => describe(tag)).join(' | ');
+      return (value, context) => {
+        if (!isPlain(value)) {
+          return;
+        }
+        const seen = Object.hasOwn(value, key) ? value[key] : undefined;
+        const [tag, run] = table.get(seen) ?? [];
+        if (run !== undefined && Object.is(seen, tag)) {
+          run(value, context);
+        } else {
+          issue(context, `Expected ${expected}, received ${describe(seen)}`, [
+            ...context.path,
+            key,
+          ]);
+        }
+      };
+    }
+  }
+  // A leaf fails at the value itself: never the closest.
+  return closest(runs.filter((_run, at) => !leaves.has(of[at] as StandardSchemaV1)));
+};
+
 type UnionOf<TMembers extends readonly StandardSchemaV1[]> = Schema<
   Infer<TMembers[number]>,
   Input<TMembers[number]>
@@ -1019,10 +1070,17 @@ export function union<const TMembers extends readonly StandardSchemaV1[]>(
       return sequential;
     }
   };
+  let told: Impl['run'] | undefined;
+  /**
+  Built on first failure, inside its try: a shape that throws is an issue.
+  */
+  const report: Impl['run'] = (value, context) => {
+    (told ??= tell(of, own))(value, context);
+  };
   return schema<Infer<TMembers[number]>, Input<TMembers[number]>>(
     { kind: 'union', ...naming, of },
     (value) => pick((members ?? settle()).fast, value),
-    (value, context) => choose((members ?? settle()).fast, value, context, label),
+    (value, context) => choose((members ?? settle()).fast, report, value, context, label),
     (value) => pick((members ?? settle()).check, value),
   );
 }
@@ -1038,8 +1096,9 @@ export const refine = <TSchema extends Schema>(
   message: string,
   test: (value: Infer<TSchema>) => boolean,
 ): TSchema => {
-  const { fast, run } = impl(of);
-  return schema(
+  const inner = impl(of);
+  const { fast, run } = inner;
+  const made = schema(
     of.def,
     // `test` judges the output, so `is` builds it too: fast is the check.
     (value) => {
@@ -1048,13 +1107,18 @@ export const refine = <TSchema extends Schema>(
     },
     (value, context) => {
       const before = context.issues.length;
+      const taken = unjudged();
       const out = run(value, context) as Infer<TSchema>;
-      if (context.issues.length === before && !test(out)) {
+      if (context.issues.length === before && unjudged() === taken && !test(out)) {
         issue(context, message);
       }
       return out;
     },
   ) as TSchema;
+  if (raw.has(inner)) {
+    raw.add(impl(made));
+  }
+  return made;
 };
 
 /**

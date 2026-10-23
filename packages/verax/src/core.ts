@@ -56,6 +56,10 @@ export const FAIL: unique symbol = Symbol('verax.fail');
 export type Fail = typeof FAIL;
 
 export interface Context {
+  /**
+  Issues collected before the walk stops: `MAX_ISSUES` unless set.
+  */
+  readonly cap?: number;
   readonly issues: Issue[];
   readonly path: PropertyKey[];
 }
@@ -84,15 +88,19 @@ Thrown to end a full check early; caught only by `verify`.
 */
 const STOP: unique symbol = Symbol('verax.stop');
 
-const note = (context: Context, message: string, path = [...context.path]): void => {
+const note = (
+  context: Context,
+  message: string,
+  path: readonly PropertyKey[] = [...context.path],
+): void => {
   context.issues.push({ message, path });
 };
 
-export const issue = (context: Context, message: string, path?: PropertyKey[]): void => {
+export const issue = (context: Context, message: string, path?: readonly PropertyKey[]): void => {
   // Past the budget every refusal is its doing, whatever it looks like.
   const why = limit === 0 ? TOO_COMPLEX : message;
   note(context, why, path);
-  if (why === TOO_COMPLEX || context.issues.length >= MAX_ISSUES) {
+  if (why === TOO_COMPLEX || context.issues.length >= (context.cap ?? MAX_ISSUES)) {
     throw STOP;
   }
 };
@@ -140,6 +148,10 @@ let deep = 0;
 A nested frame met stack exhaustion. Its verdict depended on the caller's stack, and a callback may invert it — so, like the budget, it ends the call.
 */
 let exhausted = false;
+/**
+An explanation ran past the budget: it was undone, and no other runs in this call.
+*/
+let drained = false;
 
 /**
 Charges a failed stretch — a union member, a nested frame's fast check —
@@ -256,6 +268,7 @@ const open = (): void => {
     linear = 0;
     deep = 0;
     exhausted = false;
+    drained = false;
   }
   frames += 1;
 };
@@ -329,6 +342,21 @@ export const describe = (value: unknown): string => {
   }
 };
 
+/**
+A thrown value's message; the value, and its message, may be hostile.
+*/
+const explain = (error: unknown): string => {
+  try {
+    if (error instanceof Error) {
+      const { message } = error as { message: unknown };
+      return typeof message === 'string' ? message : describe(message);
+    }
+  } catch {
+    // A throwing `message` getter or prototype trap.
+  }
+  return describe(error);
+};
+
 // ─── unions ──────────────────────────────────────────────────────────────────────────────────────
 
 const OVERFLOW = /call stack/iu;
@@ -391,36 +419,148 @@ export const pick = (
 };
 
 /**
-`pick`, reporting a failure: a refusal met on the way, else the mismatch.
+An untagged union is explaining itself: one nested in its explanation reports only its mismatch.
+*/
+let explaining = false;
+/**
+The path length of the value whose union is trying a member's full check, or -1: a union nested in the try is taken to pass, unjudged, so tries never compound.
+*/
+let comparing = -1;
+/**
+Unions taken to pass so far: an output holding one is unjudged, so no `refine` may test it.
+*/
+let taken = 0;
+
+export const unjudged = (): number => taken;
+/**
+Keys a member being tried did not know, on the value its union compares members on.
+*/
+let strangers = 0;
+
+/**
+Reports an unknown key; one of the value a union compares members on means the member is not it.
+*/
+export const stray = (context: Context, key: string, message: string): void => {
+  strangers += frames === 1 && context.path.length === comparing ? 1 : 0;
+  issue(context, message, [...context.path, key]);
+};
+
+/**
+The issues `run` finds in `value` at `path`, up to `cap`; a throw is one, at its path, but stack exhaustion ends the call. Each issue's path is work.
+*/
+const trial = (
+  run: Impl['run'],
+  value: unknown,
+  path: readonly PropertyKey[],
+  cap = MAX_ISSUES,
+): Issue[] => {
+  const from = top;
+  const context: Context = { cap, issues: [], path: [...path] };
+  try {
+    run(value, context);
+  } catch (error) {
+    if (overflow(error)) {
+      throw error;
+    }
+    if (error !== STOP) {
+      note(context, `Threw: ${explain(error)}`);
+    }
+  }
+  top = from;
+  for (const { path: at } of context.issues) {
+    steps += at.length;
+  }
+  return context.issues;
+};
+
+/**
+Reports the closest of `runs`: of the members failing below the value
+itself and knowing every key it holds, the one with the fewest issues
+outside nested unions, the first on a tie. Each full check tried is charged
+as a failed member is, and stops once it cannot be closer; past the budget,
+or inside another untagged union's explanation, it reports nothing.
+*/
+export const closest =
+  (runs: readonly Impl['run'][]): Impl['run'] =>
+  (value, context) => {
+    if (explaining) {
+      return;
+    }
+    let best: Impl['run'] | undefined;
+    let fewest = Infinity;
+    const { length } = context.path;
+    explaining = true;
+    try {
+      for (const run of runs) {
+        const start = steps;
+        const before = waste;
+        const met = strangers;
+        comparing = length;
+        const issues = trial(run, value, context.path, Math.min(fewest, MAX_ISSUES));
+        comparing = -1;
+        if (
+          strangers === met &&
+          issues.length < fewest &&
+          issues.every(({ path }) => path.length > length)
+        ) {
+          best = run;
+          fewest = issues.length;
+        }
+        charge(start, before);
+        spend(1);
+        if (limit === 0) {
+          return;
+        }
+      }
+      best?.(value, context);
+    } finally {
+      explaining = false;
+      comparing = -1;
+    }
+  };
+
+/**
+`pick`, reporting a failure: the issues `report` finds — at their paths, unless
+a limit ends it — else a refusal met on the way, else the mismatch.
 */
 export const choose = (
   members: readonly ((value: unknown) => unknown)[],
+  report: Impl['run'],
   value: unknown,
   context: Context,
   label: string,
 ): unknown => {
+  // A nested call is its own: it judges, though its caller's member is being tried.
+  if (comparing !== -1 && frames === 1) {
+    taken += 1;
+    return value;
+  }
   const before = deep;
   const out = pick(members, value);
   if (out !== FAIL) {
     return out;
   }
-  issue(context, deep === before ? `Expected ${label}, received ${describe(value)}` : 'Too deep');
-  return value;
-};
-
-/**
-A thrown value's message; the value, and its message, may be hostile.
-*/
-const explain = (error: unknown): string => {
-  try {
-    if (error instanceof Error) {
-      const { message } = error as { message: unknown };
-      return typeof message === 'string' ? message : describe(message);
+  const why = deep === before ? `Expected ${label}, received ${describe(value)}` : 'Too deep';
+  let issues: Issue[] = [];
+  // Only a top-level call explains: its verdict is given, so explaining can change none.
+  if (frames === 1 && limit !== 0 && !drained) {
+    const spent = [steps, waste, linear] as const;
+    issues = trial(report, value, context.path);
+    // Explaining is extra: one that runs out is undone, once a call, and the mismatch stands.
+    if (limit === 0) {
+      [steps, waste, linear] = spent;
+      limit = MAX_DEPTH;
+      drained = true;
+      issues = [];
     }
-  } catch {
-    // A throwing `message` getter or prototype trap.
   }
-  return describe(error);
+  if (limit === 0 || issues.length === 0) {
+    issue(context, why);
+  }
+  for (const { message, path } of issues) {
+    issue(context, message, path);
+  }
+  return value;
 };
 
 // ─── schemas, and schemas from elsewhere ─────────────────────────────────────────────────────────
