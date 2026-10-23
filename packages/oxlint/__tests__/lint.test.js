@@ -1,8 +1,15 @@
 import { expect, test } from 'bun:test';
 import { scratch, spawnOxlint, write } from './_helpers.js';
 
+const { readFileSync } = process.getBuiltinModule('node:fs');
 const { join } = process.getBuiltinModule('node:path');
 
+const printWidth = 100;
+const narrowWidth = 40;
+const narrow = {
+  files: ['narrow/*.js'],
+  rules: { 'comments/divider': ['error', { width: narrowWidth }] },
+};
 const consumerOverride = {
   files: ['**/*.tsx'],
   rules: {
@@ -33,6 +40,25 @@ const directives = [
   '',
 ].join('\n');
 
+/**
+a divider `width` columns wide
+@param {string} head
+@param {number} width
+*/
+const pad = (head, width) => head.padEnd(width, '─');
+const trailing = 'export const value = 1; // ─── trailing ';
+const long = `// ─── ${'x'.repeat(printWidth)} ─`;
+// the four dividers, then two comments that are none
+const dividers = [
+  pad('// ─── fits ', printWidth),
+  '// ─── short ───',
+  `${trailing}───`,
+  long,
+  '/* ─── block ─── */',
+  '// prose ───',
+  '',
+].join('\n');
+
 // no package.json above the temp dir: every environment is on
 const directory = scratch('oxlint-lint-');
 write(directory, {
@@ -41,11 +67,13 @@ write(directory, {
   'app/page.tsx': 'export default function Page() {\n  return null;\n}\n',
   'described.js': '/* oxlint-disable -- reason */\nexport const value = 1;\n',
   'directives.js': directives,
+  'dividers.js': dividers,
   'instrumentation.js': 'export async function register() {\n  return 1;\n}\n',
+  'narrow/dividers.js': dividers,
   'next.config.js': 'export const extra = 1;\nexport default {};\n',
   'own-line.js':
     'export const value = 1; // oxlint-disable-line no-console,inline-config/no-directives\n',
-  'oxlint.config.mjs': `import { defineConfig } from ${JSON.stringify(join(import.meta.dirname, '..', 'index.js'))};\nexport default defineConfig({ overrides: [${JSON.stringify(consumerOverride)}] });\n`,
+  'oxlint.config.mjs': `import { defineConfig } from ${JSON.stringify(join(import.meta.dirname, '..', 'index.js'))};\nexport default defineConfig({ overrides: [${JSON.stringify(consumerOverride)}, ${JSON.stringify(narrow)}] });\n`,
   'oxlint.config.ts': 'export const extra = 1;\nexport default {};\n',
   'src/later.ts': 'export async function later(): Promise<number> {\n  return 1;\n}\n',
   'src/plain.js': "const fs = require('node:fs');\nprocess = fs;\nconst _unused = 1;\n",
@@ -78,6 +106,7 @@ const expected = {
 };
 
 const suppressing = ['described.js', 'own-line.js'];
+const divided = ['dividers.js', 'narrow/dividers.js'];
 
 /** @type {{ diagnostics: { code: string; filename: string; labels: [{ span: { length: number; offset: number } }]; message: string; severity: string }[] }} */
 const { diagnostics } = spawnOxlint(directory, [
@@ -85,6 +114,7 @@ const { diagnostics } = spawnOxlint(directory, [
   'oxlint.config.mjs',
   ...Object.keys(expected),
   ...suppressing,
+  ...divided,
 ]);
 
 test('every directive form is banned, and nothing else', () => {
@@ -124,4 +154,29 @@ test('a run oxlint cannot report on throws with its output', () => {
   expect(() => spawnOxlint(directory, ['-c', 'missing.json'])).toThrow(
     'Failed to parse oxlint configuration file',
   );
+});
+
+const ends = (width) => `A divider ends at column ${width}.`;
+const tooLong = (width) => `Divider title too long for ${width} columns.`;
+test.each([
+  [
+    divided[0],
+    [ends(printWidth), ends(printWidth), tooLong(printWidth)],
+    ['// ─── fits ', '// ─── short ', trailing].map((head) => pad(head, printWidth)),
+  ],
+  [
+    divided[1],
+    [ends(narrowWidth), ends(narrowWidth), tooLong(narrowWidth), tooLong(narrowWidth)],
+    [pad('// ─── fits ', narrowWidth), pad('// ─── short ', narrowWidth), `${trailing}───`],
+  ],
+])('a divider ends at the width, fixed by its run of rules: %s', (file, messages, fixed) => {
+  expect(
+    diagnostics
+      .filter(({ code, filename }) => filename === file && code === 'comments(divider)')
+      .map(({ message }) => message),
+  ).toEqual(messages);
+  // other rules fix the lines after the dividers
+  spawnOxlint(directory, ['-c', 'oxlint.config.mjs', '--fix', file]);
+  const lines = String(readFileSync(join(directory, file))).split('\n');
+  expect(lines.slice(0, lines.indexOf(long) + 1)).toEqual([...fixed, long]);
 });

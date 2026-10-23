@@ -27,6 +27,7 @@ const jsPlugins = [
   { name: 'import-js', specifier: absolute('./plugins/import-js.js') },
   { name: 'react-js', specifier: absolute('./plugins/react-js.js') },
   { name: 'unicorn-js', specifier: absolute('./plugins/unicorn-js.js') },
+  absolute('./plugins/comments.js'),
   absolute('./plugins/eslint-js.js'),
   absolute('./plugins/inline-config.js'),
   absolute('./plugins/typescript-js.js'),
@@ -230,6 +231,7 @@ const rules = {
 
   'typescript/prefer-readonly-parameter-types': 'warn',
 
+  'comments/divider': 'error',
   'inline-config/no-directives': 'error',
 };
 
