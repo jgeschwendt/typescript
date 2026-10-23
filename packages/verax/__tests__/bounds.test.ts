@@ -1,5 +1,7 @@
 // Findings of the 2026-09-28 final unanchored review; the id is its ledger entry.
 import { describe, expect, test } from 'bun:test';
+import { type Equal, beneath, chain, copy, paths, steps } from './_helpers.js';
+import { depth as stackDepth } from '../src/core.js';
 import {
   type Infer,
   type Input,
@@ -25,9 +27,7 @@ import {
   union,
   unknown,
   validate,
-} from './index.js';
-import { depth as stackDepth } from './core.js';
-import { type Equal, beneath, chain, copy, paths, steps } from './fixtures.js';
+} from '../src/index.js';
 
 /**
 A standard schema from elsewhere, as a hand-written adapter would make one.
@@ -447,8 +447,8 @@ describe('one budget bounds a whole call', () => {
     const script = `${Bun.env['TMPDIR'] ?? '/tmp'}/verax-edge-${process.pid}.ts`;
     await Bun.write(
       script,
-      `import { int, is, list, nullable, object, optional, string, union, validate } from ${JSON.stringify(`${import.meta.dir}/index.ts`)};
-      import { depth } from ${JSON.stringify(`${import.meta.dir}/core.ts`)};
+      `import { int, is, list, nullable, object, optional, string, union, validate } from ${JSON.stringify(`${import.meta.dir}/../src/index.ts`)};
+      import { depth } from ${JSON.stringify(`${import.meta.dir}/../src/core.ts`)};
       const Point = object({ x: int() });
       const Chain = union([
         object({ get next() { return nullable(Chain); } }),
@@ -809,7 +809,7 @@ describe('no verdict rests on the stack, and no union is free to try', () => {
     const script = `${Bun.env['TMPDIR'] ?? '/tmp'}/verax-invert-${process.pid}.ts`;
     await Bun.write(
       script,
-      `import { is, list, refine, unknown, validate } from ${JSON.stringify(`${import.meta.dir}/index.ts`)};
+      `import { is, list, refine, unknown, validate } from ${JSON.stringify(`${import.meta.dir}/../src/index.ts`)};
       const Lists = list(unknown());
       // Each rejects a list by inverting a nested verdict: an exhausted one must not become an accept.
       const Inverted = [
@@ -1125,7 +1125,7 @@ describe('a discriminated union finds its member by lookup, with the verdict of 
     const script = `${Bun.env['TMPDIR'] ?? '/tmp'}/verax-j2-${process.pid}.ts`;
     await Bun.write(
       script,
-      `import { int, object, validate } from ${JSON.stringify(`${import.meta.dir}/index.ts`)};
+      `import { int, object, validate } from ${JSON.stringify(`${import.meta.dir}/../src/index.ts`)};
       const Point = object({ x: int() });
       const entries = [(value) => validate(value, Point), (value) => Point['~standard'].validate(value)];
       // A throw that left a frame of verax escaped from within; one from the caller's own call did not.

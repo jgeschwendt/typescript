@@ -40,7 +40,10 @@ export default defineConfig({
   ignorePatterns: ['dist/**'],
   overrides: [
     // `new Set(tags).size` is the unique count; prefer-set-size refuses the spread that would avoid it
-    { files: ['src/bounds.test.ts'], rules: { 'unicorn-js/no-unreadable-new-expression': 'off' } },
+    {
+      files: ['__tests__/bounds.test.ts'],
+      rules: { 'unicorn-js/no-unreadable-new-expression': 'off' },
+    },
     {
       files: ['src/core.ts'],
       rules: {
@@ -55,7 +58,7 @@ export default defineConfig({
     // the package entry is a re-export list by design
     { files: ['src/index.ts'], rules: { 'unicorn-js/no-barrel-files': 'off' } },
     {
-      files: ['src/property.test.ts'],
+      files: ['__tests__/property.test.ts'],
       rules: {
         // for-of would run the value's iterator; the oracle reads by index, as verax does
         'typescript/prefer-for-of': 'off',
@@ -108,10 +111,12 @@ export default defineConfig({
     },
     // tests hand verax thenables, holes, non-Error throws and cross-realm promises
     {
-      files: ['src/*.test.ts', 'src/fixtures.ts'],
+      files: ['__tests__/*.ts'],
       rules: {
         // fast-check's names collide with verax's; a second copy's type is the module's own
-        'import/no-namespace': ['error', { ignore: ['./index.js', 'fast-check'] }],
+        'import/no-namespace': ['error', { ignore: ['../src/index.js', 'fast-check'] }],
+        // tests sit beside src, as in @jlg/oxlint: they import the module under test from ../src
+        'import/no-relative-parent-imports': 'off',
         'no-sparse-arrays': 'off',
         'no-throw-literal': 'off',
         // type tests declare schemas read only by `typeof`; a rest destructure omits a key unread

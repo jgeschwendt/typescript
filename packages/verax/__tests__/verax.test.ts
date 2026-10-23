@@ -31,7 +31,7 @@ import {
   union,
   unknown,
   validate,
-} from './index.js';
+} from '../src/index.js';
 
 const Role = enums('Role', ['ADMIN', 'MEMBER']);
 const DateTime = coerce(

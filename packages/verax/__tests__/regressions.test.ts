@@ -1,5 +1,7 @@
 // One test per defect confirmed by the 2026-09-26 gigasweep; `#n` is its finding id.
 import { describe, expect, test } from 'bun:test';
+import { type Equal, beneath, chain, copy, paths, trap } from './_helpers.js';
+import { impl, depth as stackDepth } from '../src/core.js';
 import {
   type Infer,
   type Input,
@@ -23,9 +25,7 @@ import {
   union,
   unknown,
   validate,
-} from './index.js';
-import { impl, depth as stackDepth } from './core.js';
-import { type Equal, beneath, chain, copy, paths, trap } from './fixtures.js';
+} from '../src/index.js';
 
 /**
 An object schema built from entries: key order is the variable under test.

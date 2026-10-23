@@ -1,6 +1,6 @@
 // Helpers the regression suites share.
-import type * as Verax from './index.js';
-import type { Issue } from './index.js';
+import type * as Verax from '../src/index.js';
+import type { Issue } from '../src/index.js';
 
 export type Equal<TLeft, TRight> = [TLeft] extends [TRight]
   ? [TRight] extends [TLeft]
@@ -30,7 +30,7 @@ export const copy = async (): Promise<typeof Verax> => {
   const directory = `${Bun.env['TMPDIR'] ?? '/tmp'}/verax-copy-${process.pid}`;
   await Promise.all(
     ['core', 'index', 'sdl', 'standard', 'types'].map((name) =>
-      Bun.write(`${directory}/${name}.ts`, Bun.file(new URL(`${name}.ts`, import.meta.url))),
+      Bun.write(`${directory}/${name}.ts`, Bun.file(new URL(`../src/${name}.ts`, import.meta.url))),
     ),
   );
   return (await import(`${directory}/index.ts`)) as typeof Verax;
