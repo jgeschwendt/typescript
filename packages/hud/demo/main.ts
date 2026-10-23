@@ -5,6 +5,16 @@ const now = (): string => {
   return date.toISOString();
 };
 const seeded = now();
+// enough open threads that the later pins run to two digits
+const cells = Array.from({ length: 9 }, (_slot, index): Thread => ({
+  id: `c${index}`,
+  messages: [{ at: seeded, author: 'agent', text: `Check cell ${index + 1}.` }],
+  page: '/',
+  selector: `tbody > tr:nth-of-type(${Math.floor(index / 3) + 1}) > td:nth-of-type(${(index % 3) + 1})`,
+  status: 'open',
+  x: 80,
+  y: 50,
+}));
 const hud = mount(undefined, {
   page: '/',
   threads: [
@@ -29,6 +39,7 @@ const hud = mount(undefined, {
       x: 60,
       y: 50,
     },
+    ...cells,
   ],
 });
 const host = document.querySelector('hud');
@@ -49,6 +60,9 @@ host?.addEventListener('hud:reply', ({ detail: { id, text } }) => {
 });
 host?.addEventListener('hud:resolve', ({ detail: { id } }) => {
   update(id, () => ({ status: 'resolved' }));
+});
+host?.addEventListener('hud:reopen', ({ detail: { id } }) => {
+  update(id, () => ({ status: 'open' }));
 });
 host?.addEventListener('hud:anchor', ({ detail: { id, ...anchor } }) => {
   update(id, () => anchor);

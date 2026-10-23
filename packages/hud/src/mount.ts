@@ -1,4 +1,5 @@
 import { pinOf, placeOf, resolve, selectorFor, visible } from './anchor.js';
+import { glyph } from './glyph.js';
 import { css } from './style.js';
 
 interface Message {
@@ -23,6 +24,7 @@ Each `hud:<name>` event's `detail`, dispatched on the `<hud>` host, bubbling and
 interface HudEvents {
   anchor: { id: string; selector: string; x: number; y: number };
   open: { selector: string; text: string; x: number; y: number };
+  reopen: { id: string };
   reply: { id: string; text: string };
   resolve: { id: string };
   select: { id: string };
@@ -123,6 +125,13 @@ const field = (
   return area;
 };
 
+// a pin labelled by its pixel-grid glyph, no font involved
+const pinButton = (label: string): HTMLButtonElement => {
+  const button = create('button', {}, glyph(label));
+  button.setAttribute('aria-label', label);
+  return button;
+};
+
 const place = (layer: Layer): void => {
   const { left, top } = origin(layer);
   for (const [pin, thread] of layer.placed) {
@@ -132,7 +141,8 @@ const place = (layer: Layer): void => {
       continue;
     }
     const at = placeOf(element, thread);
-    moveTo(pin, at.left - left, at.top - top);
+    // whole pixels, so the glyph's cells land on the device grid
+    moveTo(pin, Math.round(at.left - left), Math.round(at.top - top));
   }
 };
 
@@ -190,16 +200,17 @@ const renderThread = (layer: Layer, thread: Thread, label: string): HTMLElement 
       emit(layer, 'reply', { id: thread.id, text });
     });
   layer.replies.set(thread.id, reply);
-  const resolveButton = create('button', {
+  const action = thread.status === 'open' ? 'resolve' : 'reopen';
+  const toggle = create('button', {
     onclick: () => {
-      emit(layer, 'resolve', { id: thread.id });
+      emit(layer, action, { id: thread.id });
     },
-    textContent: 'resolve',
+    textContent: action,
   });
   const messages = thread.messages.map((message) =>
     create('p', { title: message.at }, create('b', { textContent: message.author }), message.text),
   );
-  const actions = create('div', { hidden: thread.status !== 'open' }, reply, resolveButton);
+  const actions = create('div', {}, ...(action === 'resolve' ? [reply] : []), toggle);
   return marked(
     layer,
     create('section', {}, create('header', { textContent: label }), ...messages, actions),
@@ -230,11 +241,9 @@ const render = (layer: Layer): void => {
   const { activeElement } = layer.shadow;
   const sorted = order(layer);
   const pin = (thread: Thread): HTMLElement => {
-    const button = create('button', {
-      onpointerdown: (event) => {
-        drag(layer, event, [button, thread]);
-      },
-      textContent: sorted.label(thread),
+    const button = pinButton(sorted.label(thread));
+    button.addEventListener('pointerdown', (event) => {
+      drag(layer, event, [button, thread]);
     });
     return marked(layer, button, thread);
   };
@@ -319,9 +328,7 @@ const onHover = (layer: Layer, event: PointerEvent): void => {
 A hollow pin numbered as the next open thread, standing in until render replaces it with the real one.
 */
 const drafted = (layer: Layer, at: Pick<Thread, 'selector' | 'x' | 'y'>): HTMLElement => {
-  const draft = create('button', {
-    textContent: String(layer.pins.querySelectorAll('[data-status="open"]').length + 1),
-  });
+  const draft = pinButton(String(layer.pins.querySelectorAll('[data-status="open"]').length + 1));
   draft.dataset['draft'] = 'true';
   layer.placed.set(draft, at);
   layer.pins.append(draft);
