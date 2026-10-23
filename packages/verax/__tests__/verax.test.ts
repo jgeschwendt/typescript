@@ -26,12 +26,12 @@ import {
   record,
   refine,
   scalar,
-  sdl,
   string,
   union,
   unknown,
   validate,
 } from '../src/index.js';
+import { sdl } from '../src/sdl.js';
 
 const Role = enums('Role', ['ADMIN', 'MEMBER']);
 const DateTime = coerce(

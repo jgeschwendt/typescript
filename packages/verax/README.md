@@ -186,4 +186,4 @@ const Node: Schema<Node> = object('Node', {
 | `record(value)`                               | `Record<string, V>`: any keys (no SDL form)      |
 | `refine(schema, message, test)`               | narrow the accepted values, keep the type        |
 | `coerce(schema, convert)`                     | convert before validating (GraphQL `parseValue`) |
-| `sdl(roots, { input? })`                      | GraphQL SDL; `input: true` emits `input` types   |
+| `sdl(roots, { input? })` from `verax/sdl`     | GraphQL SDL; `input: true` emits `input` types   |

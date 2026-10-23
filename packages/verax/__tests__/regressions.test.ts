@@ -20,12 +20,12 @@ import {
   parse,
   refine,
   scalar,
-  sdl,
   string,
   union,
   unknown,
   validate,
 } from '../src/index.js';
+import { sdl } from '../src/sdl.js';
 
 /**
 An object schema built from entries: key order is the variable under test.
