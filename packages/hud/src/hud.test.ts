@@ -3,6 +3,7 @@ import { afterAll, beforeAll, beforeEach, expect, spyOn, test } from 'bun:test';
 import {
   type Hud,
   type Thread,
+  glyph,
   mount,
   pinOf,
   placeOf,
@@ -47,6 +48,11 @@ const pointer = (type: string, element: Element, at = 0): boolean =>
       composed: true,
     }),
   );
+const label = (pin: Element): string | null => pin.getAttribute('aria-label');
+const lit = (image: SVGSVGElement): number =>
+  image.querySelector('path')!.getAttribute('d')!.split('M').length - 1;
+const size = (image: SVGSVGElement): (string | null)[] =>
+  ['viewBox', 'width', 'height'].map((name) => image.getAttribute(name));
 const thread = (
   id: string,
   selector: string,
@@ -66,6 +72,7 @@ const setup = (threads: Thread[] = []): { hud: Hud; seen: unknown[][]; shadow: S
   for (const name of [
     'hud:anchor',
     'hud:open',
+    'hud:reopen',
     'hud:reply',
     'hud:resolve',
     'hud:select',
@@ -181,11 +188,7 @@ test('picking sets a crosshair; a click drafts the next pin until the thread arr
   cursors.push(style.cursor);
   hud.pick();
   pickH1();
-  expect([draft()!.textContent, draft()!.style.left, draft()!.style.top]).toEqual([
-    '2',
-    '25px',
-    '10px',
-  ]);
+  expect([label(draft()!), draft()!.style.left, draft()!.style.top]).toEqual(['2', '25px', '10px']);
   key({ key: 'Escape' }, shadow.querySelector('[placeholder="comment"]')!);
   expect(draft()).toBeUndefined();
   pickH1();
@@ -196,7 +199,7 @@ test('picking sets a crosshair; a click drafts the next pin until the thread arr
   hud.threads = [...threads, thread('b', '#top')];
   expect([
     draft(),
-    ...[...shadow.querySelectorAll('button[data-status]')].map((pin) => pin.textContent),
+    ...[...shadow.querySelectorAll('button[data-status]')].map((button) => label(button)),
   ]).toEqual([undefined, '1', '2', '✓']);
   hud.pick();
   hud.destroy();
@@ -229,7 +232,7 @@ test('pins, panel, reply, resolve, re-anchor', async () => {
     pointer('pointermove', document.body, to);
     pointer('pointerup', document.body, to);
   };
-  expect(pins().map((button) => [button.textContent, button.hidden])).toEqual([
+  expect(pins().map((button) => [label(button), button.hidden])).toEqual([
     ['1', false],
     ['2', true],
     ['3', true],
@@ -268,14 +271,31 @@ test('pins, panel, reply, resolve, re-anchor', async () => {
   shadow.querySelector<HTMLElement>('button[data-id=""]')!.click();
   expect(shadow.querySelector('aside')!.hidden).toBe(true);
   hud.select('r');
-  expect(shadow.querySelector('[data-on="true"]')!.textContent).toBe('✓');
+  expect(label(shadow.querySelector('[data-on="true"]')!)).toBe('✓');
+  [...shadow.querySelectorAll('button')].find((button) => button.textContent === 'reopen')!.click();
+  expect(seen.slice(-2)).toEqual([
+    ['hud:reopen', { id: 'r' }],
+    ['hud:select', { id: 'r' }],
+  ]);
   hud.page = '/other';
   hud.threads = [...threads, thread('b', 'p', { page: '/other' })];
-  expect([hud.page, hud.threads.length, pins().map((button) => button.textContent)]).toEqual([
+  expect([hud.page, hud.threads.length, pins().map((button) => label(button))]).toEqual([
     '/other',
     6,
     ['1', '2'],
   ]);
   hud.pick();
   hud.destroy();
+});
+
+test('glyph draws pixel-grid digits and a check as one path of unit squares', () => {
+  expect(Array.from('0123456789', (digit) => lit(glyph(digit)))).toEqual([
+    12, 8, 11, 11, 9, 11, 12, 7, 13, 12,
+  ]);
+  expect(glyph('1').querySelector('path')!.getAttribute('d')).toStartWith('M1 0h1v1h-1z');
+  expect(size(glyph('7'))).toEqual(['0 0 3 5', '6', '10']);
+  expect(size(glyph('12'))).toEqual(['0 0 7 5', '14', '10']);
+  expect(glyph('12').querySelector('path')!.getAttribute('d')).toContain('M4 0h1v1h-1z');
+  expect([lit(glyph('✓')), ...size(glyph('✓'))]).toEqual([5, '0 0 5 4', '10', '8']);
+  expect([lit(glyph('x')), ...size(glyph('x'))]).toEqual([0, '0 0 0 0', '0', '0']);
 });
