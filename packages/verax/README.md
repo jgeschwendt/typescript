@@ -2,10 +2,7 @@
 
 > vērāx — truthful.
 
-Runtime types for TypeScript, shaped like GraphQL. A successor to superstruct:
-the same `is` / `assert` / `validate` verbs, zero dependencies, and every schema
-is a [Standard Schema](https://standardschema.dev) — it drops into tRPC, Hono,
-TanStack Form, or anything else that speaks the spec.
+Runtime types for TypeScript, shaped like GraphQL, zero dependencies under [Standard Schema](https://standardschema.dev).
 
 ```ts
 import { type Infer, enums, id, int, list, nullable, object, parse, string } from 'verax';
@@ -27,7 +24,7 @@ const user = parse(input, User); // User, or throws VeraxError with every issue
 
 ## Requirements
 
-TypeScript 7+ and ESM only (`import`, Node >=22) — no CommonJS build.
+TypeScript 7+ and ESM only (`import`, Node >=22)
 
 ## GraphQL leans
 
@@ -41,7 +38,11 @@ TypeScript 7+ and ESM only (`import`, Node >=22) — no CommonJS build.
 - With `{ input: true }` a nullable field must be `optional(nullable(x))`, as in GraphQL.
 
 ```ts
+import { sdl } from 'verax/sdl';
+import { User } from '.';
+
 sdl([User]);
+
 // enum Role {
 //   ADMIN
 //   MEMBER

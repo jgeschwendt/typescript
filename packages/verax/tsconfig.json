@@ -7,5 +7,5 @@
     "noEmit": true,
     "types": ["bun"]
   },
-  "include": ["__tests__", "src"]
+  "include": ["__tests__", "examples", "src"]
 }
