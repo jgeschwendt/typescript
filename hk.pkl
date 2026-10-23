@@ -18,7 +18,7 @@ hooks {
   ["pre-push"] {
     steps {
       ["gate"] {
-        check = "unset $(git rev-parse --local-env-vars); bunx oxlint && bunx oxfmt --check && bun test && stele check && stele emit --check"
+        check = "unset $(git rev-parse --local-env-vars); bunx oxlint && bunx oxfmt --check && bun test && (cd packages/verax && bunx tsc --noEmit) && stele check && stele emit --check"
       }
     }
   }
