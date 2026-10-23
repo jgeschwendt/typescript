@@ -16,14 +16,18 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "demo": "bun demo/serve.ts",
+    "glyphs": "bun glyphs.ts && bunx oxfmt src/outlines.ts",
     "test": "bun test",
     "typecheck": "tsc -p ."
   },
   "devDependencies": {
     "@happy-dom/global-registrator": "^21.0.4",
+    "@ibm/plex-mono": "2.5.0",
     "@jlg/oxlint": "^0.1.4",
     "@jlg/tsconfig": "^0.1.1",
     "@types/bun": "^1.4.4",
+    "@types/opentype.js": "1.3.10",
+    "opentype.js": "2.0.0",
     "typescript": "^7.0.2"
   }
 }

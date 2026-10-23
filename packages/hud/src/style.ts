@@ -30,11 +30,11 @@ button { cursor: pointer; }
   height: 20px;
   justify-content: center;
   min-width: 20px;
-  padding: 0 6px;
+  padding: 0 5px;
   position: absolute;
   transform: translate(-50%, -50%);
 }
-#pins svg { fill: currentColor; flex: none; shape-rendering: crispEdges; }
+#pins svg { fill: currentColor; flex: none; }
 #pins [data-status="resolved"] { opacity: 0.35; padding: 0; }
 #pins [data-on="true"] { outline: 1px solid var(--accent); outline-offset: 2px; }
 #pins [data-drag="true"] { cursor: grabbing; pointer-events: none; }
@@ -58,6 +58,7 @@ b { color: var(--muted); font-weight: 400; margin-right: 6px; }
 textarea { border: 1px solid var(--line); border-radius: 4px; box-sizing: border-box; cursor: text; display: block; outline: 0; padding: 6px; resize: vertical; width: 100%; }
 textarea:focus { border-color: var(--accent); }
 section button, small { color: var(--muted); display: block; font-size: 11px; margin-top: 4px; }
+section div { display: flex; flex-wrap: wrap; gap: 0 12px; }
 button:hover { color: var(--fg); }
 `;
 
