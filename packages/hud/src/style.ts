@@ -18,21 +18,24 @@ button, textarea { background: none; border: 0; color: inherit; font: inherit; p
 button { cursor: pointer; }
 #pins { left: 0; position: absolute; top: 0; }
 #pins button {
+  align-items: center;
   background: var(--accent);
   border: 1px solid var(--bg);
   border-radius: 10px;
   box-shadow: 0 1px 4px rgb(0 0 0 / 0.5);
+  box-sizing: border-box;
   color: var(--bg);
   cursor: grab;
-  font-size: 11px;
-  font-weight: 600;
+  display: flex;
   height: 20px;
+  justify-content: center;
   min-width: 20px;
-  padding: 0 5px;
+  padding: 0 6px;
   position: absolute;
   transform: translate(-50%, -50%);
 }
-#pins [data-status="resolved"] { opacity: 0.35; }
+#pins svg { fill: currentColor; flex: none; shape-rendering: crispEdges; }
+#pins [data-status="resolved"] { opacity: 0.35; padding: 0; }
 #pins [data-on="true"] { outline: 1px solid var(--accent); outline-offset: 2px; }
 #pins [data-drag="true"] { cursor: grabbing; pointer-events: none; }
 #pins [data-draft="true"] { background: var(--bg); border-color: var(--accent); color: var(--accent); pointer-events: none; }
