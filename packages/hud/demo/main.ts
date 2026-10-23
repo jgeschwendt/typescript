@@ -61,6 +61,9 @@ host?.addEventListener('hud:reply', ({ detail: { id, text } }) => {
 host?.addEventListener('hud:resolve', ({ detail: { id } }) => {
   update(id, () => ({ status: 'resolved' }));
 });
+host?.addEventListener('hud:delete', ({ detail: { id } }) => {
+  hud.threads = hud.threads.filter((thread) => thread.id !== id);
+});
 host?.addEventListener('hud:reopen', ({ detail: { id } }) => {
   update(id, () => ({ status: 'open' }));
 });

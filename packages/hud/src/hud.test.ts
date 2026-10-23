@@ -49,10 +49,10 @@ const pointer = (type: string, element: Element, at = 0): boolean =>
     }),
   );
 const label = (pin: Element): string | null => pin.getAttribute('aria-label');
-const lit = (image: SVGSVGElement): number =>
-  image.querySelector('path')!.getAttribute('d')!.split('M').length - 1;
 const size = (image: SVGSVGElement): (string | null)[] =>
   ['viewBox', 'width', 'height'].map((name) => image.getAttribute(name));
+const paths = (image: SVGSVGElement): string[] =>
+  [...image.querySelectorAll('path')].map((path) => path.getAttribute('d')!);
 const thread = (
   id: string,
   selector: string,
@@ -71,6 +71,7 @@ const setup = (threads: Thread[] = []): { hud: Hud; seen: unknown[][]; shadow: S
   const seen: unknown[][] = [];
   for (const name of [
     'hud:anchor',
+    'hud:delete',
     'hud:open',
     'hud:reopen',
     'hud:reply',
@@ -272,9 +273,13 @@ test('pins, panel, reply, resolve, re-anchor', async () => {
   expect(shadow.querySelector('aside')!.hidden).toBe(true);
   hud.select('r');
   expect(label(shadow.querySelector('[data-on="true"]')!)).toBe('✓');
-  [...shadow.querySelectorAll('button')].find((button) => button.textContent === 'reopen')!.click();
-  expect(seen.slice(-2)).toEqual([
+  for (const name of ['reopen', 'delete']) {
+    [...shadow.querySelectorAll('button')].find((button) => button.textContent === name)!.click();
+  }
+  expect(seen.slice(-4)).toEqual([
     ['hud:reopen', { id: 'r' }],
+    ['hud:select', { id: 'r' }],
+    ['hud:delete', { id: 'r' }],
     ['hud:select', { id: 'r' }],
   ]);
   hud.page = '/other';
@@ -288,14 +293,13 @@ test('pins, panel, reply, resolve, re-anchor', async () => {
   hud.destroy();
 });
 
-test('glyph draws pixel-grid digits and a check as one path of unit squares', () => {
-  expect(Array.from('0123456789', (digit) => lit(glyph(digit)))).toEqual([
-    12, 8, 11, 11, 9, 11, 12, 7, 13, 12,
-  ]);
-  expect(glyph('1').querySelector('path')!.getAttribute('d')).toStartWith('M1 0h1v1h-1z');
-  expect(size(glyph('7'))).toEqual(['0 0 3 5', '6', '10']);
-  expect(size(glyph('12'))).toEqual(['0 0 7 5', '14', '10']);
-  expect(glyph('12').querySelector('path')!.getAttribute('d')).toContain('M4 0h1v1h-1z');
-  expect([lit(glyph('✓')), ...size(glyph('✓'))]).toEqual([5, '0 0 5 4', '10', '8']);
-  expect([lit(glyph('x')), ...size(glyph('x'))]).toEqual([0, '0 0 0 0', '0', '0']);
+test('glyph draws font outlines on a shared 10px box, one path per character', () => {
+  expect(paths(glyph('0123456789✓')).map((path) => /^M\d/u.test(path))).toEqual(
+    Array.from({ length: 11 }, () => true),
+  );
+  expect(size(glyph('7'))).toEqual(['0 0 8 10', '8', '10']);
+  expect(size(glyph('12'))).toEqual(['0 0 16 10', '16', '10']);
+  expect(size(glyph('100'))).toEqual(['0 0 24 10', '24', '10']);
+  expect(paths(glyph('12'))).toEqual([...paths(glyph('1')), ...paths(glyph('2'))]);
+  expect([paths(glyph('x')), ...size(glyph('x'))]).toEqual([[], '0 0 0 10', '0', '10']);
 });

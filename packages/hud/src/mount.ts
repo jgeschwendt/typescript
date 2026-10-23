@@ -23,6 +23,7 @@ Each `hud:<name>` event's `detail`, dispatched on the `<hud>` host, bubbling and
 */
 interface HudEvents {
   anchor: { id: string; selector: string; x: number; y: number };
+  delete: { id: string };
   open: { selector: string; text: string; x: number; y: number };
   reopen: { id: string };
   reply: { id: string; text: string };
@@ -125,7 +126,7 @@ const field = (
   return area;
 };
 
-// a pin labelled by its pixel-grid glyph, no font involved
+// a pin labelled by its outline glyph, no web font involved
 const pinButton = (label: string): HTMLButtonElement => {
   const button = create('button', {}, glyph(label));
   button.setAttribute('aria-label', label);
@@ -141,7 +142,7 @@ const place = (layer: Layer): void => {
       continue;
     }
     const at = placeOf(element, thread);
-    // whole pixels, so the glyph's cells land on the device grid
+    // whole pixels, so the glyph's box lands on the device grid
     moveTo(pin, Math.round(at.left - left), Math.round(at.top - top));
   }
 };
@@ -200,17 +201,21 @@ const renderThread = (layer: Layer, thread: Thread, label: string): HTMLElement 
       emit(layer, 'reply', { id: thread.id, text });
     });
   layer.replies.set(thread.id, reply);
-  const action = thread.status === 'open' ? 'resolve' : 'reopen';
-  const toggle = create('button', {
-    onclick: () => {
-      emit(layer, action, { id: thread.id });
-    },
-    textContent: action,
-  });
   const messages = thread.messages.map((message) =>
     create('p', { title: message.at }, create('b', { textContent: message.author }), message.text),
   );
-  const actions = create('div', {}, ...(action === 'resolve' ? [reply] : []), toggle);
+  const act = (name: 'delete' | 'reopen' | 'resolve'): HTMLButtonElement =>
+    create('button', {
+      onclick: () => {
+        emit(layer, name, { id: thread.id });
+      },
+      textContent: name,
+    });
+  const actions = create(
+    'div',
+    {},
+    ...(thread.status === 'open' ? [reply, act('resolve')] : [act('reopen'), act('delete')]),
+  );
   return marked(
     layer,
     create('section', {}, create('header', { textContent: label }), ...messages, actions),
