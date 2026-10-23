@@ -1,5 +1,5 @@
 {
   "extends": "@jlg/tsconfig",
   "compilerOptions": { "noEmit": true, "types": ["bun"] },
-  "include": ["demo", "src"]
+  "include": ["demo", "glyphs.ts", "src"]
 }

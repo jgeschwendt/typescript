@@ -1,38 +1,8 @@
-// one bitmap cell, in CSS pixels
-const cell = 2;
-const svg = 'http://www.w3.org/2000/svg';
-// rows top to bottom, lit cells as 1: the classic 3×5 numerals and a 5×4 check
-const bitmaps = new Map(
-  Object.entries({
-    '0': '111 101 101 101 111',
-    '1': '010 110 010 010 111',
-    '2': '111 001 111 100 111',
-    '3': '111 001 111 001 111',
-    '4': '101 101 111 001 001',
-    '5': '111 100 111 001 111',
-    '6': '111 100 111 101 111',
-    '7': '111 001 001 001 001',
-    '8': '111 101 111 101 111',
-    '9': '111 101 111 001 111',
-    '✓': '00001 00010 10100 01000',
-  }).map(([char, rows]) => [char, rows.split(' ')]),
-);
+import { outlines } from './outlines.js';
 
-// the run's lit cells as unit squares, glyphs one cell apart, and its width in cells
-const trace = (runs: string[][]): { squares: string; width: number } => {
-  const squares: string[] = [];
-  let left = 0;
-  for (const rows of runs) {
-    for (const [y, row] of rows.entries()) {
-      for (const { index: x } of row.matchAll(/1/gu)) {
-        squares.push(`M${left + x} ${y}h1v1h-1z`);
-      }
-    }
-    const [first = ''] = rows;
-    left += first.length + 1;
-  }
-  return { squares: squares.join(''), width: Math.max(left - 1, 0) };
-};
+// every outline's box, in CSS pixels
+const height = 10;
+const svg = 'http://www.w3.org/2000/svg';
 
 const draw = <Tag extends keyof SVGElementTagNameMap>(
   tag: Tag,
@@ -46,23 +16,33 @@ const draw = <Tag extends keyof SVGElementTagNameMap>(
 };
 
 /**
-`text` drawn as one path of unit squares at `cell` pixels each; characters without a bitmap are skipped.
+`text` as IBM Plex Mono outlines, one path per character on a 10px box, its ink centred in an even width so a centred pin keeps it on whole pixels; characters without an outline are skipped.
 */
 const glyph = (text: string): SVGSVGElement => {
-  const runs = Array.from(text.matchAll(/./gu), ([char]) => bitmaps.get(char)).filter(
-    (rows) => rows !== undefined,
-  );
-  const { squares, width } = trace(runs);
-  const height = Math.max(0, ...runs.map((rows) => rows.length));
+  let end = 0;
+  const placed = Array.from(text, (char) => outlines.get(char))
+    .filter((outline) => outline !== undefined)
+    .map(({ advance, path, width }) => {
+      end += advance;
+      return { left: end - advance, path, right: end - advance + width };
+    });
+  const ink = placed.at(-1)?.right ?? 0;
+  const width = 2 * Math.round(ink / 2);
   const image = draw('svg', {
     'aria-hidden': 'true',
-    height: height * cell,
+    height,
     viewBox: `0 0 ${width} ${height}`,
-    width: width * cell,
+    width,
   });
-  const path = draw('path');
-  path.setAttribute('d', squares);
-  image.append(path);
+  image.append(
+    ...placed.map(({ left, path }) => {
+      const element = draw('path', {
+        transform: `translate(${(left + (width - ink) / 2).toFixed(2)} 0)`,
+      });
+      element.setAttribute('d', path);
+      return element;
+    }),
+  );
   return image;
 };
 

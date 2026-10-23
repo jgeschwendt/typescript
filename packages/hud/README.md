@@ -28,7 +28,7 @@ hud.threads = await load(); // setting threads or page re-renders
 | `select(id)`      | open the panel on a thread and scroll its pin into view; `''` closes it |
 | `destroy()`       | remove the layer and every listener and observer                        |
 
-Press `c` (outside inputs, textareas, contenteditable) or call `pick()`: the cursor turns to a crosshair and the element under it is outlined, Escape cancels, a click drops a hollow draft pin numbered as the next thread and opens a compose box — Enter sends, Shift+Enter breaks the line, Escape cancels and drops the draft, which the real pin replaces once the host sets `threads`. Pins for the current `page` sit where their selector resolves (none when it resolves to nothing or a hidden element), follow resize, scroll and DOM changes, and drag to re-anchor. An open pin shows its 1-based place among the page's open threads, a resolved one a dimmed check, both drawn by `glyph` as pixel-grid SVG rather than a font, centred on whole pixels. Clicking a pin opens the panel: the page's threads, open first, each with its messages; an open one carries a reply box and a resolve button, a resolved one a reopen button.
+Press `c` (outside inputs, textareas, contenteditable) or call `pick()`: the cursor turns to a crosshair and the element under it is outlined, Escape cancels, a click drops a hollow draft pin numbered as the next thread and opens a compose box — Enter sends, Shift+Enter breaks the line, Escape cancels and drops the draft, which the real pin replaces once the host sets `threads`. Pins for the current `page` sit where their selector resolves (none when it resolves to nothing or a hidden element), follow resize, scroll and DOM changes, and drag to re-anchor. An open pin shows its 1-based place among the page's open threads, a resolved one a dimmed check, both drawn by `glyph` as SVG outlines of IBM Plex Mono SemiBold, extracted at build time so no font loads, on a 10px box centred on whole pixels. Clicking a pin opens the panel: the page's threads, open first, each with its messages; an open one carries a reply box and a resolve button, a resolved one reopen and delete buttons.
 
 ## Events
 
@@ -40,6 +40,7 @@ Dispatched on the `<hud>` element as bubbling, composed `CustomEvent`s; the host
 | `hud:reply`   | `{ id, text }`             | a reply is sent            |
 | `hud:resolve` | `{ id }`                   | resolve is clicked         |
 | `hud:reopen`  | `{ id }`                   | reopen is clicked          |
+| `hud:delete`  | `{ id }`                   | delete is clicked          |
 | `hud:anchor`  | `{ id, selector, x, y }`   | a pin is dropped           |
 | `hud:select`  | `{ id }`                   | a pin or thread is clicked |
 
@@ -59,15 +60,15 @@ interface Thread {
 
 ## Utils
 
-| export                               | returns                                                                                                  |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------- |
-| `selectorFor(el)`                    | a selector unique in `el`'s document: `#id`, the tag, or `tag:nth-of-type`, grown up the tree            |
-| `resolve(selector, root = document)` | the matching element, or `undefined` (an invalid selector too)                                           |
-| `unique(selector, root = document)`  | whether exactly one element matches                                                                      |
-| `pinOf(el, clientX, clientY)`        | `{ x, y }` percentages of the point in `el`'s box, clamped to 0–100                                      |
-| `placeOf(el, { x, y })`              | `{ left, top }` document coordinates of that pin                                                         |
-| `visible(el)`                        | whether `el` renders                                                                                     |
-| `glyph(text)`                        | an `<svg>` of `text`: digits as 3×5 bitmaps, `✓` as 5×4, 2px cells one cell apart, filled `currentColor` |
+| export                               | returns                                                                                                                                               |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `selectorFor(el)`                    | a selector unique in `el`'s document: `#id`, the tag, or `tag:nth-of-type`, grown up the tree                                                         |
+| `resolve(selector, root = document)` | the matching element, or `undefined` (an invalid selector too)                                                                                        |
+| `unique(selector, root = document)`  | whether exactly one element matches                                                                                                                   |
+| `pinOf(el, clientX, clientY)`        | `{ x, y }` percentages of the point in `el`'s box, clamped to 0–100                                                                                   |
+| `placeOf(el, { x, y })`              | `{ left, top }` document coordinates of that pin                                                                                                      |
+| `visible(el)`                        | whether `el` renders                                                                                                                                  |
+| `glyph(text)`                        | an `<svg>` of `text` in IBM Plex Mono SemiBold outlines, 10px tall, one baseline for every digit, ink centred in an even width, filled `currentColor` |
 
 ## Theming
 
@@ -83,5 +84,7 @@ Set on `<hud>`; each falls back to the dark default.
 | `--hud-muted`  | `#6b7079`                              |
 
 ## Demo
+
+`bun run glyphs` regenerates `src/outlines.ts` from the `@ibm/plex-mono` devDependency (SIL Open Font License 1.1); the file is committed, so consumers need no font.
 
 `bun run demo` serves a static page with the layer and an in-memory store on http://127.0.0.1:4173/.
