@@ -14,7 +14,7 @@ export const paths = (result: {
 /**
 A proxy handler whose read of `key` throws.
 */
-export const trap = (key: PropertyKey): ProxyHandler<unknown[]> => ({
+export const trap = (key: PropertyKey): ProxyHandler<object> => ({
   get: (target, property) => {
     if (property === key) {
       throw new Error(String(key));
@@ -24,10 +24,11 @@ export const trap = (key: PropertyKey): ProxyHandler<unknown[]> => ({
 });
 
 /**
-A second copy of verax, as when two installed versions meet in one app.
+A second copy of verax, as when two installed versions meet in one app — each `tag` its own,
+whose code no other test has run.
 */
-export const copy = async (): Promise<typeof Verax> => {
-  const directory = `${Bun.env['TMPDIR'] ?? '/tmp'}/verax-copy-${process.pid}`;
+export const copy = async (tag = 'copy'): Promise<typeof Verax> => {
+  const directory = `${Bun.env['TMPDIR'] ?? '/tmp'}/verax-${tag}-${process.pid}`;
   await Promise.all(
     ['core', 'index', 'sdl', 'standard', 'types'].map((name) =>
       Bun.write(`${directory}/${name}.ts`, Bun.file(new URL(`../src/${name}.ts`, import.meta.url))),
@@ -70,4 +71,32 @@ export const chain = (levels: number, link: (next: unknown) => unknown): unknown
     value = link(value);
   }
   return value;
+};
+
+/**
+Runs `thunk` at every depth from the stack's edge to 300 frames above it, from callers of every
+frame size: wherever a call meets the edge, warmed or cold, and with room to finish. A throw ends
+only that run.
+*/
+export const sweep = (thunk: () => unknown): void => {
+  for (let width = 0; width < 8; width += 1) {
+    let deepest = -1;
+    const edge = (level: number, ...pad: number[]): void => {
+      try {
+        edge(level + 1, ...pad);
+      } catch {
+        deepest = level;
+      }
+      if (level >= deepest - 300) {
+        for (let frames = 0; frames < 4; frames += 1) {
+          try {
+            beneath(frames, thunk);
+          } catch {
+            // the edge, met before or after `thunk`
+          }
+        }
+      }
+    };
+    edge(0, ...Array.from({ length: width }, (_value, at) => at));
+  }
 };

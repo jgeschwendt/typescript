@@ -328,6 +328,9 @@ describe('sdl', () => {
     expect(() => sdl([union([User])])).toThrow('sdl: unions must be named — union(name, …)');
     expect(() => sdl([literal(1)])).toThrow('sdl: literal() has no GraphQL equivalent');
     expect(() => sdl([unknown()])).toThrow('sdl: unknown() has no GraphQL equivalent');
+    expect(() => sdl([object('Bag', { foreign: { '~standard': int()['~standard'] } })])).toThrow(
+      'sdl: a schema without a def has no GraphQL equivalent',
+    );
     expect(() => sdl([object('Bag', { counts: record(int()) })])).toThrow(
       'sdl: record() has no GraphQL equivalent',
     );

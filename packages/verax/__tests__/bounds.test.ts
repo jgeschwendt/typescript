@@ -1,6 +1,6 @@
 // Findings of the 2026-09-28 final unanchored review; the id is its ledger entry.
 import { describe, expect, test } from 'bun:test';
-import { type Equal, beneath, chain, copy, paths, steps } from './_helpers.js';
+import { type Equal, beneath, chain, copy, paths, steps, sweep, trap } from './_helpers.js';
 import { depth as stackDepth } from '../src/core.js';
 import {
   type Infer,
@@ -337,7 +337,8 @@ describe('foreign results are read defensively', () => {
     for (const result of [
       () => Other.resolve({ issues: [{ message: 'rejected' }] }),
       () => ({
-        then: (resolve: (value: unknown) => void) => {
+        then: (resolve: (value: unknown) => void, reject: () => void) => {
+          reject();
           resolve({ value: 1 });
         },
       }),
@@ -442,41 +443,32 @@ describe('an undiscriminated recursive union fails closed', () => {
 
 // Findings of the 2026-09-28 final unanchored review #2; the id is its ledger entry.
 describe('one budget bounds a whole call', () => {
-  test('B1 G1 a validation at the stack edge leaves no state behind', async () => {
-    // A fresh process: warmed code meets the stack's edge elsewhere.
-    const script = `${Bun.env['TMPDIR'] ?? '/tmp'}/verax-edge-${process.pid}.ts`;
-    await Bun.write(
-      script,
-      `import { int, is, list, nullable, object, optional, string, union, validate } from ${JSON.stringify(`${import.meta.dir}/../src/index.ts`)};
-      import { depth } from ${JSON.stringify(`${import.meta.dir}/../src/core.ts`)};
-      const Point = object({ x: int() });
-      const Chain = union([
-        object({ get next() { return nullable(Chain); } }),
-        object({ get next() { return nullable(Chain); }, note: optional(string()) }),
-      ]);
-      let deep = { next: null, note: 5 };
-      for (let level = 0; level < 24; level += 1) deep = { next: deep };
-      for (const [Edge, value] of [[Point, { x: 1 }], [Point, { x: 'x' }], [list(Point), [{ x: 1 }, { x: 'x' }]]]) {
-        // Callers whose frames differ in size meet the edge at different points of a call.
-        for (let width = 0; width < 40; width += 1) {
-          let near = 0;
-          const edge = (...pad) => {
-            try { edge(...pad); } catch { if ((near += 1) < 100) validate(value, Edge); }
-          };
-          try { edge(...Array.from({ length: width }, (_, at) => at)); } catch {}
-        }
-      }
-      // A call left open stays open: its budget, spent here, would never be renewed.
-      console.log(String(
-        validate(deep, Chain).issues?.[0]?.message === 'Too complex' &&
-          validate({ x: 1 }, Point).issues === undefined &&
-          is({ x: 1 }, Point) &&
-          depth() === 0,
-      ));`,
-    );
-    const { stdout } = Bun.spawnSync([process.execPath, script]);
-    await Bun.file(script).delete();
-    expect(stdout.toString().trim()).toBe('true');
+  test('B1 G1 a validation at the stack edge leaves no state behind', () => {
+    const Point = object({ x: int() });
+    const Chain: Schema = union([
+      object({
+        get next(): Schema {
+          return nullable(Chain);
+        },
+      }),
+      object({
+        get next(): Schema {
+          return nullable(Chain);
+        },
+        note: optional(string()),
+      }),
+    ]);
+    const deep = chain(25, (next) => (next === null ? { next, note: 5 } : { next }));
+    sweep(() => {
+      validate({ x: 1 }, Point);
+      validate({ x: 'x' }, Point);
+      validate([{ x: 1 }, { x: 'x' }], list(Point));
+    });
+    // A call left open stays open: its budget, spent here, would never be renewed.
+    expect(validate(deep, Chain).issues?.[0]?.message).toBe('Too complex');
+    expect(validate({ x: 1 }, Point)).toEqual({ value: { x: 1 } });
+    expect(is({ x: 1 }, Point)).toBe(true);
+    expect(stackDepth()).toBe(0);
   });
   test('B2 G2 shared children are walked per path, within one budget: Too complex, in bounded reads', () => {
     let budget = steps(0);
@@ -733,6 +725,15 @@ describe('plain data is bounded; exotic data costs its structure', () => {
     expect(
       validate({ field: 1 }, object({ field: elsewhere(() => ({ issues: undefined, value: 2 })) })),
     ).toEqual({ value: { field: 2 } });
+    // No issues is still a rejection; a spec whose `~standard` throws is an adapter that throws.
+    expect(
+      validate(
+        1,
+        elsewhere(() => ({ issues: [] })),
+      ).issues,
+    ).toEqual([{ message: 'Rejected', path: [] }]);
+    const hostile = new Proxy({}, trap('~standard')) as Schema;
+    expect(validate(1, hostile).issues).toEqual([{ message: 'Threw: ~standard', path: [] }]);
   });
   test('H5 only stack exhaustion fails a whole union: any other RangeError fails its member', () => {
     const Throws = refine(int(), 'never', () => {
@@ -740,6 +741,21 @@ describe('plain data is bounded; exotic data costs its structure', () => {
     });
     expect(is(1, union([Throws, int()]))).toBe(true);
     expect(validate(1, union([Throws, int()]))).toEqual({ value: 1 });
+    // A RangeError whose message cannot be read might be the stack's: fail closed, the whole check.
+    const Unreadable = refine(int(), 'never', () => {
+      throw Object.create(RangeError.prototype, {
+        message: {
+          get: (): never => {
+            throw new Error('unreadable');
+          },
+        },
+      }) as RangeError;
+    });
+    expect(validate(1, union([Unreadable, int()])).issues).toEqual([
+      { message: 'Threw: RangeError', path: [] },
+    ]);
+    // An empty union has no member to accept.
+    expect(is(1, union([]))).toBe(false);
   });
   test('H7 a container costs the same at any depth', () => {
     const Item = object({ a: int() });
@@ -805,34 +821,34 @@ describe('plain data is bounded; exotic data costs its structure', () => {
 // Findings of the 2026-09-28 final unanchored review #4; the id is its ledger entry.
 describe('no verdict rests on the stack, and no union is free to try', () => {
   test('I1 a nested validation that exhausts the stack fails its whole call, whatever a callback made of it', async () => {
-    // A fresh process: warmed code meets the stack's edge elsewhere.
-    const script = `${Bun.env['TMPDIR'] ?? '/tmp'}/verax-invert-${process.pid}.ts`;
-    await Bun.write(
-      script,
-      `import { is, list, refine, unknown, validate } from ${JSON.stringify(`${import.meta.dir}/../src/index.ts`)};
-      const Lists = list(unknown());
-      // Each rejects a list by inverting a nested verdict: an exhausted one must not become an accept.
-      const Inverted = [
-        refine(unknown(), 'not a list', (value) => !is(value, Lists)),
-        refine(unknown(), 'not a list', (value) => validate(value, Lists).issues !== undefined),
-      ];
-      const wrong = [0, 0];
-      for (const [at, Edge] of Inverted.entries()) {
-        // Callers whose frames differ in size meet the edge at different points of a call.
-        for (let width = 0; width < 40; width += 1) {
-          const edge = (...pad) => {
-            try { edge(...pad); } catch {}
-            if (validate([1], Edge).issues === undefined) wrong[at] += 1;
-            if (is([1], Edge)) wrong[at] += 1;
-          };
-          try { edge(...Array.from({ length: width }, (_, index) => index)); } catch {}
+    const exhausted = 'Threw: stack exhausted';
+    // Warmed code, and code no test has run: optimised, verax's calls may be inlined, leaving no edge between them.
+    for (const verax of [{ is, list, refine, unknown, validate }, await copy('cold')]) {
+      const Lists = verax.list(verax.unknown());
+      let ends = 0;
+      let relays = 0;
+      // Inverts a nested verdict: only an exhausted one could accept.
+      const Edge = verax.refine(verax.unknown(), 'not a list', (value) => {
+        const message = verax.validate(value, Lists).issues?.[0]?.message;
+        ends += Number(message === exhausted);
+        relays += Number(message !== undefined && message !== exhausted);
+        return !verax.is(value, Lists);
+      });
+      let wrong = 0;
+      sweep(() => {
+        ends = 0;
+        const { issues } = verax.validate([1], Edge);
+        // An exhausted nested call ends its whole call: never accepted, never outlived, never relayed.
+        if (
+          issues === undefined ||
+          (ends > 0 && issues[0]?.message !== exhausted) ||
+          verax.is([1], Edge)
+        ) {
+          wrong += 1;
         }
-      }
-      console.log(JSON.stringify(wrong));`,
-    );
-    const { stdout } = Bun.spawnSync([process.execPath, script]);
-    await Bun.file(script).delete();
-    expect(stdout.toString().trim()).toBe('[0,0]');
+      });
+      expect({ relays, wrong }).toEqual({ relays: 0, wrong: 0 });
+    }
   });
   test('I2 every union member tried is a step: a wide tagged union over a shared list is Too complex, in bounded work', () => {
     let budget = steps(0);
@@ -1121,40 +1137,26 @@ describe('a discriminated union finds its member by lookup, with the verdict of 
       }
     }
   });
-  test('J2 validate at the stack edge: an overflow in finding the schema is an issue, never a throw from within', async () => {
-    // A fresh process: warmed code meets the stack's edge elsewhere.
-    const script = `${Bun.env['TMPDIR'] ?? '/tmp'}/verax-j2-${process.pid}.ts`;
-    await Bun.write(
-      script,
-      `import { int, object, validate } from ${JSON.stringify(`${import.meta.dir}/../src/index.ts`)};
-      const Point = object({ x: int() });
-      const entries = [(value) => validate(value, Point), (value) => Point['~standard'].validate(value)];
+  test('J2 validate at the stack edge: an overflow in finding the schema is an issue, never a throw from within', () => {
+    const Point = object({ x: int() });
+    for (const entry of [
+      (value: unknown): unknown => validate(value, Point),
+      (value: unknown): unknown => Point['~standard'].validate(value),
+    ]) {
       // A throw that left a frame of verax escaped from within; one from the caller's own call did not.
-      const within = [0, 0];
-      for (const [at, entry] of entries.entries()) {
-        // From near the edge, the entry is reached through \`hops\` small frames: its room sweeps the edge finely.
-        const hop = (hops) => {
-          if (hops > 0) return hop(hops - 1);
-          try { return entry({ x: 1 }); } catch (error) {
-            if (/core\\.ts|types\\.ts/.test(String(error.stack).split('\\n')[1] ?? '')) within[at] += 1;
-            throw error;
-          }
-        };
-        // Callers whose frames differ in size meet the edge at different points of a call.
-        for (let width = 0; width < 8; width += 1) {
-          let deepest = -1;
-          const edge = (level, ...pad) => {
-            try { edge(level + 1, ...pad); } catch { deepest = level; }
-            if (level >= deepest - 3) for (let hops = 0; hops < 200; hops += 1) { try { hop(hops); } catch {} }
-          };
-          try { edge(0, ...Array.from({ length: width }, (_, index) => index)); } catch {}
+      let within = 0;
+      sweep(() => {
+        try {
+          return entry({ x: 1 });
+        } catch (error) {
+          within += Number(
+            /core\.ts|types\.ts/u.test((error as Error).stack?.split('\n', 2)[1] ?? ''),
+          );
+          throw error;
         }
-      }
-      console.log(JSON.stringify(within));`,
-    );
-    const { stdout } = Bun.spawnSync([process.execPath, script]);
-    await Bun.file(script).delete();
-    expect(stdout.toString().trim()).toBe('[0,0]');
+      });
+      expect(within).toBe(0);
+    }
   });
 });
 
@@ -1312,6 +1314,7 @@ describe('record keeps the guarantees object does', () => {
     try {
       expect(parse({ a: 1 }, Counts)).toEqual({ a: 1 });
       expect(Object.hasOwn(parse({ a: 1 }, Counts), 'polluted')).toBe(false);
+      expect(paths(validate({ a: 'x' }, Counts))).toEqual([['a']]);
     } finally {
       delete prototype['polluted'];
     }

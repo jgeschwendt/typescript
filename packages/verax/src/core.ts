@@ -305,30 +305,26 @@ const render = (value: unknown): string => {
       return 'function';
     }
     case 'object': {
-      if (value === null) {
-        return 'null';
-      }
-      if (Array.isArray(value)) {
-        return 'list';
-      }
-      // A class instance by its constructor's name, if it is a short identifier: `Date`, not `object`.
-      const name: unknown = (
-        Object.getPrototypeOf(value) as {
-          constructor?: { name?: unknown };
-        } | null
-      )?.constructor?.name;
-      return typeof name === 'string' && name !== 'Object' && IDENTIFIER.test(name)
-        ? name
-        : 'object';
+      break;
     }
     case 'string': {
       const text = value.length > MAX_STRING ? `${value.slice(0, MAX_STRING)}…` : value;
       return PLAIN.test(text) ? `"${text}"` : JSON.stringify(text);
     }
-    default: {
-      return 'value';
-    }
   }
+  if (value === null) {
+    return 'null';
+  }
+  if (Array.isArray(value)) {
+    return 'list';
+  }
+  // A class instance by its constructor's name, if it is a short identifier: `Date`, not `object`.
+  const name: unknown = (
+    Object.getPrototypeOf(value) as {
+      constructor?: { name?: unknown };
+    } | null
+  )?.constructor?.name;
+  return typeof name === 'string' && name !== 'Object' && IDENTIFIER.test(name) ? name : 'object';
 };
 
 /**

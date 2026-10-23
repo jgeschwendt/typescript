@@ -1,0 +1,5 @@
+[test]
+coverage = true
+# measured: verax's src alone, from the root or packages/verax (its test script passes this file)
+coveragePathIgnorePatterns = ["!{packages/verax/,}src/*.ts"]
+coverageThreshold = { functions = 1.0, lines = 1.0 }

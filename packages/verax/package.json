@@ -39,7 +39,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "prepack": "bun run build",
-    "test": "tsc --noEmit && bun test"
+    "test": "tsc --noEmit && bun --config=../../bunfig.toml test"
   },
   "devDependencies": {
     "@jlg/oxlint": "^0.1.4",
