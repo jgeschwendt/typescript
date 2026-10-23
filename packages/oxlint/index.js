@@ -23,6 +23,7 @@ jsPlugins resolve against their config file, and this base has none
 const absolute = (specifier) => fileURLToPath(new URL(specifier, import.meta.url));
 
 // ※ oxlint-js-plugins
+// no react-hooks-js: oxlint has eslint-plugin-react-hooks natively but memoized-effect-dependencies, config, gating and fbt (7.1.1 · 2026-10-23); one rule is not worth its 119 packages
 const jsPlugins = [
   { name: 'import-js', specifier: absolute('./plugins/import-js.js') },
   { name: 'react-js', specifier: absolute('./plugins/react-js.js') },
