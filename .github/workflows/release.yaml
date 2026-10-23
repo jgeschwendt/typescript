@@ -60,12 +60,12 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       # ※ release-approval-gate
-      # must read the changesets before `changeset version` consumes them
+      # must read the changesets before `changeset version` consumes them; any verax bump is gated (owner 2026-10-22)
       - id: bumps
         run: |
           if grep -rEq --include='*.md' --exclude=README.md \
-            '^[[:space:]]*.?@jlg/[a-z]+.?[[:space:]]*:[[:space:]]*(minor|major)[[:space:]]*$' \
-            .changeset; then
+            '^[[:space:]]*.?(@jlg/[a-z]+|verax).?[[:space:]]*:[[:space:]]*(minor|major)[[:space:]]*$' \
+            .changeset || grep -rEq --include='*.md' --exclude=README.md '^[[:space:]]*.?verax.?[[:space:]]*:' .changeset; then
             echo "gated=true" >> "$GITHUB_OUTPUT"
           fi
 

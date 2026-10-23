@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "erasableSyntaxOnly": true,
+    "exactOptionalPropertyTypes": true,
+    "lib": ["ES2024"],
+    "noEmit": true,
+    "types": ["bun"]
+  },
+  "include": ["__tests__", "examples", "src"]
+}
