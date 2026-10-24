@@ -30,6 +30,11 @@ jobs:
       - run: bunx oxfmt --check
       - run: bunx oxlint
       - run: bun test
+      # ※ verax-type-tests
+      # verax's type-level tests (`true satisfies Equal<…>`) only fail under tsc.
+      # Run inside the package so bunx resolves the lockfile's compiler.
+      - run: bunx tsc --noEmit
+        working-directory: packages/verax
 
       # ※ changeset-guard
       # grep, not rg (absent on the runner); `.?` around the name absorbs any quote style
@@ -41,25 +46,28 @@ jobs:
         run: |
           bump() {
             grep -rEl --include='*.md' --exclude=README.md \
-              "^[[:space:]]*.?@jlg/[a-z]+.?[[:space:]]*:[[:space:]]*$1[[:space:]]*\$" \
+              "^[[:space:]]*.?(@jlg/[a-z]+|verax).?[[:space:]]*:[[:space:]]*$1[[:space:]]*\$" \
               .changeset || true
           }
+          # any verax changeset or version change needs the sign-off, patch included (owner 2026-10-22)
+          verax() { grep -rEl --include='*.md' --exclude=README.md '^[[:space:]]*.?verax.?[[:space:]]*:' .changeset || true; }
           majors=$(bump major)
           if [ -n "$majors" ]; then
             echo "::error::major bump forbidden pre-1.0 — rewrite as minor (breaking) or patch: $majors"
             exit 1
           fi
           [ "$EVENT" = pull_request ] || exit 0
-          unsigned="$(bump minor)"
+          unsigned="$(bump minor; verax)"
           for f in packages/*/package.json; do
             old=$(git show "$BASE:$f" 2>/dev/null | node -p 'JSON.parse(require("fs").readFileSync(0, "utf8")).version' 2>/dev/null) || continue
             new=$(node -p "require('./$f').version")
+            [ "$old" = "$new" ] && continue
             # a downgrade (a corrected bump) counts as patch
             kind=$(node -p 'const [a, b] = process.argv.slice(1).map((v) => v.split(".").map(Number)); b[0] > a[0] ? "major" : b[0] === a[0] && b[1] > a[1] ? "minor" : "patch"' "$old" "$new")
-            [ "$kind" = patch ] || unsigned="$unsigned $f ($old -> $new, $kind)"
+            [ "$kind" = patch ] && [ "$f" != packages/verax/package.json ] || unsigned="$unsigned $f ($old -> $new, $kind)"
           done
           if [ -n "$unsigned" ] && [ "$SIGNED_OFF" != true ]; then
-            echo "::error::minor/major release needs the owner's sign-off — apply the release:signed-off label: $unsigned"
+            echo "::error::minor/major (or any verax) release needs the owner's sign-off — apply the release:signed-off label: $unsigned"
             exit 1
           fi
 
