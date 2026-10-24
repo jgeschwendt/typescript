@@ -679,13 +679,13 @@ const caller = () => {
 /**
 oxlint's root-only options, for the config in its cwd unless `root` says otherwise: a nested config naming any fails the run
 @param {boolean | undefined} root
-@param {boolean} typeAware
+@param {boolean} isTypeAware
 @param {Config['options']} options
 @returns {false | Pick<Config, 'options'>}
 */
-const rootOptions = (root, typeAware, options) =>
+const rootOptions = (root, isTypeAware, options) =>
   (root ?? dirname(caller() ?? '') === process.cwd()) && {
-    options: { reportUnusedDisableDirectives: 'error', typeAware, ...options },
+    options: { reportUnusedDisableDirectives: 'error', typeAware: isTypeAware, ...options },
   };
 
 // ※ oxlint-extends-objects
