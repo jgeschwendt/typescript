@@ -17,6 +17,7 @@ test('typescript-js/naming-convention refuses the typed `types` option', async (
 
 /** the rules the fixtures below trip; every other configured one need only load and not crash */
 const fixtured = Object.entries({
+  comments: 'divider',
   'eslint-js':
     'camelcase consistent-this no-invalid-this no-restricted-syntax no-undef-init require-atomic-updates',
   'import-js':
@@ -93,6 +94,7 @@ const fixtures = {
     '// TODO [2000-01-01]: expired',
     // date conditions skip on pull-request CI (checkDatesOnPullRequests): a version one stays live
     "// TODO [typescript@>=1]: expired by the consumer's typescript@7",
+    '// ─── short ───',
     "import inner from 'not-listed/lib/inner.js';",
     "import packaged from '../packages/inner/index.js';",
     "import { default as fresh, old } from './b.js';",

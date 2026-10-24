@@ -1,0 +1,61 @@
+{
+  "name": "verax",
+  "version": "0.1.1",
+  "description": "Truthful data — minimal, GraphQL-shaped runtime types for TypeScript. Standard Schema native.",
+  "keywords": [
+    "graphql",
+    "schema",
+    "standard-schema",
+    "superstruct",
+    "typescript",
+    "validation"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jgeschwendt/typescript.git",
+    "directory": "packages/verax"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./sdl": {
+      "types": "./dist/sdl.d.ts",
+      "import": "./dist/sdl.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "bun run build",
+    "test": "tsc --noEmit && bun --config=../../bunfig.toml test"
+  },
+  "devDependencies": {
+    "@jlg/oxlint": "^0.1.4",
+    "@types/bun": "^1.4.4",
+    "fast-check": "^4.10.2",
+    "typescript": "^7.0.2"
+  },
+  "peerDependencies": {
+    "typescript": ">=7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
