@@ -164,6 +164,12 @@ const consumers = scratch('oxlint-js-plugins-', installTimeout);
 const { peerDependencies } = await Bun.file(join(import.meta.dirname, '..', 'package.json')).json();
 
 /**
+a range's floor: the consumer installs the oldest oxlint the base claims, so a newer-only rule name fails here
+@param {string} range
+*/
+const floor = (range) => /\d+\.\d+\.\d+/u.exec(range)?.[0] ?? range;
+
+/**
 @param {string[]} command
 @param {string} cwd
 */
@@ -180,13 +186,19 @@ beforeAll(() => {
     [process.execPath, 'pm', 'pack', '--destination', consumers, '--quiet'],
     join(import.meta.dirname, '..'),
   );
+  const oxlint = floor(peerDependencies.oxlint);
+  const tsgolint = run(
+    [process.execPath, 'info', `oxlint@${oxlint}`, 'peerDependencies.oxlint-tsgolint'],
+    consumers,
+  );
   for (const linker of linkers) {
     const directory = join(consumers, linker);
     write(directory, {
       'package.json': {
         devDependencies: {
           '@jlg/oxlint': `file:${packed}`,
-          oxlint: peerDependencies.oxlint,
+          oxlint,
+          'oxlint-tsgolint': floor(tsgolint),
           typescript: '7.0.2',
         },
         engines: { node: '>=20' },

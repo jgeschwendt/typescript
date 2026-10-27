@@ -106,6 +106,7 @@ const expected = {
 };
 
 const suppressing = ['described.js', 'own-line.js'];
+/** @type {[string, string]} */
 const divided = ['dividers.js', 'narrow/dividers.js'];
 
 /** @type {{ diagnostics: { code: string; filename: string; labels: [{ span: { length: number; offset: number } }]; message: string; severity: string }[] }} */
@@ -156,7 +157,9 @@ test('a run oxlint cannot report on throws with its output', () => {
   );
 });
 
+/** @param {number} width */
 const ends = (width) => `A divider ends at column ${width}.`;
+/** @param {number} width */
 const tooLong = (width) => `Divider title too long for ${width} columns.`;
 test.each([
   [
