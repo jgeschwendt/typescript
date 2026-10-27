@@ -234,7 +234,6 @@ const rules = {
 
   'typescript/prefer-readonly-parameter-types': 'warn',
 
-  'comments/divider': 'error',
   'inline-config/no-directives': 'error',
 };
 
@@ -699,6 +698,33 @@ const rootOptions = (root, isTypeAware, options) =>
     options: { reportUnusedDisableDirectives: 'error', typeAware: isTypeAware, ...options },
   };
 
+/** oxfmt's default printWidth */
+const printWidth = 100;
+
+/** oxfmt's config names, in its lookup order */
+const oxfmtConfigs = ['.oxfmtrc.json', '.oxfmtrc.jsonc', 'oxfmt.config.ts', 'oxfmt.config.mts'];
+
+/**
+the printWidth of the oxfmt config nearest defineConfig's caller: JSONC parsed with its comments stripped outside strings, a TS config required (Node 24 strips types, Bun runs them)
+@param {string} [directory]
+@returns {number}
+*/
+const oxfmtWidth = (directory = dirname(caller() ?? '')) => {
+  const file = oxfmtConfigs.map((name) => join(directory, name)).find((path) => existsSync(path));
+  if (file === undefined) {
+    return dirname(directory) === directory ? printWidth : oxfmtWidth(dirname(directory));
+  }
+  const options = /\.jsonc?$/u.test(file)
+    ? JSON.parse(
+        String(readFileSync(file)).replaceAll(
+          /(?<string>"(?:[^"\\]|\\.)*")|\/\*[\s\S]*?\*\/|\/\/.*$/gmu,
+          '$<string>',
+        ),
+      )
+    : createRequire(file)(file).default;
+  return options.printWidth ?? printWidth;
+};
+
 // ※ oxlint-extends-objects
 /**
 @param {Config & { env?: Config['env'] & Partial<Env>; root?: boolean }} [config]
@@ -748,6 +774,8 @@ const defineConfig = ({
       ...Object.fromEntries(
         Object.entries(floors).flatMap(([key, floor]) => (major < floor ? [[key, 'off']] : [])),
       ),
+      // a divider ends where oxfmt wraps
+      'comments/divider': ['error', { width: oxfmtWidth() }],
       ...config.rules,
     },
     settings: { ...detectReact(), ...config.settings },

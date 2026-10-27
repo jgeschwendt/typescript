@@ -23,4 +23,6 @@ export default defineConfig({
 
 A rule oxlint lacks natively is keyed by its `-js` scope—`import-js/no-internal-modules`, not `import/`—and a name oxlint has no rule for fails the whole config load.
 
+`comments/divider` ends a `// ─── title ───` divider at oxfmt's `printWidth`, read from the oxfmt config nearest the oxlint config, walking up, in oxfmt's order (`.oxfmtrc.json`, `.oxfmtrc.jsonc`, `oxfmt.config.ts`, `oxfmt.config.mts`), 100 without one; `['error', { width }]` sets it outright.
+
 `off`, the other export, maps every rule the base turns off to the fact that turns it off.
