@@ -542,7 +542,7 @@ exports[`rules 1`] = `
   "typescript/no-unsafe-assignment | pedantic | native (type-aware) | error | - | ",
   "typescript/no-unsafe-call | pedantic | native (type-aware) | error | - | ",
   "typescript/no-unsafe-declaration-merging | correctness | native | error | - | ",
-  "typescript/no-unsafe-enum-assignment | - | none | off | - | needs type information the JS plugin host has none of",
+  "typescript/no-unsafe-enum-assignment | suspicious | native (type-aware) | error | - | ",
   "typescript/no-unsafe-enum-comparison | suspicious | native (type-aware) | error | - | ",
   "typescript/no-unsafe-function-type | pedantic | native | error | - | ",
   "typescript/no-unsafe-member-access | pedantic | native (type-aware) | error | - | ",
