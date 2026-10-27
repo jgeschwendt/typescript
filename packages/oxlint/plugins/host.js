@@ -1,3 +1,5 @@
+import { enabled } from './enabled.js';
+
 /** ESLint 9.39 SourceCode#getJSDocComment, `this` made a parameter and its checks respelled */
 const jsdoc = (sourceCode, node) => {
   const find = (astNode) => {
@@ -81,10 +83,31 @@ const adapt = (rule, extend) => ({
   },
 });
 
-/** extend(context) returns extra properties for each file's context */
-export const host = (plugin, name, extend) => ({
-  meta: { name },
-  rules: Object.fromEntries(
-    Object.entries(plugin.rules).map(([id, rule]) => [id, adapt(rule, extend)]),
-  ),
-});
+/** extend(context) returns extra properties for each file's context; a rule is adapted on first read */
+const host = (plugin, name, extend) => {
+  const adapted = new Map();
+  const isListed = (key) => enabled.size === 0 || enabled.has(`${name}/${key}`);
+  const rules = Object.defineProperties(
+    {},
+    Object.fromEntries(
+      Object.keys(plugin.rules).map((key) => [
+        key,
+        {
+          configurable: true,
+          enumerable: true,
+          get: () =>
+            adapted.get(key) ?? adapted.set(key, adapt(plugin.rules[key], extend)).get(key),
+        },
+      ]),
+    ),
+  );
+  return {
+    meta: { name },
+    rules: new Proxy(rules, {
+      has: (target, key) => isListed(key) && Object.hasOwn(target, key),
+      ownKeys: (target) => Reflect.ownKeys(target).filter((key) => isListed(key)),
+    }),
+  };
+};
+
+export { host };

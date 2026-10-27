@@ -21,9 +21,19 @@ const untyped = (rule) => ({
   },
 });
 
+// descriptors, not a spread: typescript-eslint's rules are getters that load a rule module each
 export default host(
   {
-    rules: { ...plugin.rules, 'naming-convention': untyped(plugin.rules['naming-convention']) },
+    rules: Object.defineProperties(
+      {},
+      {
+        ...Object.getOwnPropertyDescriptors(plugin.rules),
+        'naming-convention': {
+          enumerable: true,
+          get: () => untyped(plugin.rules['naming-convention']),
+        },
+      },
+    ),
   },
   'typescript-js',
 );

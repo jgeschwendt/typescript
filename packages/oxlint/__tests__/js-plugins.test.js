@@ -1,18 +1,28 @@
 import { beforeAll, expect, test } from 'bun:test';
-import { scratch, spawnOxlint, write } from './_helpers.js';
+import { ruleNames, scratch, spawnOxlint, write } from './_helpers.js';
 
 const { join } = process.getBuiltinModule('node:path');
 
-test('typescript-js/naming-convention refuses the typed `types` option', async () => {
-  const { default: plugin } = await import(
-    join(import.meta.dirname, '..', 'plugins', 'typescript-js.js')
-  );
+const { default: typescript } = await import(
+  join(import.meta.dirname, '..', 'plugins', 'typescript-js.js')
+);
+
+test('typescript-js/naming-convention refuses the typed `types` option', () => {
   expect(() =>
-    plugin.rules['naming-convention'].create({
+    typescript.rules['naming-convention'].create({
       options: [{ types: ['boolean'] }],
       sourceCode: {},
     }),
   ).toThrow('needs type information');
+});
+
+test('a host lists oxlint only the rules a config names', () => {
+  expect(Object.keys(typescript.rules).map((name) => `typescript-js/${name}`)).toEqual(
+    ruleNames.filter((key) => key.startsWith('typescript-js/')),
+  );
+  expect(
+    ['naming-convention', 'typedef'].map((name) => Reflect.has(typescript.rules, name)),
+  ).toEqual([true, false]);
 });
 
 /** the rules the fixtures below trip; every other configured one need only load and not crash */
@@ -25,7 +35,7 @@ const fixtured = Object.entries({
   'inline-config': 'no-directives',
   'react-js':
     'boolean-prop-naming destructuring-assignment jsx-no-bind jsx-no-leaked-render jsx-sort-props no-adjacent-inline-elements no-deprecated no-invalid-html-attribute no-typos no-unused-prop-types prefer-read-only-props require-default-props',
-  'typescript-js': 'member-ordering naming-convention',
+  'typescript-js': 'member-ordering naming-convention no-shadow',
   'unicorn-js':
     'consistent-destructuring consistent-json-file-read expiring-todo-comments name-replacements no-for-loop no-keyword-prefix no-named-default no-unnecessary-polyfills no-unused-properties prefer-switch string-content',
 }).flatMap(([scope, names]) => names.split(' ').map((name) => `${scope}(${name})`));
@@ -149,6 +159,10 @@ const fixtures = {
     'module.exports = my_var;',
     '',
   ].join('\n'),
+  // oxlint evaluates every config before it loads a plugin, so a host lists a rule only a nested config turns on
+  'src/nested/oxlint.config.ts': `import { defineConfig } from '@jlg/oxlint';\nexport default defineConfig({ rules: { 'typescript-js/no-shadow': 'error' } });\n`,
+  'src/nested/shadow.ts':
+    'export const value = 1;\nexport const shadow = (value: number): number => value;\n',
 };
 
 // the base arrives as an object: only index.js's absolute paths locate the plugins

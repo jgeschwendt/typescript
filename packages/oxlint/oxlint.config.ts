@@ -37,6 +37,11 @@ export default defineConfig({
       },
     },
     {
+      files: ['index.js'],
+      // defineConfig records into enabled.js's set what the hosts list to oxlint
+      rules: { 'import-js/no-internal-modules': ['error', { allow: ['**/plugins/enabled.js'] }] },
+    },
+    {
       files: ['__tests__/{_helpers,define-config.test}.js'],
       // the two files that import the module under test, ../index.js
       rules: { 'import/no-relative-parent-imports': 'off' },

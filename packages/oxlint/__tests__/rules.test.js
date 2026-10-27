@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import { config, off, ruleKey } from './_helpers.js';
-import { rows } from './rules.js';
+import { rows, upstream } from './rules.js';
 
 // <rule> | <category> | <oxlint> | <base> | <options> | <reason>; categories run at error, so a bump's new rules diff here; regenerate: bun test --update-snapshots, then bun run report ※ rules-gate
 
@@ -33,4 +33,16 @@ test('off is frozen and names only a native rule or a -js rule oxlint lacks: any
         : !oxlint.get(ruleKey(key))?.startsWith('native'),
     ),
   ).toEqual([]);
+});
+
+test("typescript-eslint's extensions share their core rule's name, but index.js's `renamed`", () => {
+  const { eslint = {}, typescript = {} } = upstream;
+  expect(
+    Object.entries(typescript).flatMap(([name, { meta }]) => {
+      const base = meta?.docs?.extendsBaseRule;
+      return (base === true ? name : base) === (Object.hasOwn(eslint, name) ? name : undefined)
+        ? []
+        : [[name, base]];
+    }),
+  ).toEqual([['only-throw-error', 'no-throw-literal']]);
 });

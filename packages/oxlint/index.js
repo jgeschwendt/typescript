@@ -3,7 +3,9 @@
 /** @typedef {import('oxlint').OxlintConfig} Config */
 /** @typedef {import('oxlint').OxlintOverride} Override */
 /** @typedef {{ bun: boolean; next: boolean; node: boolean | number; react: boolean; typescript: boolean }} Env */
-/** @typedef {Record<string, { meta: { deprecated?: unknown; docs?: { extendsBaseRule?: boolean | string; requiresTypeChecking?: boolean } } }>} Rules */
+/** @typedef {{ meta: { deprecated?: unknown; docs?: { requiresTypeChecking?: boolean } } }} Rule */
+
+import { enabled } from './plugins/enabled.js';
 
 const { existsSync, readFileSync } = process.getBuiltinModule('node:fs');
 const { createRequire } = process.getBuiltinModule('node:module');
@@ -459,7 +461,7 @@ const floors = {
   'unicorn-js/prefer-uint8array-hex': node26,
 };
 
-/** @type {Record<'eslint' | 'import' | 'react' | 'typescript' | 'unicorn', Rules>} */
+/** @type {Record<'eslint' | 'import' | 'react' | 'typescript' | 'unicorn', Record<string, Rule>>} */
 const wrapped = Object.fromEntries(
   await Promise.all(
     ['eslint', 'import', 'react', 'typescript', 'unicorn'].map(async (scope) => {
@@ -470,16 +472,17 @@ const wrapped = Object.fromEntries(
 );
 
 /**
-a wrapper's live rules oxlint lacks, unless opted out; typed ones only when tuned
+a wrapper's live rules oxlint lacks, unless opted out; typed ones only when tuned; by key first, so only a candidate's rule module loads
 @param {keyof typeof wrapped} scope
 */
 const derive = (scope) =>
-  Object.entries(wrapped[scope]).flatMap(([name, { meta }]) => {
+  Object.keys(wrapped[scope]).flatMap((name) => {
     const key = `${scope}-js/${name}`;
-    return meta.deprecated ||
-      native.has(scope === 'eslint' ? name : `${scope}/${name}`) ||
-      Object.hasOwn(off, key) ||
-      (meta.docs?.requiresTypeChecking && tuned[key] === undefined)
+    if (native.has(scope === 'eslint' ? name : `${scope}/${name}`) || Object.hasOwn(off, key)) {
+      return [];
+    }
+    const meta = wrapped[scope][name]?.meta;
+    return meta?.deprecated || (meta?.docs?.requiresTypeChecking && tuned[key] === undefined)
       ? []
       : [[key, tuned[key] ?? 'error']];
   });
@@ -488,12 +491,13 @@ const javascript = Object.fromEntries(
   [derive('eslint'), derive('import'), derive('react'), derive('unicorn')].flat(),
 );
 
-/** typescript-eslint's extensions replace their core rule on TS files */
-const twins = Object.entries(wrapped.typescript)
-  .map(
-    ([name, { meta }]) =>
-      `eslint-js/${meta.docs?.extendsBaseRule === true ? name : meta.docs?.extendsBaseRule}`,
-  )
+/**
+typescript-eslint's extensions replace their core rule on TS files: each shares its core rule's name, but these (rules.test.js proves the list)
+@type {Record<string, string | undefined>}
+*/
+const renamed = { 'only-throw-error': 'no-throw-literal' };
+const twins = Object.keys(wrapped.typescript)
+  .map((name) => `eslint-js/${renamed[name] ?? name}`)
   .filter((key) => Object.hasOwn(javascript, key))
   .map((key) => [key, 'off']);
 
@@ -720,7 +724,7 @@ const defineConfig = ({
     Infinity;
   // a boolean env.node is oxlint's globals; a numeric one, the runtime floor, is ours
   const environments = { ...others, ...(typeof isNode === 'boolean' && { node: isNode }) };
-  return {
+  const built = {
     ...config,
     // oxlint's own env keys pass through; bun/next/react/typescript are ours
     ...(Object.keys(environments).length > 0 && { env: environments }),
@@ -748,6 +752,14 @@ const defineConfig = ({
     },
     settings: { ...detectReact(), ...config.settings },
   };
+  // oxlint rejects a configured rule, `off` too, that its plugin does not list: record every key, across every config (a nested one adds)
+  const keys = [built.rules, ...built.overrides.map((override) => override.rules)].flatMap((set) =>
+    Object.keys(set ?? {}),
+  );
+  for (const key of keys) {
+    enabled.add(key);
+  }
+  return built;
 };
 
 export { defineConfig, off };

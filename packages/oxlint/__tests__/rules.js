@@ -1,21 +1,36 @@
 import { config, loadRules, off, overrides, ruleKey } from './_helpers.js';
 
+/** @typedef {{ meta?: { deprecated?: unknown; docs?: { extendsBaseRule?: boolean | string; requiresTypeChecking?: boolean } } }} Rule */
+
 const levels = new Map(Object.entries(config.categories ?? {}));
 const native = loadRules();
 /**
-the wrapped plugins' live rules, `scope/name` to whether they need types
-@type {[string, boolean | undefined][][]}
+the wrapped plugins' upstream catalogs: a host lists only the rules a config turns on
+@type {Record<string, Record<string, Rule>>}
 */
-const catalogs = await Promise.all(
-  ['eslint', 'import', 'react', 'typescript', 'unicorn'].map(async (scope) => {
-    /** @type {{ default: { rules: Record<string, { meta?: { deprecated?: unknown; docs?: { requiresTypeChecking?: boolean } } }> } }} */
-    const { default: plugin } = await import(`../plugins/${scope}-js.js`);
-    return Object.entries(plugin.rules)
-      .filter(([, { meta }]) => !meta?.deprecated)
-      .map(([name, { meta }]) => [`${scope}/${name}`, meta?.docs?.requiresTypeChecking]);
-  }),
+const upstream = Object.fromEntries(
+  await Promise.all(
+    Object.entries({
+      eslint: 'eslint/use-at-your-own-risk',
+      import: 'eslint-plugin-import',
+      react: 'eslint-plugin-react',
+      typescript: '@typescript-eslint/eslint-plugin',
+      unicorn: 'eslint-plugin-unicorn',
+    }).map(async ([scope, specifier]) => {
+      /** @type {{ default: { builtinRules: Map<string, Rule>; rules?: Record<string, Rule> } }} */
+      const { default: plugin } = await import(specifier);
+      return [scope, plugin.rules ?? Object.fromEntries(plugin.builtinRules)];
+    }),
+  ),
 );
-const wrapped = new Map(catalogs.flat());
+/** the live rules, `scope/name` to whether they need types */
+const wrapped = new Map(
+  Object.entries(upstream).flatMap(([scope, rules]) =>
+    Object.entries(rules)
+      .filter(([, { meta }]) => !meta?.deprecated)
+      .map(([name, { meta }]) => [`${scope}/${name}`, meta?.docs?.requiresTypeChecking]),
+  ),
+);
 const reasons = new Map(Object.entries(off).map(([key, reason]) => [ruleKey(key), reason]));
 
 /** @type {(name: string, value: unknown) => [string, unknown[]]} */
@@ -53,4 +68,4 @@ const rows = [...new Set([...wrapped.keys(), ...native.keys()])].map((rule) => {
   return { base, baseOptions, category, options, oxlint, reason, rule };
 });
 
-export { rows };
+export { rows, upstream };
