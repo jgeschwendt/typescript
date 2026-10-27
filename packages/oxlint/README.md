@@ -10,7 +10,7 @@ import { defineConfig } from '@jlg/oxlint';
 
 export default defineConfig({
   ignorePatterns: ['**/*.d.ts'],
-  // set at the root by the base: unused directives error, type-aware once oxlint-tsgolint is installed
+  // set at the root by the base: unused directives error, type-aware wherever typescript is installed
   options: { reportUnusedDisableDirectives: 'off', typeAware: true },
   // the base's overrides come first, so yours win, and an override beats top-level rules
   overrides: [],
@@ -20,6 +20,8 @@ export default defineConfig({
 ```
 
 > Runs under Node ≥24 or Bun ≥1.4 (`bun --bun oxlint`)—JS plugins included.
+
+> The base brings its own `oxlint-tsgolint` and points oxlint at it through `OXLINT_TSGOLINT_PATH`, which never reaches oxlint's binary under `bun --bun`: there, an isolated install lists `oxlint-tsgolint` itself or lints untyped.
 
 A rule oxlint lacks natively is keyed by its `-js` scope—`import-js/no-internal-modules`, not `import/`—and a name oxlint has no rule for fails the whole config load.
 

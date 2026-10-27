@@ -1,8 +1,8 @@
-import { expect, test } from 'bun:test';
+import { afterAll, expect, test } from 'bun:test';
 import { config, everything, overrides, write } from './_helpers.js';
 import { defineConfig } from '../index.js';
 
-const { mkdtempSync, rmSync } = process.getBuiltinModule('node:fs');
+const { existsSync, mkdtempSync, rmSync } = process.getBuiltinModule('node:fs');
 const { tmpdir } = process.getBuiltinModule('node:os');
 const { join } = process.getBuiltinModule('node:path');
 
@@ -209,10 +209,19 @@ test.each([
   { title: 'a config outside the lint root sets no options' },
   { expected: options, root: true, title: 'root forces them' },
   {
+    expected: { ...options, typeAware: true },
+    files: {
+      'node_modules/.bin/tsgolint': '',
+      'package.json': { devDependencies: { typescript: '*' } },
+    },
+    root: true,
+    title: "typescript alone is type-aware through the base's tsgolint",
+  },
+  {
     expected: options,
     files: { 'package.json': { devDependencies: { typescript: '*' } } },
     root: true,
-    title: 'typescript without oxlint-tsgolint is not type-aware',
+    title: 'on Bun, only a node_modules/.bin/tsgolint oxlint finds makes it type-aware',
   },
   {
     expected: { ...options, typeAware: true },
@@ -229,6 +238,26 @@ test.each([
   },
 ])('$title', async ({ expected, files = {}, ...own }) => {
   expect(await within(files, () => defineConfig(own).options)).toStrictEqual(expected);
+});
+
+/** set by defineConfig in this process, so cleared after: spawned oxlint runs inherit the environment */
+const tsgolintVariable = 'OXLINT_TSGOLINT_PATH';
+afterAll(() => Reflect.deleteProperty(process.env, tsgolintVariable));
+test.each([
+  {
+    devDependencies: typed.devDependencies,
+    expected: false,
+    title: "a consumer's own oxlint-tsgolint leaves OXLINT_TSGOLINT_PATH alone",
+  },
+  {
+    devDependencies: { typescript: '*' },
+    expected: true,
+    title: "typescript alone points OXLINT_TSGOLINT_PATH at the base's tsgolint",
+  },
+])('$title', async ({ devDependencies, expected }) => {
+  Reflect.deleteProperty(process.env, tsgolintVariable);
+  await within({ 'package.json': { devDependencies } }, () => defineConfig());
+  expect(existsSync(process.env[tsgolintVariable] ?? '')).toBe(expected);
 });
 
 /** a root config in the temp dir: the divider's width resolves from its caller's directory up */
