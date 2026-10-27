@@ -102,6 +102,8 @@ const fixtures = {
     'export default fresh;',
     '',
   ].join('\n'),
+  'src/floating.ts':
+    'export async function later(): Promise<number> {\n  return 1;\n}\n\nlater();\n',
   'src/legacy.js': [
     '// TODO [2000-01-01]: expired',
     // date conditions skip on pull-request CI (checkDatesOnPullRequests): a version one stays live
@@ -202,19 +204,13 @@ beforeAll(() => {
     [process.execPath, 'pm', 'pack', '--destination', consumers, '--quiet'],
     join(import.meta.dirname, '..'),
   );
-  const oxlint = floor(peerDependencies.oxlint);
-  const tsgolint = run(
-    [process.execPath, 'info', `oxlint@${oxlint}`, 'peerDependencies.oxlint-tsgolint'],
-    consumers,
-  );
   for (const linker of linkers) {
     const directory = join(consumers, linker);
     write(directory, {
       'package.json': {
         devDependencies: {
           '@jlg/oxlint': `file:${packed}`,
-          oxlint,
-          'oxlint-tsgolint': floor(tsgolint),
+          oxlint: floor(peerDependencies.oxlint),
           typescript: '7.0.2',
         },
         engines: { node: '>=20' },
@@ -234,7 +230,7 @@ test.each(
   ),
 )(
   'on %s, installed %s: no JS-plugin rule crashes, and every fixtured one fires',
-  (_name, linker, runtime) => {
+  (name, linker, runtime) => {
     const directory = join(consumers, linker);
     const bin = join(directory, 'node_modules', 'oxlint', 'bin', 'oxlint');
     /** @type {{ diagnostics: { code?: string; message: string }[] }} */
@@ -249,6 +245,10 @@ test.each(
     expect(
       fixtured.filter((code) => diagnostics.every((diagnostic) => diagnostic.code !== code)),
     ).toEqual([]);
+    // type-aware through the base's own tsgolint: Node hands oxlint OXLINT_TSGOLINT_PATH, Bun's env never reaches it, so only a hoisted node_modules/.bin/tsgolint serves there
+    expect(diagnostics.some(({ code }) => code === 'typescript(no-floating-promises)')).toBe(
+      name === 'node' || linker === 'hoisted',
+    );
   },
   lintTimeout,
 );

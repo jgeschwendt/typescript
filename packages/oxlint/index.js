@@ -622,31 +622,69 @@ const tooling = {
   },
 };
 
+/**
+`directory` and every directory above it, nearest first
+@param {string} directory
+@returns {string[]}
+*/
+const ancestors = (directory) =>
+  dirname(directory) === directory ? [directory] : [directory, ...ancestors(dirname(directory))];
+
 /** every package.json from cwd up, nearest first; a workspace declares engines at its root */
 const manifests = () => {
   const found = [];
-  for (let directory = process.cwd(); ; directory = dirname(directory)) {
+  for (const directory of ancestors(process.cwd())) {
     const file = join(directory, 'package.json');
-    if (existsSync(file)) {
-      const manifest = JSON.parse(String(readFileSync(file)));
-      found.push({ directory, ...manifest });
+    if (!existsSync(file)) {
+      continue;
     }
-    if (dirname(directory) === directory) {
-      return found;
-    }
+    const manifest = JSON.parse(String(readFileSync(file)));
+    found.push({ directory, ...manifest });
   }
+  return found;
+};
+
+/** where oxlint's binary looks for tsgolint first */
+const tsgolintVariable = 'OXLINT_TSGOLINT_PATH';
+const executable = process.platform === 'win32' ? 'tsgolint.exe' : 'tsgolint';
+
+/** the base's own tsgolint, resolved as oxlint-tsgolint's bin resolves it; none on a platform without a build */
+const ownTsgolint = () => {
+  try {
+    return createRequire(import.meta.resolve('oxlint-tsgolint/package.json')).resolve(
+      `@oxlint-tsgolint/${process.platform}-${process.arch}/${executable}`,
+    );
+  } catch {
+    return '';
+  }
+};
+
+/** points oxlint at the base's tsgolint, unless something already does; Bun's process.env never reaches the native binary's environ (probed 2026-10-27), so there only a node_modules/.bin/tsgolint oxlint finds from cwd up serves */
+const hasTsgolint = () => {
+  const path = ownTsgolint();
+  if (path === '') {
+    return false;
+  }
+  process.env[tsgolintVariable] ??= path;
+  return (
+    !process.versions.bun ||
+    ancestors(process.cwd()).some((directory) =>
+      existsSync(join(directory, 'node_modules', '.bin', 'tsgolint')),
+    )
+  );
 };
 
 /** the nearest package.json decides the dependencies, the nearest with `engines` the floor; none found turns everything on */
 const detectEnvironment = () => {
   const [nearest, ...above] = manifests();
   if (nearest === undefined) {
-    return { bun: true, next: true, react: true, tsgolint: false, typescript: true };
+    return { bun: true, next: true, react: true, tsgolint: hasTsgolint(), typescript: true };
   }
   const { dependencies, devDependencies, directory } = nearest;
   const installed = { ...dependencies, ...devDependencies };
   const { engines } = [nearest, ...above].find((manifest) => manifest.engines) ?? {};
   const major = /^(?:>=|[>^~])?\s*(?<major>\d+)/u.exec(engines?.node ?? '')?.[1];
+  const isTypescript = 'typescript' in installed;
   return {
     bun:
       '@types/bun' in installed ||
@@ -656,9 +694,9 @@ const detectEnvironment = () => {
     // Bun has every floored API
     node: major ? Number(major) : engines?.bun && Infinity,
     react: 'react' in installed,
-    // type-aware needs its binary: without it oxlint fails "Failed to find tsgolint executable"
-    tsgolint: 'oxlint-tsgolint' in installed,
-    typescript: 'typescript' in installed,
+    // type-aware runs tsgolint, else oxlint fails "Failed to find tsgolint executable": the consumer's own, else the base's
+    tsgolint: isTypescript && ('oxlint-tsgolint' in installed || hasTsgolint()),
+    typescript: isTypescript,
   };
 };
 
@@ -706,13 +744,14 @@ const oxfmtConfigs = ['.oxfmtrc.json', '.oxfmtrc.jsonc', 'oxfmt.config.ts', 'oxf
 
 /**
 the printWidth of the oxfmt config nearest defineConfig's caller: JSONC parsed with its comments stripped outside strings, a TS config required (Node 24 strips types, Bun runs them)
-@param {string} [directory]
 @returns {number}
 */
-const oxfmtWidth = (directory = dirname(caller() ?? '')) => {
-  const file = oxfmtConfigs.map((name) => join(directory, name)).find((path) => existsSync(path));
+const oxfmtWidth = () => {
+  const file = ancestors(dirname(caller() ?? ''))
+    .flatMap((directory) => oxfmtConfigs.map((name) => join(directory, name)))
+    .find((path) => existsSync(path));
   if (file === undefined) {
-    return dirname(directory) === directory ? printWidth : oxfmtWidth(dirname(directory));
+    return printWidth;
   }
   const options = /\.jsonc?$/u.test(file)
     ? JSON.parse(
