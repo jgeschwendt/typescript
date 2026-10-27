@@ -302,6 +302,7 @@ const typescriptOnly = [
   'no-unsafe-assignment',
   'no-unsafe-call',
   'no-unsafe-declaration-merging',
+  'no-unsafe-enum-assignment',
   'no-unsafe-enum-comparison',
   'no-unsafe-function-type',
   'no-unsafe-member-access',
