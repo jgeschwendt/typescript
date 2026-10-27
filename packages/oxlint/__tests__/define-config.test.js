@@ -231,6 +231,39 @@ test.each([
   expect(await within(files, () => defineConfig(own).options)).toStrictEqual(expected);
 });
 
+/** a root config in the temp dir: the divider's width resolves from its caller's directory up */
+const plain = `import { defineConfig } from '${join(import.meta.dirname, '..', 'index.js')}';
+export default defineConfig();`;
+/** oxfmt's default, then the widths configs set */
+const printWidth = 100;
+const narrow = 80;
+const jsonc = 90;
+const wide = 120;
+const typedWide = `const width: number = ${wide};\nexport default { printWidth: width };\n`;
+test.each([
+  { expected: printWidth, files: {}, title: 'no oxfmt config divides at 100' },
+  { expected: printWidth, files: { '.oxfmtrc.json': {} }, title: 'no printWidth divides at 100' },
+  {
+    expected: narrow,
+    files: { '.oxfmtrc.json': { printWidth: narrow }, 'oxfmt.config.ts': typedWide },
+    title: ".oxfmtrc.json comes first in oxfmt's order",
+  },
+  {
+    expected: jsonc,
+    files: {
+      '.oxfmtrc.jsonc': `{\n  "$schema": "https://oxc.rs/schema.json", // url\n  /* width */ "printWidth": ${jsonc}\n}\n`,
+    },
+    title: 'JSONC strips comments, never a // inside a string',
+  },
+  { expected: wide, files: { 'oxfmt.config.ts': typedWide }, title: 'a TS config is required' },
+])('$title', async ({ expected, files }) => {
+  const { default: built } = await within(
+    { ...files, 'nested/oxlint.config.js': plain },
+    () => import(join(process.cwd(), 'oxlint.config.js')),
+  );
+  expect(built.rules['comments/divider']).toStrictEqual(['error', { width: expected }]);
+});
+
 /** a shared config wrapping the base, as a consumer's oxlint.config.js loads it */
 const wrapper = `import { defineConfig } from '${join(import.meta.dirname, '..', 'index.js')}';
 export default (config) => defineConfig(config);`;

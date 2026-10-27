@@ -4,7 +4,7 @@ const divider = /^ ─── (?<title>.+?) ─+$/u;
 /** the fewest rules a divider closes on */
 const least = 3;
 
-/** oxfmt's printWidth */
+/** oxfmt's default printWidth: defineConfig passes the consumer's */
 const printWidth = 100;
 
 const plugin = {

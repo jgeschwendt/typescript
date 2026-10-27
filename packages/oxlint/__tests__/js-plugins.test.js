@@ -51,6 +51,8 @@ const inert = {
 const fixtures = {
   'node_modules/not-listed/lib/inner.js': 'export default 1;\n',
   'node_modules/not-listed/package.json': { name: 'not-listed', type: 'module', version: '1.0.0' },
+  // required by defineConfig for the divider's width, on Node through its type stripping
+  'oxfmt.config.ts': 'const width: number = 100;\nexport default { printWidth: width };\n',
   'packages/inner/index.js': 'export default 1;\n',
   'packages/inner/package.json': { name: 'inner', type: 'module', version: '1.0.0' },
   'src/Widget.tsx': [
