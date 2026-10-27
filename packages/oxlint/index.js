@@ -353,7 +353,13 @@ const always = [
   { env: { node: true }, files: ['**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}'] },
   {
     files: ['**/*.{cjs,js,jsx,mjs}'],
-    rules: Object.fromEntries(typescriptOnly.map((name) => [`typescript/${name}`, 'off'])),
+    // a name the running oxlint lacks fails the config: emit only the installed catalog's
+    rules: Object.fromEntries(
+      typescriptOnly
+        .map((name) => `typescript/${name}`)
+        .filter((key) => native.has(key))
+        .map((key) => [key, 'off']),
+    ),
   },
   // a describe body holds one statement per test
   { files: ['**/*.test.*', '**/__tests__/**'], rules: { 'max-statements': 'off' } },

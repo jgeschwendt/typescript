@@ -18,7 +18,7 @@ hazards:
     anchor: ※ rule-existence-guard
   - claim: VERSION PAIRING — oxlint 1.89 declares peer oxlint-tsgolint >=7.0.2003 (probed 2026-10-20); an old tsgolint breaks type-aware SILENTLY ('Failed to find tsgolint executable') and a TS-free repo still lints green; probe type-aware directly when bumping
     anchor: ※ oxlint-tsgolint-pairing
-  - claim: PEER COUPLING — peerDependencies.oxlint is a caret range though JS plugins are alpha; naming a version-N-only rule in index.js puts a floor of N under any range it widens to (older consumers hard-fail on the unknown name); category-activated rules don't
+  - claim: PEER COUPLING — peerDependencies.oxlint is a caret range though JS plugins are alpha; naming a version-N-only rule in index.js puts a floor of N under any range it widens to (older consumers hard-fail on the unknown name); category-activated rules don't, and `typescriptOnly` is filtered through the installed catalog; js-plugins.test.js's packed consumer installs the range's floor oxlint (and that oxlint's tsgolint peer floor), so a name only a newer oxlint knows fails the suite
     anchor: ※ oxlint-peer-coupling
   - claim: SNAPSHOT RESOLUTION — the guard tests resolve oxlint from packages/oxlint/node_modules first, so a root-only oxlint bump leaves packages/oxlint's devDependency (and the regenerated rules.test.js snapshot) on the OLD catalog with a silent no-diff; bump both package.json files together
     anchor: ※ snapshot-resolution
