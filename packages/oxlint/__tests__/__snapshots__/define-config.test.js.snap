@@ -403,7 +403,7 @@ exports[`overrides 1`] = `
   },
   {
     "files": [
-      "**/{default,error,global-error,layout,loading,not-found,page,template}.{jsx,tsx}",
+      "**/{default,error,forbidden,global-error,layout,loading,not-found,page,template,unauthorized}.{jsx,tsx}",
     ],
     "rules": {
       "react/only-export-components": [
@@ -430,7 +430,7 @@ exports[`overrides 1`] = `
   },
   {
     "files": [
-      "**/{default,error,global-error,layout,loading,not-found,page,template}.{jsx,tsx}",
+      "**/{default,error,forbidden,global-error,layout,loading,not-found,page,template,unauthorized}.{jsx,tsx}",
       "**/mdx-components.{jsx,tsx}",
     ],
     "rules": {
@@ -444,7 +444,7 @@ exports[`overrides 1`] = `
   },
   {
     "files": [
-      "**/{instrumentation,layout,middleware,page,robots,route}.{js,jsx,ts,tsx}",
+      "**/{apple-icon,default,error,forbidden,global-error,icon,layout,loading,manifest,middleware,not-found,opengraph-image,page,proxy,robots,sitemap,template,twitter-image,unauthorized}.{js,jsx,ts,tsx}",
     ],
     "rules": {
       "import/no-default-export": "off",
@@ -452,8 +452,7 @@ exports[`overrides 1`] = `
   },
   {
     "files": [
-      "**/{instrumentation,middleware,route}.{js,ts}",
-      "**/{layout,page}.{jsx,tsx}",
+      "**/{apple-icon,icon,instrumentation,layout,middleware,opengraph-image,page,proxy,route,twitter-image}.{js,jsx,ts,tsx}",
     ],
     "rules": {
       "import/group-exports": "off",

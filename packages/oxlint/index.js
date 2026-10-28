@@ -546,7 +546,8 @@ const react = [
 ];
 
 /** Next's segment files */
-const segments = '**/{default,error,global-error,layout,loading,not-found,page,template}.{jsx,tsx}';
+const segments =
+  '**/{default,error,forbidden,global-error,layout,loading,not-found,page,template,unauthorized}.{jsx,tsx}';
 
 /** @type {Override[]} */
 const next = [
@@ -595,12 +596,18 @@ const next = [
     files: [segments, '**/mdx-components.{jsx,tsx}'],
     rules: { 'unicorn/filename-case': ['error', { case: 'kebabCase' }] },
   },
+  // the file conventions Next reads a default export from
   {
-    files: ['**/{instrumentation,layout,middleware,page,robots,route}.{js,jsx,ts,tsx}'],
+    files: [
+      '**/{apple-icon,default,error,forbidden,global-error,icon,layout,loading,manifest,middleware,not-found,opengraph-image,page,proxy,robots,sitemap,template,twitter-image,unauthorized}.{js,jsx,ts,tsx}',
+    ],
     rules: { 'import/no-default-export': 'off' },
   },
+  // the conventions that name several exports: image alt/size/contentType, segment config, handlers
   {
-    files: ['**/{instrumentation,middleware,route}.{js,ts}', '**/{layout,page}.{jsx,tsx}'],
+    files: [
+      '**/{apple-icon,icon,instrumentation,layout,middleware,opengraph-image,page,proxy,route,twitter-image}.{js,jsx,ts,tsx}',
+    ],
     rules: { 'import/group-exports': 'off' },
   },
   {
