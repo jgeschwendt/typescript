@@ -6,19 +6,29 @@ const { existsSync, mkdtempSync, rmSync } = process.getBuiltinModule('node:fs');
 const { tmpdir } = process.getBuiltinModule('node:os');
 const { join } = process.getBuiltinModule('node:path');
 
+/** a shared config wrapping the base, as a consumer's oxlint.config.js loads it */
+const wrapper = `import { defineConfig } from '${join(import.meta.dirname, '..', 'index.js')}';
+export default (config) => defineConfig(config);`;
+
 /**
-runs `run` one directory below `files`, so detection has to walk up
-@template T
+the config at `path` below cwd, built through the wrapper with `own`; cwd sits one directory below `files`, so detection has to walk up
 @param {Record<string, unknown>} files
-@param {() => T} run
+@param {Record<string, unknown>} [own]
+@param {string} [path]
+@returns {Promise<import('oxlint').OxlintConfig>}
 */
-const within = async (files, run) => {
+const within = async (files, own, path = 'oxlint.config.js') => {
   const directory = mkdtempSync(join(tmpdir(), 'oxlint-define-'));
   const cwd = process.cwd();
-  write(directory, { ...files, 'nested/.keep': '' });
+  write(directory, {
+    [`nested/${path}`]: `import wrap from ${JSON.stringify(join(directory, 'nested', 'wrapper.js'))};\nexport default wrap(${JSON.stringify(own)});\n`,
+    'nested/wrapper.js': wrapper,
+    ...files,
+  });
   try {
     process.chdir(join(directory, 'nested'));
-    return await run();
+    const { default: built } = await import(join(process.cwd(), path));
+    return built;
   } finally {
     process.chdir(cwd);
     rmSync(directory, { force: true, recursive: true });
@@ -88,10 +98,14 @@ test.each([
     forced: { bun: false, next: true },
     title: 'env overrides detection',
   },
-])('$title', async ({ expected, files, forced }) => {
-  expect(await within(files, () => environment(defineConfig({ env: forced })))).toStrictEqual(
-    expected,
-  );
+  {
+    expected: none,
+    files: { 'nested/leaf/package.json': {}, 'package.json': { dependencies: { react: '*' } } },
+    path: 'leaf/oxlint.config.js',
+    title: "a nested config detects from its own directory, not oxlint's cwd",
+  },
+])('$title', async ({ expected, files, forced, path }) => {
+  expect(environment(await within(files, { env: forced }, path))).toStrictEqual(expected);
 });
 
 /** Node's LTS, below the 26 floors */
@@ -159,7 +173,7 @@ test.each([
     title: 'env.bun meets every floor',
   },
 ])('$title', async ({ expected, files, forced }) => {
-  const { rules = {} } = await within(files, () => defineConfig({ env: forced }));
+  const { rules = {} } = await within(files, { env: forced });
   expect(gated.filter((key) => rules[key] === 'off')).toStrictEqual([...expected]);
 });
 
@@ -187,57 +201,72 @@ test("env keeps oxlint's own environments and drops bun/next/react/typescript an
   expect(defineConfig({ env: { node: lts, react: false } })).not.toHaveProperty('env');
 });
 
-test('settings.react.version comes from the installed React, else a far-future semver; consumer settings win', async () => {
-  await within(
-    { 'node_modules/react/package.json': { name: 'react', version: '19.3.0-canary-1' } },
-    () => {
-      expect(defineConfig().settings).toStrictEqual({ react: { version: '19.3.0' } });
-      expect(
-        defineConfig({ settings: { next: {}, react: { version: '18.2.0' } } }).settings,
-      ).toStrictEqual({ next: {}, react: { version: '18.2.0' } });
-    },
-  );
-  expect(await within({}, () => defineConfig().settings)).toStrictEqual({
-    react: { version: '999.999.999' },
-  });
+/** @param {string} version */
+const react = (version) => ({ name: 'react', version });
+const installed = { 'node_modules/react/package.json': react('19.3.0-canary-1') };
+test.each([
+  {
+    expected: { react: { version: '19.3.0' } },
+    files: installed,
+    title: 'settings.react.version comes from the installed React',
+  },
+  {
+    expected: { react: { version: '18.2.0' } },
+    files: { ...installed, 'nested/leaf/node_modules/react/package.json': react('18.2.0') },
+    path: 'leaf/oxlint.config.js',
+    title: "a nested config resolves its own React, not oxlint's cwd's",
+  },
+  {
+    expected: { next: {}, react: { version: '18.2.0' } },
+    files: installed,
+    settings: { next: {}, react: { version: '18.2.0' } },
+    title: 'consumer settings win',
+  },
+  {
+    expected: { react: { version: '999.999.999' } },
+    files: {},
+    title: 'no React gets a far-future semver',
+  },
+])('$title', async ({ expected, files, path, settings }) => {
+  const built = await within(files, { settings }, path);
+  expect(built.settings).toStrictEqual(expected);
 });
 
 /** @type {import('oxlint').OxlintConfig['options']} */
 const options = { reportUnusedDisableDirectives: 'error', typeAware: false };
 const typed = { devDependencies: { 'oxlint-tsgolint': '*', typescript: '*' } };
 test.each([
-  { title: 'a config outside the lint root sets no options' },
-  { expected: options, root: true, title: 'root forces them' },
+  { expected: options, title: 'the config in cwd through a wrapper is the root' },
+  { path: 'sub/oxlint.config.js', title: 'a config below cwd through a wrapper is not' },
+  { expected: options, path: 'sub/oxlint.config.js', root: true, title: 'root forces them' },
+  { root: false, title: 'root: false drops them' },
   {
     expected: { ...options, typeAware: true },
     files: {
       'node_modules/.bin/tsgolint': '',
       'package.json': { devDependencies: { typescript: '*' } },
     },
-    root: true,
     title: "typescript alone is type-aware through the base's tsgolint",
   },
   {
     expected: options,
     files: { 'package.json': { devDependencies: { typescript: '*' } } },
-    root: true,
     title: 'on Bun, only a node_modules/.bin/tsgolint oxlint finds makes it type-aware',
   },
   {
     expected: { ...options, typeAware: true },
     files: { 'package.json': typed },
-    root: true,
     title: 'typescript and oxlint-tsgolint are type-aware',
   },
   {
     expected: options,
     files: { 'package.json': typed },
     options: { typeAware: false },
-    root: true,
     title: "the consumer's options win",
   },
-])('$title', async ({ expected, files = {}, ...own }) => {
-  expect(await within(files, () => defineConfig(own).options)).toStrictEqual(expected);
+])('$title', async ({ expected, files = {}, path, ...own }) => {
+  const built = await within(files, own, path);
+  expect(built.options).toStrictEqual(expected);
 });
 
 /** set by defineConfig in this process, so cleared after: spawned oxlint runs inherit the environment */
@@ -256,13 +285,10 @@ test.each([
   },
 ])('$title', async ({ devDependencies, expected }) => {
   Reflect.deleteProperty(process.env, tsgolintVariable);
-  await within({ 'package.json': { devDependencies } }, () => defineConfig());
+  await within({ 'package.json': { devDependencies } });
   expect(existsSync(process.env[tsgolintVariable] ?? '')).toBe(expected);
 });
 
-/** a root config in the temp dir: the divider's width resolves from its caller's directory up */
-const plain = `import { defineConfig } from '${join(import.meta.dirname, '..', 'index.js')}';
-export default defineConfig();`;
 /** oxfmt's default, then the widths configs set */
 const printWidth = 100;
 const narrow = 80;
@@ -286,40 +312,6 @@ test.each([
   },
   { expected: wide, files: { 'oxfmt.config.ts': typedWide }, title: 'a TS config is required' },
 ])('$title', async ({ expected, files }) => {
-  const { default: built } = await within(
-    { ...files, 'nested/oxlint.config.js': plain },
-    () => import(join(process.cwd(), 'oxlint.config.js')),
-  );
-  expect(built.rules['comments/divider']).toStrictEqual(['error', { width: expected }]);
-});
-
-/** a shared config wrapping the base, as a consumer's oxlint.config.js loads it */
-const wrapper = `import { defineConfig } from '${join(import.meta.dirname, '..', 'index.js')}';
-export default (config) => defineConfig(config);`;
-test.each([
-  {
-    expected: options,
-    path: 'oxlint.config.js',
-    title: 'the config in cwd through a wrapper is the root',
-  },
-  { path: 'sub/oxlint.config.js', title: 'a config below cwd through a wrapper is not' },
-])('$title', async ({ expected, path }) => {
-  const entry = `import wrap from '${path.includes('/') ? '../' : './'}wrapper.js';
-export default wrap();`;
-  const { default: wrapped } = await within(
-    { [`nested/${path}`]: entry, 'nested/wrapper.js': wrapper },
-    () => import(join(process.cwd(), path)),
-  );
-  expect(wrapped.options).toStrictEqual(expected);
-});
-
-test("the config in oxlint's cwd is the root unless root: false", () => {
-  const cwd = process.cwd();
-  process.chdir(import.meta.dirname);
-  try {
-    expect(defineConfig().options).toStrictEqual(options);
-    expect(defineConfig({ root: false })).not.toHaveProperty('options');
-  } finally {
-    process.chdir(cwd);
-  }
+  const built = await within(files);
+  expect(built.rules?.['comments/divider']).toStrictEqual(['error', { width: expected }]);
 });
