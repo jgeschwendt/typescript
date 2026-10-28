@@ -288,9 +288,10 @@ export const nullable = <TSchema extends StandardSchemaV1>(
   of: TSchema,
 ): Schema<Infer<TSchema> | null, Input<TSchema> | null> => wrap({ kind: 'nullable', of }, of, null);
 
-export interface Optional<TOut, TIn = TOut> extends Schema<TOut | undefined, TIn | undefined> {
-  readonly def: Extract<Def, { kind: 'optional' }>;
-}
+export type Optional<TOut, TIn = TOut> = Readonly<{
+  def: Extract<Def, { kind: 'optional' }>;
+}> &
+  Schema<TOut | undefined, TIn | undefined>;
 
 /**
 The key may be absent (or `undefined`). Distinct from `nullable`.
@@ -346,55 +347,56 @@ const rank = ({ def }: Partial<Schema>): number =>
         ? 1
         : 0;
 
-interface Field extends Impl {
+type Field = Readonly<{
   /**
   Position in the shape, where its output goes.
   */
-  readonly at: number;
+  at: number;
   /**
   Assignment would hit an `Object.prototype` accessor (`__proto__`) or a frozen intrinsic.
   */
-  readonly define: boolean;
-  readonly key: string;
+  define: boolean;
+  key: string;
   /**
   Its `rank`: leaf fields are checked first, discriminants first of all in a wide shape.
   */
-  readonly rank: number;
+  rank: number;
   /**
   A leaf's predicate, called in place of its checks.
   */
-  readonly test: ((value: unknown) => boolean) | undefined;
-}
+  test: ((value: unknown) => boolean) | undefined;
+}> &
+  Impl;
 
 /**
 The shape, read once: getters run on first use, never per validation.
 */
-interface Plan {
+type Plan = Readonly<{
   /**
   In shape order — outputs and issues follow it.
   */
-  readonly fields: readonly Field[];
+  fields: readonly Field[];
   /**
   How many leaf fields lead `order`: checked before the object is admitted, a failing one wastes nothing.
   */
-  readonly lead: number;
+  lead: number;
   /**
   Some field is not a leaf: the walk descends, so the object counts as a level.
   */
-  readonly nested: boolean;
+  nested: boolean;
   /**
   Leaf fields first, by rank: a failing discriminant skips the nested fields.
   */
-  readonly order: readonly Field[];
+  order: readonly Field[];
   /**
   `order` is not shape order, so an output is assembled after the walk.
   */
-  readonly reordered: boolean;
+  reordered: boolean;
   /**
   Frozen, null-prototype: `def.shape`, and the known-key lookup.
   */
-  readonly shape: Shape;
-}
+  shape: Shape;
+}>;
 
 // ※ verax-hot-path
 // Shapes resolve here, once: the per-run walks index these plans and never call
@@ -865,24 +867,24 @@ export function enums<const TValues extends readonly string[]>(
 /**
 A union's members, as `pick` tries them.
 */
-interface Members {
-  readonly check: readonly ((value: unknown) => unknown)[];
-  readonly fast: readonly ((value: unknown) => unknown)[];
-}
+type Members = Readonly<{
+  check: readonly ((value: unknown) => unknown)[];
+  fast: readonly ((value: unknown) => unknown)[];
+}>;
 
 /**
 A member found by its discriminant: the rest of its walk, the discriminant read.
 */
-interface Found {
+type Found = Readonly<{
   /**
   The discriminant's position in the shape, where its output goes.
   */
-  readonly at: number;
-  readonly lead: number;
-  readonly order: readonly Field[];
-  readonly plan: Plan;
-  readonly value: Primitive;
-}
+  at: number;
+  lead: number;
+  order: readonly Field[];
+  plan: Plan;
+  value: Primitive;
+}>;
 
 /**
 The members by their literal at `key`, or `undefined`: each must hold one,

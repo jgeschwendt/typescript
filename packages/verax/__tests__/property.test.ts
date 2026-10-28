@@ -560,11 +560,11 @@ const { desc: descArb } = fc.letrec<{ desc: Desc }>((tie) => {
 
 // Values are recipes, built fresh per run: fast-check probes and prints what it generates, and a revoked proxy or poisoned getter would throw inside it.
 
-interface Recipe {
-  readonly make: () => unknown;
-  readonly show: string;
-  readonly [fc.toStringMethod]: () => string;
-}
+type Recipe = Readonly<{
+  make: () => unknown;
+  show: string;
+  [fc.toStringMethod]: () => string;
+}>;
 const recipe = (show: string, make: () => unknown): Recipe => ({
   make,
   show,

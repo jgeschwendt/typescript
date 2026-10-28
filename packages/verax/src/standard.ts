@@ -2,42 +2,39 @@
 // a structurally compatible subset of @standard-schema/spec 1.1.0 (StandardSchemaV1
 // only), not a verbatim copy. https://standardschema.dev
 
-export interface StandardSchemaV1<Input = unknown, Output = Input> {
-  readonly '~standard': StandardSchemaV1.Props<Input, Output>;
-}
+export type StandardSchemaV1<Input = unknown, Output = Input> = Readonly<{
+  '~standard': StandardSchemaV1.Props<Input, Output>;
+}>;
 
 export declare namespace StandardSchemaV1 {
-  export interface Props<Input = unknown, Output = Input> {
-    readonly types?: Types<Input, Output> | undefined;
-    readonly validate: (
-      value: unknown,
-      options?: Options,
-    ) => Result<Output> | Promise<Result<Output>>;
-    readonly vendor: string;
-    readonly version: 1;
-  }
-  export interface Options {
-    readonly libraryOptions?: Record<string, unknown> | undefined;
-  }
+  export type Props<Input = unknown, Output = Input> = Readonly<{
+    types?: Types<Input, Output> | undefined;
+    validate: (value: unknown, options?: Options) => Result<Output> | Promise<Result<Output>>;
+    vendor: string;
+    version: 1;
+  }>;
+  export type Options = Readonly<{
+    libraryOptions?: Record<string, unknown> | undefined;
+  }>;
   export type Result<Output> = FailureResult | SuccessResult<Output>;
-  export interface SuccessResult<Output> {
-    readonly issues?: undefined;
-    readonly value: Output;
-  }
-  export interface FailureResult {
-    readonly issues: readonly Issue[];
-  }
-  export interface Issue {
-    readonly message: string;
-    readonly path?: readonly (PathSegment | PropertyKey)[] | undefined;
-  }
-  export interface PathSegment {
-    readonly key: PropertyKey;
-  }
-  export interface Types<Input = unknown, Output = Input> {
-    readonly input: Input;
-    readonly output: Output;
-  }
+  export type SuccessResult<Output> = Readonly<{
+    issues?: undefined;
+    value: Output;
+  }>;
+  export type FailureResult = Readonly<{
+    issues: readonly Issue[];
+  }>;
+  export type Issue = Readonly<{
+    message: string;
+    path?: readonly (PathSegment | PropertyKey)[] | undefined;
+  }>;
+  export type PathSegment = Readonly<{
+    key: PropertyKey;
+  }>;
+  export type Types<Input = unknown, Output = Input> = Readonly<{
+    input: Input;
+    output: Output;
+  }>;
   export type InferInput<TSchema extends StandardSchemaV1> = NonNullable<
     TSchema['~standard']['types']
   >['input'];

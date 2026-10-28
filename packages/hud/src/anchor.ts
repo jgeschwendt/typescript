@@ -1,7 +1,7 @@
-interface Pin {
+type Pin = {
   x: number;
   y: number;
-}
+};
 
 const percent = 100;
 const hundredths = 100;
