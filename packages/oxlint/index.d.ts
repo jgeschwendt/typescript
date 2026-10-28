@@ -15,5 +15,10 @@ export declare function defineConfig(
   },
 ): OxlintConfig;
 
+/** the base's naming-convention entries after the severity, per file set: an override's options replace the base's, so a consumer restates the rule as `['warn', ...own, ...namingConvention.tsx]` */
+export declare const namingConvention: Readonly<
+  Record<'default' | 'route' | 'tsx', readonly Record<string, unknown>[]>
+>;
+
 /** every rule the base turns off, keyed by its config name, to the fact that turns it off: a native rule off in `rules`, a `-js/` rule its JS plugin never runs */
 export declare const off: Readonly<Record<string, string>>;

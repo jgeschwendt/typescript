@@ -1,6 +1,6 @@
 import { afterAll, expect, test } from 'bun:test';
 import { config, everything, overrides, write } from './_helpers.js';
-import { defineConfig } from '../index.js';
+import { defineConfig, namingConvention } from '../index.js';
 
 const { existsSync, mkdtempSync, rmSync } = process.getBuiltinModule('node:fs');
 const { tmpdir } = process.getBuiltinModule('node:os');
@@ -64,6 +64,26 @@ test('jsPlugins never run a rule oxlint ports or upstream deprecated', () => {
 
 test('overrides', () => {
   expect(overrides).toMatchSnapshot();
+});
+
+/**
+the naming-convention tuple of the override for `files`
+@param {string} files
+*/
+const tuple = (files) =>
+  overrides.find((override) => override.files.includes(files))?.rules?.[
+    'typescript-js/naming-convention'
+  ];
+test('namingConvention is the tail of every naming-convention tuple', () => {
+  expect({
+    default: tuple('**/*.{cts,mts,ts,tsx}'),
+    route: tuple('**/route.ts'),
+    tsx: tuple('**/*.tsx'),
+  }).toStrictEqual({
+    default: ['warn', ...namingConvention.default],
+    route: ['warn', ...namingConvention.route],
+    tsx: ['warn', ...namingConvention.tsx],
+  });
 });
 
 const none = { bun: false, next: false, react: false, typescript: false };

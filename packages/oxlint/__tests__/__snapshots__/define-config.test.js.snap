@@ -224,7 +224,10 @@ exports[`overrides 1`] = `
           "modifiers": [
             "requiresQuotes",
           ],
-          "selector": "objectLiteralProperty",
+          "selector": [
+            "objectLiteralProperty",
+            "typeProperty",
+          ],
         },
         {
           "format": [
@@ -336,7 +339,10 @@ exports[`overrides 1`] = `
           "modifiers": [
             "requiresQuotes",
           ],
-          "selector": "objectLiteralProperty",
+          "selector": [
+            "objectLiteralProperty",
+            "typeProperty",
+          ],
         },
         {
           "format": [
@@ -403,7 +409,10 @@ exports[`overrides 1`] = `
           "modifiers": [
             "requiresQuotes",
           ],
-          "selector": "objectLiteralProperty",
+          "selector": [
+            "objectLiteralProperty",
+            "typeProperty",
+          ],
         },
         {
           "format": [
