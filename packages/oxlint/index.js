@@ -526,7 +526,20 @@ const bun = {
 
 /** @type {Override[]} */
 const react = [
-  { env: { browser: true }, files: ['**/*.{jsx,tsx}'], plugins: ['jsx-a11y', 'react-perf'] },
+  {
+    env: { browser: true },
+    files: ['**/*.{jsx,tsx}'],
+    plugins: ['jsx-a11y', 'react-perf'],
+    // react-perf guards memoized children against fresh props; a host element (div, span) has none
+    rules: Object.fromEntries(
+      [
+        'jsx-no-jsx-as-prop',
+        'jsx-no-new-array-as-prop',
+        'jsx-no-new-function-as-prop',
+        'jsx-no-new-object-as-prop',
+      ].map((rule) => [`react-perf/${rule}`, ['error', { nativeAllowList: 'all' }]]),
+    ),
+  },
   {
     files: ['**/*.tsx'],
     rules: {

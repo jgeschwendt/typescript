@@ -261,6 +261,32 @@ exports[`overrides 1`] = `
       "jsx-a11y",
       "react-perf",
     ],
+    "rules": {
+      "react-perf/jsx-no-jsx-as-prop": [
+        "error",
+        {
+          "nativeAllowList": "all",
+        },
+      ],
+      "react-perf/jsx-no-new-array-as-prop": [
+        "error",
+        {
+          "nativeAllowList": "all",
+        },
+      ],
+      "react-perf/jsx-no-new-function-as-prop": [
+        "error",
+        {
+          "nativeAllowList": "all",
+        },
+      ],
+      "react-perf/jsx-no-new-object-as-prop": [
+        "error",
+        {
+          "nativeAllowList": "all",
+        },
+      ],
+    },
   },
   {
     "files": [
