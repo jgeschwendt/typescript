@@ -76,6 +76,32 @@ jobs:
       - run: ~/.local/bin/stele check
       - run: ~/.local/bin/stele emit --check
 
+  # oxfmt.config.ts evaluates on node through oxfmt's bin shebang (bunx, plain `bun run`). `bun fmt` is Bun's own
+  # formatter: it reads the same oxfmt.config.ts files (nested too) and formats natively, Prettier-equivalent.
+  # One job per formatter proves both read this config; on 2026-10-27 they agreed on all 99 files.
+  fmt-bun:
+    name: fmt (bun)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v2
+      # install on the pinned bun; only the check runs on canary (setup-bun lands last on PATH)
+      - run: bun install --frozen-lockfile
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: canary
+      # --no-script: a package.json `fmt` script would otherwise run instead of the formatter
+      - run: bun --version && bun fmt --no-script --check
+
+  fmt-node:
+    name: fmt (node)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v2
+      - run: bun install --frozen-lockfile
+      - run: node node_modules/oxfmt/bin/oxfmt --check
+
   # oxlint.config.ts and the base's JS plugins evaluate on whichever runtime launches oxlint's bin: node
   # through its shebang (bunx, plain `bun run`). `bun lint` is Bun's own linter: it reads the same
   # oxlint.config.ts files and runs the JS plugins itself. One job per linter proves both read this config.
