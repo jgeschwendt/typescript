@@ -59,6 +59,7 @@ export default defineConfig({
           'error',
           { considerDefaultExhaustiveForUnions: true },
         ],
+
         'typescript-js/naming-convention': [
           'warn',
           ...naming,
@@ -102,6 +103,7 @@ export default defineConfig({
       rules: {
         'no-redeclare': 'off',
         'typescript/no-namespace': 'off',
+
         'typescript-js/naming-convention': 'off',
         'unicorn-js/name-replacements': 'off',
       },
@@ -117,6 +119,7 @@ export default defineConfig({
         'typescript/prefer-optional-chain': 'off',
         // a list's output is sized up front: growing it is 2–3× slower
         'unicorn/no-new-array': 'off',
+
         // `key in Object.prototype` is the check: an inherited accessor such as __proto__
         'unicorn-js/no-computed-property-existence-check': 'off',
         // push's returned length is the index it filled, in the same step
@@ -152,6 +155,7 @@ export default defineConfig({
         ],
         'typescript/only-throw-error': 'off',
         'typescript/promise-function-async': 'off',
+
         // a schema const is named like the type it validates, a scalar like a GraphQL type: `const User = object(…)`
         'typescript-js/naming-convention': [
           'warn',
@@ -209,6 +213,7 @@ export default defineConfig({
     'unicorn/no-nested-ternary': 'off',
     // GraphQL null is data, distinct from an absent key
     'unicorn/no-null': 'off',
+
     // predicates and flags take the domain's words: the API's `is`, a leaf's `test`, `overflow`
     'unicorn-js/consistent-boolean-name': 'off',
     // `def` is the API's word: every schema carries one

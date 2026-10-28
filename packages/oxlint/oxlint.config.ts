@@ -10,6 +10,7 @@ export default defineConfig({
         'import/no-default-export': 'off',
         // imported for its resolve-hook side effect
         'import/no-unassigned-import': ['error', { allow: ['**/typescript6.js'] }],
+
         // eslint-module-utils ignores `exports` maps, the only way these two resolve
         'import-js/no-unresolved': [
           'error',
@@ -25,6 +26,7 @@ export default defineConfig({
       rules: {
         'max-statements': 'off',
         'unicorn/no-null': 'off',
+
         'unicorn-js/prefer-error-is-error': 'off',
       },
     },
