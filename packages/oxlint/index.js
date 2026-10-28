@@ -630,10 +630,28 @@ const tooling = {
 const ancestors = (directory) =>
   dirname(directory) === directory ? [directory] : [directory, ...ancestors(dirname(directory))];
 
-/** every package.json from cwd up, nearest first; a workspace declares engines at its root */
+/** the oxlint config on the stack, else the first file other than this one: defineConfig's caller through any wrapper */
+const caller = () => {
+  const { stack } = new Error('the caller');
+  const files = String(stack)
+    .split('\n')
+    // Node's frames carry file:// URLs (oxlint appends ?cache=), Bun's bare paths
+    .flatMap((frame) => /(?<=[\s(])(?:file:\/\/)?\/[^()]*(?=:\d+:\d+\)?$)/u.exec(frame) ?? [])
+    .map((location) => fileURLToPath(new URL(location, import.meta.url)))
+    .filter((file) => file !== import.meta.filename);
+  return files.find((file) => /^oxlint\.config\.[cm]?[jt]s$/u.test(basename(file))) ?? files[0];
+};
+
+/** the directory of defineConfig's caller: oxlint evaluates every nested config from the root's cwd */
+const origin = () => {
+  const file = caller();
+  return file === undefined ? process.cwd() : dirname(file);
+};
+
+/** every package.json from the config's directory up, nearest first; a workspace declares engines at its root */
 const manifests = () => {
   const found = [];
-  for (const directory of ancestors(process.cwd())) {
+  for (const directory of ancestors(origin())) {
     const file = join(directory, 'package.json');
     if (!existsSync(file)) {
       continue;
@@ -659,7 +677,7 @@ const ownTsgolint = () => {
   }
 };
 
-/** points oxlint at the base's tsgolint, unless something already does; Bun's process.env never reaches the native binary's environ (probed 2026-10-27), so there only a node_modules/.bin/tsgolint oxlint finds from cwd up serves */
+/** points oxlint at the base's tsgolint, unless something already does; Bun's process.env never reaches the native binary's environ (probed 2026-10-27), so there only a node_modules/.bin/tsgolint serves, from cwd up as the binary looks, not the config's directory */
 const hasTsgolint = () => {
   const path = ownTsgolint();
   if (path === '') {
@@ -674,7 +692,7 @@ const hasTsgolint = () => {
   );
 };
 
-/** the nearest package.json decides the dependencies, the nearest with `engines` the floor; none found turns everything on */
+/** the package.json nearest the config decides the dependencies, the nearest with `engines` the floor; none found turns everything on */
 const detectEnvironment = () => {
   const [nearest, ...above] = manifests();
   if (nearest === undefined) {
@@ -700,11 +718,11 @@ const detectEnvironment = () => {
   };
 };
 
-/** oxlint rejects version "detect"; no react installed gets a semver that keeps every version gate open and silences the plugin's warning */
+/** oxlint rejects version "detect": the React the config's directory resolves, else a semver that keeps every version gate open and silences the plugin's warning */
 const detectReact = () => {
   let version = '';
   try {
-    ({ version } = createRequire(`${process.cwd()}/package.json`)('react/package.json'));
+    ({ version } = createRequire(join(origin(), 'package.json'))('react/package.json'));
   } catch {
     // no react installed: no version
   }
@@ -712,27 +730,15 @@ const detectReact = () => {
   return { react: { version: semver?.[0] ?? '999.999.999' } };
 };
 
-/** the oxlint config on the stack, else the first file other than this one: defineConfig's caller through any wrapper */
-const caller = () => {
-  const { stack } = new Error('the caller');
-  const files = String(stack)
-    .split('\n')
-    // Node's frames carry file:// URLs (oxlint appends ?cache=), Bun's bare paths
-    .flatMap((frame) => /(?<=[\s(])(?:file:\/\/)?\/[^()]*(?=:\d+:\d+\)?$)/u.exec(frame) ?? [])
-    .map((location) => fileURLToPath(new URL(location, import.meta.url)))
-    .filter((file) => file !== import.meta.filename);
-  return files.find((file) => /^oxlint\.config\.[cm]?[jt]s$/u.test(basename(file))) ?? files[0];
-};
-
 /**
-oxlint's root-only options, for the config in its cwd unless `root` says otherwise: a nested config naming any fails the run
+oxlint's root-only options, for the config in its cwd unless `root` says otherwise: a nested config naming any fails the run, so cwd, not the config's directory, decides
 @param {boolean | undefined} root
 @param {boolean} isTypeAware
 @param {Config['options']} options
 @returns {false | Pick<Config, 'options'>}
 */
 const rootOptions = (root, isTypeAware, options) =>
-  (root ?? dirname(caller() ?? '') === process.cwd()) && {
+  (root ?? origin() === process.cwd()) && {
     options: { reportUnusedDisableDirectives: 'error', typeAware: isTypeAware, ...options },
   };
 
@@ -747,7 +753,7 @@ the printWidth of the oxfmt config nearest defineConfig's caller: JSONC parsed w
 @returns {number}
 */
 const oxfmtWidth = () => {
-  const file = ancestors(dirname(caller() ?? ''))
+  const file = ancestors(origin())
     .flatMap((directory) => oxfmtConfigs.map((name) => join(directory, name)))
     .find((path) => existsSync(path));
   if (file === undefined) {

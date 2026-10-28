@@ -23,6 +23,8 @@ export default defineConfig({
 
 > The base brings its own `oxlint-tsgolint` and points oxlint at it through `OXLINT_TSGOLINT_PATH`, which never reaches oxlint's binary under `bun --bun`: there, an isolated install lists `oxlint-tsgolint` itself or lints untyped.
 
+Bun, Next, React, TypeScript and the Node floor come from the package.json nearest each oxlint config, walking up (`engines` from the nearest that has one), so a nested config lints with its own package's dependencies; `env` forces any of them.
+
 A rule oxlint lacks natively is keyed by its `-js` scope—`import-js/no-internal-modules`, not `import/`—and a name oxlint has no rule for fails the whole config load.
 
 `comments/divider` ends a `// ─── title ───` divider at oxfmt's `printWidth`, read from the oxfmt config nearest the oxlint config, walking up, in oxfmt's order (`.oxfmtrc.json`, `.oxfmtrc.jsonc`, `oxfmt.config.ts`, `oxfmt.config.mts`), 100 without one; `['error', { width }]` sets it outright.
