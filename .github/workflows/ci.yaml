@@ -108,10 +108,9 @@ jobs:
   lint-bun:
     name: lint (bun)
     # bun lint ships in the release after 1.4.4 (oven-sh/bun#46439, 2026-10-26): canary until then. Its
-    # natural sort-keys ranks `-` after `/` where ESLint's natural-compare (and oxlint) rank it before, so
-    # the rule maps in every oxlint.config.ts read as unsorted (7 false errors, 2026-10-27): non-blocking
-    # until bun matches ESLint, then drop continue-on-error.
-    continue-on-error: true
+    # natural sort-keys orders `-` before `/` where ESLint's natural-compare (and oxlint) order it after, so a
+    # plugin's `x/` keys followed by its `x-js/` keys read as unsorted. A blank line between those two groups
+    # (allowLineSeparatedGroups) makes each oxlint.config.ts sorted under both orders (2026-10-28).
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
