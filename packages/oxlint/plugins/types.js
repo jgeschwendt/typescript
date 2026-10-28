@@ -40,10 +40,11 @@ const plugin = {
               );
             for (const node of marked) {
               const id = messageId(node);
-              for (const member of node.members) {
-                if (!member.readonly) {
-                  continue;
-                }
+              // a stray modifier is its own finding; a literal to wrap is one, at its first modifier
+              const reported = node.members
+                .filter((member) => member.readonly)
+                .slice(0, id === 'redundant' ? Infinity : 1);
+              for (const member of reported) {
                 context.report({
                   messageId: id,
                   node: member,

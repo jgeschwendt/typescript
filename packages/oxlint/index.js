@@ -233,6 +233,8 @@ const rules = {
   ],
   'react/jsx-filename-extension': ['error', { extensions: ['.jsx', '.tsx'] }],
 
+  // the literal is what types/prefer-readonly-generic wraps; an interface cannot be
+  'typescript/consistent-type-definitions': ['error', 'type'],
   'typescript/prefer-readonly-parameter-types': 'warn',
 
   'inline-config/no-directives': 'error',
