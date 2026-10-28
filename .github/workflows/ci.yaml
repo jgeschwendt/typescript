@@ -75,3 +75,34 @@ jobs:
       - run: curl -fsSL https://raw.githubusercontent.com/jgeschwendt/stele/main/scripts/install.sh | bash -s v0.3.0
       - run: ~/.local/bin/stele check
       - run: ~/.local/bin/stele emit --check
+
+  # oxlint.config.ts and the base's JS plugins evaluate on whichever runtime launches oxlint's bin: node
+  # through its shebang (bunx, plain `bun run`). `bun lint` is Bun's own linter: it reads the same
+  # oxlint.config.ts files and runs the JS plugins itself. One job per linter proves both read this config.
+  lint-bun:
+    name: lint (bun)
+    # bun lint ships in the release after 1.4.4 (oven-sh/bun#46439, 2026-10-26): canary until then. Its
+    # natural sort-keys ranks `-` after `/` where ESLint's natural-compare (and oxlint) rank it before, so
+    # the rule maps in every oxlint.config.ts read as unsorted (7 false errors, 2026-10-27): non-blocking
+    # until bun matches ESLint, then drop continue-on-error.
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v2
+      # install on the pinned bun; only the lint runs on canary (setup-bun lands last on PATH)
+      - run: bun install --frozen-lockfile
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: canary
+      # --no-script: with a package.json `lint` script, bare `bun lint` runs the script instead
+      - run: bun --version && bun lint --no-script
+
+  lint-node:
+    name: lint (node)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v2
+      - run: bun install --frozen-lockfile
+      - run: node node_modules/oxlint/bin/oxlint
