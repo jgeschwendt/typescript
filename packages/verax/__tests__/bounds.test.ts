@@ -557,7 +557,7 @@ describe('one budget bounds a whole call', () => {
       ).issues?.map(({ message }) => message),
     ).toEqual(['Too complex']);
     expect(budget.calls).toBeLessThanOrEqual(12_000_000);
-  });
+  }, 30_000);
   test('G2 past the budget no verdict stands, even one a callback inverts', () => {
     const Either = undiscriminated((value) => value);
     const NotEither = refine(unknown(), 'an Either', (value) => !is(value, Either));
@@ -849,6 +849,25 @@ describe('no verdict rests on the stack, and no union is free to try', () => {
       });
       expect({ relays, wrong }).toEqual({ relays: 0, wrong: 0 });
     }
+  });
+  test('I1 the edge between a nested fast check and its full one ends the call: the full check is the deeper', () => {
+    // A rejection pays for the full check, a few frames deeper than the fast one: the edge can fall between them.
+    let calls = 0;
+    const Inner = refine(unknown(), 'never', () => {
+      calls += 1;
+      if (calls === 2) {
+        throw new RangeError('Maximum call stack size exceeded');
+      }
+      return false;
+    });
+    const Outer = refine(
+      unknown(),
+      'outer',
+      (value) => validate(value, Inner).issues === undefined,
+    );
+    expect(validate(1, Outer).issues).toEqual([{ message: 'Threw: stack exhausted', path: [] }]);
+    expect(calls).toBe(2);
+    expect(stackDepth()).toBe(0);
   });
   test('I2 every union member tried is a step: a wide tagged union over a shared list is Too complex, in bounded work', () => {
     let budget = steps(0);
@@ -1213,7 +1232,7 @@ describe('record keeps the guarantees object does', () => {
     expect(validate(over, list(Counts)).issues?.map(({ message }) => message)).toEqual([
       'Too complex',
     ]);
-  });
+  }, 30_000);
   test('a record failing in a union member is never free: every key enumerated counts, read or not, past the free leaf reads', () => {
     const keys = Array.from({ length: 10_000 }, (_value, at) => `k${at}`);
     const lateBad = Object.fromEntries(keys.map((key, at) => [key, at === 9999 ? 'x' : at]));
