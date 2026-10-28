@@ -300,15 +300,15 @@ test.each([
   { expected: printWidth, files: { '.oxfmtrc.json': {} }, title: 'no printWidth divides at 100' },
   {
     expected: narrow,
-    files: { '.oxfmtrc.json': { printWidth: narrow }, 'oxfmt.config.ts': typedWide },
-    title: ".oxfmtrc.json comes first in oxfmt's order",
+    files: { '.oxfmtrc.json': `{ "printWidth": ${narrow}, }`, 'oxfmt.config.ts': typedWide },
+    title: ".oxfmtrc.json comes first in oxfmt's order, a trailing comma allowed",
   },
   {
     expected: jsonc,
     files: {
-      '.oxfmtrc.jsonc': `{\n  "$schema": "https://oxc.rs/schema.json", // url\n  /* width */ "printWidth": ${jsonc}\n}\n`,
+      '.oxfmtrc.jsonc': `{\n  "$schema": "https://oxc.rs/schema.json", // url\n  /* width */ "printWidth": ${jsonc}, // trailing\n}\n`,
     },
-    title: 'JSONC strips comments, never a // inside a string',
+    title: 'JSONC strips comments, never a // inside a string, then trailing commas',
   },
   { expected: wide, files: { 'oxfmt.config.ts': typedWide }, title: 'a TS config is required' },
 ])('$title', async ({ expected, files }) => {

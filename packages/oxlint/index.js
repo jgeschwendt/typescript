@@ -749,7 +749,7 @@ const printWidth = 100;
 const oxfmtConfigs = ['.oxfmtrc.json', '.oxfmtrc.jsonc', 'oxfmt.config.ts', 'oxfmt.config.mts'];
 
 /**
-the printWidth of the oxfmt config nearest defineConfig's caller: JSONC parsed with its comments stripped outside strings, a TS config required (Node 24 strips types, Bun runs them)
+the printWidth of the oxfmt config nearest defineConfig's caller: JSON or JSONC parsed with its comments stripped outside strings, then its trailing commas, a TS config required (Node 24 strips types, Bun runs them)
 @returns {number}
 */
 const oxfmtWidth = () => {
@@ -761,10 +761,10 @@ const oxfmtWidth = () => {
   }
   const options = /\.jsonc?$/u.test(file)
     ? JSON.parse(
-        String(readFileSync(file)).replaceAll(
-          /(?<string>"(?:[^"\\]|\\.)*")|\/\*[\s\S]*?\*\/|\/\/.*$/gmu,
-          '$<string>',
-        ),
+        String(readFileSync(file))
+          .replaceAll(/(?<string>"(?:[^"\\]|\\.)*")|\/\*[\s\S]*?\*\/|\/\/.*$/gmu, '$<string>')
+          // a comma dropped inside a string changes only that string, never printWidth
+          .replaceAll(/,(?=\s*[}\]])/gu, ''),
       )
     : createRequire(file)(file).default;
   return options.printWidth ?? printWidth;
