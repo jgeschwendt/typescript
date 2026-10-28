@@ -45,33 +45,6 @@ export default defineConfig({
       rules: { 'unicorn-js/no-unreadable-new-expression': 'off' },
     },
     {
-      files: ['examples/*.ts'],
-      rules: {
-        // examples import the package under test from ../src, as tests do
-        'import/no-relative-parent-imports': 'off',
-        // a teaching page: each comment annotates the line it shows, and the run prints its results
-        'no-console': 'off',
-        'no-inline-comments': 'off',
-        // a schema and its type share a name, the declaration merge TypeScript intends
-        'no-redeclare': 'off',
-        // `switch (true)` over `is` guards: the default branch is the rest
-        'typescript/switch-exhaustiveness-check': [
-          'error',
-          { considerDefaultExhaustiveForUnions: true },
-        ],
-
-        'typescript-js/naming-convention': [
-          'warn',
-          ...naming,
-          { format: ['camelCase', 'PascalCase'], selector: 'variable' },
-        ],
-        // a runnable page: its top level is the run
-        'unicorn-js/no-top-level-side-effects': 'off',
-        // lib ES2024 types no FormData[Symbol.iterator]; entries() is the typed path
-        'unicorn-js/prefer-direct-iteration': 'off',
-      },
-    },
-    {
       files: ['src/core.ts'],
       rules: {
         // a schema's own keys enumerate as built: def, then ~standard
@@ -138,6 +111,8 @@ export default defineConfig({
         ],
       },
     },
+    // the docs runner drives the page in a browser
+    { env: { browser: true }, files: ['docs/*.ts'] },
     // tests hand verax thenables, holes, non-Error throws and cross-realm promises
     {
       files: ['__tests__/*.ts'],
