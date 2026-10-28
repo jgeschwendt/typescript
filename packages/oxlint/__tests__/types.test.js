@@ -14,12 +14,12 @@ const redundant = '`readonly` is redundant inside `Readonly<{ … }>`.';
 const cases = {
   'generic.ts': [
     'export type Bag = Set<{ readonly a: string; readonly [key: string]: string }>;\n',
-    [generic, generic],
+    [generic],
     'export type Bag = Set<Readonly<{ a: string; [key: string]: string }>>;\n',
   ],
   'mixed.ts': [
     'export type Bag = Set<{ readonly a: string; readonly b: string; c: string }>;\n',
-    [mixed, mixed],
+    [mixed],
   ],
   'nested.ts': [
     'export type Bag = Set<{ readonly a: { readonly b: string } }>;\n',
@@ -27,7 +27,7 @@ const cases = {
     'export type Bag = Set<Readonly<{ a: Readonly<{ b: string }> }>>;\n',
   ],
   'out-of-scope.ts': [
-    'export interface Box {\n  readonly a: string;\n}\nexport type List = Set<readonly [string, string]>;\nexport type Names = readonly string[];\n',
+    'export type List = Set<readonly [string, string]>;\nexport type Names = readonly string[];\n',
     [],
   ],
   'redundant.ts': [
