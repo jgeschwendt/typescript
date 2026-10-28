@@ -29,4 +29,6 @@ A rule oxlint lacks natively is keyed by its `-js` scope—`import-js/no-interna
 
 `comments/divider` ends a `// ─── title ───` divider at oxfmt's `printWidth`, read from the oxfmt config nearest the oxlint config, walking up, in oxfmt's order (`.oxfmtrc.json`, `.oxfmtrc.jsonc`, `oxfmt.config.ts`, `oxfmt.config.mts`), 100 without one; `['error', { width }]` sets it outright.
 
+`types/prefer-readonly-generic`, on TypeScript files, writes a readonly object type `Readonly<{ a: string }>`, never `{ readonly a: string }`: it fixes a literal whose every member is `readonly`, strips the modifiers inside `Readonly<…>`, and reports a literal only some of whose members are, for the author to wrap or split; interfaces and `readonly` arrays and tuples stay as written.
+
 `off`, the other export, maps every rule the base turns off to the fact that turns it off.

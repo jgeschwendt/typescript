@@ -165,6 +165,7 @@ exports[`overrides 1`] = `
       "no-implied-eval": "off",
       "prefer-promise-reject-errors": "off",
       "require-await": "off",
+      "types/prefer-readonly-generic": "error",
       "typescript-js/member-ordering": [
         "error",
         {

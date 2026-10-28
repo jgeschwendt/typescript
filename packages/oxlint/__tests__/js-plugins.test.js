@@ -35,6 +35,7 @@ const fixtured = Object.entries({
   'inline-config': 'no-directives',
   'react-js':
     'boolean-prop-naming destructuring-assignment jsx-no-bind jsx-no-leaked-render jsx-sort-props no-adjacent-inline-elements no-deprecated no-invalid-html-attribute no-typos no-unused-prop-types prefer-read-only-props require-default-props',
+  types: 'prefer-readonly-generic',
   'typescript-js': 'member-ordering naming-convention no-shadow',
   'unicorn-js':
     'consistent-destructuring consistent-json-file-read expiring-todo-comments name-replacements no-for-loop no-keyword-prefix no-named-default no-unnecessary-polyfills no-unused-properties prefer-switch string-content',
