@@ -51,6 +51,8 @@ const categories = {
 
 /** code lines per file, blanks and comments aside: the only size ceiling */
 const maxLines = 2000;
+/** JSX nesting below a root: 2, the default, fails any real tree; 7 is the round-4 consumer reading */
+const maxJsxDepth = 7;
 
 /** the native rule names of the oxlint that loads this config */
 const schema = new URL('configuration_schema.json', import.meta.resolve('oxlint/package.json'));
@@ -226,15 +228,20 @@ const rules = {
   'max-lines': ['error', { max: maxLines, skipBlankLines: true, skipComments: true }],
 
   'import/no-default-export': 'error',
+  // one statement per module: a type-only name joins the value import inline
+  'import/no-duplicates': ['error', { preferInline: true }],
 
   'react/jsx-curly-brace-presence': [
     'error',
     { children: 'always', propElementValues: 'always', props: 'never' },
   ],
   'react/jsx-filename-extension': ['error', { extensions: ['.jsx', '.tsx'] }],
+  'react/jsx-max-depth': ['error', { max: maxJsxDepth }],
 
   // the literal is what types/prefer-readonly-generic wraps; an interface cannot be
   'typescript/consistent-type-definitions': ['error', 'type'],
+  // inline, not split: `import { T, x }` fixes to `import { type T, x }`
+  'typescript/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
   'typescript/prefer-readonly-parameter-types': 'warn',
 
   'inline-config/no-directives': 'error',
@@ -537,6 +544,7 @@ const twins = Object.keys(wrapped.typescript)
 const typescript = {
   files: ['**/*.{cts,mts,ts,tsx}'],
   rules: {
+    // prefer-inline flags a lone `import type`, which no-import-type-side-effects requires; no-duplicates inlines instead
     'import/consistent-type-specifier-style': 'off',
     'import/extensions': 'off',
     'no-implied-eval': 'off',
