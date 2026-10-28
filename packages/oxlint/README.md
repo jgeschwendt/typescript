@@ -31,6 +31,8 @@ A rule oxlint lacks natively is keyed by its `-js` scope—`import-js/no-interna
 
 `types/prefer-readonly-generic`, on TypeScript files, writes a readonly object type `Readonly<{ a: string }>`, never `{ readonly a: string }`: it fixes a literal whose every member is `readonly`, strips the modifiers inside `Readonly<…>`, and reports a literal only some of whose members are, once per literal, for the author to wrap or split. The base writes object types as `type` literals (`typescript/consistent-type-definitions: type`), so every object type is one the rule governs; `readonly` arrays and tuples stay as written.
 
+One import statement per module: a type-only name joins the value import inline, `import { type T, x } from 'm'`, and `import type { T }` stands alone only where a module gives types alone; `--fix` writes both.
+
 `off` maps every rule the base turns off to the fact that turns it off.
 
 `namingConvention` exports the base's naming-convention entry lists (`default`, `tsx`, `route`) so a consumer override can restate the rule as `['warn', ...own entries, ...namingConvention.tsx]`, since an override's options replace the base's rather than merge.

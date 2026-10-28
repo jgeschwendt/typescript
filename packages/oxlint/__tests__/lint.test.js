@@ -59,9 +59,46 @@ const dividers = [
   '',
 ].join('\n');
 
+const fromFs = " from 'node:fs';\n";
+const read = "export const read = (path: PathLike): string => readFileSync(path, 'utf8');\n";
+const alias = 'export type Path = PathLike;\n';
+const duplicates = ['eslint(no-duplicate-imports)', 'import(no-duplicates)'];
+const maxJsxDepth = 7;
+/** @param {number} depth JSX nested `depth` below its root */
+const tree = (depth) =>
+  `export const tree = ${'<i>'.repeat(depth + 1)}${'</i>'.repeat(depth + 1)};\n`;
+/** per file: its source and the rules under test it reports, sorted @type {Record<string, [string, string[]]>} */
+const targeted = {
+  'imports/inline-sorted.ts': [`import { type PathLike, readFileSync }${fromFs}${read}`, []],
+  'imports/inline-unsorted.ts': [
+    `import { readFileSync, type PathLike }${fromFs}${read}`,
+    ['eslint(sort-imports)'],
+  ],
+  'imports/split.ts': [
+    `import { readFileSync }${fromFs}import type { PathLike }${fromFs}${read}`,
+    duplicates,
+  ],
+  'imports/two-values.ts': [
+    `import { readFileSync }${fromFs}import { writeFileSync }${fromFs}export const both = [readFileSync, writeFileSync];\n`,
+    duplicates,
+  ],
+  'imports/type-inline.ts': [
+    `import { type PathLike }${fromFs}${alias}`,
+    ['typescript(no-import-type-side-effects)'],
+  ],
+  'imports/type-only.ts': [`import type { PathLike }${fromFs}${alias}`, []],
+  'imports/value-of-type.ts': [
+    `import { PathLike, readFileSync }${fromFs}${read}`,
+    ['typescript(consistent-type-imports)'],
+  ],
+  'jsx/depth-7.tsx': [tree(maxJsxDepth), []],
+  'jsx/depth-8.tsx': [tree(maxJsxDepth + 1), ['react(jsx-max-depth)']],
+};
+
 // no package.json above the temp dir: every environment is on
 const directory = scratch('oxlint-lint-');
 write(directory, {
+  ...Object.fromEntries(Object.entries(targeted).map(([file, [source]]) => [file, source])),
   'app/api/route.ts':
     'export function GET() {\n  return 1;\n}\n\nexport function POST() {\n  return 2;\n}\n',
   'app/opengraph-image.ts':
@@ -122,6 +159,7 @@ const { diagnostics } = spawnOxlint(directory, [
   '-c',
   'oxlint.config.mjs',
   ...Object.keys(expected),
+  ...Object.keys(targeted),
   ...suppressing,
   ...divided,
 ]);
@@ -190,4 +228,34 @@ test.each([
   spawnOxlint(directory, ['-c', 'oxlint.config.mjs', '--fix', file]);
   const lines = String(readFileSync(join(directory, file))).split('\n');
   expect(lines.slice(0, lines.indexOf(long) + 1)).toEqual([...fixed, long]);
+});
+
+// only the rules under test: the fixtures trip unrelated ones (import/no-nodejs-modules among them)
+const targetRules = new Set(Object.values(targeted).flatMap(([, codes]) => codes));
+test('one import statement per module, a type-only name inline; JSX at most 7 deep', () => {
+  expect(
+    Object.fromEntries(
+      Object.keys(targeted).map((file) => [
+        file,
+        [
+          ...new Set(
+            diagnostics
+              .filter(({ code, filename }) => filename === file && targetRules.has(code))
+              .map(({ code }) => code),
+          ),
+        ].toSorted(),
+      ]),
+    ),
+  ).toEqual(Object.fromEntries(Object.entries(targeted).map(([file, [, codes]]) => [file, codes])));
+  // the first pass merges, the second sorts the members; oxfmt, not run here, spaces the merged comma
+  const fixed = ['imports/split.ts', 'imports/value-of-type.ts'];
+  spawnOxlint(directory, ['-c', 'oxlint.config.mjs', '--fix', ...fixed]);
+  spawnOxlint(directory, ['-c', 'oxlint.config.mjs', '--fix', ...fixed]);
+  expect(
+    fixed.map((file) =>
+      String(readFileSync(join(directory, file)))
+        .replaceAll(/, */gu, ', ')
+        .split('\n', 1),
+    ),
+  ).toEqual(fixed.map(() => ["import { type PathLike, readFileSync } from 'node:fs';"]));
 });
