@@ -64,6 +64,8 @@ const directory = scratch('oxlint-lint-');
 write(directory, {
   'app/api/route.ts':
     'export function GET() {\n  return 1;\n}\n\nexport function POST() {\n  return 2;\n}\n',
+  'app/opengraph-image.ts':
+    "export const alt = 'About';\nexport const size = { height: 630, width: 1200 };\n\nexport default function Image() {\n  return null;\n}\n",
   'app/page.tsx': 'export default function Page() {\n  return null;\n}\n',
   'described.js': '/* oxlint-disable -- reason */\nexport const value = 1;\n',
   'directives.js': directives,
@@ -75,6 +77,8 @@ write(directory, {
     'export const value = 1; // oxlint-disable-line no-console,inline-config/no-directives\n',
   'oxlint.config.mjs': `import { defineConfig } from ${JSON.stringify(join(import.meta.dirname, '..', 'index.js'))};\nexport default defineConfig({ overrides: [${JSON.stringify(consumerOverride)}, ${JSON.stringify(narrow)}] });\n`,
   'oxlint.config.ts': 'export const extra = 1;\nexport default {};\n',
+  'proxy.ts':
+    "export const config = { matcher: '/about' };\n\nexport function proxy() {\n  return 1;\n}\n",
   'src/later.ts': 'export async function later(): Promise<number> {\n  return 1;\n}\n',
   'src/plain.js': "const fs = require('node:fs');\nprocess = fs;\nconst _unused = 1;\n",
   'sub/next.config.js': 'export const extra = 1;\nexport default {};\n',
@@ -84,6 +88,8 @@ write(directory, {
 const expected = {
   // Next route handlers may be separate named exports
   'app/api/route.ts': { 'import(group-exports)': false },
+  // an image convention default-exports the image beside its alt and size
+  'app/opengraph-image.ts': { 'import(group-exports)': false, 'import(no-default-export)': false },
   // a consumer `**/*.tsx` override comes last, so it beats the base's Next exemptions
   'app/page.tsx': { 'import(no-default-export)': true, 'unicorn(filename-case)': true },
   'directives.js': {},
@@ -92,6 +98,8 @@ const expected = {
   // root tooling configs export only a default; nested ones are app code
   'next.config.js': { 'import(no-default-export)': false, 'import(no-named-export)': true },
   'oxlint.config.ts': { 'import(no-named-export)': true },
+  // Next 16's proxy exports its config beside the function
+  'proxy.ts': { 'import(group-exports)': false },
   // TS files run the typed require-await only
   'src/later.ts': { 'eslint(require-await)': false },
   'src/plain.js': {
