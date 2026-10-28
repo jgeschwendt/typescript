@@ -7,9 +7,11 @@ export type Equal<TLeft, TRight> = [TLeft] extends [TRight]
     ? true
     : false
   : false;
-export const paths = (result: {
-  readonly issues?: readonly Issue[] | undefined;
-}): (readonly PropertyKey[])[] | undefined => result.issues?.map((found) => found.path);
+export const paths = (
+  result: Readonly<{
+    issues?: readonly Issue[] | undefined;
+  }>,
+): (readonly PropertyKey[])[] | undefined => result.issues?.map((found) => found.path);
 
 /**
 A proxy handler whose read of `key` throws.

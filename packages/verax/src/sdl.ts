@@ -77,7 +77,7 @@ GraphQL forbids an input object reaching itself through non-null fields.
 Input `reference` already refused bare nullable/optional, so a field whose def is
 an object is non-null.
 */
-const checkAcyclic = (declarations: Iterable<{ readonly def: Def }>): void => {
+const checkAcyclic = (declarations: Iterable<Readonly<{ def: Def }>>): void => {
   const acyclic = new Set<Def>();
   const walk = (def: Def, path: readonly Def[]): void => {
     if (def.kind !== 'object' || acyclic.has(def)) {

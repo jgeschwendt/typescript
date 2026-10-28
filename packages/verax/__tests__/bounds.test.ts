@@ -814,7 +814,7 @@ describe('plain data is bounded; exotic data costs its structure', () => {
     values.push('B');
     expect(is('B', Letter)).toBe(false);
     expect(Letter.def).toEqual({ kind: 'enum', values: ['A'] });
-    expect(Object.isFrozen((Letter.def as { readonly values: unknown }).values)).toBe(true);
+    expect(Object.isFrozen((Letter.def as Readonly<{ values: unknown }>).values)).toBe(true);
   });
 });
 

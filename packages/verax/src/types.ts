@@ -38,17 +38,17 @@ directly, skipping `fast`. A pure one runs no callback: not a `scalar`'s.
 */
 const leaves = new WeakMap<
   StandardSchemaV1,
-  {
-    readonly expected: string;
-    readonly pure: boolean;
-    readonly test: (value: unknown) => boolean;
-  }
+  Readonly<{
+    expected: string;
+    pure: boolean;
+    test: (value: unknown) => boolean;
+  }>
 >();
 
 /**
 Each `literal` and its value — a discriminant, if its union's members share its key.
 */
-const literals = new WeakMap<StandardSchemaV1, { readonly value: Primitive }>();
+const literals = new WeakMap<StandardSchemaV1, Readonly<{ value: Primitive }>>();
 
 const leaf = <TValue>(
   def: Def,
@@ -307,7 +307,7 @@ Splits `(body)` or `(name, body)`; the name reaches the def only when given.
 */
 const split = <TBody>(
   parts: readonly [TBody] | readonly [string, TBody],
-): [{ readonly name?: string }, TBody] =>
+): [Readonly<{ name?: string }>, TBody] =>
   parts.length === 1 ? [{}, parts[0]] : [{ name: parts[0] }, parts[1]];
 
 type Side<TSchema extends StandardSchemaV1, TSide extends 'input' | 'output'> = NonNullable<
