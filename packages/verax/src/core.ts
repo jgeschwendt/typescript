@@ -1,32 +1,33 @@
 import type { StandardSchemaV1 } from './standard.js';
 
-export type Issue = StandardSchemaV1.Issue & {
-  readonly path: readonly PropertyKey[];
-};
+export type Issue = StandardSchemaV1.Issue &
+  Readonly<{
+    path: readonly PropertyKey[];
+  }>;
 
 /**
 Structural description of a schema — what `sdl()` and tooling walk. A child
 may be a Standard Schema from elsewhere, which has no `def`.
 */
 export type Def =
-  | {
-      readonly kind: 'enum';
-      readonly name?: string;
-      readonly values: readonly string[];
-    }
-  | { readonly kind: 'list'; readonly of: StandardSchemaV1 }
-  | { readonly kind: 'literal'; readonly value: Primitive }
-  | { readonly kind: 'nullable'; readonly of: StandardSchemaV1 }
-  | { readonly kind: 'object'; readonly name?: string; readonly shape: Shape }
-  | { readonly kind: 'optional'; readonly of: StandardSchemaV1 }
-  | { readonly kind: 'record'; readonly of: StandardSchemaV1 }
-  | { readonly kind: 'scalar'; readonly name: string }
-  | {
-      readonly kind: 'union';
-      readonly name?: string;
-      readonly of: readonly StandardSchemaV1[];
-    }
-  | { readonly kind: 'unknown' };
+  | Readonly<{
+      kind: 'enum';
+      name?: string;
+      values: readonly string[];
+    }>
+  | Readonly<{ kind: 'list'; of: StandardSchemaV1 }>
+  | Readonly<{ kind: 'literal'; value: Primitive }>
+  | Readonly<{ kind: 'nullable'; of: StandardSchemaV1 }>
+  | Readonly<{ kind: 'object'; name?: string; shape: Shape }>
+  | Readonly<{ kind: 'optional'; of: StandardSchemaV1 }>
+  | Readonly<{ kind: 'record'; of: StandardSchemaV1 }>
+  | Readonly<{ kind: 'scalar'; name: string }>
+  | Readonly<{
+      kind: 'union';
+      name?: string;
+      of: readonly StandardSchemaV1[];
+    }>
+  | Readonly<{ kind: 'unknown' }>;
 
 export type Primitive = bigint | boolean | number | string | null | undefined;
 
@@ -586,7 +587,7 @@ const foreign = (spec: StandardSchemaV1): Impl => {
   */
   const call = (
     value: unknown,
-  ): string | { readonly issues?: readonly unknown[]; readonly value?: unknown } => {
+  ): string | Readonly<{ issues?: readonly unknown[]; value?: unknown }> => {
     const result: unknown = spec['~standard'].validate(value);
     // Any thenable, from any realm: `instanceof Promise` misses another realm's.
     const { then } = (result ?? {}) as { then?: unknown };
@@ -662,8 +663,8 @@ export const impl = (spec: StandardSchemaV1): Impl => {
 // ─── the verbs ───────────────────────────────────────────────────────────────────────────────────
 
 type Result<TOut> =
-  | { readonly issues?: undefined; readonly value: TOut }
-  | { readonly issues: readonly Issue[] };
+  | Readonly<{ issues?: undefined; value: TOut }>
+  | Readonly<{ issues: readonly Issue[] }>;
 
 // ※ verax-never-throws
 /**
@@ -710,7 +711,7 @@ function verify<TOut>(
 /**
 Whether the call is exhausted, now that a frame caught `thrown`: in a nested frame an overflow ends it.
 */
-const exhausts = (nested: boolean, thrown: { readonly error: unknown } | undefined): boolean => {
+const exhausts = (nested: boolean, thrown: Readonly<{ error: unknown }> | undefined): boolean => {
   if (nested && thrown !== undefined && overflow(thrown.error)) {
     exhausted = true;
     limit = 0;
@@ -725,7 +726,7 @@ const walk = <TOut>(value: unknown, self: Impl<TOut>): Result<TOut> => {
   const from = top;
   open();
   let output: unknown = FAIL;
-  let thrown: { readonly error: unknown } | undefined;
+  let thrown: Readonly<{ error: unknown }> | undefined;
   try {
     output = self.fast(value);
   } catch (error) {
@@ -746,7 +747,7 @@ const walk = <TOut>(value: unknown, self: Impl<TOut>): Result<TOut> => {
   }
   const context: Context = { issues: [], path: [] };
   open();
-  let failed: { readonly error: unknown } | undefined;
+  let failed: Readonly<{ error: unknown }> | undefined;
   try {
     self.run(value, context);
   } catch (error) {

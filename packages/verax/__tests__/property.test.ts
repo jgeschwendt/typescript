@@ -35,30 +35,30 @@ import {
 type Primitive = bigint | boolean | number | string | null | undefined;
 type Shape = readonly (readonly [string, Desc])[];
 type Desc =
-  | { readonly kind: 'boolean' }
-  | { readonly kind: 'coerce'; readonly of: Desc; readonly convert: Convert }
-  | { readonly kind: 'enums'; readonly values: readonly string[] }
-  | { readonly kind: 'float' }
-  | { readonly kind: 'id' }
-  | { readonly kind: 'int' }
-  | { readonly kind: 'list'; readonly of: Desc }
-  | { readonly kind: 'literal'; readonly value: Primitive }
-  | { readonly kind: 'nullable'; readonly of: Desc }
-  | { readonly kind: 'object'; readonly shape: Shape }
-  | { readonly kind: 'optional'; readonly of: Desc }
-  | { readonly kind: 'record'; readonly of: Desc }
-  | { readonly kind: 'refine'; readonly of: Desc; readonly test: Predicate }
-  | { readonly kind: 'scalar'; readonly guard: Guard }
-  | { readonly kind: 'string' }
-  | { readonly kind: 'union'; readonly of: readonly Desc[] }
-  | { readonly kind: 'unknown' };
+  | Readonly<{ kind: 'boolean' }>
+  | Readonly<{ kind: 'coerce'; of: Desc; convert: Convert }>
+  | Readonly<{ kind: 'enums'; values: readonly string[] }>
+  | Readonly<{ kind: 'float' }>
+  | Readonly<{ kind: 'id' }>
+  | Readonly<{ kind: 'int' }>
+  | Readonly<{ kind: 'list'; of: Desc }>
+  | Readonly<{ kind: 'literal'; value: Primitive }>
+  | Readonly<{ kind: 'nullable'; of: Desc }>
+  | Readonly<{ kind: 'object'; shape: Shape }>
+  | Readonly<{ kind: 'optional'; of: Desc }>
+  | Readonly<{ kind: 'record'; of: Desc }>
+  | Readonly<{ kind: 'refine'; of: Desc; test: Predicate }>
+  | Readonly<{ kind: 'scalar'; guard: Guard }>
+  | Readonly<{ kind: 'string' }>
+  | Readonly<{ kind: 'union'; of: readonly Desc[] }>
+  | Readonly<{ kind: 'unknown' }>;
 
 /**
 One handler per description kind; `dispatch` routes a description to its own.
 */
 type Table<TResult, TRest extends unknown[]> = {
   readonly [TKind in Desc['kind']]: (
-    desc: Desc & { readonly kind: TKind },
+    desc: Desc & Readonly<{ kind: TKind }>,
     ...rest: TRest
   ) => TResult;
 };
@@ -139,7 +139,7 @@ type Convert = keyof typeof CONVERTERS;
 
 // ─── the reference model ─────────────────────────────────────────────────────────────────────────
 
-type Verdict = { readonly ok: false } | { readonly ok: true; readonly out: unknown };
+type Verdict = Readonly<{ ok: false }> | Readonly<{ ok: true; out: unknown }>;
 const REJECT: Verdict = { ok: false };
 const accept = (out: unknown): Verdict => ({ ok: true, out });
 /**
@@ -701,7 +701,7 @@ Places one field; `form` is the record's form for its first field, else `literal
 */
 const placeField = (
   form: ObjectForm,
-  { proto, target }: { readonly proto: object | null; readonly target: object },
+  { proto, target }: Readonly<{ proto: object | null; target: object }>,
   [key, value]: readonly [string, unknown],
 ): void => {
   if (form === 'inherited' && proto) {
@@ -834,7 +834,7 @@ const numbers = fc.oneof(fc.integer(), fc.double(), fc.constantFrom(-0, INT_MAX 
 Values the converter maps into its inner schema's domain.
 */
 const preimage = (
-  desc: Desc & { readonly kind: 'coerce' },
+  desc: Desc & Readonly<{ kind: 'coerce' }>,
   hostile: boolean,
 ): fc.Arbitrary<Recipe> => {
   const table: Readonly<Record<Convert, () => fc.Arbitrary<Recipe>>> = {
