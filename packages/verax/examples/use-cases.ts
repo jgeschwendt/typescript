@@ -90,10 +90,10 @@ const Track = object('Track', { __typename: literal('Track'), count: Count, even
 const Message = union('Message', [Ping, Track]); // one read of `__typename` picks the member
 
 // recursive: a getter field, and an explicit annotation (TS can't infer through a cycle)
-interface Comment {
+type Comment = {
   replies: Comment[];
   text: string;
-}
+};
 const Comment: Schema<Comment> = object('Comment', {
   get replies() {
     return list(Comment);

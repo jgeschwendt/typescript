@@ -34,9 +34,10 @@ export type Primitive = bigint | boolean | number | string | null | undefined;
 /**
 `TOut` is the output; `TIn` is what the schema accepts — they differ once `coerce` is involved.
 */
-export interface Schema<TOut = unknown, TIn = TOut> extends StandardSchemaV1<TIn, TOut> {
-  readonly def: Def;
-}
+export type Schema<TOut = unknown, TIn = TOut> = Readonly<{
+  def: Def;
+}> &
+  StandardSchemaV1<TIn, TOut>;
 
 export type Shape = Readonly<Record<string, StandardSchemaV1>>;
 
@@ -56,29 +57,29 @@ Rejection from a fast check. Module-private: no input can be it.
 export const FAIL: unique symbol = Symbol('verax.fail');
 export type Fail = typeof FAIL;
 
-export interface Context {
+export type Context = Readonly<{
   /**
   Issues collected before the walk stops: `MAX_ISSUES` unless set.
   */
-  readonly cap?: number;
-  readonly issues: Issue[];
-  readonly path: PropertyKey[];
-}
+  cap?: number;
+  issues: Issue[];
+  path: PropertyKey[];
+}>;
 
 /**
 A schema's checks, private to this copy of verax. Any may throw.
 */
-export interface Impl<TOut = unknown> {
+export type Impl<TOut = unknown> = Readonly<{
   /**
   The verdict alone, for `is`: `FAIL`, or anything else.
   */
-  readonly check: (value: unknown) => unknown;
-  readonly fast: (value: unknown) => Fail | TOut;
+  check: (value: unknown) => unknown;
+  fast: (value: unknown) => Fail | TOut;
   /**
   Pushes every issue at its path; runs only after `fast` failed.
   */
-  readonly run: (value: unknown, context: Context) => TOut;
-}
+  run: (value: unknown, context: Context) => TOut;
+}>;
 
 // ─── issues ──────────────────────────────────────────────────────────────────────────────────────
 

@@ -2,13 +2,13 @@ import { pinOf, placeOf, resolve, selectorFor, visible } from './anchor.js';
 import { glyph } from './glyph.js';
 import { css } from './style.js';
 
-interface Message {
+type Message = {
   at: string;
   author: 'agent' | 'user';
   text: string;
-}
+};
 
-interface Thread {
+type Thread = {
   id: string;
   messages: Message[];
   page: string;
@@ -16,12 +16,12 @@ interface Thread {
   status: 'open' | 'resolved';
   x: number;
   y: number;
-}
+};
 
 /**
 Each `hud:<name>` event's `detail`, dispatched on the `<hud>` host, bubbling and composed.
 */
-interface HudEvents {
+type HudEvents = {
   anchor: { id: string; selector: string; x: number; y: number };
   delete: { id: string };
   open: { selector: string; text: string; x: number; y: number };
@@ -29,7 +29,7 @@ interface HudEvents {
   reply: { id: string; text: string };
   resolve: { id: string };
   select: { id: string };
-}
+};
 
 type HudEventMap = { [Name in keyof HudEvents as `hud:${Name}`]: CustomEvent<HudEvents[Name]> };
 
@@ -37,20 +37,20 @@ declare global {
   interface ElementEventMap extends HudEventMap {}
 }
 
-interface Hud {
+type Hud = {
   destroy: () => void;
   page: string;
   pick: () => void;
   select: (id: string) => void;
   threads: Thread[];
-}
+};
 
-interface Options {
+type Options = {
   page?: string;
   threads?: Thread[];
-}
+};
 
-interface Layer {
+type Layer = {
   box: HTMLElement;
   close?: () => void;
   cursor: string;
@@ -65,7 +65,7 @@ interface Layer {
   selected?: string;
   shadow: ShadowRoot;
   threads: Thread[];
-}
+};
 
 // a press travels this many pixels before it is a drag
 const dragSlop = 3;

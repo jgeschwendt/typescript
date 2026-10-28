@@ -217,9 +217,9 @@ describe('lists and hostile input', () => {
 
 describe('recursion', () => {
   test('#20 a schema that follows a cycle stops at the depth limit, not a stack overflow', () => {
-    interface Node {
+    type Node = {
       next: Node | null;
-    }
+    };
     const Linked: Schema<Node> = object({
       get next() {
         return nullable(Linked);

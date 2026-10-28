@@ -173,10 +173,10 @@ have no effect.
 ```ts
 import type { Schema } from 'verax';
 
-interface Node {
+type Node = {
   next: Node | null;
   note?: string | undefined;
-}
+};
 
 const Node: Schema<Node> = object('Node', {
   get next() {

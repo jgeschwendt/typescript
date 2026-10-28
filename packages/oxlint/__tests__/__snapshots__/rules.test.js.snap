@@ -475,7 +475,7 @@ exports[`rules 1`] = `
   "typescript/consistent-indexed-object-style | style | native | error | - | ",
   "typescript/consistent-return | suspicious | native (type-aware) | error | - | ",
   "typescript/consistent-type-assertions | style | native | error | - | ",
-  "typescript/consistent-type-definitions | style | native | error | - | ",
+  "typescript/consistent-type-definitions | style | native | error | set | ",
   "typescript/consistent-type-exports | style | native (type-aware) | error | - | ",
   "typescript/consistent-type-imports | style | native | error | - | ",
   "typescript/default-param-last | - | none | off | - | duplicates native default-param-last (verified 2026-10-14 · TS probe)",
