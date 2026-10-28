@@ -7,7 +7,7 @@ commands:
   test: bun run --filter '@jlg/oxlint' test
   snapshot-regen: bun run --filter '@jlg/oxlint' test --update-snapshots
 invariants:
-  - claim: SINGLE SOURCE OF TRUTH — index.js is the only base ruleset, defineConfig its only config entry and `off` its only other export, the reasoned opt-out map the rules table reads; no JSON copy, no `base` export; consumer overrides always follow the base's; never fork the data
+  - claim: SINGLE SOURCE OF TRUTH — index.js is the only base ruleset, defineConfig its only config entry; its only other exports are `off`, the reasoned opt-out map the rules table reads, and `namingConvention`, the naming-convention entry lists its own tuples spread; no JSON copy, no `base` export; consumer overrides always follow the base's; never fork the data
     anchor: ※ oxlint-base
   - claim: SNAPSHOT GATE — the rules.test.js bun snapshot (every rule of the enabled oxlint plugins and of the wrapped ESLint plugins' catalogs, one line each) and the define-config.test.js overrides snapshot (its typescript override derives from the catalogs) are the review gate for oxlint and typescript-eslint bumps; a bump adds new rules to on-categories as consumer-facing errors, so regen and review both diffs
     anchor: ※ rules-gate
