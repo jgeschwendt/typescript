@@ -4,6 +4,8 @@
 
 Runtime types for TypeScript, shaped like GraphQL, zero dependencies under [Standard Schema](https://standardschema.dev).
 
+Docs, every example runnable: [jgeschwendt.github.io/typescript/verax](https://jgeschwendt.github.io/typescript/verax/).
+
 ```ts
 import { type Infer, enums, id, int, list, nullable, object, parse, string } from 'verax';
 

@@ -26,11 +26,17 @@ export const trap = (key: PropertyKey): ProxyHandler<object> => ({
 });
 
 /**
+The directory `copy(tag)` writes its copy of verax's source to.
+*/
+export const copied = (tag: string): string =>
+  `${Bun.env['TMPDIR'] ?? '/tmp'}/verax-${tag}-${process.pid}`;
+
+/**
 A second copy of verax, as when two installed versions meet in one app — each `tag` its own,
 whose code no other test has run.
 */
 export const copy = async (tag = 'copy'): Promise<typeof Verax> => {
-  const directory = `${Bun.env['TMPDIR'] ?? '/tmp'}/verax-${tag}-${process.pid}`;
+  const directory = copied(tag);
   await Promise.all(
     ['core', 'index', 'sdl', 'standard', 'types'].map((name) =>
       Bun.write(`${directory}/${name}.ts`, Bun.file(new URL(`../src/${name}.ts`, import.meta.url))),

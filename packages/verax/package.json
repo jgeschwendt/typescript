@@ -38,6 +38,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "docs": "bun build src/index.ts src/sdl.ts docs/repl.ts --entry-naming [name].[ext] --outdir docs/build --splitting --target browser",
     "prepack": "bun run build",
     "test": "tsc --noEmit && bun --config=../../bunfig.toml test"
   },

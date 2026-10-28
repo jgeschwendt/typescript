@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en" class="ui">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>verax — docs</title>
+    <link rel="stylesheet" href="https://gigantic.dev/ui/ui.css" />
+    <link rel="stylesheet" href="https://gigantic.dev/ui/docs.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23345c7a'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+    <style>
+      pre[data-ts] {
+        position: relative;
+      }
+      pre[data-ts] > code {
+        display: block;
+        outline: none;
+      }
+      pre[data-ts] > button {
+        position: absolute;
+        right: var(--ui-space-2);
+        top: var(--ui-space-2);
+      }
+      pre[data-out] {
+        border-style: dashed;
+        color: var(--ui-fg-muted);
+        margin-top: var(--ui-space-1);
+      }
+      pre[data-out]:empty {
+        display: none;
+      }
+      pre[data-out][data-state='changed'] {
+        border-color: var(--ui-warn);
+      }
+      pre[data-out][data-state='same'] {
+        border-color: var(--ui-ok);
+      }
+    </style>
+  </head>
+  <body data-page="docs">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true">
+      <!-- Phosphor Icons (regular), MIT (c) 2023 Phosphor Icons — via jgeschwendt/ui icons/ -->
+      <symbol id="ph-circle-half" viewBox="0 0 256 256" fill="currentColor">
+        <path
+          d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,16.37a86.4,86.4,0,0,1,16,3V212.67a86.4,86.4,0,0,1-16,3Zm32,9.26a87.81,87.81,0,0,1,16,10.54V195.83a87.81,87.81,0,0,1-16,10.54ZM40,128a88.11,88.11,0,0,1,80-87.63V215.63A88.11,88.11,0,0,1,40,128Zm160,50.54V77.46a87.82,87.82,0,0,1,0,101.08Z"
+        />
+      </symbol>
+      <symbol id="ph-moon" viewBox="0 0 256 256" fill="currentColor">
+        <path
+          d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"
+        />
+      </symbol>
+      <symbol id="ph-sun" viewBox="0 0 256 256" fill="currentColor">
+        <path
+          d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"
+        />
+      </symbol>
+      <symbol
+        id="verax-check"
+        viewBox="0 0 256 256"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="16"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="128" cy="128" r="96" />
+        <path d="M84 132l32 32 56-64" />
+      </symbol>
+    </svg>
+
+    <header class="appbar">
+      <h1 class="appbar-title">
+        <svg class="icon" aria-hidden="true"><use href="#verax-check" /></svg>
+        verax <small>· docs</small>
+      </h1>
+      <span class="spacer"></span>
+      <div class="segmented" role="group" aria-label="theme">
+        <button type="button" data-theme-set="light" aria-pressed="false" title="light">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-sun" /></svg>light
+        </button>
+        <button type="button" data-theme-set="auto" aria-pressed="true" title="follow the system">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-circle-half" /></svg>auto
+        </button>
+        <button type="button" data-theme-set="dark" aria-pressed="false" title="dark">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-moon" /></svg>dark
+        </button>
+      </div>
+    </header>
+
+    <main class="docs-shell" data-container>
+      <header class="stack">
+        <p class="eyebrow">vērāx — truthful</p>
+        <p class="lead docs-lead">
+          Runtime types for TypeScript. Zero dependencies; every schema is a
+          <a class="link" href="https://standardschema.dev">Standard Schema</a>.
+        </p>
+        <pre class="snippet"><code>bun add verax</code></pre>
+        <p class="docs-note">
+          TypeScript 7+, ESM only, Node ≥22. Every example runs: edit one, press ▶ or ⌘↵. The test
+          suite runs them too, so each output shown is what verax prints.
+        </p>
+        <nav class="row docs-toc" aria-label="sections">
+          <a class="pill" href="#start">start</a>
+          <a class="pill" href="#types">types</a>
+          <a class="pill" href="#objects">objects</a>
+          <a class="pill" href="#unions">unions</a>
+          <a class="pill" href="#verbs">verbs</a>
+          <a class="pill" href="#refine-coerce">refine · coerce</a>
+          <a class="pill" href="#use-cases">use cases</a>
+          <a class="pill" href="#sdl">sdl</a>
+          <a class="pill" href="#guarantees">guarantees</a>
+        </nav>
+      </header>
+
+      <section class="docs-section" id="start">
+        <header><h2 class="h2">Start</h2></header>
+        <p class="docs-note">
+          A schema is a value and a type. <code class="code">parse</code> returns the data or
+          throws; <code class="code">validate</code> returns every issue, with its path.
+        </p>
+        <pre
+          class="snippet"
+          data-ts
+        ><code>import { type Infer, int, list, nullable, object, parse, string, validate } from 'verax';
+
+const User = object('User', {
+  age: nullable(int()),
+  name: string(),
+  tags: list(string()),
+});
+type User = Infer&lt;typeof User&gt;;
+
+const ada: User = parse({ age: 36, name: 'Ada', tags: ['math'] }, User);
+console.log(ada);
+console.log(validate({ age: 1.5, tags: [1] }, User));</code></pre>
+        <pre class="snippet" data-out>
+{ age: 36, name: 'Ada', tags: ['math'] }
+{
+  issues: [
+    { message: 'Expected Int, received 1.5', path: ['age'] },
+    { message: 'Expected String, received undefined', path: ['name'] },
+    { message: 'Expected String, received 1', path: ['tags', 0] },
+  ],
+}</pre>
+      </section>
+
+      <section class="docs-section" id="types">
+        <header><h2 class="h2">Types</h2></header>
+        <p class="docs-note">
+          <code class="code">int</code> is signed 32-bit, <code class="code">float</code> finite,
+          <code class="code">id</code> a string.
+        </p>
+        <pre
+          class="snippet"
+          data-ts
+        ><code>import { boolean, enums, float, id, is, literal, optional, record, scalar, unknown } from 'verax';
+
+const Role = enums('Role', ['ADMIN', 'MEMBER']);
+const Email = scalar('Email', (v): v is string =&gt; typeof v === 'string' &amp;&amp; v.includes('@'));
+
+console.log({
+  int: is(2 ** 31, int()),
+  float: is(0.1, float()),
+  id: is('42', id()),
+  boolean: is(false, boolean()),
+  enums: is('ADMIN', Role),
+  scalar: is('ada@example.com', Email),
+  literal: is('post', literal('post')),
+  unknown: is(Symbol('any'), unknown()),
+});</code></pre>
+        <pre class="snippet" data-out>
+{
+  int: false,
+  float: true,
+  id: true,
+  boolean: true,
+  enums: true,
+  scalar: true,
+  literal: true,
+  unknown: true,
+}</pre>
+        <p class="docs-note">
+          Every field is non-null unless wrapped: <code class="code">nullable</code> may be
+          <code class="code">null</code>, <code class="code">optional</code> may be absent.
+          <code class="code">record</code> checks every value under any key.
+        </p>
+        <pre
+          class="snippet"
+          data-ts
+        ><code>const Patch = object({ bio: nullable(string()), nick: optional(string()) });
+const Scores = record(int());
+
+console.log({
+  bioNull: is({ bio: null }, Patch),
+  bioMissing: is({}, Patch),
+  scores: is({ ada: 3, lin: 5 }, Scores),
+  scoreString: is({ ada: 3, lin: '5' }, Scores),
+});</code></pre>
+        <pre class="snippet" data-out>
+{ bioNull: true, bioMissing: false, scores: true, scoreString: false }</pre>
+      </section>
+
+      <section class="docs-section" id="objects">
+        <header><h2 class="h2">Objects</h2></header>
+        <p class="docs-note">
+          An <code class="code">object</code> is exact: an unknown key is an issue. Its name emits
+          it in SDL and names it in errors. A recursive one makes the field a getter and states its
+          type, which TypeScript cannot infer through a cycle.
+        </p>
+        <pre class="snippet" data-ts><code>import type { Schema } from 'verax';
+
+console.log(validate({ admin: true, age: null, name: 'Ada', tags: [] }, User).issues);
+
+type Comment = {
+  replies: Comment[];
+  text: string;
+};
+
+const Comment: Schema&lt;Comment&gt; = object('Comment', {
+  get replies() {
+    return list(Comment);
+  },
+  text: string(),
+});
+console.log(is({ replies: [{ replies: [], text: 'yes' }], text: 'ok?' }, Comment));</code></pre>
+        <pre class="snippet" data-out>
+[{ message: 'Unknown field on User', path: ['admin'] }]
+true</pre>
+      </section>
+
+      <section class="docs-section" id="unions">
+        <header><h2 class="h2">Unions</h2></header>
+        <p class="docs-note">
+          Tag members with <code class="code">__typename</code>: one read of the tag picks the
+          member. A failed union explains itself, by the member its tag names or, untagged, by the
+          closest one.
+        </p>
+        <pre class="snippet" data-ts><code>import { union } from 'verax';
+
+const Ping = object('Ping', { __typename: literal('Ping'), at: int() });
+const Track = object('Track', { __typename: literal('Track'), event: string() });
+const Message = union('Message', [Ping, Track]);
+console.log(validate({ __typename: 'Track', event: 7 }, Message).issues);
+console.log(validate({ __typename: 'Pong' }, Message).issues);
+
+const Contact = union('Contact', [object({ email: Email }), object({ phone: string() })]);
+console.log(validate({ email: 'ada' }, Contact).issues);</code></pre>
+        <pre class="snippet" data-out>
+[{ message: 'Expected String, received 7', path: ['event'] }]
+[
+  {
+    message: 'Expected "Ping" | "Track", received "Pong"',
+    path: ['__typename'],
+  },
+]
+[{ message: 'Expected Email, received "ada"', path: ['email'] }]</pre>
+      </section>
+
+      <section class="docs-section" id="verbs">
+        <header><h2 class="h2">Verbs</h2></header>
+        <table data-table>
+          <thead>
+            <tr>
+              <th>verb</th>
+              <th>gives</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="code">is(value, S)</code></td>
+              <td>
+                a type guard to <code class="code">Input&lt;typeof S&gt;</code>; builds nothing
+              </td>
+            </tr>
+            <tr>
+              <td><code class="code">assert(value, S)</code></td>
+              <td>the same, or throws <code class="code">VeraxError</code> with every issue</td>
+            </tr>
+            <tr>
+              <td><code class="code">validate(value, S)</code></td>
+              <td>
+                <code class="code">{ value }</code> or <code class="code">{ issues }</code>; never
+                throws
+              </td>
+            </tr>
+            <tr>
+              <td><code class="code">parse(value, S)</code></td>
+              <td>
+                <code class="code">Infer&lt;typeof S&gt;</code>, or throws
+                <code class="code">VeraxError</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="docs-note">
+          <code class="code">is</code> and <code class="code">assert</code> check through
+          <code class="code">coerce</code> but leave the input as it was;
+          <code class="code">validate</code> and <code class="code">parse</code> return the
+          converted output.
+        </p>
+        <pre class="snippet" data-ts><code>import { VeraxError, assert, coerce } from 'verax';
+
+const Count = coerce(int(), (v) =&gt; (typeof v === 'string' ? Number(v) : v));
+console.log({ is: is('3', Count), parse: parse('3', Count), validate: validate('three', Count) });
+
+try {
+  assert({ name: 'Ada' }, User);
+} catch (error) {
+  console.log(error instanceof VeraxError, String(error));
+}</code></pre>
+        <pre class="snippet" data-out>
+{
+  is: true,
+  parse: 3,
+  validate: { issues: [{ message: 'Expected Int, received NaN', path: [] }] },
+}
+true VeraxError: age: Expected Int, received undefined
+tags: Expected list, received undefined</pre>
+      </section>
+
+      <section class="docs-section" id="refine-coerce">
+        <header><h2 class="h2">refine · coerce</h2></header>
+        <p class="docs-note">
+          <code class="code">refine</code> narrows the accepted values and keeps the type.
+          <code class="code">coerce</code> converts before validating: defaults, strings, dates.
+        </p>
+        <pre class="snippet" data-ts><code>import { refine } from 'verax';
+
+const Adult = refine(int(), 'Expected an adult', (n) =&gt; n &gt;= 18);
+const Page = coerce(optional(int()), (v) =&gt; v ?? 1);
+const When = coerce(
+  scalar('DateTime', (v): v is Date =&gt; v instanceof Date &amp;&amp; !Number.isNaN(v.getTime())),
+  (v) =&gt; (typeof v === 'string' ? new Date(v) : v),
+);
+console.log({
+  adult: validate(17, Adult),
+  page: parse(undefined, Page),
+  when: parse('2026-10-01', When),
+});</code></pre>
+        <pre class="snippet" data-out>
+{
+  adult: { issues: [{ message: 'Expected an adult', path: [] }] },
+  page: 1,
+  when: 2026-10-01T00:00:00.000Z,
+}</pre>
+      </section>
+
+      <section class="docs-section" id="use-cases">
+        <header><h2 class="h2">Use cases</h2></header>
+        <h3 class="h3" id="control-flow">Control flow</h3>
+        <pre class="snippet" data-ts><code>const handle = (data: unknown): string =&gt; {
+  if (is(data, Ping)) return `pong ${data.at}`;
+  assert(data, Track);
+  return `tracked ${data.event}`;
+};
+console.log(handle({ __typename: 'Ping', at: 1 }), handle({ __typename: 'Track', event: 'open' }));</code></pre>
+        <pre class="snippet" data-out>pong 1 tracked open</pre>
+        <h3 class="h3" id="fetch">Fetch bodies</h3>
+        <p class="docs-note">
+          The output is a fresh plain object: no getter, proxy or prototype of the input reaches it.
+        </p>
+        <pre
+          class="snippet"
+          data-ts
+        ><code>const response = new Response('{"age":null,"name":"Lin","tags":["c"]}');
+console.log(parse(await response.json(), User));</code></pre>
+        <pre class="snippet" data-out>{ age: null, name: 'Lin', tags: ['c'] }</pre>
+        <h3 class="h3" id="forms">Form data</h3>
+        <p class="docs-note">
+          Form values are strings and an unchecked box is absent: coerce each field.
+        </p>
+        <pre class="snippet" data-ts><code>const Signup = object('Signup', {
+  age: coerce(int(), Number),
+  email: Email,
+  newsletter: coerce(boolean(), (v) =&gt; v === 'on'),
+});
+
+const form = new FormData();
+form.set('age', '36');
+form.set('email', 'ada@example.com');
+console.log(parse({ newsletter: undefined, ...Object.fromEntries(form.entries()) }, Signup));</code></pre>
+        <pre class="snippet" data-out>{ age: 36, email: 'ada@example.com', newsletter: false }</pre>
+        <h3 class="h3" id="tests">Tests</h3>
+        <p class="docs-note">
+          In <code class="code">bun:test</code> or <code class="code">node:test</code>,
+          <code class="code">assert</code> is the assertion: a failure throws and the runner prints
+          every issue.
+        </p>
+        <pre class="snippet"><code>test('GET /users/1', async () =&gt; {
+  assert(await (await fetch('/users/1')).json(), User);
+});</code></pre>
+        <h3 class="h3" id="standard-schema">Standard Schema</h3>
+        <p class="docs-note">
+          Hand any schema to a library that speaks it: tRPC, Hono, TanStack Form.
+        </p>
+        <pre
+          class="snippet"
+          data-ts
+        ><code>console.log(await User['~standard'].validate({ age: null, name: 'Ada', tags: [] }));</code></pre>
+        <pre class="snippet" data-out>{ value: { age: null, name: 'Ada', tags: [] } }</pre>
+      </section>
+
+      <section class="docs-section" id="sdl">
+        <header><h2 class="h2">SDL</h2></header>
+        <p class="docs-note">
+          <code class="code">sdl()</code> prints GraphQL SDL for every named type its roots reach;
+          <code class="code">__typename</code> stays implicit. It throws on an unnamed type and on
+          SDL that would lie.
+        </p>
+        <pre class="snippet" data-ts><code>import { sdl } from 'verax/sdl';
+
+console.log(sdl([User, Comment, Message]));</code></pre>
+        <pre class="snippet" data-out>
+type Comment {
+  replies: [Comment!]!
+  text: String!
+}
+
+union Message = Ping | Track
+
+type Ping {
+  at: Int!
+}
+
+type Track {
+  event: String!
+}
+
+type User {
+  age: Int
+  name: String!
+  tags: [String!]!
+}</pre>
+        <p class="docs-note">
+          With <code class="code">{ input: true }</code> it emits
+          <code class="code">input</code> types, for arguments.
+        </p>
+        <pre class="snippet" data-ts><code>console.log(sdl([Signup], { input: true }));</code></pre>
+        <pre class="snippet" data-out>
+scalar Email
+
+input Signup {
+  age: Int!
+  email: Email!
+  newsletter: Boolean!
+}</pre>
+      </section>
+
+      <section class="docs-section" id="guarantees">
+        <header><h2 class="h2">Guarantees</h2></header>
+        <p class="docs-note">
+          Validation never throws and never returns a wrong verdict. A throwing callback, hostile
+          getter or exhausted stack is an issue, and every limit fails closed: nesting past 512 is
+          <code class="code">Too deep</code>, work past 10 million steps
+          <code class="code">Too complex</code>, and issues stop at 100. The
+          <a
+            class="link"
+            href="https://github.com/jgeschwendt/typescript/tree/main/packages/verax#readme"
+            >README</a
+          >
+          states the exact contract.
+        </p>
+        <pre class="snippet" data-ts><code>const hostile = {
+  age: null,
+  get name(): string {
+    throw new Error('boom');
+  },
+  tags: [],
+};
+console.log(validate(hostile, User).issues);
+
+let deep: Comment = { replies: [], text: '' };
+for (let level = 0; level &lt; 600; level += 1) deep = { replies: [deep], text: '' };
+console.log(validate(deep, Comment).issues?.map(({ message }) =&gt; message));</code></pre>
+        <pre class="snippet" data-out>
+[{ message: 'Threw: boom', path: ['name'] }]
+['Too deep']</pre>
+      </section>
+
+      <nav class="row link-row" aria-label="links">
+        <a class="pill" href="https://github.com/jgeschwendt/typescript/tree/main/packages/verax"
+          >repo · packages/verax</a
+        >
+        <a class="pill" href="https://www.npmjs.com/package/verax">npm · verax</a>
+      </nav>
+    </main>
+    <script type="module">
+      import { start } from './repl.js';
+      start();
+    </script>
+    <script>
+      /* The theme contract, verbatim from jgeschwendt/ui docs.js — same localStorage
+   key, so a theme chosen on the ui pages is the theme this one opens in. */
+      const THEME_KEY = 'ui-theme';
+      function applyTheme(mode) {
+        const root = document.documentElement;
+        if (mode === 'auto') {
+          root.removeAttribute('data-theme');
+          localStorage.removeItem(THEME_KEY);
+        } else {
+          root.dataset.theme = mode;
+          localStorage.setItem(THEME_KEY, mode);
+        }
+        for (const b of document.querySelectorAll('[data-theme-set]')) {
+          b.setAttribute('aria-pressed', String(b.dataset.themeSet === mode));
+        }
+      }
+      for (const b of document.querySelectorAll('[data-theme-set]')) {
+        b.addEventListener('click', () => applyTheme(b.dataset.themeSet));
+      }
+      applyTheme(localStorage.getItem(THEME_KEY) || 'auto');
+    </script>
+  </body>
+</html>
