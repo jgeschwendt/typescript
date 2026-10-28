@@ -33,6 +33,7 @@ const jsPlugins = [
   absolute('./plugins/comments.js'),
   absolute('./plugins/eslint-js.js'),
   absolute('./plugins/inline-config.js'),
+  absolute('./plugins/types.js'),
   absolute('./plugins/typescript-js.js'),
 ];
 
@@ -510,6 +511,7 @@ const typescript = {
     'no-implied-eval': 'off',
     'prefer-promise-reject-errors': 'off',
     'require-await': 'off',
+    'types/prefer-readonly-generic': 'error',
     ...Object.fromEntries([...twins, ...derive('typescript')]),
     'import-js/no-unresolved': 'off',
   },
