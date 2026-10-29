@@ -1,6 +1,6 @@
 {
   "name": "@jlg/oxlint",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jgeschwendt/typescript.git",
@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@jlg/oxfmt": "^0.1.1",
-    "@jlg/tsconfig": "^0.1.1",
+    "@jlg/tsconfig": "^0.1.2",
     "@types/bun": "^1.4.4",
     "oxlint": "^1.90.0"
   },

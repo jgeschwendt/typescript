@@ -1,5 +1,11 @@
 # @jlg/tsconfig
 
+## 0.1.2
+
+### Patch Changes
+
+- [#96](https://github.com/jgeschwendt/typescript/pull/96) [`ccf323a`](https://github.com/jgeschwendt/typescript/commit/ccf323a8410e511d713928e52fe70a6ba36cdefa) Thanks [@jgeschwendt](https://github.com/jgeschwendt)! - `lib` gains `ESNext.Iterator`, so iterator helpers (`map`, `filter`, `take`, `toArray`) type-check on Node 22 and 24.
+
 ## 0.1.1
 
 ### Patch Changes
