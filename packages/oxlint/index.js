@@ -80,7 +80,7 @@ const off = Object.freeze({
   'oxc/no-optional-chaining': 'bans ?., syntax the house writes',
   'oxc/no-rest-spread-properties': 'bans object rest/spread, syntax the house writes',
   'react/function-component-definition':
-    'contradicts native func-style: the function declaration it demands is the one func-style forbids (verified 2026-10-20 · probe)',
+    "contradicts func-style's expression default: `const Empty = () => null` in .ts has no passing form; the React preset turns it on beside func-style declaration (probed 2026-10-28)",
   'react/react-in-jsx-scope': 'the automatic JSX runtime needs no React in scope',
   'react/todo': "reports the React Compiler's own unimplemented syntax, not the code's",
   'typescript/ban-types':
@@ -229,6 +229,7 @@ const rules = {
 
   'max-lines': ['error', { max: maxLines, skipBlankLines: true, skipComments: true }],
   // positional, max then flag: a lone over-long top-level function passes; a second reports both
+  // @ts-expect-error oxlint types one options slot; the flag is read from the second
   'max-statements': ['error', {}, { ignoreTopLevelFunctions: true }],
 
   'import/no-default-export': 'error',
@@ -573,15 +574,20 @@ const react = [
   {
     files: ['**/*.{jsx,tsx}'],
     plugins: ['jsx-a11y', 'react-perf'],
-    // react-perf guards memoized children against fresh props; a host element (div, span) has none
-    rules: Object.fromEntries(
-      [
-        'jsx-no-jsx-as-prop',
-        'jsx-no-new-array-as-prop',
-        'jsx-no-new-function-as-prop',
-        'jsx-no-new-object-as-prop',
-      ].map((rule) => [`react-perf/${rule}`, ['error', { nativeAllowList: 'all' }]]),
-    ),
+    rules: {
+      // a component is a declaration, and so is every function beside it
+      'func-style': ['error', 'declaration'],
+      'react/function-component-definition': 'error',
+      // react-perf guards memoized children against fresh props; a host element (div, span) has none
+      ...Object.fromEntries(
+        [
+          'jsx-no-jsx-as-prop',
+          'jsx-no-new-array-as-prop',
+          'jsx-no-new-function-as-prop',
+          'jsx-no-new-object-as-prop',
+        ].map((rule) => [`react-perf/${rule}`, ['error', { nativeAllowList: 'all' }]]),
+      ),
+    },
   },
   {
     files: ['**/*.tsx'],
@@ -613,6 +619,7 @@ const next = [
   {
     files: ['**/route.ts'],
     rules: {
+      'func-style': ['error', 'declaration'],
       'typescript-js/naming-convention': ['warn', ...namingConvention.route],
     },
   },
@@ -620,6 +627,8 @@ const next = [
   {
     files: [segments],
     rules: {
+      // the component is a declaration; metadata and segment config stay expressions
+      'func-style': ['error', 'declaration', { overrides: { namedExports: 'expression' } }],
       'react/only-export-components': [
         'error',
         {
@@ -662,7 +671,18 @@ const next = [
   },
   {
     files: ['**/instrumentation.{js,ts}'],
-    rules: { 'require-await': 'off', 'typescript/require-await': 'off' },
+    rules: {
+      'func-style': ['error', 'declaration'],
+      'require-await': 'off',
+      'typescript/require-await': 'off',
+    },
+  },
+  // middleware, proxy and the metadata routes are declarations, as route.ts and instrumentation are
+  {
+    files: [
+      '**/{apple-icon,icon,manifest,middleware,opengraph-image,proxy,robots,sitemap,twitter-image}.{js,jsx,ts,tsx}',
+    ],
+    rules: { 'func-style': ['error', 'declaration'] },
   },
 ];
 

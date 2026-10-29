@@ -31,6 +31,8 @@ A rule oxlint lacks natively is keyed by its `-js` scope—`import-js/no-interna
 
 `types/prefer-readonly-generic`, on TypeScript files, writes a readonly object type `Readonly<{ a: string }>`, never `{ readonly a: string }`: it fixes a literal whose every member is `readonly`, strips the modifiers inside `Readonly<…>`, and reports a literal only some of whose members are, once per literal, for the author to wrap or split. The base writes object types as `type` literals (`typescript/consistent-type-definitions: type`), so every object type is one the rule governs; `readonly` arrays and tuples stay as written.
 
+Functions are expressions, `const f = () => …`, except where React or Next wants a declaration: `.jsx`/`.tsx` run `func-style` at `declaration`, helpers included, with `react/function-component-definition` on, so a component is `function Button()`; Next's segment files let a named export stay an expression (`export const generateMetadata = …`), and `route.ts`, `instrumentation`, `middleware`, `proxy` and the metadata routes (`robots`, `sitemap`, the icons and images) are declarations throughout.
+
 One import statement per module: a type-only name joins the value import inline, `import { type T, x } from 'm'`, and `import type { T }` stands alone only where a module gives types alone; `--fix` writes both.
 
 File names are kebab-case, components included—`button.tsx`, never `Button.tsx`; Next's segment files already are.

@@ -262,6 +262,10 @@ exports[`overrides 1`] = `
       "react-perf",
     ],
     "rules": {
+      "func-style": [
+        "error",
+        "declaration",
+      ],
       "react-perf/jsx-no-jsx-as-prop": [
         "error",
         {
@@ -286,6 +290,7 @@ exports[`overrides 1`] = `
           "nativeAllowList": "all",
         },
       ],
+      "react/function-component-definition": "error",
     },
   },
   {
@@ -420,6 +425,10 @@ exports[`overrides 1`] = `
       "**/route.ts",
     ],
     "rules": {
+      "func-style": [
+        "error",
+        "declaration",
+      ],
       "typescript-js/naming-convention": [
         "warn",
         {
@@ -474,6 +483,15 @@ exports[`overrides 1`] = `
       "**/{default,error,forbidden,global-error,layout,loading,not-found,page,template,unauthorized}.{jsx,tsx}",
     ],
     "rules": {
+      "func-style": [
+        "error",
+        "declaration",
+        {
+          "overrides": {
+            "namedExports": "expression",
+          },
+        },
+      ],
       "react/only-export-components": [
         "error",
         {
@@ -531,8 +549,23 @@ exports[`overrides 1`] = `
       "**/instrumentation.{js,ts}",
     ],
     "rules": {
+      "func-style": [
+        "error",
+        "declaration",
+      ],
       "require-await": "off",
       "typescript/require-await": "off",
+    },
+  },
+  {
+    "files": [
+      "**/{apple-icon,icon,manifest,middleware,opengraph-image,proxy,robots,sitemap,twitter-image}.{js,jsx,ts,tsx}",
+    ],
+    "rules": {
+      "func-style": [
+        "error",
+        "declaration",
+      ],
     },
   },
   {

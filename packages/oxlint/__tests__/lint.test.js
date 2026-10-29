@@ -76,6 +76,14 @@ const targeted = {
     "type PageProps = Readonly<{ params: Promise<{ slug: string }>; searchParams: Promise<object> }>;\nexport const generateStaticParams = (): { slug: string }[] => [{ slug: 'a' }];\nexport default async function Page({ params, searchParams }: PageProps): Promise<string> {\n  const [{ slug }] = await Promise.all([params, searchParams]);\n  return slug;\n}\n",
     [],
   ],
+  'app/inner/page.tsx': [
+    'const Inner = () => null;\nexport default function Page() {\n  return Inner();\n}\n',
+    ['eslint(func-style)', 'react(function-component-definition)'],
+  ],
+  'func-style/declared.ts': [
+    'export function declared() {\n  return 1;\n}\n',
+    ['eslint(func-style)'],
+  ],
   'imports/inline-sorted.ts': [`import { type PathLike, readFileSync }${fromFs}${read}`, []],
   'imports/inline-unsorted.ts': [
     `import { readFileSync, type PathLike }${fromFs}${read}`,
@@ -106,8 +114,12 @@ const targeted = {
     ['eslint(max-statements)'],
   ],
   'max-statements/top-level.ts': [`export const top = (): number => {\n${statements}};\n`, []],
+  'react/arrow.tsx': [
+    'export const Arrow = (): React.JSX.Element => <i />;\n',
+    ['eslint(func-style)', 'react(function-component-definition)'],
+  ],
   'react/button.tsx': [
-    'import { type Ref, useRef } from \'react\';\n\ntype ButtonProps = Readonly<{ label: string; ref: Ref<HTMLButtonElement> }>;\nexport const Button = ({ label, ref }: ButtonProps): React.JSX.Element => {\n  const inputRef = useRef<HTMLInputElement>(null);\n  return (\n    <button ref={ref} type="button">\n      {label}\n      <input ref={inputRef} />\n    </button>\n  );\n};\n',
+    'import { type Ref, useRef } from \'react\';\n\ntype ButtonProps = Readonly<{ label: string; ref: Ref<HTMLButtonElement> }>;\nexport function Button({ label, ref }: ButtonProps): React.JSX.Element {\n  const inputRef = useRef<HTMLInputElement>(null);\n  return (\n    <button ref={ref} type="button">\n      {label}\n      <input ref={inputRef} />\n    </button>\n  );\n}\n',
     [],
   ],
   'react/card-props.ts': [
@@ -130,7 +142,7 @@ write(directory, {
   'described.js': '/* oxlint-disable -- reason */\nexport const value = 1;\n',
   'directives.js': directives,
   'dividers.js': dividers,
-  'instrumentation.js': 'export async function register() {\n  return 1;\n}\n',
+  'instrumentation.js': 'export const register = async () => 1;\n',
   'narrow/dividers.js': dividers,
   'next.config.js': 'export const extra = 1;\nexport default {};\n',
   'own-line.js':
@@ -147,19 +159,19 @@ write(directory, {
 /** per linted file, whether each code (or code prefix) reports there; each file must report something, so no negative holds vacuously */
 const expected = {
   // Next route handlers may be separate named exports
-  'app/api/route.ts': { 'import(group-exports)': false },
+  'app/api/route.ts': { 'eslint(func-style)': false, 'import(group-exports)': false },
   // an image convention default-exports the image beside its alt and size
   'app/opengraph-image.ts': { 'import(group-exports)': false, 'import(no-default-export)': false },
   // a consumer `**/*.tsx` override comes last, so it beats the base's Next exemptions
   'app/page.tsx': { 'import(no-default-export)': true, 'unicorn(filename-case)': true },
   'directives.js': {},
-  // Next's register() may be async without awaiting
-  'instrumentation.js': { 'eslint(require-await)': false },
+  // Next's register() may be async without awaiting, and is a declaration
+  'instrumentation.js': { 'eslint(func-style)': true, 'eslint(require-await)': false },
   // root tooling configs export only a default; nested ones are app code
   'next.config.js': { 'import(no-default-export)': false, 'import(no-named-export)': true },
   'oxlint.config.ts': { 'import(no-named-export)': true },
   // Next 16's proxy exports its config beside the function
-  'proxy.ts': { 'import(group-exports)': false },
+  'proxy.ts': { 'eslint(func-style)': false, 'import(group-exports)': false },
   // TS files run the typed require-await only
   'src/later.ts': { 'eslint(require-await)': false },
   'src/plain.js': {
@@ -255,7 +267,7 @@ test.each([
 
 // only the rules under test: the fixtures trip unrelated ones (import/no-nodejs-modules among them)
 const targetRules = new Set(Object.values(targeted).flatMap(([, codes]) => codes));
-test("one import statement per module, a type-only name inline; JSX at most 7 deep; React's and Next's names are no abbreviations; a lone top-level function has no statement ceiling", () => {
+test("one import statement per module, a type-only name inline; JSX at most 7 deep; a JSX file's functions are declarations, a segment's named exports may be expressions; React's and Next's names are no abbreviations; a lone top-level function has no statement ceiling", () => {
   expect(
     Object.fromEntries(
       Object.keys(targeted).map((file) => [
