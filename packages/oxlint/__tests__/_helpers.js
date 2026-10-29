@@ -32,6 +32,35 @@ const write = (root, files) => {
   }
 };
 
+/** a shared config wrapping the base, as a consumer's oxlint.config.js loads it */
+const wrapper = `import { defineConfig } from '${join(import.meta.dirname, '..', 'index.js')}';
+export default (config) => defineConfig(config);`;
+
+/**
+the config at `path` below cwd, built through the wrapper with `own`; cwd sits one directory below `files`, so detection has to walk up
+@param {Record<string, unknown>} files
+@param {Record<string, unknown>} [own]
+@param {string} [path]
+@returns {Promise<import('oxlint').OxlintConfig>}
+*/
+const within = async (files, own, path = 'oxlint.config.js') => {
+  const directory = mkdtempSync(join(tmpdir(), 'oxlint-define-'));
+  const cwd = process.cwd();
+  write(directory, {
+    [`nested/${path}`]: `import wrap from ${JSON.stringify(join(directory, 'nested', 'wrapper.js'))};\nexport default wrap(${JSON.stringify(own)});\n`,
+    'nested/wrapper.js': wrapper,
+    ...files,
+  });
+  try {
+    process.chdir(join(directory, 'nested'));
+    const { default: built } = await import(join(process.cwd(), path));
+    return built;
+  } finally {
+    process.chdir(cwd);
+    rmSync(directory, { force: true, recursive: true });
+  }
+};
+
 /**
 runs oxlint in `cwd` for a JSON report and parses it, throwing with oxlint's own output when it is not JSON
 @param {string} cwd
@@ -119,6 +148,7 @@ export {
   ruleNames,
   scratch,
   spawnOxlint,
+  within,
   write,
 };
 export { off } from '../index.js';

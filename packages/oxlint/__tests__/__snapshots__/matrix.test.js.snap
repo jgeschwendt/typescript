@@ -1,0 +1,2100 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`typescript / a.ts in full 1`] = `
+"(env): {"node":true}
+(globals): {}
+(plugins): ["eslint","import","oxc","react","typescript","unicorn"]
+accessor-pairs: error
+array-callback-return: error
+arrow-body-style: error
+block-scoped-var: error
+capitalized-comments: off
+class-methods-use-this: error
+comments/divider: error [{"width":100}]
+complexity: error
+constructor-super: error
+curly: error ["all"]
+default-case: error
+default-case-last: error
+default-param-last: error
+eqeqeq: error
+eslint-js/camelcase: error
+eslint-js/consistent-return: off
+eslint-js/consistent-this: error
+eslint-js/dot-notation: off
+eslint-js/no-dupe-args: error
+eslint-js/no-invalid-this: off
+eslint-js/no-octal: error
+eslint-js/no-octal-escape: error
+eslint-js/no-restricted-syntax: error
+eslint-js/no-undef-init: error
+eslint-js/require-atomic-updates: error
+eslint-js/strict: error
+for-direction: error
+func-name-matching: error
+func-names: error
+func-style: error
+getter-return: error
+grouped-accessor-pairs: error
+guard-for-in: error
+id-denylist: error
+id-length: error [{"checkGeneric":false}]
+id-match: error
+import-js/no-deprecated: error
+import-js/no-extraneous-dependencies: error
+import-js/no-import-module-exports: error
+import-js/no-internal-modules: error
+import-js/no-relative-packages: error
+import-js/no-restricted-paths: error
+import-js/no-unresolved: off
+import-js/no-useless-path-segments: error
+import/consistent-type-specifier-style: off
+import/default: error
+import/export: warn
+import/exports-last: error
+import/extensions: off
+import/first: error
+import/group-exports: error
+import/max-dependencies: error
+import/named: warn
+import/namespace: error
+import/newline-after-import: error
+import/no-absolute-path: error
+import/no-amd: error
+import/no-anonymous-default-export: error
+import/no-commonjs: error
+import/no-cycle: error
+import/no-default-export: error
+import/no-duplicates: error [{"preferInline":true}]
+import/no-dynamic-require: error
+import/no-empty-named-blocks: error
+import/no-mutable-exports: error
+import/no-named-as-default: error
+import/no-named-as-default-member: error
+import/no-named-default: error
+import/no-named-export: off
+import/no-namespace: error
+import/no-nodejs-modules: error
+import/no-relative-parent-imports: error
+import/no-self-import: error
+import/no-unassigned-import: error
+import/no-webpack-loader-syntax: error
+import/prefer-default-export: off
+import/unambiguous: error
+init-declarations: error
+inline-config/no-directives: error
+logical-assignment-operators: error
+max-classes-per-file: error
+max-depth: error
+max-lines: error [{"max":2000,"skipBlankLines":true,"skipComments":true}]
+max-lines-per-function: off
+max-nested-callbacks: error
+max-params: error
+max-statements: error [{},{"ignoreTopLevelFunctions":true}]
+new-cap: error
+no-alert: error
+no-array-constructor: error
+no-async-promise-executor: error
+no-await-in-loop: error
+no-bitwise: error
+no-caller: error
+no-case-declarations: error
+no-class-assign: error
+no-compare-neg-zero: error
+no-cond-assign: error
+no-console: error
+no-const-assign: error
+no-constant-binary-expression: error
+no-constant-condition: error
+no-constructor-return: error
+no-continue: off
+no-control-regex: error
+no-debugger: error
+no-delete-var: error
+no-div-regex: error
+no-dupe-class-members: error
+no-dupe-else-if: error
+no-dupe-keys: error
+no-duplicate-case: error
+no-duplicate-imports: error
+no-else-return: error
+no-empty: error
+no-empty-character-class: error
+no-empty-function: error
+no-empty-pattern: error
+no-empty-static-block: error
+no-eq-null: error
+no-eval: error
+no-ex-assign: error
+no-extend-native: error
+no-extra-bind: error
+no-extra-boolean-cast: error
+no-extra-label: error
+no-fallthrough: error
+no-func-assign: error
+no-global-assign: error
+no-implicit-coercion: error
+no-implicit-globals: error
+no-implied-eval: off
+no-import-assign: error
+no-inline-comments: error
+no-inner-declarations: error ["functions",{"blockScopedFunctions":"allow"}]
+no-invalid-regexp: error
+no-irregular-whitespace: error [{"skipComments":false,"skipJSXText":false,"skipRegExps":false,"skipStrings":true,"skipTemplates":false}]
+no-iterator: error
+no-label-var: error
+no-labels: error
+no-lone-blocks: error
+no-lonely-if: error
+no-loop-func: error
+no-loss-of-precision: error
+no-magic-numbers: error [{"detectObjects":true,"enforceConst":true,"ignore":[-1,0,1,2],"ignoreArrayIndexes":false,"ignoreClassFieldInitialValues":false,"ignoreDefaultValues":false,"ignoreEnums":true,"ignoreNumericLiteralTypes":true,"ignoreReadonlyClassProperties":false,"ignoreTypeIndexes":false}]
+no-misleading-character-class: error
+no-multi-assign: error
+no-multi-str: error
+no-negated-condition: error
+no-nested-ternary: error
+no-new: error
+no-new-func: error
+no-new-native-nonconstructor: error
+no-new-wrappers: error
+no-nonoctal-decimal-escape: error
+no-obj-calls: error
+no-object-constructor: error
+no-param-reassign: error
+no-plusplus: error
+no-promise-executor-return: error
+no-proto: error
+no-prototype-builtins: error
+no-redeclare: error
+no-regex-spaces: error
+no-restricted-exports: warn
+no-restricted-globals: error
+no-restricted-imports: error
+no-restricted-properties: error
+no-return-assign: error
+no-script-url: error
+no-self-assign: error
+no-self-compare: error
+no-sequences: error
+no-setter-return: error
+no-shadow: error
+no-shadow-restricted-names: error [{"reportGlobalThis":false}]
+no-sparse-arrays: error
+no-template-curly-in-string: error
+no-ternary: off
+no-this-before-super: error
+no-throw-literal: error
+no-unassigned-vars: error
+no-undef: warn
+no-undefined: off
+no-underscore-dangle: error
+no-unexpected-multiline: off
+no-unmodified-loop-condition: error
+no-unneeded-ternary: error
+no-unreachable: error
+no-unreachable-loop: warn
+no-unsafe-finally: error
+no-unsafe-negation: error
+no-unsafe-optional-chaining: error
+no-unused-expressions: error
+no-unused-labels: error
+no-unused-private-class-members: error
+no-unused-vars: error [{"args":"after-used","caughtErrors":"all","ignoreRestSiblings":false,"reportVarsOnlyUsedAsTypes":true,"vars":"all"}]
+no-use-before-define: error
+no-useless-assignment: warn
+no-useless-backreference: error
+no-useless-call: error
+no-useless-catch: error
+no-useless-computed-key: error
+no-useless-concat: error
+no-useless-constructor: error
+no-useless-escape: error
+no-useless-rename: error
+no-useless-return: error
+no-var: error
+no-void: error [{"allowAsStatement":true}]
+no-warning-comments: error
+no-with: error
+object-shorthand: error
+one-var: error ["never"]
+operator-assignment: error
+oxc/approx-constant: error
+oxc/bad-array-method-on-arguments: error
+oxc/bad-bitwise-operator: error
+oxc/bad-char-at-comparison: error
+oxc/bad-comparison-sequence: error
+oxc/bad-match-all-arg: error
+oxc/bad-min-max-func: error
+oxc/bad-object-literal-comparison: error
+oxc/bad-replace-all-arg: error
+oxc/branches-sharing-code: error
+oxc/const-comparisons: error
+oxc/double-comparisons: error
+oxc/erasing-op: error
+oxc/misrefactored-assign-op: error
+oxc/missing-throw: error
+oxc/no-accumulating-spread: error
+oxc/no-async-await: off
+oxc/no-async-endpoint-handlers: error
+oxc/no-barrel-file: error
+oxc/no-const-enum: error
+oxc/no-map-spread: error
+oxc/no-optional-chaining: off
+oxc/no-rest-spread-properties: off
+oxc/no-this-in-exported-function: error
+oxc/number-arg-out-of-range: error
+oxc/only-used-in-recursion: error
+oxc/uninvoked-array-callback: error
+prefer-arrow-callback: error
+prefer-const: error
+prefer-destructuring: error
+prefer-exponentiation-operator: error
+prefer-named-capture-group: error
+prefer-numeric-literals: error
+prefer-object-has-own: error
+prefer-object-spread: error
+prefer-promise-reject-errors: off
+prefer-regex-literals: error
+prefer-rest-params: error
+prefer-spread: error
+prefer-template: error
+preserve-caught-error: error
+radix: error ["as-needed"]
+react-js/boolean-prop-naming: error
+react-js/default-props-match-prop-types: error
+react-js/destructuring-assignment: error
+react-js/forbid-foreign-prop-types: error
+react-js/forbid-prop-types: error
+react-js/jsx-no-bind: error [{"ignoreDOMComponents":true}]
+react-js/jsx-no-leaked-render: error
+react-js/jsx-sort-props: error
+react-js/no-access-state-in-setstate: error
+react-js/no-adjacent-inline-elements: error
+react-js/no-arrow-function-lifecycle: error
+react-js/no-deprecated: error
+react-js/no-invalid-html-attribute: error
+react-js/no-typos: error
+react-js/no-unused-class-component-methods: error
+react-js/no-unused-prop-types: error
+react-js/no-unused-state: error
+react-js/prefer-exact-props: error
+react-js/prefer-read-only-props: error
+react-js/prefer-stateless-function: error
+react-js/prop-types: error
+react-js/require-default-props: error [{"functions":"defaultArguments"}]
+react-js/require-optimization: error
+react-js/sort-comp: error
+react-js/sort-default-props: error
+react-js/sort-prop-types: error
+react-js/static-property-placement: error
+react/button-has-type: error
+react/capitalized-calls: error
+react/checked-requires-onchange-or-readonly: error
+react/display-name: error
+react/error-boundaries: error
+react/exhaustive-deps: error
+react/exhaustive-effect-dependencies: error
+react/forbid-component-props: error
+react/forbid-dom-props: error
+react/forbid-elements: error
+react/forward-ref-uses-ref: error
+react/function-component-definition: off
+react/globals: error
+react/hook-use-state: error
+react/hooks: error
+react/iframe-missing-sandbox: error
+react/immutability: error
+react/incompatible-library: error
+react/invariant: error
+react/jsx-boolean-value: error
+react/jsx-curly-brace-presence: error [{"children":"always","propElementValues":"always","props":"never"}]
+react/jsx-filename-extension: error [{"extensions":[".jsx",".tsx"]}]
+react/jsx-fragments: error
+react/jsx-handler-names: error
+react/jsx-key: error
+react/jsx-max-depth: error [{"max":7}]
+react/jsx-no-comment-textnodes: error
+react/jsx-no-constructed-context-values: error
+react/jsx-no-duplicate-props: error
+react/jsx-no-literals: error
+react/jsx-no-script-url: error
+react/jsx-no-target-blank: error
+react/jsx-no-undef: error
+react/jsx-no-useless-fragment: error
+react/jsx-pascal-case: error
+react/jsx-props-no-spread-multi: error
+react/jsx-props-no-spreading: error
+react/memo-dependencies: error
+react/no-array-index-key: error
+react/no-children-prop: error
+react/no-clone-element: error
+react/no-danger: error
+react/no-danger-with-children: error
+react/no-deriving-state-in-effects: error
+react/no-did-mount-set-state: error
+react/no-did-update-set-state: error
+react/no-direct-mutation-state: error
+react/no-find-dom-node: error
+react/no-is-mounted: error
+react/no-multi-comp: error
+react/no-namespace: error
+react/no-object-type-as-default-prop: error
+react/no-react-children: error
+react/no-redundant-should-component-update: error
+react/no-render-return-value: error
+react/no-set-state: error
+react/no-string-refs: error
+react/no-this-in-sfc: error
+react/no-unescaped-entities: error
+react/no-unknown-property: error
+react/no-unsafe: error
+react/no-unstable-nested-components: error
+react/no-will-update-set-state: error
+react/only-export-components: error
+react/prefer-es6-class: error
+react/prefer-function-component: error
+react/preserve-manual-memoization: error
+react/purity: error
+react/react-in-jsx-scope: off
+react/refs: error
+react/require-render-return: warn
+react/rule-suppression: error
+react/rules-of-hooks: error
+react/self-closing-comp: error
+react/set-state-in-effect: error
+react/set-state-in-render: error
+react/state-in-constructor: error
+react/static-components: error
+react/style-prop-object: error
+react/syntax: error
+react/todo: off
+react/unsupported-syntax: error
+react/use-memo: error
+react/void-dom-elements-no-children: error
+react/void-use-memo: error
+require-await: off
+require-unicode-regexp: error
+require-yield: error
+sort-imports: error [{"ignoreDeclarationSort":true}]
+sort-keys: error ["asc",{"allowLineSeparatedGroups":true,"natural":true}]
+sort-vars: error
+symbol-description: error
+types/prefer-readonly-generic: error
+typescript-js/member-ordering: error [{"default":{"memberTypes":["signature","call-signature","static-field","public-field","protected-field","private-field","#private-field","static-initialization","constructor","static-method",["get","set","accessor","public-method","protected-method"],["private-method","#private-method"]]}}]
+typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["PascalCase"],"selector":"enumMember"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","UPPER_CASE"],"selector":"variable"}]
+typescript-js/no-invalid-this: error
+typescript/adjacent-overload-signatures: error
+typescript/array-type: error
+typescript/await-thenable: error
+typescript/ban-ts-comment: error
+typescript/ban-tslint-comment: error
+typescript/ban-types: off
+typescript/class-literal-property-style: error
+typescript/consistent-generic-constructors: error
+typescript/consistent-indexed-object-style: error
+typescript/consistent-return: error
+typescript/consistent-type-assertions: error
+typescript/consistent-type-definitions: error ["type"]
+typescript/consistent-type-exports: error
+typescript/consistent-type-imports: error [{"fixStyle":"inline-type-imports"}]
+typescript/dot-notation: error
+typescript/explicit-function-return-type: error
+typescript/explicit-member-accessibility: error
+typescript/explicit-module-boundary-types: error
+typescript/method-signature-style: error
+typescript/no-array-delete: error
+typescript/no-base-to-string: error
+typescript/no-confusing-non-null-assertion: error
+typescript/no-confusing-void-expression: error
+typescript/no-deprecated: error
+typescript/no-duplicate-enum-values: error
+typescript/no-duplicate-type-constituents: error
+typescript/no-dynamic-delete: error
+typescript/no-empty-interface: off
+typescript/no-empty-object-type: error
+typescript/no-explicit-any: error
+typescript/no-extra-non-null-assertion: error
+typescript/no-extraneous-class: error
+typescript/no-floating-promises: error
+typescript/no-for-in-array: error
+typescript/no-generated-empty-object-type: error
+typescript/no-implied-eval: error
+typescript/no-import-type-side-effects: error
+typescript/no-inferrable-types: error
+typescript/no-invalid-void-type: error
+typescript/no-meaningless-void-operator: error
+typescript/no-misused-new: error
+typescript/no-misused-promises: error
+typescript/no-misused-spread: error
+typescript/no-mixed-enums: error
+typescript/no-namespace: error
+typescript/no-non-null-asserted-nullish-coalescing: error
+typescript/no-non-null-asserted-optional-chain: error
+typescript/no-non-null-assertion: error
+typescript/no-redundant-type-constituents: error
+typescript/no-require-imports: error
+typescript/no-restricted-types: error
+typescript/no-this-alias: error
+typescript/no-unnecessary-boolean-literal-compare: error
+typescript/no-unnecessary-condition: warn
+typescript/no-unnecessary-parameter-property-assignment: error
+typescript/no-unnecessary-qualifier: error
+typescript/no-unnecessary-template-expression: error
+typescript/no-unnecessary-type-arguments: error
+typescript/no-unnecessary-type-assertion: error
+typescript/no-unnecessary-type-constraint: error
+typescript/no-unnecessary-type-conversion: error
+typescript/no-unnecessary-type-parameters: error
+typescript/no-unsafe-argument: error
+typescript/no-unsafe-assignment: error
+typescript/no-unsafe-call: error
+typescript/no-unsafe-declaration-merging: error
+typescript/no-unsafe-enum-assignment: error
+typescript/no-unsafe-enum-comparison: error
+typescript/no-unsafe-function-type: error
+typescript/no-unsafe-member-access: error
+typescript/no-unsafe-return: error
+typescript/no-unsafe-type-assertion: error
+typescript/no-unsafe-unary-minus: error
+typescript/no-useless-default-assignment: error
+typescript/no-useless-empty-export: error
+typescript/no-var-requires: off
+typescript/no-wrapper-object-types: error
+typescript/non-nullable-type-assertion-style: error
+typescript/only-throw-error: error
+typescript/parameter-properties: error
+typescript/prefer-as-const: error
+typescript/prefer-enum-initializers: error
+typescript/prefer-find: error
+typescript/prefer-for-of: error
+typescript/prefer-function-type: error
+typescript/prefer-includes: error
+typescript/prefer-literal-enum-member: error
+typescript/prefer-namespace-keyword: error
+typescript/prefer-nullish-coalescing: error
+typescript/prefer-optional-chain: warn
+typescript/prefer-promise-reject-errors: error
+typescript/prefer-readonly: error
+typescript/prefer-readonly-parameter-types: warn
+typescript/prefer-reduce-type-parameter: error
+typescript/prefer-regexp-exec: error
+typescript/prefer-return-this-type: error
+typescript/prefer-string-starts-ends-with: error
+typescript/prefer-ts-expect-error: off
+typescript/promise-function-async: error
+typescript/related-getter-setter-pairs: error
+typescript/require-array-sort-compare: error
+typescript/require-await: error
+typescript/restrict-plus-operands: error
+typescript/restrict-template-expressions: error
+typescript/return-await: error
+typescript/strict-boolean-expressions: error
+typescript/strict-void-return: error
+typescript/switch-exhaustiveness-check: error
+typescript/triple-slash-reference: error
+typescript/unbound-method: error
+typescript/unified-signatures: error
+typescript/use-unknown-in-catch-callback-variable: error
+unicode-bom: error
+unicorn-js/better-dom-traversing: error
+unicorn-js/class-reference-in-static-methods: error
+unicorn-js/comment-content: error
+unicorn-js/consistent-boolean-name: error
+unicorn-js/consistent-class-member-order: error [{"order":["static-field","public-field","private-field","static-block","constructor","static-method","public-method","private-method"]}]
+unicorn-js/consistent-compound-words: error
+unicorn-js/consistent-conditional-object-spread: error
+unicorn-js/consistent-destructuring: error
+unicorn-js/consistent-export-decorator-position: error
+unicorn-js/consistent-function-style: error
+unicorn-js/consistent-json-file-read: error
+unicorn-js/consistent-optional-chaining: error
+unicorn-js/consistent-tuple-labels: error
+unicorn-js/default-export-style: error
+unicorn-js/dom-node-dataset: error
+unicorn-js/expiring-todo-comments: error [{"checkDates":true}]
+unicorn-js/id-match: error
+unicorn-js/isolated-functions: error
+unicorn-js/iteration-fallback-style: error
+unicorn-js/logical-assignment-operators: error
+unicorn-js/name-replacements: error
+unicorn-js/no-accidental-bitwise-operator: error
+unicorn-js/no-array-concat-in-loop: error
+unicorn-js/no-array-from-fill: error
+unicorn-js/no-array-front-mutation: error
+unicorn-js/no-array-sort-for-min-max: error
+unicorn-js/no-array-splice: error
+unicorn-js/no-asterisk-prefix-in-documentation-comments: error
+unicorn-js/no-async-iterator-callback: error
+unicorn-js/no-async-promise-finally: error
+unicorn-js/no-barrel-files: error
+unicorn-js/no-blob-to-file: error
+unicorn-js/no-boolean-sort-comparator: error
+unicorn-js/no-break-in-nested-loop: error
+unicorn-js/no-canvas-to-image: error
+unicorn-js/no-chained-comparison: error
+unicorn-js/no-collection-bracket-access: error
+unicorn-js/no-computed-property-existence-check: error
+unicorn-js/no-conflicting-constraints: error
+unicorn-js/no-confusing-array-splice: error
+unicorn-js/no-constant-zero-expression: error
+unicorn-js/no-declarations-before-early-exit: error
+unicorn-js/no-double-comparison: error
+unicorn-js/no-duplicate-if-branches: error
+unicorn-js/no-duplicate-logical-operands: error
+unicorn-js/no-duplicate-loops: error
+unicorn-js/no-duplicate-set-values: error
+unicorn-js/no-error-property-assignment: error
+unicorn-js/no-exports-in-scripts: error
+unicorn-js/no-for-each: error
+unicorn-js/no-for-loop: error
+unicorn-js/no-global-object-property-assignment: error
+unicorn-js/no-impossible-length-comparison: error
+unicorn-js/no-incomplete-accessor-override: error
+unicorn-js/no-incorrect-query-selector: error
+unicorn-js/no-incorrect-template-string-interpolation: error
+unicorn-js/no-ineffective-csp-directives: error
+unicorn-js/no-invalid-argument-count: error
+unicorn-js/no-invalid-boolean-attribute-value: error
+unicorn-js/no-invalid-character-comparison: error
+unicorn-js/no-invalid-dom-token: error
+unicorn-js/no-invalid-file-input-accept: error
+unicorn-js/no-invalid-integrity: error
+unicorn-js/no-invalid-intl-options: error
+unicorn-js/no-invalid-property-descriptor: error
+unicorn-js/no-invalid-response-options: error
+unicorn-js/no-invalid-style-set-property: error
+unicorn-js/no-invalid-temporal-arithmetic: error
+unicorn-js/no-invalid-url-protocol-comparison: error
+unicorn-js/no-invalid-well-known-symbol-methods: error
+unicorn-js/no-keyword-prefix: error
+unicorn-js/no-late-current-target-access: error
+unicorn-js/no-late-event-control: error
+unicorn-js/no-leading-empty-lines: error
+unicorn-js/no-loop-iterable-mutation: error
+unicorn-js/no-manually-wrapped-comments: error
+unicorn-js/no-mismatched-map-key: error
+unicorn-js/no-misrefactored-assignment: error
+unicorn-js/no-missing-local-resource: error
+unicorn-js/no-multiple-promise-resolver-calls: error
+unicorn-js/no-named-default: error
+unicorn-js/no-negated-array-predicate: error
+unicorn-js/no-negated-comparison: error
+unicorn-js/no-nonstandard-builtin-properties: error
+unicorn-js/no-object-methods-with-collections: error
+unicorn-js/no-optional-chaining-on-undeclared-variable: error
+unicorn-js/no-prevent-default-in-passive-listener: error
+unicorn-js/no-redundant-comparison: error
+unicorn-js/no-repeated-call-wrappers: error
+unicorn-js/no-return-array-push: error
+unicorn-js/no-selector-as-dom-name: error
+unicorn-js/no-shorthand-property-overrides: error
+unicorn-js/no-subtraction-comparison: error
+unicorn-js/no-this-outside-of-class: error
+unicorn-js/no-top-level-assignment-in-function: error
+unicorn-js/no-top-level-side-effects: error
+unicorn-js/no-transition-all: error
+unicorn-js/no-uncalled-method: error
+unicorn-js/no-undeclared-class-members: error
+unicorn-js/no-unnecessary-array-flat-map: error
+unicorn-js/no-unnecessary-boolean-comparison: error
+unicorn-js/no-unnecessary-default-arguments: error
+unicorn-js/no-unnecessary-fetch-options: error
+unicorn-js/no-unnecessary-global-this: error
+unicorn-js/no-unnecessary-nested-ternary: error
+unicorn-js/no-unnecessary-parameters: error
+unicorn-js/no-unnecessary-polyfills: error
+unicorn-js/no-unnecessary-splice: error
+unicorn-js/no-unnecessary-string-trim: error
+unicorn-js/no-unreadable-for-of-expression: error
+unicorn-js/no-unreadable-new-expression: error
+unicorn-js/no-unreadable-object-destructuring: error
+unicorn-js/no-unsafe-buffer-conversion: error
+unicorn-js/no-unsafe-dom-html: error
+unicorn-js/no-unsafe-json-serialization: error
+unicorn-js/no-unsafe-promise-all-settled-values: error
+unicorn-js/no-unsafe-property-key: error
+unicorn-js/no-unsafe-sqlite-interpolation: error
+unicorn-js/no-unsafe-string-replacement: error
+unicorn-js/no-unused-builtin-method-return: error
+unicorn-js/no-unused-iterator-helper: error
+unicorn-js/no-unused-properties: error
+unicorn-js/no-url-in-search-params: error
+unicorn-js/no-useless-boolean-cast: error
+unicorn-js/no-useless-coercion: error
+unicorn-js/no-useless-compound-assignment: error
+unicorn-js/no-useless-concat: error
+unicorn-js/no-useless-continue: error
+unicorn-js/no-useless-delete-check: error
+unicorn-js/no-useless-else: error
+unicorn-js/no-useless-logical-operand: error
+unicorn-js/no-useless-override: error
+unicorn-js/no-useless-re-export: error
+unicorn-js/no-useless-recursion: error
+unicorn-js/no-useless-set-construction: error
+unicorn-js/no-useless-template-literals: error
+unicorn-js/no-using-resource-escape: error
+unicorn-js/no-xor-as-exponentiation: error
+unicorn-js/operator-assignment: error
+unicorn-js/prefer-abort-signal-any: error
+unicorn-js/prefer-abort-signal-timeout: error
+unicorn-js/prefer-add-event-listener-options: error
+unicorn-js/prefer-aggregate-error: error
+unicorn-js/prefer-array-from-async: error
+unicorn-js/prefer-array-from-map: error
+unicorn-js/prefer-array-from-range: error
+unicorn-js/prefer-array-iterable-methods: error
+unicorn-js/prefer-array-last-methods: error
+unicorn-js/prefer-array-slice: error
+unicorn-js/prefer-await: error
+unicorn-js/prefer-block-statement-over-iife: error
+unicorn-js/prefer-boolean-return: error
+unicorn-js/prefer-combined-guards: error
+unicorn-js/prefer-continue: error
+unicorn-js/prefer-direct-iteration: error
+unicorn-js/prefer-dispose: error
+unicorn-js/prefer-dom-node-html-methods: error
+unicorn-js/prefer-dom-node-replace-children: error
+unicorn-js/prefer-early-return: error
+unicorn-js/prefer-else-if: error
+unicorn-js/prefer-error-is-error: error
+unicorn-js/prefer-escaped-irregular-whitespace: error
+unicorn-js/prefer-flat-math-min-max: error
+unicorn-js/prefer-get-or-insert-computed: error
+unicorn-js/prefer-global-number-constants: error
+unicorn-js/prefer-group-by: error
+unicorn-js/prefer-has-check: error
+unicorn-js/prefer-hoisting-branch-code: error
+unicorn-js/prefer-https: error
+unicorn-js/prefer-identifier-import-export-specifiers: error
+unicorn-js/prefer-includes-over-repeated-comparisons: error
+unicorn-js/prefer-iterable-in-constructor: error
+unicorn-js/prefer-iterator-concat: error
+unicorn-js/prefer-iterator-helpers: error
+unicorn-js/prefer-iterator-to-array: error
+unicorn-js/prefer-iterator-to-array-at-end: error
+unicorn-js/prefer-iterator-zip: error
+unicorn-js/prefer-json-import: error
+unicorn-js/prefer-literal-ascii: error
+unicorn-js/prefer-location-assign: error
+unicorn-js/prefer-map-from-entries: error
+unicorn-js/prefer-math-abs: error
+unicorn-js/prefer-math-constants: error
+unicorn-js/prefer-minimal-ternary: error
+unicorn-js/prefer-number-is-safe-integer: error
+unicorn-js/prefer-object-define-properties: error
+unicorn-js/prefer-object-destructuring-defaults: error
+unicorn-js/prefer-object-iterable-methods: error
+unicorn-js/prefer-observer-apis: error
+unicorn-js/prefer-path2d: error
+unicorn-js/prefer-private-class-fields: error
+unicorn-js/prefer-promise-static-methods: error
+unicorn-js/prefer-promise-try: error
+unicorn-js/prefer-promise-with-resolvers: error
+unicorn-js/prefer-queue-microtask: error
+unicorn-js/prefer-regexp-escape: error
+unicorn-js/prefer-scoped-selector: error
+unicorn-js/prefer-set-methods: error
+unicorn-js/prefer-short-arrow-method: error
+unicorn-js/prefer-short-escape-sequences: error
+unicorn-js/prefer-simple-condition-first: error
+unicorn-js/prefer-simple-sort-comparator: error
+unicorn-js/prefer-simplified-conditions: error
+unicorn-js/prefer-single-array-predicate: error
+unicorn-js/prefer-single-object-destructuring: error
+unicorn-js/prefer-single-replace: error
+unicorn-js/prefer-smaller-scope: error
+unicorn-js/prefer-split-limit: error
+unicorn-js/prefer-string-match-all: error
+unicorn-js/prefer-string-pad-start-end: error
+unicorn-js/prefer-string-repeat: error
+unicorn-js/prefer-switch: error
+unicorn-js/prefer-temporal: error
+unicorn-js/prefer-temporal-conversion: error
+unicorn-js/prefer-then-catch: error
+unicorn-js/prefer-toggle-attribute: error
+unicorn-js/prefer-type-literal-last: error
+unicorn-js/prefer-uint8array-base64: error
+unicorn-js/prefer-uint8array-hex: error
+unicorn-js/prefer-unary-minus: error
+unicorn-js/prefer-unicode-code-point-escapes: error
+unicorn-js/prefer-url-can-parse: error
+unicorn-js/prefer-url-href: error
+unicorn-js/prefer-url-search-parameters: error
+unicorn-js/prefer-while-loop-condition: error
+unicorn-js/require-array-sort-compare: error
+unicorn-js/require-css-escape: error
+unicorn-js/require-passive-events: error
+unicorn-js/require-proxy-trap-boolean-return: error
+unicorn-js/require-text-decoder-streaming: error
+unicorn-js/single-line-block-comment-style: error
+unicorn-js/string-content: error
+unicorn-js/template-indent: error
+unicorn-js/try-complexity: error
+unicorn/catch-error-name: error
+unicorn/consistent-assert: error
+unicorn/consistent-date-clone: error
+unicorn/consistent-empty-array-spread: error
+unicorn/consistent-existence-index-check: error
+unicorn/consistent-function-scoping: error
+unicorn/consistent-template-literal-escape: error
+unicorn/custom-error-definition: error
+unicorn/empty-brace-spaces: off
+unicorn/error-message: error
+unicorn/escape-case: error
+unicorn/explicit-length-check: error
+unicorn/explicit-timer-delay: error
+unicorn/filename-case: error
+unicorn/import-style: error
+unicorn/max-nested-calls: error
+unicorn/new-for-builtins: error
+unicorn/no-abusive-eslint-disable: error
+unicorn/no-accessor-recursion: error
+unicorn/no-anonymous-default-export: error
+unicorn/no-array-callback-reference: error
+unicorn/no-array-fill-with-reference-type: error
+unicorn/no-array-for-each: error
+unicorn/no-array-method-this-argument: error
+unicorn/no-array-reduce: error
+unicorn/no-array-reverse: error
+unicorn/no-array-sort: error
+unicorn/no-await-expression-member: error
+unicorn/no-await-in-promise-methods: error
+unicorn/no-confusing-array-with: error
+unicorn/no-console-spaces: error
+unicorn/no-document-cookie: error
+unicorn/no-empty-file: error
+unicorn/no-hex-escape: error
+unicorn/no-immediate-mutation: error
+unicorn/no-instanceof-array: error
+unicorn/no-instanceof-builtins: error
+unicorn/no-invalid-fetch-options: error
+unicorn/no-invalid-remove-event-listener: error
+unicorn/no-length-as-slice-end: error
+unicorn/no-lonely-if: error
+unicorn/no-magic-array-flat-depth: error
+unicorn/no-negated-condition: error
+unicorn/no-negation-in-equality-check: error
+unicorn/no-nested-ternary: off
+unicorn/no-new-array: error
+unicorn/no-new-buffer: error
+unicorn/no-null: error
+unicorn/no-object-as-default-parameter: error
+unicorn/no-process-exit: error
+unicorn/no-single-promise-in-promise-methods: error
+unicorn/no-static-only-class: error
+unicorn/no-thenable: error
+unicorn/no-this-assignment: error
+unicorn/no-typeof-undefined: error
+unicorn/no-unnecessary-array-flat-depth: error
+unicorn/no-unnecessary-array-splice-count: error
+unicorn/no-unnecessary-await: error
+unicorn/no-unnecessary-slice-end: error
+unicorn/no-unreadable-array-destructuring: error
+unicorn/no-unreadable-iife: error
+unicorn/no-useless-collection-argument: error
+unicorn/no-useless-error-capture-stack-trace: error
+unicorn/no-useless-fallback-in-spread: error
+unicorn/no-useless-iterator-to-array: warn
+unicorn/no-useless-length-check: error
+unicorn/no-useless-promise-resolve-reject: error
+unicorn/no-useless-spread: error
+unicorn/no-useless-switch-case: error
+unicorn/no-useless-undefined: error
+unicorn/no-zero-fractions: error
+unicorn/number-literal-case: off
+unicorn/numeric-separators-style: error
+unicorn/prefer-add-event-listener: error
+unicorn/prefer-array-find: error
+unicorn/prefer-array-flat: error
+unicorn/prefer-array-flat-map: error
+unicorn/prefer-array-index-of: error
+unicorn/prefer-array-some: error
+unicorn/prefer-at: error
+unicorn/prefer-bigint-literals: error
+unicorn/prefer-blob-reading-methods: error
+unicorn/prefer-class-fields: error
+unicorn/prefer-classlist-toggle: error
+unicorn/prefer-code-point: error
+unicorn/prefer-date-now: error
+unicorn/prefer-default-parameters: error
+unicorn/prefer-dom-node-append: error
+unicorn/prefer-dom-node-dataset: error
+unicorn/prefer-dom-node-remove: error
+unicorn/prefer-dom-node-text-content: error
+unicorn/prefer-event-target: error
+unicorn/prefer-export-from: error
+unicorn/prefer-global-this: error
+unicorn/prefer-import-meta-properties: error
+unicorn/prefer-includes: error
+unicorn/prefer-keyboard-event-key: error
+unicorn/prefer-logical-operator-over-ternary: error
+unicorn/prefer-math-min-max: error
+unicorn/prefer-math-trunc: error
+unicorn/prefer-modern-dom-apis: error
+unicorn/prefer-modern-math-apis: error
+unicorn/prefer-module: error
+unicorn/prefer-native-coercion-functions: error
+unicorn/prefer-negative-index: error
+unicorn/prefer-node-protocol: error
+unicorn/prefer-number-coercion: error
+unicorn/prefer-number-properties: error
+unicorn/prefer-object-from-entries: error
+unicorn/prefer-optional-catch-binding: error
+unicorn/prefer-prototype-methods: error
+unicorn/prefer-query-selector: error
+unicorn/prefer-reflect-apply: error
+unicorn/prefer-regexp-test: error
+unicorn/prefer-response-static-json: error
+unicorn/prefer-set-has: error
+unicorn/prefer-set-size: error
+unicorn/prefer-single-call: error
+unicorn/prefer-spread: error
+unicorn/prefer-string-raw: error
+unicorn/prefer-string-replace-all: error
+unicorn/prefer-string-slice: error
+unicorn/prefer-string-starts-ends-with: error
+unicorn/prefer-string-trim-start-end: error
+unicorn/prefer-structured-clone: error
+unicorn/prefer-ternary: error
+unicorn/prefer-top-level-await: error
+unicorn/prefer-type-error: error
+unicorn/relative-url-style: error
+unicorn/require-array-join-separator: error
+unicorn/require-module-attributes: error
+unicorn/require-module-specifiers: error
+unicorn/require-number-to-fixed-digits-argument: error
+unicorn/require-post-message-target-origin: error
+unicorn/switch-case-braces: error
+unicorn/switch-case-break-position: error
+unicorn/text-encoding-identifier-case: error
+unicorn/throw-new-error: error
+use-isnan: error
+valid-typeof: error
+vars-on-top: error
+yoda: error"
+`;
+
+exports[`bun / a.js, a.jsx, app/layout.jsx, app/page.js, app/route.js, instrumentation.js from typescript / a.js 1`] = `
+"(globals): {"Bun":"readonly"}
+import-js/no-unresolved: error [{"ignore":["^bun:"]}]"
+`;
+
+exports[`bun / a.test.ts from typescript / a.ts 1`] = `
+"(globals): {"Bun":"readonly"}
+eslint-js/consistent-return: error
+eslint-js/dot-notation: error
+eslint-js/no-invalid-this: error
+import-js/no-unresolved: error [{"ignore":["^bun:"]}]
+import/consistent-type-specifier-style: error
+import/extensions: error
+max-statements: off
+no-implied-eval: error
+prefer-promise-reject-errors: error
+require-await: error
+types/prefer-readonly-generic: unset
+typescript-js/member-ordering: unset
+typescript-js/naming-convention: unset
+typescript-js/no-invalid-this: unset"
+`;
+
+exports[`bun / a.ts, a.tsx, app/api/route.ts, app/error.tsx, app/icon.tsx, app/page.tsx, app/robots.ts, instrumentation.ts, mdx-components.tsx, proxy.ts from typescript / a.ts 1`] = `
+"(globals): {"Bun":"readonly"}
+eslint-js/consistent-return: error
+eslint-js/dot-notation: error
+eslint-js/no-invalid-this: error
+import-js/no-unresolved: error [{"ignore":["^bun:"]}]
+import/consistent-type-specifier-style: error
+import/extensions: error
+no-implied-eval: error
+prefer-promise-reject-errors: error
+require-await: error
+types/prefer-readonly-generic: unset
+typescript-js/member-ordering: unset
+typescript-js/naming-convention: unset
+typescript-js/no-invalid-this: unset"
+`;
+
+exports[`bun / eslint.config.js from typescript / a.js 1`] = `
+"(globals): {"Bun":"readonly"}
+import-js/no-unresolved: error [{"ignore":["^bun:"]}]
+import/no-default-export: off
+import/no-named-export: error
+import/no-nodejs-modules: off
+unicorn-js/no-top-level-side-effects: off"
+`;
+
+exports[`bun / next.config.ts from typescript / a.ts 1`] = `
+"(globals): {"Bun":"readonly"}
+eslint-js/consistent-return: error
+eslint-js/dot-notation: error
+eslint-js/no-invalid-this: error
+import-js/no-unresolved: error [{"ignore":["^bun:"]}]
+import/consistent-type-specifier-style: error
+import/extensions: error
+import/no-default-export: off
+import/no-named-export: error
+import/no-nodejs-modules: off
+no-implied-eval: error
+prefer-promise-reject-errors: error
+require-await: error
+types/prefer-readonly-generic: unset
+typescript-js/member-ordering: unset
+typescript-js/naming-convention: unset
+typescript-js/no-invalid-this: unset
+unicorn-js/no-top-level-side-effects: off"
+`;
+
+exports[`js / a.js, a.jsx, app/layout.jsx, app/page.js, app/route.js, instrumentation.js from typescript / a.js 1`] = `""`;
+
+exports[`js / a.test.ts from typescript / a.ts 1`] = `
+"eslint-js/consistent-return: error
+eslint-js/dot-notation: error
+eslint-js/no-invalid-this: error
+import-js/no-unresolved: error
+import/consistent-type-specifier-style: error
+import/extensions: error
+max-statements: off
+no-implied-eval: error
+prefer-promise-reject-errors: error
+require-await: error
+types/prefer-readonly-generic: unset
+typescript-js/member-ordering: unset
+typescript-js/naming-convention: unset
+typescript-js/no-invalid-this: unset"
+`;
+
+exports[`js / a.ts, a.tsx, app/api/route.ts, app/error.tsx, app/icon.tsx, app/page.tsx, app/robots.ts, instrumentation.ts, mdx-components.tsx, proxy.ts from typescript / a.ts 1`] = `
+"eslint-js/consistent-return: error
+eslint-js/dot-notation: error
+eslint-js/no-invalid-this: error
+import-js/no-unresolved: error
+import/consistent-type-specifier-style: error
+import/extensions: error
+no-implied-eval: error
+prefer-promise-reject-errors: error
+require-await: error
+types/prefer-readonly-generic: unset
+typescript-js/member-ordering: unset
+typescript-js/naming-convention: unset
+typescript-js/no-invalid-this: unset"
+`;
+
+exports[`js, typescript / eslint.config.js from typescript / a.js 1`] = `
+"import/no-default-export: off
+import/no-named-export: error
+import/no-nodejs-modules: off
+unicorn-js/no-top-level-side-effects: off"
+`;
+
+exports[`js / next.config.ts from typescript / a.ts 1`] = `
+"eslint-js/consistent-return: error
+eslint-js/dot-notation: error
+eslint-js/no-invalid-this: error
+import-js/no-unresolved: error
+import/consistent-type-specifier-style: error
+import/extensions: error
+import/no-default-export: off
+import/no-named-export: error
+import/no-nodejs-modules: off
+no-implied-eval: error
+prefer-promise-reject-errors: error
+require-await: error
+types/prefer-readonly-generic: unset
+typescript-js/member-ordering: unset
+typescript-js/naming-convention: unset
+typescript-js/no-invalid-this: unset
+unicorn-js/no-top-level-side-effects: off"
+`;
+
+exports[`typescript / a.js from typescript / a.ts 1`] = `
+"eslint-js/consistent-return: error
+eslint-js/dot-notation: error
+eslint-js/no-invalid-this: error
+import-js/no-unresolved: error
+import/consistent-type-specifier-style: error
+import/extensions: error
+no-implied-eval: error
+prefer-promise-reject-errors: error
+require-await: error
+types/prefer-readonly-generic: unset
+typescript-js/member-ordering: unset
+typescript-js/naming-convention: unset
+typescript-js/no-invalid-this: unset
+typescript/adjacent-overload-signatures: off
+typescript/array-type: off
+typescript/await-thenable: off
+typescript/ban-ts-comment: off
+typescript/ban-tslint-comment: off
+typescript/class-literal-property-style: off
+typescript/consistent-generic-constructors: off
+typescript/consistent-indexed-object-style: off
+typescript/consistent-return: off
+typescript/consistent-type-assertions: off
+typescript/consistent-type-definitions: off
+typescript/consistent-type-exports: off
+typescript/consistent-type-imports: off
+typescript/dot-notation: off
+typescript/explicit-function-return-type: off
+typescript/explicit-member-accessibility: off
+typescript/explicit-module-boundary-types: off
+typescript/method-signature-style: off
+typescript/no-array-delete: off
+typescript/no-base-to-string: off
+typescript/no-confusing-non-null-assertion: off
+typescript/no-confusing-void-expression: off
+typescript/no-deprecated: off
+typescript/no-duplicate-enum-values: off
+typescript/no-duplicate-type-constituents: off
+typescript/no-dynamic-delete: off
+typescript/no-empty-object-type: off
+typescript/no-explicit-any: off
+typescript/no-extra-non-null-assertion: off
+typescript/no-extraneous-class: off
+typescript/no-floating-promises: off
+typescript/no-for-in-array: off
+typescript/no-generated-empty-object-type: off
+typescript/no-implied-eval: off
+typescript/no-import-type-side-effects: off
+typescript/no-inferrable-types: off
+typescript/no-invalid-void-type: off
+typescript/no-meaningless-void-operator: off
+typescript/no-misused-new: off
+typescript/no-misused-promises: off
+typescript/no-misused-spread: off
+typescript/no-mixed-enums: off
+typescript/no-namespace: off
+typescript/no-non-null-asserted-nullish-coalescing: off
+typescript/no-non-null-asserted-optional-chain: off
+typescript/no-non-null-assertion: off
+typescript/no-redundant-type-constituents: off
+typescript/no-require-imports: off
+typescript/no-restricted-types: off
+typescript/no-this-alias: off
+typescript/no-unnecessary-boolean-literal-compare: off
+typescript/no-unnecessary-condition: off
+typescript/no-unnecessary-parameter-property-assignment: off
+typescript/no-unnecessary-qualifier: off
+typescript/no-unnecessary-template-expression: off
+typescript/no-unnecessary-type-arguments: off
+typescript/no-unnecessary-type-assertion: off
+typescript/no-unnecessary-type-constraint: off
+typescript/no-unnecessary-type-conversion: off
+typescript/no-unnecessary-type-parameters: off
+typescript/no-unsafe-argument: off
+typescript/no-unsafe-assignment: off
+typescript/no-unsafe-call: off
+typescript/no-unsafe-declaration-merging: off
+typescript/no-unsafe-enum-assignment: off
+typescript/no-unsafe-enum-comparison: off
+typescript/no-unsafe-function-type: off
+typescript/no-unsafe-member-access: off
+typescript/no-unsafe-return: off
+typescript/no-unsafe-type-assertion: off
+typescript/no-unsafe-unary-minus: off
+typescript/no-useless-default-assignment: off
+typescript/no-useless-empty-export: off
+typescript/no-wrapper-object-types: off
+typescript/non-nullable-type-assertion-style: off
+typescript/only-throw-error: off
+typescript/parameter-properties: off
+typescript/prefer-as-const: off
+typescript/prefer-enum-initializers: off
+typescript/prefer-find: off
+typescript/prefer-for-of: off
+typescript/prefer-function-type: off
+typescript/prefer-includes: off
+typescript/prefer-literal-enum-member: off
+typescript/prefer-namespace-keyword: off
+typescript/prefer-nullish-coalescing: off
+typescript/prefer-optional-chain: off
+typescript/prefer-promise-reject-errors: off
+typescript/prefer-readonly: off
+typescript/prefer-readonly-parameter-types: off
+typescript/prefer-reduce-type-parameter: off
+typescript/prefer-regexp-exec: off
+typescript/prefer-return-this-type: off
+typescript/prefer-string-starts-ends-with: off
+typescript/promise-function-async: off
+typescript/related-getter-setter-pairs: off
+typescript/require-array-sort-compare: off
+typescript/require-await: off
+typescript/restrict-plus-operands: off
+typescript/restrict-template-expressions: off
+typescript/return-await: off
+typescript/strict-boolean-expressions: off
+typescript/strict-void-return: off
+typescript/switch-exhaustiveness-check: off
+typescript/triple-slash-reference: off
+typescript/unbound-method: off
+typescript/unified-signatures: off
+typescript/use-unknown-in-catch-callback-variable: off"
+`;
+
+exports[`typescript / a.jsx, app/layout.jsx, app/page.js, app/route.js, instrumentation.js from typescript / a.js 1`] = `""`;
+
+exports[`typescript / a.test.ts from typescript / a.ts 1`] = `"max-statements: off"`;
+
+exports[`typescript / a.ts, a.tsx, app/api/route.ts, app/error.tsx, app/icon.tsx, app/page.tsx, app/robots.ts, instrumentation.ts, mdx-components.tsx, proxy.ts from typescript / a.ts 1`] = `""`;
+
+exports[`typescript / next.config.ts from typescript / a.ts 1`] = `
+"import/no-default-export: off
+import/no-named-export: error
+import/no-nodejs-modules: off
+unicorn-js/no-top-level-side-effects: off"
+`;
+
+exports[`typescript+react / a.js, app/page.js, app/route.js, instrumentation.js from typescript / a.js 1`] = `"unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false}}]"`;
+
+exports[`typescript+react / a.jsx, app/layout.jsx from typescript / a.js 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","jsx-a11y","react-perf"]
+func-style: error ["declaration"]
+jsx-a11y/alt-text: error
+jsx-a11y/anchor-ambiguous-text: error
+jsx-a11y/anchor-has-content: error
+jsx-a11y/anchor-is-valid: error
+jsx-a11y/aria-activedescendant-has-tabindex: error
+jsx-a11y/aria-props: error
+jsx-a11y/aria-proptypes: error
+jsx-a11y/aria-role: error
+jsx-a11y/aria-unsupported-elements: error
+jsx-a11y/autocomplete-valid: error
+jsx-a11y/click-events-have-key-events: error
+jsx-a11y/control-has-associated-label: error
+jsx-a11y/heading-has-content: error
+jsx-a11y/html-has-lang: error
+jsx-a11y/iframe-has-title: error
+jsx-a11y/img-redundant-alt: error
+jsx-a11y/interactive-supports-focus: error
+jsx-a11y/label-has-associated-control: error
+jsx-a11y/lang: error
+jsx-a11y/media-has-caption: error
+jsx-a11y/mouse-events-have-key-events: error
+jsx-a11y/no-access-key: error
+jsx-a11y/no-aria-hidden-on-focusable: error
+jsx-a11y/no-autofocus: error
+jsx-a11y/no-distracting-elements: error
+jsx-a11y/no-interactive-element-to-noninteractive-role: error
+jsx-a11y/no-noninteractive-element-interactions: error
+jsx-a11y/no-noninteractive-element-to-interactive-role: error
+jsx-a11y/no-noninteractive-tabindex: error
+jsx-a11y/no-redundant-roles: error
+jsx-a11y/no-static-element-interactions: error
+jsx-a11y/prefer-tag-over-role: error
+jsx-a11y/role-has-required-aria-props: error
+jsx-a11y/role-supports-aria-props: error
+jsx-a11y/scope: error
+jsx-a11y/tabindex-no-positive: error
+react-perf/jsx-no-jsx-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-array-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
+react/function-component-definition: error
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false}}]"
+`;
+
+exports[`typescript+react / a.test.ts from typescript / a.ts 1`] = `
+"max-statements: off
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false}}]"
+`;
+
+exports[`typescript+react / a.ts, app/api/route.ts, app/robots.ts, instrumentation.ts, proxy.ts from typescript / a.ts 1`] = `"unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false}}]"`;
+
+exports[`typescript+react / a.tsx, app/error.tsx, app/icon.tsx, app/page.tsx, mdx-components.tsx from typescript / a.ts 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","jsx-a11y","react-perf"]
+func-style: error ["declaration"]
+jsx-a11y/alt-text: error
+jsx-a11y/anchor-ambiguous-text: error
+jsx-a11y/anchor-has-content: error
+jsx-a11y/anchor-is-valid: error
+jsx-a11y/aria-activedescendant-has-tabindex: error
+jsx-a11y/aria-props: error
+jsx-a11y/aria-proptypes: error
+jsx-a11y/aria-role: error
+jsx-a11y/aria-unsupported-elements: error
+jsx-a11y/autocomplete-valid: error
+jsx-a11y/click-events-have-key-events: error
+jsx-a11y/control-has-associated-label: error
+jsx-a11y/heading-has-content: error
+jsx-a11y/html-has-lang: error
+jsx-a11y/iframe-has-title: error
+jsx-a11y/img-redundant-alt: error
+jsx-a11y/interactive-supports-focus: error
+jsx-a11y/label-has-associated-control: error
+jsx-a11y/lang: error
+jsx-a11y/media-has-caption: error
+jsx-a11y/mouse-events-have-key-events: error
+jsx-a11y/no-access-key: error
+jsx-a11y/no-aria-hidden-on-focusable: error
+jsx-a11y/no-autofocus: error
+jsx-a11y/no-distracting-elements: error
+jsx-a11y/no-interactive-element-to-noninteractive-role: error
+jsx-a11y/no-noninteractive-element-interactions: error
+jsx-a11y/no-noninteractive-element-to-interactive-role: error
+jsx-a11y/no-noninteractive-tabindex: error
+jsx-a11y/no-redundant-roles: error
+jsx-a11y/no-static-element-interactions: error
+jsx-a11y/prefer-tag-over-role: error
+jsx-a11y/role-has-required-aria-props: error
+jsx-a11y/role-supports-aria-props: error
+jsx-a11y/scope: error
+jsx-a11y/tabindex-no-positive: error
+react-perf/jsx-no-jsx-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-array-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
+react/function-component-definition: error
+typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["camelCase","PascalCase"],"selector":"function"},{"format":["camelCase","PascalCase"],"selector":"import"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralMethod"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","PascalCase"],"selector":"typeProperty"},{"format":["camelCase","PascalCase","UPPER_CASE"],"selector":"variable"}]
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false}}]"
+`;
+
+exports[`typescript+react / eslint.config.js from typescript / a.js 1`] = `
+"import/no-default-export: off
+import/no-named-export: error
+import/no-nodejs-modules: off
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false}}]
+unicorn-js/no-top-level-side-effects: off"
+`;
+
+exports[`typescript+react / next.config.ts from typescript / a.ts 1`] = `
+"import/no-default-export: off
+import/no-named-export: error
+import/no-nodejs-modules: off
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false}}]
+unicorn-js/no-top-level-side-effects: off"
+`;
+
+exports[`typescript+react+next / a.js from typescript / a.js 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","nextjs"]
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
+`;
+
+exports[`typescript+react+next / a.jsx from typescript / a.js 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","jsx-a11y","react-perf","nextjs"]
+func-style: error ["declaration"]
+jsx-a11y/alt-text: error
+jsx-a11y/anchor-ambiguous-text: error
+jsx-a11y/anchor-has-content: error
+jsx-a11y/anchor-is-valid: error
+jsx-a11y/aria-activedescendant-has-tabindex: error
+jsx-a11y/aria-props: error
+jsx-a11y/aria-proptypes: error
+jsx-a11y/aria-role: error
+jsx-a11y/aria-unsupported-elements: error
+jsx-a11y/autocomplete-valid: error
+jsx-a11y/click-events-have-key-events: error
+jsx-a11y/control-has-associated-label: error
+jsx-a11y/heading-has-content: error
+jsx-a11y/html-has-lang: error
+jsx-a11y/iframe-has-title: error
+jsx-a11y/img-redundant-alt: error
+jsx-a11y/interactive-supports-focus: error
+jsx-a11y/label-has-associated-control: error
+jsx-a11y/lang: error
+jsx-a11y/media-has-caption: error
+jsx-a11y/mouse-events-have-key-events: error
+jsx-a11y/no-access-key: error
+jsx-a11y/no-aria-hidden-on-focusable: error
+jsx-a11y/no-autofocus: error
+jsx-a11y/no-distracting-elements: error
+jsx-a11y/no-interactive-element-to-noninteractive-role: error
+jsx-a11y/no-noninteractive-element-interactions: error
+jsx-a11y/no-noninteractive-element-to-interactive-role: error
+jsx-a11y/no-noninteractive-tabindex: error
+jsx-a11y/no-redundant-roles: error
+jsx-a11y/no-static-element-interactions: error
+jsx-a11y/prefer-tag-over-role: error
+jsx-a11y/role-has-required-aria-props: error
+jsx-a11y/role-supports-aria-props: error
+jsx-a11y/scope: error
+jsx-a11y/tabindex-no-positive: error
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+react-perf/jsx-no-jsx-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-array-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
+react/function-component-definition: error
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
+`;
+
+exports[`typescript+react+next / a.test.ts from typescript / a.ts 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","nextjs"]
+max-statements: off
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
+`;
+
+exports[`typescript+react+next / a.ts from typescript / a.ts 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","nextjs"]
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
+`;
+
+exports[`typescript+react+next / a.tsx from typescript / a.ts 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","jsx-a11y","react-perf","nextjs"]
+func-style: error ["declaration"]
+jsx-a11y/alt-text: error
+jsx-a11y/anchor-ambiguous-text: error
+jsx-a11y/anchor-has-content: error
+jsx-a11y/anchor-is-valid: error
+jsx-a11y/aria-activedescendant-has-tabindex: error
+jsx-a11y/aria-props: error
+jsx-a11y/aria-proptypes: error
+jsx-a11y/aria-role: error
+jsx-a11y/aria-unsupported-elements: error
+jsx-a11y/autocomplete-valid: error
+jsx-a11y/click-events-have-key-events: error
+jsx-a11y/control-has-associated-label: error
+jsx-a11y/heading-has-content: error
+jsx-a11y/html-has-lang: error
+jsx-a11y/iframe-has-title: error
+jsx-a11y/img-redundant-alt: error
+jsx-a11y/interactive-supports-focus: error
+jsx-a11y/label-has-associated-control: error
+jsx-a11y/lang: error
+jsx-a11y/media-has-caption: error
+jsx-a11y/mouse-events-have-key-events: error
+jsx-a11y/no-access-key: error
+jsx-a11y/no-aria-hidden-on-focusable: error
+jsx-a11y/no-autofocus: error
+jsx-a11y/no-distracting-elements: error
+jsx-a11y/no-interactive-element-to-noninteractive-role: error
+jsx-a11y/no-noninteractive-element-interactions: error
+jsx-a11y/no-noninteractive-element-to-interactive-role: error
+jsx-a11y/no-noninteractive-tabindex: error
+jsx-a11y/no-redundant-roles: error
+jsx-a11y/no-static-element-interactions: error
+jsx-a11y/prefer-tag-over-role: error
+jsx-a11y/role-has-required-aria-props: error
+jsx-a11y/role-supports-aria-props: error
+jsx-a11y/scope: error
+jsx-a11y/tabindex-no-positive: error
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+react-perf/jsx-no-jsx-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-array-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
+react/function-component-definition: error
+typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["camelCase","PascalCase"],"selector":"function"},{"format":["camelCase","PascalCase"],"selector":"import"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralMethod"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","PascalCase"],"selector":"typeProperty"},{"format":["camelCase","PascalCase","UPPER_CASE"],"selector":"variable"}]
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
+`;
+
+exports[`typescript+react+next / app/api/route.ts from typescript / a.ts 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","nextjs"]
+func-style: error ["declaration"]
+import/group-exports: off
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["UPPER_CASE"],"selector":"function"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","UPPER_CASE"],"selector":"variable"}]
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
+`;
+
+exports[`typescript+react+next / app/error.tsx from typescript / a.ts 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","jsx-a11y","react-perf","nextjs"]
+func-style: error ["declaration",{"overrides":{"namedExports":"expression"}}]
+import/no-default-export: off
+jsx-a11y/alt-text: error
+jsx-a11y/anchor-ambiguous-text: error
+jsx-a11y/anchor-has-content: error
+jsx-a11y/anchor-is-valid: error
+jsx-a11y/aria-activedescendant-has-tabindex: error
+jsx-a11y/aria-props: error
+jsx-a11y/aria-proptypes: error
+jsx-a11y/aria-role: error
+jsx-a11y/aria-unsupported-elements: error
+jsx-a11y/autocomplete-valid: error
+jsx-a11y/click-events-have-key-events: error
+jsx-a11y/control-has-associated-label: error
+jsx-a11y/heading-has-content: error
+jsx-a11y/html-has-lang: error
+jsx-a11y/iframe-has-title: error
+jsx-a11y/img-redundant-alt: error
+jsx-a11y/interactive-supports-focus: error
+jsx-a11y/label-has-associated-control: error
+jsx-a11y/lang: error
+jsx-a11y/media-has-caption: error
+jsx-a11y/mouse-events-have-key-events: error
+jsx-a11y/no-access-key: error
+jsx-a11y/no-aria-hidden-on-focusable: error
+jsx-a11y/no-autofocus: error
+jsx-a11y/no-distracting-elements: error
+jsx-a11y/no-interactive-element-to-noninteractive-role: error
+jsx-a11y/no-noninteractive-element-interactions: error
+jsx-a11y/no-noninteractive-element-to-interactive-role: error
+jsx-a11y/no-noninteractive-tabindex: error
+jsx-a11y/no-redundant-roles: error
+jsx-a11y/no-static-element-interactions: error
+jsx-a11y/prefer-tag-over-role: error
+jsx-a11y/role-has-required-aria-props: error
+jsx-a11y/role-supports-aria-props: error
+jsx-a11y/scope: error
+jsx-a11y/tabindex-no-positive: error
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+react-perf/jsx-no-jsx-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-array-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
+react/function-component-definition: error
+react/only-export-components: error [{"allowExportNames":["dynamic","dynamicParams","experimental_ppr","fetchCache","generateMetadata","generateStaticParams","generateViewport","maxDuration","metadata","preferredRegion","revalidate","runtime","viewport"]}]
+typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["camelCase","PascalCase"],"selector":"function"},{"format":["camelCase","PascalCase"],"selector":"import"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralMethod"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","PascalCase"],"selector":"typeProperty"},{"format":["camelCase","PascalCase","UPPER_CASE"],"selector":"variable"}]
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]
+unicorn/filename-case: error [{"case":"kebabCase"}]"
+`;
+
+exports[`typescript+react+next / app/icon.tsx from typescript / a.ts 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","jsx-a11y","react-perf","nextjs"]
+func-style: error ["declaration"]
+import/group-exports: off
+import/no-default-export: off
+jsx-a11y/alt-text: error
+jsx-a11y/anchor-ambiguous-text: error
+jsx-a11y/anchor-has-content: error
+jsx-a11y/anchor-is-valid: error
+jsx-a11y/aria-activedescendant-has-tabindex: error
+jsx-a11y/aria-props: error
+jsx-a11y/aria-proptypes: error
+jsx-a11y/aria-role: error
+jsx-a11y/aria-unsupported-elements: error
+jsx-a11y/autocomplete-valid: error
+jsx-a11y/click-events-have-key-events: error
+jsx-a11y/control-has-associated-label: error
+jsx-a11y/heading-has-content: error
+jsx-a11y/html-has-lang: error
+jsx-a11y/iframe-has-title: error
+jsx-a11y/img-redundant-alt: error
+jsx-a11y/interactive-supports-focus: error
+jsx-a11y/label-has-associated-control: error
+jsx-a11y/lang: error
+jsx-a11y/media-has-caption: error
+jsx-a11y/mouse-events-have-key-events: error
+jsx-a11y/no-access-key: error
+jsx-a11y/no-aria-hidden-on-focusable: error
+jsx-a11y/no-autofocus: error
+jsx-a11y/no-distracting-elements: error
+jsx-a11y/no-interactive-element-to-noninteractive-role: error
+jsx-a11y/no-noninteractive-element-interactions: error
+jsx-a11y/no-noninteractive-element-to-interactive-role: error
+jsx-a11y/no-noninteractive-tabindex: error
+jsx-a11y/no-redundant-roles: error
+jsx-a11y/no-static-element-interactions: error
+jsx-a11y/prefer-tag-over-role: error
+jsx-a11y/role-has-required-aria-props: error
+jsx-a11y/role-supports-aria-props: error
+jsx-a11y/scope: error
+jsx-a11y/tabindex-no-positive: error
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+react-perf/jsx-no-jsx-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-array-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
+react/function-component-definition: error
+typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["camelCase","PascalCase"],"selector":"function"},{"format":["camelCase","PascalCase"],"selector":"import"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralMethod"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","PascalCase"],"selector":"typeProperty"},{"format":["camelCase","PascalCase","UPPER_CASE"],"selector":"variable"}]
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
+`;
+
+exports[`typescript+react+next / app/layout.jsx from typescript / a.js 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","jsx-a11y","react-perf","nextjs"]
+func-style: error ["declaration",{"overrides":{"namedExports":"expression"}}]
+import/group-exports: off
+import/no-default-export: off
+jsx-a11y/alt-text: error
+jsx-a11y/anchor-ambiguous-text: error
+jsx-a11y/anchor-has-content: error
+jsx-a11y/anchor-is-valid: error
+jsx-a11y/aria-activedescendant-has-tabindex: error
+jsx-a11y/aria-props: error
+jsx-a11y/aria-proptypes: error
+jsx-a11y/aria-role: error
+jsx-a11y/aria-unsupported-elements: error
+jsx-a11y/autocomplete-valid: error
+jsx-a11y/click-events-have-key-events: error
+jsx-a11y/control-has-associated-label: error
+jsx-a11y/heading-has-content: error
+jsx-a11y/html-has-lang: error
+jsx-a11y/iframe-has-title: error
+jsx-a11y/img-redundant-alt: error
+jsx-a11y/interactive-supports-focus: error
+jsx-a11y/label-has-associated-control: error
+jsx-a11y/lang: error
+jsx-a11y/media-has-caption: error
+jsx-a11y/mouse-events-have-key-events: error
+jsx-a11y/no-access-key: error
+jsx-a11y/no-aria-hidden-on-focusable: error
+jsx-a11y/no-autofocus: error
+jsx-a11y/no-distracting-elements: error
+jsx-a11y/no-interactive-element-to-noninteractive-role: error
+jsx-a11y/no-noninteractive-element-interactions: error
+jsx-a11y/no-noninteractive-element-to-interactive-role: error
+jsx-a11y/no-noninteractive-tabindex: error
+jsx-a11y/no-redundant-roles: error
+jsx-a11y/no-static-element-interactions: error
+jsx-a11y/prefer-tag-over-role: error
+jsx-a11y/role-has-required-aria-props: error
+jsx-a11y/role-supports-aria-props: error
+jsx-a11y/scope: error
+jsx-a11y/tabindex-no-positive: error
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+react-perf/jsx-no-jsx-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-array-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
+react/function-component-definition: error
+react/only-export-components: error [{"allowExportNames":["dynamic","dynamicParams","experimental_ppr","fetchCache","generateMetadata","generateStaticParams","generateViewport","maxDuration","metadata","preferredRegion","revalidate","runtime","viewport"]}]
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]
+unicorn/filename-case: error [{"case":"kebabCase"}]"
+`;
+
+exports[`typescript+react+next / app/page.js from typescript / a.js 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","nextjs"]
+import/group-exports: off
+import/no-default-export: off
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
+`;
+
+exports[`typescript+react+next / app/page.tsx from typescript / a.ts 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","jsx-a11y","react-perf","nextjs"]
+func-style: error ["declaration",{"overrides":{"namedExports":"expression"}}]
+import/group-exports: off
+import/no-default-export: off
+jsx-a11y/alt-text: error
+jsx-a11y/anchor-ambiguous-text: error
+jsx-a11y/anchor-has-content: error
+jsx-a11y/anchor-is-valid: error
+jsx-a11y/aria-activedescendant-has-tabindex: error
+jsx-a11y/aria-props: error
+jsx-a11y/aria-proptypes: error
+jsx-a11y/aria-role: error
+jsx-a11y/aria-unsupported-elements: error
+jsx-a11y/autocomplete-valid: error
+jsx-a11y/click-events-have-key-events: error
+jsx-a11y/control-has-associated-label: error
+jsx-a11y/heading-has-content: error
+jsx-a11y/html-has-lang: error
+jsx-a11y/iframe-has-title: error
+jsx-a11y/img-redundant-alt: error
+jsx-a11y/interactive-supports-focus: error
+jsx-a11y/label-has-associated-control: error
+jsx-a11y/lang: error
+jsx-a11y/media-has-caption: error
+jsx-a11y/mouse-events-have-key-events: error
+jsx-a11y/no-access-key: error
+jsx-a11y/no-aria-hidden-on-focusable: error
+jsx-a11y/no-autofocus: error
+jsx-a11y/no-distracting-elements: error
+jsx-a11y/no-interactive-element-to-noninteractive-role: error
+jsx-a11y/no-noninteractive-element-interactions: error
+jsx-a11y/no-noninteractive-element-to-interactive-role: error
+jsx-a11y/no-noninteractive-tabindex: error
+jsx-a11y/no-redundant-roles: error
+jsx-a11y/no-static-element-interactions: error
+jsx-a11y/prefer-tag-over-role: error
+jsx-a11y/role-has-required-aria-props: error
+jsx-a11y/role-supports-aria-props: error
+jsx-a11y/scope: error
+jsx-a11y/tabindex-no-positive: error
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+react-perf/jsx-no-jsx-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-array-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
+react/function-component-definition: error
+react/only-export-components: error [{"allowExportNames":["dynamic","dynamicParams","experimental_ppr","fetchCache","generateMetadata","generateStaticParams","generateViewport","maxDuration","metadata","preferredRegion","revalidate","runtime","viewport"]}]
+typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["camelCase","PascalCase"],"selector":"function"},{"format":["camelCase","PascalCase"],"selector":"import"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralMethod"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","PascalCase"],"selector":"typeProperty"},{"format":["camelCase","PascalCase","UPPER_CASE"],"selector":"variable"}]
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]
+unicorn/filename-case: error [{"case":"kebabCase"}]"
+`;
+
+exports[`typescript+react+next / app/robots.ts from typescript / a.ts 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","nextjs"]
+func-style: error ["declaration"]
+import/no-default-export: off
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
+`;
+
+exports[`typescript+react+next / app/route.js from typescript / a.js 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","nextjs"]
+func-style: error ["declaration"]
+import/group-exports: off
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["UPPER_CASE"],"selector":"function"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","UPPER_CASE"],"selector":"variable"}]
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
+`;
+
+exports[`typescript+react+next / eslint.config.js from typescript / a.js 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","nextjs"]
+import/no-default-export: off
+import/no-named-export: error
+import/no-nodejs-modules: off
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]
+unicorn-js/no-top-level-side-effects: off"
+`;
+
+exports[`typescript+react+next / instrumentation.js from typescript / a.js 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","nextjs"]
+func-style: error ["declaration"]
+import/group-exports: off
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+require-await: off
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
+`;
+
+exports[`typescript+react+next / instrumentation.ts from typescript / a.ts 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","nextjs"]
+func-style: error ["declaration"]
+import/group-exports: off
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+typescript/require-await: off
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
+`;
+
+exports[`typescript+react+next / mdx-components.tsx from typescript / a.ts 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","jsx-a11y","react-perf","nextjs"]
+func-style: error ["declaration"]
+jsx-a11y/alt-text: error
+jsx-a11y/anchor-ambiguous-text: error
+jsx-a11y/anchor-has-content: error
+jsx-a11y/anchor-is-valid: error
+jsx-a11y/aria-activedescendant-has-tabindex: error
+jsx-a11y/aria-props: error
+jsx-a11y/aria-proptypes: error
+jsx-a11y/aria-role: error
+jsx-a11y/aria-unsupported-elements: error
+jsx-a11y/autocomplete-valid: error
+jsx-a11y/click-events-have-key-events: error
+jsx-a11y/control-has-associated-label: error
+jsx-a11y/heading-has-content: error
+jsx-a11y/html-has-lang: error
+jsx-a11y/iframe-has-title: error
+jsx-a11y/img-redundant-alt: error
+jsx-a11y/interactive-supports-focus: error
+jsx-a11y/label-has-associated-control: error
+jsx-a11y/lang: error
+jsx-a11y/media-has-caption: error
+jsx-a11y/mouse-events-have-key-events: error
+jsx-a11y/no-access-key: error
+jsx-a11y/no-aria-hidden-on-focusable: error
+jsx-a11y/no-autofocus: error
+jsx-a11y/no-distracting-elements: error
+jsx-a11y/no-interactive-element-to-noninteractive-role: error
+jsx-a11y/no-noninteractive-element-interactions: error
+jsx-a11y/no-noninteractive-element-to-interactive-role: error
+jsx-a11y/no-noninteractive-tabindex: error
+jsx-a11y/no-redundant-roles: error
+jsx-a11y/no-static-element-interactions: error
+jsx-a11y/prefer-tag-over-role: error
+jsx-a11y/role-has-required-aria-props: error
+jsx-a11y/role-supports-aria-props: error
+jsx-a11y/scope: error
+jsx-a11y/tabindex-no-positive: error
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+react-perf/jsx-no-jsx-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-array-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
+react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
+react/function-component-definition: error
+typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["camelCase","PascalCase"],"selector":"function"},{"format":["camelCase","PascalCase"],"selector":"import"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralMethod"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","PascalCase"],"selector":"typeProperty"},{"format":["camelCase","PascalCase","UPPER_CASE"],"selector":"variable"}]
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]
+unicorn/filename-case: error [{"case":"kebabCase"}]"
+`;
+
+exports[`typescript+react+next / next.config.ts from typescript / a.ts 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","nextjs"]
+import/no-default-export: off
+import/no-named-export: error
+import/no-nodejs-modules: off
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]
+unicorn-js/no-top-level-side-effects: off"
+`;
+
+exports[`typescript+react+next / proxy.ts from typescript / a.ts 1`] = `
+"(plugins): ["eslint","import","oxc","react","typescript","unicorn","nextjs"]
+func-style: error ["declaration"]
+import/group-exports: off
+import/no-default-export: off
+nextjs/google-font-display: error
+nextjs/google-font-preconnect: error
+nextjs/inline-script-id: error
+nextjs/next-script-for-ga: error
+nextjs/no-assign-module-variable: error
+nextjs/no-async-client-component: error
+nextjs/no-before-interactive-script-outside-document: error
+nextjs/no-css-tags: error
+nextjs/no-document-import-in-page: error
+nextjs/no-duplicate-head: error
+nextjs/no-head-element: error
+nextjs/no-head-import-in-document: error
+nextjs/no-html-link-for-pages: error
+nextjs/no-img-element: error
+nextjs/no-page-custom-font: error
+nextjs/no-script-component-in-head: error
+nextjs/no-styled-jsx-in-document: error
+nextjs/no-sync-scripts: error
+nextjs/no-title-in-document-head: error
+nextjs/no-typos: error
+nextjs/no-unwanted-polyfillio: error
+unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
+`;

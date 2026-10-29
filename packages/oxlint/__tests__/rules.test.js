@@ -2,13 +2,13 @@ import { expect, test } from 'bun:test';
 import { config, off, ruleKey } from './_helpers.js';
 import { rows, upstream } from './rules.js';
 
-// <rule> | <category> | <oxlint> | <base> | <options> | <reason>; categories run at error, so a bump's new rules diff here; regenerate: bun test --update-snapshots, then bun run report ※ rules-gate
+// <rule> | <category> | <oxlint> | <type-aware> | <base> | <options> | <reason>; categories run at error, so a bump's new rules diff here; regenerate: bun test --update-snapshots, then bun run report ※ rules-gate
 
 test('rules', () => {
   expect(
     rows
-      .map(({ base, category, options, oxlint, reason, rule }) =>
-        [rule, category, oxlint, base, options, reason].join(' | '),
+      .map(({ base, category, options, oxlint, reason, rule, 'type-aware': typed }) =>
+        [rule, category, oxlint, typed, base, options, reason].join(' | '),
       )
       .toSorted(),
   ).toMatchSnapshot();
@@ -30,7 +30,7 @@ test('off is frozen and names only a native rule or a -js rule oxlint lacks: any
     Object.keys(off).filter((key) =>
       key.includes('-js/')
         ? oxlint.get(ruleKey(key.replace('-js/', '/'))) !== 'none'
-        : !oxlint.get(ruleKey(key))?.startsWith('native'),
+        : oxlint.get(ruleKey(key)) !== 'native',
     ),
   ).toEqual([]);
 });

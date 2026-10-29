@@ -70,15 +70,15 @@ await Bun.write(
     </script>
     <script>
       const rows = JSON.parse(document.querySelector('#rows').textContent);
-      const columns = ['rule', 'category', 'oxlint', 'base', 'options', 'reason'];
+      const columns = ['rule', 'category', 'oxlint', 'type-aware', 'base', 'options', 'reason'];
       const pills = {
         error: 'danger',
         js: 'info',
         native: 'ok',
-        'native (type-aware)': 'ok',
         none: 'ok',
         set: 'info',
         warn: 'warn',
+        yes: 'info',
       };
       const filter = document.querySelector('#filter');
       const head = document.querySelector('#head');
@@ -115,7 +115,9 @@ await Bun.write(
           'td',
           { className: name === 'reason' ? 'muted' : '' },
           row.options === 'set' && name === 'options' ? (open.has(row.rule) ? '▾ ' : '▸ ') : '',
-          ['reason', 'rule'].includes(name) || row[name] === '-'
+          name === 'rule' && row.url
+            ? el('a', { className: 'link', href: row.url, textContent: row.rule })
+            : ['reason', 'rule'].includes(name) || row[name] === '-'
             ? row[name]
             : el('span', {
                 className: \`pill \${pills[row[name]] ? \`pill-\${pills[row[name]]}\` : ''}\`,

@@ -157,6 +157,7 @@ exports[`overrides 1`] = `
       "**/*.{cts,mts,ts,tsx}",
     ],
     "rules": {
+      "eslint-js/consistent-return": "off",
       "eslint-js/dot-notation": "off",
       "eslint-js/no-invalid-this": "off",
       "import-js/no-unresolved": "off",
@@ -422,7 +423,7 @@ exports[`overrides 1`] = `
   },
   {
     "files": [
-      "**/route.ts",
+      "**/route.{js,ts}",
     ],
     "rules": {
       "func-style": [
