@@ -69,6 +69,10 @@ const tree = (depth) =>
   `export const tree = ${'<i>'.repeat(depth + 1)}${'</i>'.repeat(depth + 1)};\n`;
 /** per file: its source and the rules under test it reports, sorted @type {Record<string, [string, string[]]>} */
 const targeted = {
+  'app/blog/[slug]/page.tsx': [
+    "type PageProps = Readonly<{ params: Promise<{ slug: string }>; searchParams: Promise<object> }>;\nexport const generateStaticParams = (): { slug: string }[] => [{ slug: 'a' }];\nexport default async function Page({ params, searchParams }: PageProps): Promise<string> {\n  const [{ slug }] = await Promise.all([params, searchParams]);\n  return slug;\n}\n",
+    [],
+  ],
   'imports/inline-sorted.ts': [`import { type PathLike, readFileSync }${fromFs}${read}`, []],
   'imports/inline-unsorted.ts': [
     `import { readFileSync, type PathLike }${fromFs}${read}`,
@@ -93,6 +97,16 @@ const targeted = {
   ],
   'jsx/depth-7.tsx': [tree(maxJsxDepth), []],
   'jsx/depth-8.tsx': [tree(maxJsxDepth + 1), ['react(jsx-max-depth)']],
+  'react/button.tsx': [
+    'import { type Ref, useRef } from \'react\';\n\ntype ButtonProps = Readonly<{ label: string; ref: Ref<HTMLButtonElement> }>;\nexport const Button = ({ label, ref }: ButtonProps): React.JSX.Element => {\n  const inputRef = useRef<HTMLInputElement>(null);\n  return (\n    <button ref={ref} type="button">\n      {label}\n      <input ref={inputRef} />\n    </button>\n  );\n};\n',
+    [],
+  ],
+  'react/card-props.ts': [
+    'export type CardProps = Readonly<{ title: string }>;\nexport const render = (props: CardProps): string => props.title;\n',
+    [],
+  ],
+  // the rule still runs: only React's and Next's words are cleared
+  'react/options.ts': ['export const opts = 1;\n', ['unicorn-js(name-replacements)']],
 };
 
 // no package.json above the temp dir: every environment is on
@@ -232,7 +246,7 @@ test.each([
 
 // only the rules under test: the fixtures trip unrelated ones (import/no-nodejs-modules among them)
 const targetRules = new Set(Object.values(targeted).flatMap(([, codes]) => codes));
-test('one import statement per module, a type-only name inline; JSX at most 7 deep', () => {
+test("one import statement per module, a type-only name inline; JSX at most 7 deep; React's and Next's names are no abbreviations", () => {
   expect(
     Object.fromEntries(
       Object.keys(targeted).map((file) => [

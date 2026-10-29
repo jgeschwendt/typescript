@@ -53,6 +53,8 @@ const categories = {
 const maxLines = 2000;
 /** JSX nesting below a root: 2, the default, fails any real tree; 7 is the round-4 consumer reading */
 const maxJsxDepth = 7;
+/** the words name-replacements leaves alone under React */
+const reactNames = { props: false, ref: false, refs: false };
 
 /** the native rule names of the oxlint that loads this config */
 const schema = new URL('configuration_schema.json', import.meta.resolve('oxlint/package.json'));
@@ -585,6 +587,11 @@ const react = [
       'typescript-js/naming-convention': ['warn', ...namingConvention.tsx],
     },
   },
+  // React's names are `props`, `ref`, `inputRef`, `ButtonProps`: the word, not the identifier, since the rule splits camelCase
+  {
+    files: ['**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}'],
+    rules: { 'unicorn-js/name-replacements': ['error', { replacements: reactNames }] },
+  },
 ];
 
 /** Next's segment files */
@@ -594,6 +601,13 @@ const segments =
 /** @type {Override[]} */
 const next = [
   { files: ['**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}'], plugins: ['nextjs'] },
+  // `params`, `searchParams`, `generateStaticParams` are Next's; options replace, so React's words ride along
+  {
+    files: ['**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}'],
+    rules: {
+      'unicorn-js/name-replacements': ['error', { replacements: { ...reactNames, params: false } }],
+    },
+  },
   {
     files: ['**/route.ts'],
     rules: {

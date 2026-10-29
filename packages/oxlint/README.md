@@ -33,6 +33,10 @@ A rule oxlint lacks natively is keyed by its `-js` scope—`import-js/no-interna
 
 One import statement per module: a type-only name joins the value import inline, `import { type T, x } from 'm'`, and `import type { T }` stands alone only where a module gives types alone; `--fix` writes both.
 
+File names are kebab-case, components included—`button.tsx`, never `Button.tsx`; Next's segment files already are.
+
+With React on, `props`, `ref` and the `Props`/`Ref` words are not abbreviations to `unicorn-js/name-replacements`; with Next on, `params` too.
+
 `off` maps every rule the base turns off to the fact that turns it off.
 
 `namingConvention` exports the base's naming-convention entry lists (`default`, `tsx`, `route`) so a consumer override can restate the rule as `['warn', ...own entries, ...namingConvention.tsx]`, since an override's options replace the base's rather than merge.
