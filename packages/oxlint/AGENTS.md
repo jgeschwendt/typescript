@@ -13,6 +13,8 @@ invariants:
     anchor: ※ rules-gate
   - claim: MAXIMALIST OPT-OUT — every non-deprecated rule of the wrapped ESLint plugins that oxlint lacks runs through the -js plugins at error by default; the only mechanical exclusion is requiresTypeChecking; every other off the base sets at top level, native or -js and runtime floors aside, is a named entry in `off` with a factual one-line reason (crash under the host, duplicate of a native rule, formatting oxfmt owns, non-JS language, contradiction with a rule the base runs, syntax the house writes), and rules.test.js fails on a reasonless off — noise is never a reason, the owner walks every entry
     anchor: ※ opt-out-map
+  - claim: CONVENTIONS, NOT RECIPES — the README states what the base does and how a rule reads its options (the func-style split, how a camelcase `allow` entry matches); a consumer's exception to a rule it keeps (a barrel allowed one by one behind a sibling `<folder>.ts` and a tsconfig paths map, a snake_case boundary) is the app's config and the app's own stele, never a base recipe (the no-barrel-files recipe declined 2026-10-28, "apps will do this on their own")
+    anchor: packages/oxlint/README.md#usage
 hazards:
   - claim: FOOTGUN — an unknown rule NAME hard-fails the whole oxlint config (exit 1, nothing lints); a valid native rule whose plugin isn't enabled is a SILENT no-op; rule-existence.test.js guards native rules, lint.test.js (oxlint's own config-load check) guards jsPlugins rules, and js-plugins.test.js the Node-floor offs
     anchor: ※ rule-existence-guard
