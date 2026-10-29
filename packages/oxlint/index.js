@@ -567,8 +567,8 @@ const bun = {
 
 /** @type {Override[]} */
 const react = [
+  // no browser env: Ink is React with no window; a consumer with a DOM sets env.browser itself
   {
-    env: { browser: true },
     files: ['**/*.{jsx,tsx}'],
     plugins: ['jsx-a11y', 'react-perf'],
     // react-perf guards memoized children against fresh props; a host element (div, span) has none

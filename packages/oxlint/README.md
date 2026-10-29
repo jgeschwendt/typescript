@@ -37,6 +37,8 @@ File names are kebab-case, components included—`button.tsx`, never `Button.tsx
 
 With React on, `props`, `ref` and the `Props`/`Ref` words are not abbreviations to `unicorn-js/name-replacements`; with Next on, `params` too.
 
+React does not imply a browser (Ink renders to a terminal): a consumer with a DOM sets `env: { browser: true }` itself.
+
 `off` maps every rule the base turns off to the fact that turns it off.
 
 `namingConvention` exports the base's naming-convention entry lists (`default`, `tsx`, `route`) so a consumer override can restate the rule as `['warn', ...own entries, ...namingConvention.tsx]`, since an override's options replace the base's rather than merge.
