@@ -98,8 +98,6 @@ const off = Object.freeze({
   'unicorn/number-literal-case':
     "eslint-config-prettier's residue: conflicts with oxfmt over 0xff vs 0xFF (probed against oxfmt)",
 
-  'eslint-js/consistent-return':
-    'with no-useless-return, no-useless-undefined and no-null a value-or-nothing function has no passing form; the ts override already drops it',
   'import-js/dynamic-import-chunkname':
     "demands webpack's magic comment; Next, Turbopack and Bun name chunks themselves",
   'import-js/enforce-node-protocol-usage':
@@ -546,7 +544,7 @@ const twins = Object.keys(wrapped.typescript)
   .filter((key) => Object.hasOwn(javascript, key))
   .map((key) => [key, 'off']);
 
-// later overrides win: the .ts, .tsx, then route.ts naming-convention sets, in that order
+// later overrides win: the .ts, .tsx, then route naming-convention sets, in that order
 /** @type {Override} */
 const typescript = {
   files: ['**/*.{cts,mts,ts,tsx}'],
@@ -619,7 +617,7 @@ const next = [
     },
   },
   {
-    files: ['**/route.ts'],
+    files: ['**/route.{js,ts}'],
     rules: {
       'func-style': ['error', 'declaration'],
       'typescript-js/naming-convention': ['warn', ...namingConvention.route],
@@ -679,7 +677,7 @@ const next = [
       'typescript/require-await': 'off',
     },
   },
-  // middleware, proxy and the metadata routes are declarations, as route.ts and instrumentation are
+  // middleware, proxy and the metadata routes are declarations, as route and instrumentation are
   {
     files: [
       '**/{apple-icon,icon,manifest,middleware,opengraph-image,proxy,robots,sitemap,twitter-image}.{js,jsx,ts,tsx}',

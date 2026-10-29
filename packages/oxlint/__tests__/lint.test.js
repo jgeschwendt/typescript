@@ -142,6 +142,8 @@ const targeted = {
 const directory = scratch('oxlint-lint-');
 write(directory, {
   ...Object.fromEntries(Object.entries(targeted).map(([file, [source]]) => [file, source])),
+  'app/api/route.js':
+    'export function GET() {\n  return 1;\n}\n\nexport function post() {\n  return 2;\n}\n',
   'app/api/route.ts':
     'export function GET() {\n  return 1;\n}\n\nexport function POST() {\n  return 2;\n}\n',
   'app/opengraph-image.ts':
@@ -167,6 +169,11 @@ write(directory, {
 /** per linted file, whether each code (or code prefix) reports there; each file must report something, so no negative holds vacuously */
 const expected = {
   // Next route handlers may be separate named exports
+  'app/api/route.js': {
+    'eslint(func-style)': false,
+    'import(group-exports)': false,
+    'typescript-js(naming-convention)': true,
+  },
   'app/api/route.ts': { 'eslint(func-style)': false, 'import(group-exports)': false },
   // an image convention default-exports the image beside its alt and size
   'app/opengraph-image.ts': { 'import(group-exports)': false, 'import(no-default-export)': false },

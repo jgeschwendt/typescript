@@ -1,6 +1,6 @@
 import { config, loadRules, off, overrides, ruleKey } from './_helpers.js';
 
-/** @typedef {{ meta?: { deprecated?: unknown; docs?: { extendsBaseRule?: boolean | string; requiresTypeChecking?: boolean } } }} Rule */
+/** @typedef {{ meta?: { deprecated?: unknown; docs?: { extendsBaseRule?: boolean | string; requiresTypeChecking?: boolean; url?: string } } }} Rule */
 
 const levels = new Map(Object.entries(config.categories ?? {}));
 const native = loadRules();
@@ -23,12 +23,12 @@ const upstream = Object.fromEntries(
     }),
   ),
 );
-/** the live rules, `scope/name` to whether they need types */
+/** the live rules, `scope/name` to their docs */
 const wrapped = new Map(
   Object.entries(upstream).flatMap(([scope, rules]) =>
     Object.entries(rules)
       .filter(([, { meta }]) => !meta?.deprecated)
-      .map(([name, { meta }]) => [`${scope}/${name}`, meta?.docs?.requiresTypeChecking]),
+      .map(([name, { meta }]) => [`${scope}/${name}`, meta?.docs]),
   ),
 );
 const reasons = new Map(Object.entries(off).map(([key, reason]) => [ruleKey(key), reason]));
@@ -54,18 +54,27 @@ const entry = (key) => {
 const rows = [...new Set([...wrapped.keys(), ...native.keys()])].map((rule) => {
   const js = ruleKey(rule.replace('/', '-js/'));
   const [base, ...baseOptions] = entry(rule) ?? entry(js) ?? ['off'];
-  const { category = '-', type_aware: typed } = native.get(rule) ?? {};
-  const oxlint = native.has(rule)
-    ? `native${typed ? ' (type-aware)' : ''}`
-    : ((entry(js) && 'js') ?? 'none');
+  const { category = '-', type_aware: typeAware } = native.get(rule) ?? {};
+  const { requiresTypeChecking, url } = wrapped.get(rule) ?? {};
+  const typed = typeAware || requiresTypeChecking;
+  const oxlint = native.has(rule) ? 'native' : ((entry(js) && 'js') ?? 'none');
   const options = base === 'off' || oxlint === 'none' || baseOptions.length === 0 ? '-' : 'set';
   const reason =
     reasons.get(rule) ??
     reasons.get(js) ??
-    (oxlint === 'none' && wrapped.get(rule)
-      ? 'needs type information the JS plugin host has none of'
-      : '');
-  return { base, baseOptions, category, options, oxlint, reason, rule };
+    (oxlint === 'none' && typed ? 'needs type information the JS plugin host has none of' : '');
+  return {
+    base,
+    baseOptions,
+    category,
+    options,
+    oxlint,
+    reason,
+    rule,
+    'type-aware': typed ? 'yes' : '-',
+    // native scopes already read as oxc's docs paths: jsx_a11y, react_perf
+    url: oxlint === 'native' ? `https://oxc.rs/docs/guide/usage/linter/rules/${rule}.html` : url,
+  };
 });
 
 export { rows, upstream };

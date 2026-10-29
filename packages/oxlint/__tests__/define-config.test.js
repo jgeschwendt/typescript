@@ -1,44 +1,13 @@
 import { afterAll, expect, test } from 'bun:test';
-import { config, everything, overrides, write } from './_helpers.js';
+import { config, everything, overrides, within } from './_helpers.js';
 import { defineConfig, namingConvention } from '../index.js';
 
-const { existsSync, mkdtempSync, rmSync } = process.getBuiltinModule('node:fs');
-const { tmpdir } = process.getBuiltinModule('node:os');
-const { join } = process.getBuiltinModule('node:path');
-
-/** a shared config wrapping the base, as a consumer's oxlint.config.js loads it */
-const wrapper = `import { defineConfig } from '${join(import.meta.dirname, '..', 'index.js')}';
-export default (config) => defineConfig(config);`;
-
-/**
-the config at `path` below cwd, built through the wrapper with `own`; cwd sits one directory below `files`, so detection has to walk up
-@param {Record<string, unknown>} files
-@param {Record<string, unknown>} [own]
-@param {string} [path]
-@returns {Promise<import('oxlint').OxlintConfig>}
-*/
-const within = async (files, own, path = 'oxlint.config.js') => {
-  const directory = mkdtempSync(join(tmpdir(), 'oxlint-define-'));
-  const cwd = process.cwd();
-  write(directory, {
-    [`nested/${path}`]: `import wrap from ${JSON.stringify(join(directory, 'nested', 'wrapper.js'))};\nexport default wrap(${JSON.stringify(own)});\n`,
-    'nested/wrapper.js': wrapper,
-    ...files,
-  });
-  try {
-    process.chdir(join(directory, 'nested'));
-    const { default: built } = await import(join(process.cwd(), path));
-    return built;
-  } finally {
-    process.chdir(cwd);
-    rmSync(directory, { force: true, recursive: true });
-  }
-};
+const { existsSync } = process.getBuiltinModule('node:fs');
 
 /** a glob or global only that environment's overrides carry */
 const markers = {
   bun: 'Bun',
-  next: '**/route.ts',
+  next: '**/route.{js,ts}',
   react: '**/*.tsx',
   typescript: '**/*.{cts,mts,ts,tsx}',
 };
@@ -77,7 +46,7 @@ const tuple = (files) =>
 test('namingConvention is the tail of every naming-convention tuple', () => {
   expect({
     default: tuple('**/*.{cts,mts,ts,tsx}'),
-    route: tuple('**/route.ts'),
+    route: tuple('**/route.{js,ts}'),
     tsx: tuple('**/*.tsx'),
   }).toStrictEqual({
     default: ['warn', ...namingConvention.default],
