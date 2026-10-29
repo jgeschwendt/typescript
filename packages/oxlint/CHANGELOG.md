@@ -1,5 +1,13 @@
 # @jlg/oxlint
 
+## 0.1.5
+
+### Patch Changes
+
+- [#96](https://github.com/jgeschwendt/typescript/pull/96) [`ccf323a`](https://github.com/jgeschwendt/typescript/commit/ccf323a8410e511d713928e52fe70a6ba36cdefa) Thanks [@jgeschwendt](https://github.com/jgeschwendt)! - Peer `oxlint` is `^1.89.0` (was pinned exactly); rule and plugin names are checked against the installed oxlint, so a name only a newer oxlint knows is emitted only where it exists. Node floors are 22 and 24. `oxlint-tsgolint` is now a dependency: with TypeScript detected, type-aware linting turns on without a consumer-side install, and the config at the lint root sets `reportUnusedDisableDirectives` and `typeAware` itself. Environment detection (TypeScript, React, Next, oxfmt `printWidth` for the comment rules) starts from the config file's directory, so a monorepo package lints against its own manifest; a shared config wrapping `defineConfig` keeps the root options. The plugin hosts register only the rules a config names (lint time down about a sixth).
+
+  Rules: new `types/prefer-readonly-generic` (`Readonly<{…}>` over per-member `readonly`) and `consistent-type-definitions: type` beside it; one import statement per module (`import { type T, x }`); `sort-keys` natural with blank-line groups; `func-style` is expression by default, declaration in `.jsx`/`.tsx` and in Next's `route`, `instrumentation`, `middleware`, `proxy` and metadata files, with Next segment files keeping named exports as expressions; `max-statements` ignores a lone top-level function; `react/jsx-max-depth` 7; `react-perf/*` and `react-js/jsx-no-bind` spare host elements; `eslint-js/consistent-return` is on again for JS (the native rule covers TS); `react/function-component-definition` is on for `.jsx`/`.tsx`; Next's default-export and multi-export file conventions are exempt from `no-default-export` and `group-exports` by name, and the route override covers `route.{js,ts}`; `name-replacements` keeps React's `props`/`ref`/`refs` and Next's `params`; quoted type properties are exempt from `naming-convention`, whose lists are exported as `namingConvention`; tooling configs may import node builtins; `dynamic-import-chunkname` is off; the React preset no longer sets `env.browser`. Every opt-out lives in one `off` map with its reason, and the rules page gains a type-aware column and a docs link per rule.
+
 ## 0.1.4
 
 ### Patch Changes
