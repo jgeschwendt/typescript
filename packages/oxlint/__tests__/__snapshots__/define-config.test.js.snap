@@ -379,9 +379,44 @@ exports[`overrides 1`] = `
     "files": [
       "**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}",
     ],
+    "rules": {
+      "unicorn-js/name-replacements": [
+        "error",
+        {
+          "replacements": {
+            "props": false,
+            "ref": false,
+            "refs": false,
+          },
+        },
+      ],
+    },
+  },
+  {
+    "files": [
+      "**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}",
+    ],
     "plugins": [
       "nextjs",
     ],
+  },
+  {
+    "files": [
+      "**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}",
+    ],
+    "rules": {
+      "unicorn-js/name-replacements": [
+        "error",
+        {
+          "replacements": {
+            "params": false,
+            "props": false,
+            "ref": false,
+            "refs": false,
+          },
+        },
+      ],
+    },
   },
   {
     "files": [
