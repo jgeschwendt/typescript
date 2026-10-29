@@ -70,6 +70,9 @@ const tree = (depth) =>
 const maxStatements = 10;
 /** a function body one statement over max-statements' default */
 const statements = `  let total = 0;\n${'  total += 1;\n'.repeat(maxStatements - 1)}  return total;\n`;
+/** a component whose `tag` takes an inline handler @param {string} tag */
+const handler = (tag) =>
+  `export function Host(): React.JSX.Element {\n  return <${tag} onClick={() => 1} />;\n}\n`;
 /** per file: its source and the rules under test it reports, sorted @type {Record<string, [string, string[]]>} */
 const targeted = {
   'app/blog/[slug]/page.tsx': [
@@ -118,6 +121,11 @@ const targeted = {
     'export const Arrow = (): React.JSX.Element => <i />;\n',
     ['eslint(func-style)', 'react(function-component-definition)'],
   ],
+  'react/bind-component.tsx': [
+    handler('Arrow'),
+    ['react-js(jsx-no-bind)', 'react-perf(jsx-no-new-function-as-prop)'],
+  ],
+  'react/bind-host.tsx': [handler('i'), []],
   'react/button.tsx': [
     'import { type Ref, useRef } from \'react\';\n\ntype ButtonProps = Readonly<{ label: string; ref: Ref<HTMLButtonElement> }>;\nexport function Button({ label, ref }: ButtonProps): React.JSX.Element {\n  const inputRef = useRef<HTMLInputElement>(null);\n  return (\n    <button ref={ref} type="button">\n      {label}\n      <input ref={inputRef} />\n    </button>\n  );\n}\n',
     [],
@@ -267,7 +275,7 @@ test.each([
 
 // only the rules under test: the fixtures trip unrelated ones (import/no-nodejs-modules among them)
 const targetRules = new Set(Object.values(targeted).flatMap(([, codes]) => codes));
-test("one import statement per module, a type-only name inline; JSX at most 7 deep; a JSX file's functions are declarations, a segment's named exports may be expressions; React's and Next's names are no abbreviations; a lone top-level function has no statement ceiling", () => {
+test("one import statement per module, a type-only name inline; JSX at most 7 deep; a JSX file's functions are declarations, a segment's named exports may be expressions; React's and Next's names are no abbreviations; an inline handler reports on a component, never a host element; a lone top-level function has no statement ceiling", () => {
   expect(
     Object.fromEntries(
       Object.keys(targeted).map((file) => [

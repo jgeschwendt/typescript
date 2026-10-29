@@ -72,7 +72,7 @@ const fixtures = {
     '    <div title={props.title} id="widget">',
     '      {items.length && <span>{props.label}</span>}',
     '      <a href="/x" rel="nonsense">a</a><b>{String(props.enabled)}</b>',
-    '      <button onClick={() => items.pop()} type="button">x</button>',
+    '      <Toggle enabled onClick={() => items.pop()} />',
     '    </div>',
     '  );',
     '}',
