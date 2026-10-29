@@ -59,16 +59,6 @@ jobs:
           permission-pull-requests: write
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
-      # ※ release-approval-gate
-      # must read the changesets before `changeset version` consumes them; any verax bump is gated (owner 2026-10-22)
-      - id: bumps
-        run: |
-          if grep -rEq --include='*.md' --exclude=README.md \
-            '^[[:space:]]*.?(@jlg/[a-z]+|verax).?[[:space:]]*:[[:space:]]*(minor|major)[[:space:]]*$' \
-            .changeset || grep -rEq --include='*.md' --exclude=README.md '^[[:space:]]*.?verax.?[[:space:]]*:' .changeset; then
-            echo "gated=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - id: version
         uses: changesets/action/version@v2
         with:
@@ -77,15 +67,14 @@ jobs:
           pr-title: 'task(//): version packages'
           script: bun run version-packages
 
-      - if: steps.version.outputs.pr-number != '' && steps.bumps.outputs.gated != 'true'
+      # ※ release-approval-gate
+      # a draft until the owner readies and merges it; that merge is the release (owner 2026-10-29)
+      - if: steps.version.outputs.pr-number != ''
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: gh pr merge ${{ steps.version.outputs.pr-number }} --auto --rebase
-
-      - if: steps.version.outputs.pr-number != '' && steps.bumps.outputs.gated == 'true'
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: gh pr edit ${{ steps.version.outputs.pr-number }} --add-reviewer jgeschwendt || true
+          PR: ${{ steps.version.outputs.pr-number }}
+        run: |
+          [ "$(gh pr view "$PR" --json isDraft --jq .isDraft)" = true ] || gh pr ready --undo "$PR"
 
   # no id-token here, so publish is the only job holding an OIDC credential
   pack:
