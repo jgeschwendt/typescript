@@ -372,7 +372,7 @@ exports[`rules 1`] = `
   "react/jsx-max-depth | style | native | error | set | ",
   "react/jsx-max-props-per-line | - | none | off | - | formatting-only: 6 reports on oxfmt-clean jlg.io TSX (measured 2026-10-14)",
   "react/jsx-newline | - | none | off | - | formatting-only: 17 reports on oxfmt-clean jlg.io TSX (measured 2026-10-14)",
-  "react/jsx-no-bind | - | js | error | - | ",
+  "react/jsx-no-bind | - | js | error | set | ",
   "react/jsx-no-comment-textnodes | suspicious | native | error | - | ",
   "react/jsx-no-constructed-context-values | perf | native | error | - | ",
   "react/jsx-no-duplicate-props | correctness | native | error | - | ",

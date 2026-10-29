@@ -434,6 +434,8 @@ options and severities other than a bare `error`
 @type {NonNullable<Config['rules']>}
 */
 const tuned = {
+  // host elements pass, as react-perf's nativeAllowList spares them; a component still reports
+  'react-js/jsx-no-bind': ['error', { ignoreDOMComponents: true }],
   'react-js/require-default-props': ['error', { functions: 'defaultArguments' }],
   // typed upstream, yet needs types only for the `types` option the wrapper refuses
   'typescript-js/naming-convention': ['warn', ...namingConvention.default],

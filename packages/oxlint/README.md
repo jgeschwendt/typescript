@@ -33,6 +33,10 @@ A rule oxlint lacks natively is keyed by its `-js` scope—`import-js/no-interna
 
 Functions are expressions, `const f = () => …`, except where React or Next wants a declaration: `.jsx`/`.tsx` run `func-style` at `declaration`, helpers included, with `react/function-component-definition` on, so a component is `function Button()`; Next's segment files let a named export stay an expression (`export const generateMetadata = …`), and `route.ts`, `instrumentation`, `middleware`, `proxy` and the metadata routes (`robots`, `sitemap`, the icons and images) are declarations throughout.
 
+`jsx-no-bind` and `react-perf` agree: an inline handler on a host element (`<button onClick={() => …}>`) passes, on a component (`<Button onClick={() => …}>`) it reports under both, once each; `jsx-no-bind` runs through the plugin host with `ignoreDOMComponents`, as `react-perf` runs with `nativeAllowList: all`.
+
+`camelcase` runs on TypeScript too, as `eslint-js/camelcase`. A consumer with a snake_case boundary (a wire format, a generated client) allows it with an anchored pattern, `['error', { allow: ['^api_\\w+$'] }]`, never a bare prefix: an entry matches as the whole name or as an unanchored regex, so `api_` would wave through anything containing it.
+
 One import statement per module: a type-only name joins the value import inline, `import { type T, x } from 'm'`, and `import type { T }` stands alone only where a module gives types alone; `--fix` writes both.
 
 File names are kebab-case, components included—`button.tsx`, never `Button.tsx`; Next's segment files already are.
