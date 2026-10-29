@@ -346,7 +346,7 @@ exports[`rules 1`] = `
   "react/forbid-foreign-prop-types | - | js | error | - | ",
   "react/forbid-prop-types | - | js | error | - | ",
   "react/forward-ref-uses-ref | correctness | native | error | - | ",
-  "react/function-component-definition | style | native | off | - | contradicts native func-style: the function declaration it demands is the one func-style forbids (verified 2026-10-20 · probe)",
+  "react/function-component-definition | style | native | off | - | contradicts func-style's expression default: \`const Empty = () => null\` in .ts has no passing form; the React preset turns it on beside func-style declaration (probed 2026-10-28)",
   "react/globals | correctness | native | error | - | ",
   "react/hook-use-state | style | native | error | - | ",
   "react/hooks | suspicious | native | error | - | ",
