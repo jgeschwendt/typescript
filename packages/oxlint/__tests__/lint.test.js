@@ -67,6 +67,9 @@ const maxJsxDepth = 7;
 /** @param {number} depth JSX nested `depth` below its root */
 const tree = (depth) =>
   `export const tree = ${'<i>'.repeat(depth + 1)}${'</i>'.repeat(depth + 1)};\n`;
+const maxStatements = 10;
+/** a function body one statement over max-statements' default */
+const statements = `  let total = 0;\n${'  total += 1;\n'.repeat(maxStatements - 1)}  return total;\n`;
 /** per file: its source and the rules under test it reports, sorted @type {Record<string, [string, string[]]>} */
 const targeted = {
   'app/blog/[slug]/page.tsx': [
@@ -97,6 +100,12 @@ const targeted = {
   ],
   'jsx/depth-7.tsx': [tree(maxJsxDepth), []],
   'jsx/depth-8.tsx': [tree(maxJsxDepth + 1), ['react(jsx-max-depth)']],
+  // a lone top-level function is exempt; one nested inside it is not
+  'max-statements/nested.ts': [
+    `export const outer = (): number => {\n  const inner = (): number => {\n${statements}  };\n  return inner();\n};\n`,
+    ['eslint(max-statements)'],
+  ],
+  'max-statements/top-level.ts': [`export const top = (): number => {\n${statements}};\n`, []],
   'react/button.tsx': [
     'import { type Ref, useRef } from \'react\';\n\ntype ButtonProps = Readonly<{ label: string; ref: Ref<HTMLButtonElement> }>;\nexport const Button = ({ label, ref }: ButtonProps): React.JSX.Element => {\n  const inputRef = useRef<HTMLInputElement>(null);\n  return (\n    <button ref={ref} type="button">\n      {label}\n      <input ref={inputRef} />\n    </button>\n  );\n};\n',
     [],
@@ -246,7 +255,7 @@ test.each([
 
 // only the rules under test: the fixtures trip unrelated ones (import/no-nodejs-modules among them)
 const targetRules = new Set(Object.values(targeted).flatMap(([, codes]) => codes));
-test("one import statement per module, a type-only name inline; JSX at most 7 deep; React's and Next's names are no abbreviations", () => {
+test("one import statement per module, a type-only name inline; JSX at most 7 deep; React's and Next's names are no abbreviations; a lone top-level function has no statement ceiling", () => {
   expect(
     Object.fromEntries(
       Object.keys(targeted).map((file) => [

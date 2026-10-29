@@ -37,7 +37,7 @@ exports[`rules 1`] = `
   "eslint/max-lines-per-function | pedantic | native | off | - | max-lines is the ceiling: a function is at most its file",
   "eslint/max-nested-callbacks | pedantic | native | error | - | ",
   "eslint/max-params | style | native | error | - | ",
-  "eslint/max-statements | style | native | error | - | ",
+  "eslint/max-statements | style | native | error | set | ",
   "eslint/new-cap | style | native | error | - | ",
   "eslint/no-alert | restriction | native | error | - | ",
   "eslint/no-array-constructor | pedantic | native | error | - | ",

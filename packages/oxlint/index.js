@@ -228,6 +228,8 @@ const rules = {
   'no-shadow-restricted-names': ['error', { reportGlobalThis: false }],
 
   'max-lines': ['error', { max: maxLines, skipBlankLines: true, skipComments: true }],
+  // positional, max then flag: a lone over-long top-level function passes; a second reports both
+  'max-statements': ['error', {}, { ignoreTopLevelFunctions: true }],
 
   'import/no-default-export': 'error',
   // one statement per module: a type-only name joins the value import inline
