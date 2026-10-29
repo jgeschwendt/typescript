@@ -254,9 +254,6 @@ exports[`overrides 1`] = `
     },
   },
   {
-    "env": {
-      "browser": true,
-    },
     "files": [
       "**/*.{jsx,tsx}",
     ],
