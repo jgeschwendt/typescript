@@ -1190,7 +1190,7 @@ describe('review 5', () => {
     for (const Union of [Lookup, Each]) {
       const result = validate(
         {
-          get k(): undefined {
+          get k(): unknown {
             validate({ y: 1 }, Union);
             return undefined;
           },
