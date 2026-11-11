@@ -17,6 +17,7 @@
     "build": "tsc -p tsconfig.build.json",
     "demo": "bun demo/serve.ts",
     "glyphs": "bun glyphs.ts && bunx oxfmt src/outlines.ts",
+    "serve": "bun src/serve.ts",
     "test": "bun test",
     "typecheck": "tsc -p ."
   },
