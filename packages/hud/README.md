@@ -83,6 +83,31 @@ Set on `<hud>`; each falls back to the dark default.
 | `--hud-line`   | `#1d2025`                              |
 | `--hud-muted`  | `#6b7079`                              |
 
+## Serve
+
+```sh
+bun packages/hud/src/serve.ts <dir> [--port 8765] [--store FILE]
+```
+
+Serves `<dir>` on 127.0.0.1 with `Cache-Control: no-store`, every HTML response carrying `<hud></hud>` and `/__hud/client.js` (the layer, bundled on request) before `</body>`. Threads live in one JSON file, written via tmp and rename: `--store`, else `${XDG_STATE_HOME:-~/.local/state}/hud/<dir as a slug>.json`; missing or unreadable is no threads. A new thread carries `context`, what a text-only reader needs to know the pinned element — `img "Five stations…" · under "Data root"`: the tag, its `alt`, `aria-label` or first 120 characters, the nearest preceding heading — re-read on re-anchor.
+
+| channel                  | does                                                                                                                      |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| WebSocket `/__hud/ws`    | the browser's: threads on connect and after every change; the client sends each `hud:*` event but `select`, as the user's |
+| WebSocket `/__hud/watch` | the agent's, one text line per frame: on connect every unanswered user message of an open thread, then each as it happens |
+| `GET /__hud/threads`     | every thread                                                                                                              |
+| `POST /__hud/reply`      | `{ id, text }` appends an `agent` message; `id` may be a unique prefix — 404 on none, 409 on several                      |
+| `POST /__hud/resolve`    | `{ id }` resolves                                                                                                         |
+
+Watch lines, `<id8>` the id's first 8 characters, newlines flattened to spaces; agent messages send none:
+
+```
+comment <id8> <page> <context> | <text>
+reply <id8> <page> | <text>
+status <id8> <resolved|open>
+deleted <id8>
+```
+
 ## Demo
 
 `bun run glyphs` regenerates `src/outlines.ts` from the `@ibm/plex-mono` devDependency (SIL Open Font License 1.1); the file is committed, so consumers need no font.

@@ -18,6 +18,8 @@ export default defineConfig({
         'no-magic-numbers': 'off',
       },
     },
+    // the review server: a port, HTTP statuses, an id prefix, and the printed URL it listens on
+    { files: ['src/serve.ts'], rules: { 'no-console': 'off', 'no-magic-numbers': 'off' } },
     // a test's geometry is literal pixels and percentages; its lookups are known to hit
     {
       files: ['src/*.test.ts'],
