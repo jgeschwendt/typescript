@@ -21,14 +21,14 @@ hud.threads = await load(); // setting threads or page re-renders
 
 `<hud>` is a plain element, not a custom element: a custom element name needs a hyphen, and `attachShadow` is refused on an unknown element. `mount(el = document.querySelector('hud'), { page = location.pathname, threads = [] })` throws without one, renders into an inner `<div>` that owns a shadow root styled by a constructed stylesheet — so the page's CSS stays out and a CSP without `'unsafe-inline'` styles still works — and returns the handle. Nothing registers globally, nothing runs on import.
 
-| handle            | does                                                                    |
-| ----------------- | ----------------------------------------------------------------------- |
-| `threads`, `page` | get, or set and re-render                                               |
-| `pick()`          | start the picker                                                        |
-| `select(id)`      | open the panel on a thread and scroll its pin into view; `''` closes it |
-| `destroy()`       | remove the layer and every listener and observer                        |
+| handle            | does                                                                       |
+| ----------------- | -------------------------------------------------------------------------- |
+| `threads`, `page` | get, or set and re-render                                                  |
+| `pick()`          | start the picker                                                           |
+| `select(id)`      | open the panel on a thread and scroll its anchor into view; `''` closes it |
+| `destroy()`       | remove the layer and every listener and observer                           |
 
-Press `c` (outside inputs, textareas, contenteditable) or call `pick()`: the cursor turns to a crosshair and the element under it is outlined, Escape cancels, a click drops a hollow draft pin numbered as the next thread and opens a compose box — Enter sends, Shift+Enter breaks the line, Escape cancels and drops the draft, which the real pin replaces once the host sets `threads`. Pins for the current `page` sit where their selector resolves (none when it resolves to nothing or a hidden element), follow resize, scroll and DOM changes, and drag to re-anchor. An open pin shows its 1-based place among the page's open threads, a resolved one a dimmed check, both drawn by `glyph` as SVG outlines of IBM Plex Mono SemiBold, extracted at build time so no font loads, on a 10px box centred on whole pixels. Clicking a pin opens the panel: the page's threads, open first, each with its messages; an open one carries a reply box and a resolve button, a resolved one reopen and delete buttons.
+Press `c` (outside inputs, textareas, contenteditable) or call `pick()`: the cursor turns to a crosshair and the element under it is outlined, Escape cancels, a click drops a hollow draft pin numbered as the next thread and opens a compose box — Enter sends, Shift+Enter breaks the line, Escape cancels and drops the draft, which the real pin replaces once the host sets `threads`. Pins for the current `page` sit where their selector resolves (none when it resolves to nothing, a hidden element, or a point a scrolled frame clips away) in a fixed, viewport-clipped layer that never widens the page, follow resize, scroll — the page's and any frame's — and DOM changes, and drag to re-anchor. An open pin shows its 1-based place among the page's open threads, a resolved one a dimmed check, both drawn by `glyph` as SVG outlines of IBM Plex Mono SemiBold, extracted at build time so no font loads, on a 10px box centred on whole pixels. Clicking a pin opens the panel: the page's threads, open first, each with its messages; an open one carries a reply box and a resolve button, a resolved one reopen and delete buttons.
 
 ## Events
 

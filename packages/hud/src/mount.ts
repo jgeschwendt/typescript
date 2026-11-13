@@ -72,6 +72,8 @@ const dragSlop = 3;
 // the compose popover's footprint, kept inside the viewport
 const composeHeight = 100;
 const composeWidth = 268;
+// a pin at the far corner of its box, in percent
+const whole = 100;
 const editableTags = new Set(['INPUT', 'SELECT', 'TEXTAREA']);
 
 const create = <Tag extends keyof HTMLElementTagNameMap>(
@@ -133,15 +135,32 @@ const pinButton = (label: string): HTMLButtonElement => {
   return button;
 };
 
+/**
+Whether `node` or a box above it clips the document point `at` away — a frame scrolled past the anchor.
+*/
+const clipped = (node: Element | null | undefined, at: ReturnType<typeof placeOf>): boolean => {
+  if (!node) {
+    return false;
+  }
+  const start = placeOf(node, { x: 0, y: 0 });
+  const end = placeOf(node, { x: whole, y: whole });
+  const { overflowX, overflowY } = getComputedStyle(node);
+  return (
+    (!/^(?:visible)*$/u.test(overflowX + overflowY) &&
+      (at.left < start.left || at.left > end.left || at.top < start.top || at.top > end.top)) ||
+    clipped(node.parentElement, at)
+  );
+};
+
 const place = (layer: Layer): void => {
   const { left, top } = origin(layer);
   for (const [pin, thread] of layer.placed) {
     const element = resolve(thread.selector);
-    pin.hidden = !element || !visible(element);
-    if (!element || pin.hidden) {
+    const at = element && visible(element) ? placeOf(element, thread) : undefined;
+    pin.hidden = !at || clipped(element, at);
+    if (!at || pin.hidden) {
       continue;
     }
-    const at = placeOf(element, thread);
     // whole pixels, so the glyph's box lands on the device grid
     moveTo(pin, Math.round(at.left - left), Math.round(at.top - top));
   }
@@ -264,9 +283,11 @@ const render = (layer: Layer): void => {
 const select = (layer: Layer, id: string): void => {
   layer.selected = id || undefined;
   render(layer);
-  layer.pins
-    .querySelector(`[data-id="${CSS.escape(id)}"]`)
-    ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // the anchor, not the pin: pins sit in a fixed layer, and the anchor may sit in a scrolled frame
+  resolve(layer.threads.find((thread) => thread.id === id)?.selector ?? '')?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center',
+  });
 };
 
 const onSelect = (layer: Layer, { target }: Event): void => {
