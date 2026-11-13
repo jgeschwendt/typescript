@@ -16,7 +16,7 @@ const css = `
 [hidden] { display: none !important; }
 button, textarea { background: none; border: 0; color: inherit; font: inherit; padding: 0; }
 button { cursor: pointer; }
-#pins { left: 0; position: absolute; top: 0; }
+#pins { inset: 0; overflow: clip; pointer-events: none; position: fixed; }
 #pins button {
   align-items: center;
   background: var(--accent);
@@ -31,6 +31,7 @@ button { cursor: pointer; }
   justify-content: center;
   min-width: 20px;
   padding: 0 5px;
+  pointer-events: auto;
   position: absolute;
   transform: translate(-50%, -50%);
 }

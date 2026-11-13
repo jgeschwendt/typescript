@@ -14,7 +14,7 @@ import {
 } from './index.js';
 
 const fixture = `<main><h1 id="top">a</h1><p>b</p><p id="dup">c</p><p id="dup">d</p></main>
-  <section><p style="display: none">e</p><input><div contenteditable="true"></div></section><hud></hud>`;
+  <section><p style="display: none">e</p><input><div contenteditable="true"></div><div style="overflow-x: auto"><b>f</b></div></section><hud></hud>`;
 
 beforeAll(() => {
   GlobalRegistrator.register({ url: 'http://localhost/' });
@@ -302,4 +302,17 @@ test('glyph draws font outlines on a shared 10px box, one path per character', (
   expect(size(glyph('100'))).toEqual(['0 0 24 10', '24', '10']);
   expect(paths(glyph('12'))).toEqual([...paths(glyph('1')), ...paths(glyph('2'))]);
   expect([paths(glyph('x')), ...size(glyph('x'))]).toEqual([[], '0 0 0 10', '0', '10']);
+});
+
+test('a pin hides while a clipping frame has scrolled its anchor out, and follows the frame back', async () => {
+  const anchor = query('b');
+  box(anchor.parentElement!, new DOMRect(0, 0, 100, 40));
+  box(anchor, new DOMRect(150, 0, 20, 20));
+  const { shadow } = setup([thread('f', 'b')]);
+  const pin = shadow.querySelector<HTMLElement>('button[data-status]')!;
+  expect(pin.hidden).toBe(true);
+  box(anchor, new DOMRect(40, 0, 20, 20));
+  anchor.parentElement!.dispatchEvent(new Event('scroll'));
+  await frame();
+  expect([pin.hidden, pin.style.left]).toEqual([false, '50px']);
 });
