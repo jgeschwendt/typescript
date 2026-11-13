@@ -2,13 +2,20 @@
 #
 # Exhaustiveness (§4.3) requires every top-level directory to fall in some
 # non-root node's territory. This graph is root (system) + packages (container)
-# + the two package nodes; the remaining top-level dirs carry no local knowledge
-# a root claim does not already route to:
+# + its package nodes; the remaining top-level dirs carry no local knowledge a
+# claim does not already route to:
 #   .changeset  → pending release notes; the MINIMUM BUMP invariant governs them
+#   .claude     → the agent loop's hooks: per-edit oxfmt, and dandori's fix mode
+#                 at Stop, which packages/dandori's invariants govern
 #   .github     → CI and release; the MINIMUM BUMP invariant and the VERSION PR
 #                 TOKEN hazard both anchor into these workflows
 #   docs        → the Pages root: an index linking each package's page
 # Excluding a dir here drops only its exhaustiveness requirement; the anchor scan
 # still sees it, so lm:changeset-guard and lm:release-app-token keep resolving.
 [exhaustiveness]
-exclude = ["node_modules", "_build", "deps", "target", ".changeset", ".github", "docs"]
+exclude = ["node_modules", "_build", "deps", "target", ".changeset", ".claude", ".github", "docs"]
+
+# The root's always-loaded set is 2,042 cl100k tokens with the `check` command and the STELE
+# UNSTAMPED invariant (measured 2026-11-13 · stele check); main sat at ~1,984 of the 2,000 default.
+[budget]
+claude_root = 2050

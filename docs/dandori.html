@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en" class="ui">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>typescript — dandori</title>
+    <link rel="stylesheet" href="https://gigantic.dev/ui/ui.css" />
+    <link rel="stylesheet" href="https://gigantic.dev/ui/docs.css" />
+    <style>
+      figure.figure > figcaption {
+        color: var(--ui-fg-muted);
+      }
+      .drawing {
+        background: var(--ui-bg);
+        border: 1px solid var(--ui-border);
+        border-radius: var(--ui-radius-lg);
+        overflow-x: auto;
+        padding: var(--ui-space-4);
+      }
+      .drawing svg {
+        display: block;
+        min-width: 920px;
+        width: 100%;
+      }
+      .drawing .arrow {
+        fill: none;
+        stroke: var(--ui-fg-muted);
+        stroke-width: 1.5;
+      }
+      .drawing .box > rect {
+        fill: var(--ui-surface);
+        stroke: var(--ui-border);
+      }
+      .drawing .dashed > rect {
+        stroke: var(--ui-border-strong);
+        stroke-dasharray: 5 4;
+      }
+      .drawing .focus > rect {
+        fill: var(--ui-accent);
+        stroke: var(--ui-accent);
+      }
+      .drawing .focus > text {
+        fill: var(--ui-accent-fg);
+      }
+      .drawing .head {
+        fill: var(--ui-fg-muted);
+      }
+      .drawing .lane {
+        fill: var(--ui-fg-muted);
+        font-family: var(--ui-font-sans);
+        font-size: 13px;
+      }
+      .drawing .mono {
+        font-family: var(--ui-font-mono);
+        font-size: 12px;
+      }
+      .drawing text {
+        fill: var(--ui-fg);
+        font-family: var(--ui-font-sans);
+        font-size: 14px;
+      }
+      .docs-section > p + p {
+        margin-top: var(--ui-space-3);
+      }
+      .math {
+        font-family: var(--ui-font-mono);
+        font-size: var(--ui-text-sm);
+      }
+    </style>
+  </head>
+  <body data-page="docs">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true">
+      <!-- Phosphor Icons (regular), MIT (c) 2023 Phosphor Icons — via jgeschwendt/ui icons/ -->
+      <symbol id="ph-circle-half" viewBox="0 0 256 256" fill="currentColor">
+        <path
+          d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,16.37a86.4,86.4,0,0,1,16,3V212.67a86.4,86.4,0,0,1-16,3Zm32,9.26a87.81,87.81,0,0,1,16,10.54V195.83a87.81,87.81,0,0,1-16,10.54ZM40,128a88.11,88.11,0,0,1,80-87.63V215.63A88.11,88.11,0,0,1,40,128Zm160,50.54V77.46a87.82,87.82,0,0,1,0,101.08Z"
+        />
+      </symbol>
+      <symbol id="ph-moon" viewBox="0 0 256 256" fill="currentColor">
+        <path
+          d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"
+        />
+      </symbol>
+      <symbol id="ph-sun" viewBox="0 0 256 256" fill="currentColor">
+        <path
+          d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"
+        />
+      </symbol>
+    </svg>
+
+    <header class="appbar">
+      <h1 class="appbar-title">
+        <svg class="icon" aria-hidden="true"><use href="#ph-circle-half" /></svg>
+        typescript <small>· dandori</small>
+      </h1>
+      <span class="spacer"></span>
+      <div class="segmented" role="group" aria-label="theme">
+        <button type="button" data-theme-set="light" aria-pressed="false" title="light">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-sun" /></svg>light
+        </button>
+        <button type="button" data-theme-set="auto" aria-pressed="true" title="follow the system">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-circle-half" /></svg>auto
+        </button>
+        <button type="button" data-theme-set="dark" aria-pressed="false" title="dark">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-moon" /></svg>dark
+        </button>
+      </div>
+    </header>
+
+    <main class="docs-shell" data-container>
+      <header class="stack">
+        <p class="eyebrow">jgeschwendt/typescript · @jlg/dandori</p>
+        <p class="lead docs-lead">
+          One checker for every change: it runs each gate once per tree and remembers the pass.
+        </p>
+        <pre class="snippet"><code>mise run check       # verify: never writes the tree
+mise run check:fix   # fix: oxlint --fix, oxfmt, then verify</code></pre>
+        <nav class="row docs-toc" aria-label="sections">
+          <a class="pill" href="#dandori">dandori</a>
+          <a class="pill" href="#soundness">soundness</a>
+          <a class="pill" href="#order">order</a>
+          <a class="pill" href="#once">once</a>
+          <a class="pill" href="#assumptions">assumptions</a>
+        </nav>
+      </header>
+
+      <section class="docs-section" id="dandori">
+        <header><h2 class="h2">dandori</h2></header>
+        <p class="docs-note">
+          The <code class="code">dandori</code> bin keys the working tree, skips every gate whose
+          pass is logged at that key, runs the rest cheapest-expected-first and stops at the first
+          failure. The engine knows no tool: the repo's
+          <code class="code">dandori.config.ts</code> exports the <code class="code">fixers</code>,
+          the <code class="code">gates</code> (stele with <code class="code">stamp: false</code>)
+          and the <code class="code">inputs</code> the key hashes beside the tree (<code
+            class="code"
+            >.env</code
+          >). The name is Japanese 段取り, the plans and procedure for a job: its steps arranged in
+          order. Two callers: the agent's Stop hook runs fix mode at the end of every turn and hands
+          a failure back as the reason to keep working; hk's pre-push runs verify mode, which on a
+          tree the agent loop already passed is a lookup. A third hook formats each file the agent
+          edits.
+        </p>
+        <figure class="figure">
+          <div class="drawing">
+            <svg
+              viewBox="0 0 920 280"
+              role="img"
+              aria-label="the agent loop edits, runs the fixers, keys the tree, runs the un-stamped gates and stamps the passes in the log; pre-push keys the same tree and finds every stamp"
+            >
+              <defs>
+                <marker
+                  id="head"
+                  class="head"
+                  markerHeight="8"
+                  markerUnits="userSpaceOnUse"
+                  markerWidth="8"
+                  orient="auto"
+                  refX="7"
+                  refY="4"
+                  viewBox="0 0 8 8"
+                >
+                  <path d="M0 0 L8 4 L0 8 z" />
+                </marker>
+              </defs>
+              <text class="lane" x="10" y="26">agent loop · fix mode at Stop</text>
+              <g class="box">
+                <rect height="70" rx="10" width="150" x="10" y="40" />
+                <text x="24" y="68">① edit</text>
+                <text class="mono" x="24" y="90">oxfmt &lt;file&gt;</text>
+              </g>
+              <g class="box">
+                <rect height="70" rx="10" width="180" x="180" y="40" />
+                <text x="194" y="68">② fixers</text>
+                <text class="mono" x="194" y="90">oxlint --fix → oxfmt</text>
+              </g>
+              <g class="focus">
+                <rect height="70" rx="10" width="190" x="380" y="40" />
+                <text x="394" y="68">③ key</text>
+                <text class="mono" x="394" y="90">tree · inputs · platform</text>
+              </g>
+              <g class="box">
+                <rect height="70" rx="10" width="160" x="590" y="40" />
+                <text x="604" y="68">④ gates</text>
+                <text class="mono" x="604" y="90">un-stamped, by c/p</text>
+              </g>
+              <g class="box">
+                <rect height="70" rx="10" width="140" x="770" y="40" />
+                <text x="784" y="68">⑤ stamp</text>
+                <text class="mono" x="784" y="90">passes only</text>
+              </g>
+              <text class="lane" x="10" y="218">pre-push</text>
+              <text class="lane" x="10" y="236">verify mode</text>
+              <g class="box">
+                <rect height="70" rx="10" width="180" x="180" y="190" />
+                <text x="194" y="218">git push</text>
+                <text class="mono" x="194" y="240">mise run check</text>
+              </g>
+              <g class="box dashed">
+                <rect height="70" rx="10" width="160" x="590" y="190" />
+                <text x="604" y="218">lookup</text>
+                <text class="mono" x="604" y="240">stele still runs</text>
+              </g>
+              <g class="box">
+                <rect height="70" rx="10" width="140" x="770" y="190" />
+                <text x="784" y="218">log</text>
+                <text class="mono" x="784" y="240">dandori/log.tsv</text>
+              </g>
+              <g aria-hidden="true">
+                <path class="arrow" d="M160 75 H178" marker-end="url(#head)" />
+                <path class="arrow" d="M360 75 H378" marker-end="url(#head)" />
+                <path class="arrow" d="M570 75 H588" marker-end="url(#head)" />
+                <path class="arrow" d="M750 75 H768" marker-end="url(#head)" />
+                <path class="arrow" d="M360 225 H430 V112" marker-end="url(#head)" />
+                <path class="arrow" d="M520 110 V225 H588" marker-end="url(#head)" />
+                <path class="arrow" d="M840 110 V188" marker-end="url(#head)" />
+                <path class="arrow" d="M770 225 H752" marker-end="url(#head)" />
+              </g>
+            </svg>
+          </div>
+          <figcaption>
+            Both modes reach the same key for the same tree, so the passes stamped at the end of a
+            turn are what pre-push finds. The log lives under the Git common dir, shared by every
+            worktree and never in a tree.
+          </figcaption>
+        </figure>
+        <table data-table>
+          <thead>
+            <tr>
+              <th>run</th>
+              <th class="table-num">measured</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="code">oxfmt --check</code></td>
+              <td class="table-num">0.1 s</td>
+            </tr>
+            <tr>
+              <td><code class="code">tsc</code> · config, dandori, verax</td>
+              <td class="table-num">0.2 s</td>
+            </tr>
+            <tr>
+              <td><code class="code">stele check &amp;&amp; stele emit --check</code></td>
+              <td class="table-num">0.2 s</td>
+            </tr>
+            <tr>
+              <td><code class="code">oxlint</code></td>
+              <td class="table-num">2.3 s</td>
+            </tr>
+            <tr>
+              <td><code class="code">bun test</code></td>
+              <td class="table-num">30.5 s</td>
+            </tr>
+            <tr>
+              <td>tree key</td>
+              <td class="table-num">0.03 s</td>
+            </tr>
+            <tr>
+              <td><code class="code">mise run check</code>, cold</td>
+              <td class="table-num">33.4 s</td>
+            </tr>
+            <tr>
+              <td><code class="code">mise run check</code>, every gate stamped</td>
+              <td class="table-num">0.30 s</td>
+            </tr>
+            <tr>
+              <td>Stop hook, every gate stamped</td>
+              <td class="table-num">0.27 s</td>
+            </tr>
+            <tr>
+              <td>per-edit hook</td>
+              <td class="table-num">0.10 s</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="docs-note">
+          Wall times on an Apple-silicon Mac, this repo at 7 nodes and 118 formatted files. A
+          stamped run is the key, a log read and stele.
+        </p>
+      </section>
+
+      <section class="docs-section" id="soundness">
+        <header><h2 class="h2">Soundness</h2></header>
+        <p class="docs-note">
+          <strong>Proposition 1.</strong> Treat a gate as a function
+          <span class="math">g : Tree → {pass, fail}</span>. If <span class="math">g</span> is
+          deterministic and reads nothing outside the tree, or the key covers what it reads, then
+          <span class="math">hash(t₁) = hash(t₂) ⇒ g(t₁) = g(t₂)</span> up to a hash collision, so a
+          recorded pass may be reused.
+        </p>
+        <p class="docs-note">
+          <em>Proof.</em> Git's tree hash is a hash of every path, mode and blob in the tree, so
+          equal hashes mean equal trees unless two trees collide. A deterministic
+          <span class="math">g</span> that reads only the tree and the key's other inputs gives
+          equal results on equal inputs. ∎
+        </p>
+        <p class="docs-note">
+          This is the verifying trace of Mokhov, Mitchell and Peyton Jones,
+          <a class="link" href="https://doi.org/10.1145/3236774">Build Systems à la Carte</a> (ICFP
+          2018, §4.2.2), which records the hashes of a task's dependencies and rebuilds when one
+          changes. Here the dependency set of every gate is the whole tree: an over-approximation,
+          so sound but not minimal. An edit to a README re-runs the tests.
+        </p>
+        <p class="docs-note">
+          <strong>Corollary.</strong> The key's tree is
+          <code class="code">git write-tree</code> after <code class="code">git add -A</code> into a
+          copy of the index. Committing that state with <code class="code">git add -A</code>
+          writes the same tree object, so the dirty tree's key equals
+          <code class="code">HEAD^{tree}</code> after the commit and the pass earned in the agent
+          loop is the stamp pre-push finds. The real index is never written.
+        </p>
+      </section>
+
+      <section class="docs-section" id="order">
+        <header><h2 class="h2">Order</h2></header>
+        <p class="docs-note">
+          <strong>Proposition 2.</strong> With stop-on-first-failure, cost
+          <span class="math">cᵢ</span> and failure probability <span class="math">pᵢ</span>, gate
+          <span class="math">i</span> goes before gate <span class="math">j</span> iff
+          <span class="math">cᵢ/pᵢ &lt; cⱼ/pⱼ</span>.
+        </p>
+        <figure class="figure">
+          <div class="drawing">
+            <svg
+              viewBox="0 0 900 170"
+              role="img"
+              aria-label="i then j costs c i plus one minus p i times c j; j then i costs c j plus one minus p j times c i; the difference is p j c i minus p i c j"
+            >
+              <text class="lane" x="10" y="45">i then j</text>
+              <g class="box">
+                <rect height="44" rx="10" width="120" x="110" y="20" />
+                <text class="mono" x="124" y="47">cᵢ</text>
+              </g>
+              <g class="box dashed">
+                <rect height="44" rx="10" width="260" x="240" y="20" />
+                <text class="mono" x="254" y="47">cⱼ · runs if i passes, 1−pᵢ</text>
+              </g>
+              <text class="mono" x="520" y="47">cᵢ + (1−pᵢ)cⱼ</text>
+              <text class="lane" x="10" y="125">j then i</text>
+              <g class="box">
+                <rect height="44" rx="10" width="260" x="110" y="100" />
+                <text class="mono" x="124" y="127">cⱼ</text>
+              </g>
+              <g class="box dashed">
+                <rect height="44" rx="10" width="120" x="380" y="100" />
+                <text class="mono" x="394" y="127">cᵢ · 1−pⱼ</text>
+              </g>
+              <text class="mono" x="520" y="127">cⱼ + (1−pⱼ)cᵢ</text>
+              <g class="focus">
+                <rect height="44" rx="10" width="200" x="690" y="60" />
+                <text class="mono" x="704" y="87">difference pⱼcᵢ − pᵢcⱼ</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>
+            Dashed boxes run only when the gate before them passes. The first order is cheaper
+            exactly when the difference is negative, that is when cᵢ/pᵢ &lt; cⱼ/pⱼ.
+          </figcaption>
+        </figure>
+        <p class="docs-note">
+          <em>Proof.</em> For an order σ of independent gates the expected cost is
+          <span class="math">E(σ) = Σₖ c_σₖ · Πₗ&lt;ₖ (1 − p_σₗ)</span>. Swap the adjacent gates
+          <span class="math">i, j</span> at positions <span class="math">k, k+1</span>. Every term
+          before <span class="math">k</span> is unchanged; every term after
+          <span class="math">k+1</span> carries the factor <span class="math">(1−pᵢ)(1−pⱼ)</span> in
+          either order, so it is unchanged too. With <span class="math">P</span> the probability the
+          prefix passes, only <span class="math">P[cᵢ + (1−pᵢ)cⱼ]</span> becomes
+          <span class="math">P[cⱼ + (1−pⱼ)cᵢ]</span>, and the first minus the second is
+          <span class="math">P(pⱼcᵢ − pᵢcⱼ)</span>. So an adjacent pair out of ascending
+          <span class="math">c/p</span> order can be swapped without raising the cost. Any order
+          reaches the sorted one through such swaps (each removes one inversion), so the sorted
+          order is optimal. ∎
+        </p>
+        <p class="docs-note">
+          The pairwise step still holds for dependent gates if <span class="math">pᵢ</span> and
+          <span class="math">pⱼ</span> are read as failure probabilities conditional on the prefix
+          passing, since the suffix factor is the probability that both pass in either order. The
+          global sort assumes independence: when one gate's failure predicts another's, the
+          conditional probabilities change with the prefix and no single key orders them. This is
+          Smith's ratio rule for one machine, W. E. Smith,
+          <a class="link" href="https://doi.org/10.1002/nav.3800030106"
+            >Various optimizers for single-stage production</a
+          >
+          (Naval Research Logistics Quarterly, 1956), proved by the same exchange.
+        </p>
+        <p class="docs-note">
+          dandori estimates <span class="math">c</span> as the mean logged duration, the declared
+          cost counted as one run, and <span class="math">p</span> as
+          <span class="math">(fails + 1)/(runs + 2)</span>. With no history every
+          <span class="math">p</span> is ½, so the declared costs decide. With the measured costs,
+          tsc at 0.2 s runs before the tests at 30.5 s unless the tests fail more than about 150× as
+          often. The fixers are a precedence constraint outside the sort: they rewrite the tree the
+          gates read, so they run first, oxlint's fixes before the formatter.
+        </p>
+      </section>
+
+      <section class="docs-section" id="once">
+        <header><h2 class="h2">Once</h2></header>
+        <p class="docs-note">
+          <strong>Proposition 3.</strong> One validation pass is enough. The tests write no source,
+          so the tree is the same before and after them and, by Proposition 1, every static gate
+          returns what it returned on the first pass; a second pass is redundant.
+        </p>
+        <p class="docs-note">
+          The fixers need a fixpoint <span class="math">F(t) = t</span> for
+          <span class="math">F = oxfmt ∘ oxlint --fix</span>, or a verified tree could still be
+          rewritten. That is not assumed: verify mode runs <code class="code">oxlint</code> and
+          <code class="code">oxfmt --check</code> on the tree the fixers leave, and fails if either
+          would change it. A fixer is stamped only when it left the tree as it found it.
+        </p>
+      </section>
+
+      <section class="docs-section" id="assumptions">
+        <header><h2 class="h2">Assumptions</h2></header>
+        <table data-table>
+          <thead>
+            <tr>
+              <th>input</th>
+              <th>held by</th>
+              <th>fails when</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>tracked and untracked files</td>
+              <td>the key's tree hash</td>
+              <td>never: ignored files are outside the tree, as they are outside a commit</td>
+            </tr>
+            <tr>
+              <td><code class="code">.env</code>, loaded by mise</td>
+              <td>the key's input hash</td>
+              <td>never</td>
+            </tr>
+            <tr>
+              <td>operating system</td>
+              <td>the key's platform and arch</td>
+              <td>an OS upgrade changes a result: the key holds no OS version</td>
+            </tr>
+            <tr>
+              <td><code class="code">node_modules</code></td>
+              <td>assumed installed from <code class="code">bun.lock</code></td>
+              <td>an install drifts from the lockfile; stamps are shared across worktrees</td>
+            </tr>
+            <tr>
+              <td>bun, node, hk</td>
+              <td>pinned in <code class="code">mise.toml</code>, inside the tree</td>
+              <td>a gate calls a global binary instead of the pinned one</td>
+            </tr>
+            <tr>
+              <td>determinism</td>
+              <td>assumed</td>
+              <td>a flaky test: a lucky pass stays stamped until the tree changes</td>
+            </tr>
+            <tr>
+              <td>Git history</td>
+              <td>stele is <code class="code">stamp: false</code></td>
+              <td>a new gate reads history and is stamped</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="docs-note">
+          Only passes are stamped. A failure can come from flakiness or a broken environment as well
+          as from the tree, and a stamped failure would hold until the tree changed; re-running it
+          costs one gate, while trusting it could block a good tree. stele checks that each claim's
+          anchor is unchanged since the commit it was stamped at, so its verdict depends on history
+          the tree does not carry; it runs every time, at 0.2 s. Pre-push verifies the working tree,
+          which is the pushed tree when everything is committed; a pre-commit hook that reformats on
+          commit only costs a re-run, since dandori keys what it sees.
+        </p>
+      </section>
+
+      <nav class="row link-row" aria-label="links">
+        <a class="pill" href="./">typescript · packages</a>
+        <a class="pill" href="https://github.com/jgeschwendt/typescript/tree/main/packages/dandori"
+          >repo · packages/dandori</a
+        >
+      </nav>
+    </main>
+    <script>
+      /* The theme contract, verbatim from jgeschwendt/ui docs.js — same localStorage
+   key, so a theme chosen on the ui pages is the theme this one opens in. */
+      const THEME_KEY = 'ui-theme';
+      function applyTheme(mode) {
+        const root = document.documentElement;
+        if (mode === 'auto') {
+          root.removeAttribute('data-theme');
+          localStorage.removeItem(THEME_KEY);
+        } else {
+          root.dataset.theme = mode;
+          localStorage.setItem(THEME_KEY, mode);
+        }
+        for (const b of document.querySelectorAll('[data-theme-set]')) {
+          b.setAttribute('aria-pressed', String(b.dataset.themeSet === mode));
+        }
+      }
+      for (const b of document.querySelectorAll('[data-theme-set]')) {
+        b.addEventListener('click', () => applyTheme(b.dataset.themeSet));
+      }
+      applyTheme(localStorage.getItem(THEME_KEY) || 'auto');
+    </script>
+  </body>
+</html>

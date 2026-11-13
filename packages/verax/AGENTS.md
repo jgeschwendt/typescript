@@ -15,7 +15,7 @@ hazards:
     anchor: ※ verax-def-identity
   - claim: "HOT PATH — per-run code never calls Object.entries/Object.keys or iterator helpers (values().every etc.), and `is` runs check-only paths that allocate nothing (outside refine) while parse/validate allocate only the output snapshot; shapes resolve once into plans. Measured on bun 1.4.2 / node 24: iterator helpers 2–11× slower, Object.entries 24–95 ns per call; every perf change is kept only with a before/after run of the benchmark harness"
     anchor: ※ verax-hot-path
-  - claim: TYPE TESTS — the `true satisfies Equal<…>` assertions fail only under tsc; bun test strips types, so ci.yaml and the hk pre-push gate (hk.pkl) run `bunx tsc --noEmit` in packages/verax (the lockfile compiler) separately
+  - claim: TYPE TESTS — the `true satisfies Equal<…>` assertions fail only under tsc; bun test strips types, so ci.yaml and dandori run `bunx tsc --noEmit` in packages/verax (the lockfile compiler)
     anchor: ※ verax-type-tests
 edges:
   depends: [packages/oxlint]

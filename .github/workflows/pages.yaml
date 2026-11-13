@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - .github/workflows/pages.yaml
+      - docs/dandori.html
       - docs/index.html
       - packages/oxlint/__tests__/rules.html
       - packages/oxlint/__tests__/ui.css
@@ -42,7 +43,7 @@ jobs:
       - name: site
         run: |
           mkdir -p site/oxlint site/verax
-          cp docs/index.html site/
+          cp docs/dandori.html docs/index.html site/
           cp packages/oxlint/__tests__/rules.html site/oxlint/index.html
           cp packages/oxlint/__tests__/ui.css site/oxlint/
           cp packages/verax/docs/index.html packages/verax/docs/build/*.js site/verax/

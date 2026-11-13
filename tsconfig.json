@@ -1,0 +1,5 @@
+{
+  "extends": "./packages/tsconfig/tsconfig.json",
+  "compilerOptions": { "noEmit": true, "types": ["bun"] },
+  "include": ["dandori.config.ts"]
+}

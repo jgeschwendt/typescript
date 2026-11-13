@@ -2,13 +2,16 @@
 
 ```stele
 kind: system
-purpose: Bun-workspace monorepo publishing to npm — the @jlg configs (oxlint, oxfmt, tsconfig), the private hud layer and the verax library. The packages ARE the product; changesets drive releases.
+purpose: Bun-workspace monorepo publishing to npm — the @jlg configs (oxlint, oxfmt, tsconfig), private hud and dandori layers and the verax library. The packages ARE the product; changesets drive releases.
 commands:
   changeset: bun run changeset
+  check: mise run check
   format-check: bunx oxfmt --check
   lint: bunx oxlint
   test: bun test
 invariants:
+  - claim: "STELE UNSTAMPED — dandori.config.ts runs stele `stamp: false`: its verdict reads Git history, not only the tree"
+    anchor: ※ stele-unstamped
   - claim: MINIMUM BUMP — pre-1.0 every changeset is patch, or minor for a breaking change; major is forbidden until a deliberate 1.0, and the ci check job fails on one; the guard regexes name every unscoped package (verax) beside @jlg/*
     anchor: ※ changeset-guard
   - claim: RELEASE APPROVAL — the Version Packages PR stays a draft; changesets ride their own PRs, and the owner's ready-and-merge is what publishes; a minor or major bump, and every verax bump, needs the release:signed-off label before ci's check passes — agents never ready, label or merge it
@@ -36,15 +39,15 @@ edges:
 - ⚠ `packages/oxlint`: SNAPSHOT RESOLUTION — the guard tests resolve oxlint from packages/oxlint/node_modules first, so a root-only oxlint bump leaves packages/oxlint's devDependency (and the regenerated rules.test.js snapshot) on the OLD catalog with a silent no-diff; bump both package.json files together (→ ※ snapshot-resolution)
 - ⚠ `packages/verax`: DEF IDENTITY — refine and coerce must reuse the inner schema's def object; sdl() detects name collisions and dedupes union members by def identity, so a fresh def breaks sdl naming (→ ※ verax-def-identity)
 - ⚠ `packages/verax`: HOT PATH — per-run code never calls Object.entries/Object.keys or iterator helpers (values().every etc.), and `is` runs check-only paths that allocate nothing (outside refine) while parse/validate allocate only the output snapshot; shapes resolve once into plans. Measured on bun 1.4.2 / node 24: iterator helpers 2–11× slower, Object.entries 24–95 ns per call; every perf change is kept only with a before/after run of the benchmark harness (→ ※ verax-hot-path)
-- ⚠ `packages/verax`: TYPE TESTS — the `true satisfies Equal<…>` assertions fail only under tsc; bun test strips types, so ci.yaml and the hk pre-push gate (hk.pkl) run `bunx tsc --noEmit` in packages/verax (the lockfile compiler) separately (→ ※ verax-type-tests)
+- ⚠ `packages/verax`: TYPE TESTS — the `true satisfies Equal<…>` assertions fail only under tsc; bun test strips types, so ci.yaml and dandori run `bunx tsc --noEmit` in packages/verax (the lockfile compiler) (→ ※ verax-type-tests)
 
 ## Map
 
-| node            | kind      | purpose                                                                                                                                                                                                  | unfold                                                               |
-| --------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| packages        | container | Three shipped configs, the verax runtime-type library and the private hud layer. oxlint and oxfmt carry a base ruleset and its guard tests; tsconfig is one shared file; hud is a browser comment layer. | `stele unfold packages` · or read `packages/AGENTS.md`               |
-| packages/oxfmt  | container | Canonical oxfmt settings — formatter companion to @jlg/oxlint. oxfmtrc.json holds the opinions; index.js merges it in (oxfmt has no `extends`). Repo-local keys stay in the consumer.                    | `stele unfold packages/oxfmt` · or read `packages/oxfmt/AGENTS.md`   |
-| packages/oxlint | container | Shareable oxlint base config. index.js is the whole base; defineConfig() adds overrides per detected bun/next/react/typescript, returns one flat config. Maximalist.                                     | `stele unfold packages/oxlint` · or read `packages/oxlint/AGENTS.md` |
+| node            | kind      | purpose                                                                                                                                                                                            | unfold                                                               |
+| --------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| packages        | container | Three shipped configs, the verax runtime-type library and two private layers. oxlint and oxfmt carry a base ruleset and its guard tests; hud is a browser comment layer; dandori the stamped gate. | `stele unfold packages` · or read `packages/AGENTS.md`               |
+| packages/oxfmt  | container | Canonical oxfmt settings — formatter companion to @jlg/oxlint. oxfmtrc.json holds the opinions; index.js merges it in (oxfmt has no `extends`). Repo-local keys stay in the consumer.              | `stele unfold packages/oxfmt` · or read `packages/oxfmt/AGENTS.md`   |
+| packages/oxlint | container | Shareable oxlint base config. index.js is the whole base; defineConfig() adds overrides per detected bun/next/react/typescript, returns one flat config. Maximalist.                               | `stele unfold packages/oxlint` · or read `packages/oxlint/AGENTS.md` |
 
 ## Indexes
 
