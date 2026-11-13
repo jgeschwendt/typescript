@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "f=$(jq -r .tool_input.file_path); case $f in \"$CLAUDE_PROJECT_DIR\"/*) mise x -C \"$CLAUDE_PROJECT_DIR\" -- bunx oxfmt --no-error-on-unmatched-pattern \"$f\" >/dev/null 2>&1 ;; esac; exit 0",
+            "type": "command"
+          }
+        ],
+        "matcher": "Edit|Write"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "[ \"$(jq -r .stop_hook_active)\" = true ] || mise x -C \"$CLAUDE_PROJECT_DIR\" -- bunx dandori --fix >&2 || exit 2",
+            "type": "command"
+          }
+        ]
+      }
+    ]
+  }
+}

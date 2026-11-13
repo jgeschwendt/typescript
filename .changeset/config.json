@@ -1,5 +1,5 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@4.0.0/schema.json",
+  "$schema": "../node_modules/@changesets/config/schema.json",
   "access": "public",
   "baseBranch": "main",
   "changelog": [
@@ -10,6 +10,6 @@
   ],
   "commit": false,
   "format": "oxfmt",
-  "ignore": ["@jlg/hud"],
+  "ignore": ["@jlg/dandori", "@jlg/hud"],
   "updateInternalDependencies": "patch"
 }

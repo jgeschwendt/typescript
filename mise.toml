@@ -1,8 +1,16 @@
+[env]
+_.file = ".env"
+
+[tasks.check]
+description = "dandori in verify mode: never writes the tree (docs/dandori.html)"
+run = "bunx dandori"
+
+[tasks."check:fix"]
+description = "dandori in fix mode: oxlint --fix, then oxfmt, then verify"
+run = "bunx dandori --fix"
+
 [tools]
 bun = "1.4.4"
 hk = { version = "2.8.0", workflow = "release.yml" }
 # oxlint/oxfmt launchers run under node
 node = "24"
-
-[env]
-_.file = ".env"
