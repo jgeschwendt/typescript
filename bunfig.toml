@@ -3,3 +3,6 @@ coverage = true
 # measured: verax's src alone, from the root or packages/verax (its test script passes this file)
 coveragePathIgnorePatterns = ["!{packages/verax/,}src/*.ts"]
 coverageThreshold = { functions = 1.0, lines = 1.0 }
+# a fresh global per file: each happy-dom register/unregister leaves globalThis slow for every later file
+# (global lookups 2.8ms → 67ms after hud's two cycles), timing out verax's bounded-work tests on CI (2026-11-14)
+isolate = true
