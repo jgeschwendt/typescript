@@ -1178,12 +1178,12 @@
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-multi-str.html"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "pedantic",
           "options": "-",
           "oxlint": "native",
-          "reason": "",
+          "reason": "duplicates unicorn/no-negated-condition, unicorn's replacement for the core rule (identical on every probed case; probed 2026-11-14 on oxlint 1.93)",
           "rule": "eslint/no-negated-condition",
           "type-aware": "-",
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-negated-condition.html"
@@ -4869,7 +4869,7 @@
           "category": "-",
           "options": "-",
           "oxlint": "none",
-          "reason": "duplicates native no-unused-private-class-members (verified 2026-10-14 · TS probe)",
+          "reason": "native no-unused-private-class-members covers #private members only; a TS `private` one is tsc's noUnusedLocals (TS6133), which @jlg/tsconfig turns on (probed 2026-11-14)",
           "rule": "typescript/no-unused-private-class-members",
           "type-aware": "-",
           "url": "https://typescript-eslint.io/rules/no-unused-private-class-members"
@@ -5603,12 +5603,12 @@
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/default-export-style.md"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "options": "-",
-          "oxlint": "js",
-          "reason": "",
+          "oxlint": "none",
+          "reason": "duplicates native unicorn/prefer-dom-node-dataset, the name upstream renamed it from (identical on every probed case; probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/dom-node-dataset",
           "type-aware": "-",
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/dom-node-dataset.md"
@@ -5691,12 +5691,12 @@
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/filename-case.html"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "options": "-",
-          "oxlint": "js",
-          "reason": "",
+          "oxlint": "none",
+          "reason": "duplicates native id-match (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/id-match",
           "type-aware": "-",
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/id-match.md"
@@ -5757,12 +5757,12 @@
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/key-name-casing.md"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "options": "-",
-          "oxlint": "js",
-          "reason": "",
+          "oxlint": "none",
+          "reason": "duplicates native logical-assignment-operators (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/logical-assignment-operators",
           "type-aware": "-",
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/logical-assignment-operators.md"
@@ -5823,12 +5823,12 @@
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-accessor-recursion.html"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "options": "-",
-          "oxlint": "js",
-          "reason": "",
+          "oxlint": "none",
+          "reason": "duplicates native oxc/bad-bitwise-operator (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-accidental-bitwise-operator",
           "type-aware": "-",
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-accidental-bitwise-operator.md"
@@ -6076,12 +6076,12 @@
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-canvas-to-image.md"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "options": "-",
-          "oxlint": "js",
-          "reason": "",
+          "oxlint": "none",
+          "reason": "duplicates native oxc/bad-comparison-sequence (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-chained-comparison",
           "type-aware": "-",
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-chained-comparison.md"
@@ -6153,12 +6153,12 @@
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-console-spaces.html"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "options": "-",
-          "oxlint": "js",
-          "reason": "",
+          "oxlint": "none",
+          "reason": "duplicates native oxc/erasing-op (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-constant-zero-expression",
           "type-aware": "-",
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-constant-zero-expression.md"
@@ -6208,12 +6208,12 @@
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-duplicate-if-branches.md"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "options": "-",
-          "oxlint": "js",
-          "reason": "",
+          "oxlint": "none",
+          "reason": "duplicates native oxc/const-comparisons (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-duplicate-logical-operands",
           "type-aware": "-",
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-duplicate-logical-operands.md"
@@ -6285,12 +6285,12 @@
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-exports-in-scripts.md"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "options": "-",
-          "oxlint": "js",
-          "reason": "",
+          "oxlint": "none",
+          "reason": "duplicates native unicorn/no-array-for-each, its earlier name, which also covers Map and Set (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-for-each",
           "type-aware": "-",
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-for-each.md"
@@ -6417,12 +6417,12 @@
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-boolean-attribute-value.md"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "options": "-",
-          "oxlint": "js",
-          "reason": "",
+          "oxlint": "none",
+          "reason": "duplicates native oxc/bad-char-at-comparison (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-invalid-character-comparison",
           "type-aware": "-",
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-character-comparison.md"
@@ -6681,12 +6681,12 @@
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-mismatched-map-key.md"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "options": "-",
-          "oxlint": "js",
-          "reason": "",
+          "oxlint": "none",
+          "reason": "duplicates native oxc/misrefactored-assign-op (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-misrefactored-assignment",
           "type-aware": "-",
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-misrefactored-assignment.md"
@@ -7451,12 +7451,12 @@
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-compound-assignment.md"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "options": "-",
-          "oxlint": "js",
-          "reason": "",
+          "oxlint": "none",
+          "reason": "duplicates native no-useless-concat (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-useless-concat",
           "type-aware": "-",
           "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-concat.md"
@@ -10806,34 +10806,34 @@
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-for-each.html"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "pedantic",
           "options": "-",
           "oxlint": "native",
-          "reason": "",
+          "reason": "deprecated upstream: double-reports with its successors unicorn-js/prefer-literal-ascii and unicorn-js/prefer-unicode-code-point-escapes (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-hex-escape",
           "type-aware": "-",
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-hex-escape.html"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "pedantic",
           "options": "-",
           "oxlint": "native",
-          "reason": "",
+          "reason": "deprecated upstream: double-reports with its successor no-instanceof-builtins (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-instanceof-array",
           "type-aware": "-",
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-instanceof-array.html"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "restriction",
           "options": "-",
           "oxlint": "native",
-          "reason": "",
+          "reason": "deprecated upstream: double-reports with its successor no-unnecessary-slice-end (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-length-as-slice-end",
           "type-aware": "-",
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-length-as-slice-end.html"

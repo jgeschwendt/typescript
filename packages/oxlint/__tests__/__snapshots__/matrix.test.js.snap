@@ -152,7 +152,7 @@ no-magic-numbers: error [{"detectObjects":true,"enforceConst":true,"ignore":[-1,
 no-misleading-character-class: error
 no-multi-assign: error
 no-multi-str: error
-no-negated-condition: error
+no-negated-condition: off
 no-nested-ternary: error
 no-new: error
 no-new-func: error
@@ -511,14 +511,10 @@ unicorn-js/consistent-json-file-read: error
 unicorn-js/consistent-optional-chaining: error
 unicorn-js/consistent-tuple-labels: error
 unicorn-js/default-export-style: error
-unicorn-js/dom-node-dataset: error
 unicorn-js/expiring-todo-comments: error [{"checkDates":true}]
-unicorn-js/id-match: error
 unicorn-js/isolated-functions: error
 unicorn-js/iteration-fallback-style: error
-unicorn-js/logical-assignment-operators: error
 unicorn-js/name-replacements: error
-unicorn-js/no-accidental-bitwise-operator: error
 unicorn-js/no-array-concat-in-loop: error
 unicorn-js/no-array-from-fill: error
 unicorn-js/no-array-front-mutation: error
@@ -532,21 +528,17 @@ unicorn-js/no-blob-to-file: error
 unicorn-js/no-boolean-sort-comparator: error
 unicorn-js/no-break-in-nested-loop: error
 unicorn-js/no-canvas-to-image: error
-unicorn-js/no-chained-comparison: error
 unicorn-js/no-collection-bracket-access: error
 unicorn-js/no-computed-property-existence-check: error
 unicorn-js/no-conflicting-constraints: error
 unicorn-js/no-confusing-array-splice: error
-unicorn-js/no-constant-zero-expression: error
 unicorn-js/no-declarations-before-early-exit: error
 unicorn-js/no-double-comparison: error
 unicorn-js/no-duplicate-if-branches: error
-unicorn-js/no-duplicate-logical-operands: error
 unicorn-js/no-duplicate-loops: error
 unicorn-js/no-duplicate-set-values: error
 unicorn-js/no-error-property-assignment: error
 unicorn-js/no-exports-in-scripts: error
-unicorn-js/no-for-each: error
 unicorn-js/no-for-loop: error
 unicorn-js/no-global-object-property-assignment: error
 unicorn-js/no-impossible-length-comparison: error
@@ -556,7 +548,6 @@ unicorn-js/no-incorrect-template-string-interpolation: error
 unicorn-js/no-ineffective-csp-directives: error
 unicorn-js/no-invalid-argument-count: error
 unicorn-js/no-invalid-boolean-attribute-value: error
-unicorn-js/no-invalid-character-comparison: error
 unicorn-js/no-invalid-dom-token: error
 unicorn-js/no-invalid-file-input-accept: error
 unicorn-js/no-invalid-integrity: error
@@ -574,7 +565,6 @@ unicorn-js/no-leading-empty-lines: error
 unicorn-js/no-loop-iterable-mutation: error
 unicorn-js/no-manually-wrapped-comments: error
 unicorn-js/no-mismatched-map-key: error
-unicorn-js/no-misrefactored-assignment: error
 unicorn-js/no-missing-local-resource: error
 unicorn-js/no-multiple-promise-resolver-calls: error
 unicorn-js/no-named-default: error
@@ -623,7 +613,6 @@ unicorn-js/no-url-in-search-params: error
 unicorn-js/no-useless-boolean-cast: error
 unicorn-js/no-useless-coercion: error
 unicorn-js/no-useless-compound-assignment: error
-unicorn-js/no-useless-concat: error
 unicorn-js/no-useless-continue: error
 unicorn-js/no-useless-delete-check: error
 unicorn-js/no-useless-else: error
@@ -764,13 +753,13 @@ unicorn/no-confusing-array-with: error
 unicorn/no-console-spaces: error
 unicorn/no-document-cookie: error
 unicorn/no-empty-file: error
-unicorn/no-hex-escape: error
+unicorn/no-hex-escape: off
 unicorn/no-immediate-mutation: error
-unicorn/no-instanceof-array: error
+unicorn/no-instanceof-array: off
 unicorn/no-instanceof-builtins: error
 unicorn/no-invalid-fetch-options: error
 unicorn/no-invalid-remove-event-listener: error
-unicorn/no-length-as-slice-end: error
+unicorn/no-length-as-slice-end: off
 unicorn/no-lonely-if: error
 unicorn/no-magic-array-flat-depth: error
 unicorn/no-negated-condition: error
