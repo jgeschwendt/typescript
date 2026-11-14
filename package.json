@@ -18,7 +18,7 @@
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3",
     "@jlg/oxfmt": "^0.1.2",
-    "@jlg/oxlint": "^0.1.5",
+    "@jlg/oxlint": "^0.1.6",
     "@types/bun": "^1.4.4",
     "oxfmt": "^0.78.0",
     "oxlint": "^1.93.0",
