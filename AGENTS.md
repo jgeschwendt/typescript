@@ -7,7 +7,7 @@ commands:
   changeset: bun run changeset
   format-check: bunx oxfmt --check
   lint: bunx oxlint
-  test: bun test
+  test: bun test --isolate
 invariants:
   - claim: MINIMUM BUMP — pre-1.0 every changeset is patch, or minor for a breaking change; major is forbidden until a deliberate 1.0, and the ci check job fails on one; the guard regexes name every unscoped package (verax) beside @jlg/*
     anchor: ※ changeset-guard
