@@ -1,6 +1,7 @@
 import { config, loadRules, off, overrides, ruleKey } from './_helpers.js';
 
-/** @typedef {{ meta?: { deprecated?: unknown; docs?: { extendsBaseRule?: boolean | string; requiresTypeChecking?: boolean; url?: string } } }} Rule */
+/** @typedef {string | { plugin?: unknown; rule: { name: string } }} Successor a bare or scoped name, or ESLint's object form, whose `plugin` marks another plugin's rule */
+/** @typedef {{ meta?: { deprecated?: boolean | { replacedBy?: Successor[] }; docs?: { extendsBaseRule?: boolean | string; requiresTypeChecking?: boolean; url?: string }; replacedBy?: Successor[] } }} Rule */
 
 const levels = new Map(Object.entries(config.categories ?? {}));
 const native = loadRules();

@@ -72,6 +72,8 @@ const off = Object.freeze({
   'import/prefer-default-export': 'contradicts import/no-default-export, which the base enforces',
   'max-lines-per-function': 'max-lines is the ceiling: a function is at most its file',
   'no-continue': 'contradicts unicorn/prefer-continue, which wants the guard-continue this forbids',
+  'no-negated-condition':
+    "duplicates unicorn/no-negated-condition, unicorn's replacement for the core rule (identical on every probed case; probed 2026-11-14 on oxlint 1.93)",
   'no-ternary': 'bans ternaries, syntax the house writes',
   'no-undefined': 'bans undefined, syntax the house writes',
   'no-unexpected-multiline':
@@ -93,6 +95,12 @@ const off = Object.freeze({
     'deprecated upstream: double-reports with its successor ban-ts-comment',
   'unicorn/empty-brace-spaces':
     "eslint-config-prettier's residue: brace spaces oxfmt formats (probed against oxfmt)",
+  'unicorn/no-hex-escape':
+    'deprecated upstream: double-reports with its successors unicorn-js/prefer-literal-ascii and unicorn-js/prefer-unicode-code-point-escapes (probed 2026-11-14 on oxlint 1.93)',
+  'unicorn/no-instanceof-array':
+    'deprecated upstream: double-reports with its successor no-instanceof-builtins (probed 2026-11-14 on oxlint 1.93)',
+  'unicorn/no-length-as-slice-end':
+    'deprecated upstream: double-reports with its successor no-unnecessary-slice-end (probed 2026-11-14 on oxlint 1.93)',
   'unicorn/no-nested-ternary':
     "eslint-config-prettier's residue: nested ternaries are native no-nested-ternary's (probed against oxfmt)",
   'unicorn/number-literal-case':
@@ -149,7 +157,7 @@ const off = Object.freeze({
   'typescript-js/no-unused-expressions':
     'duplicates native no-unused-expressions (verified 2026-10-14 · TS probe)',
   'typescript-js/no-unused-private-class-members':
-    'duplicates native no-unused-private-class-members (verified 2026-10-14 · TS probe)',
+    "native no-unused-private-class-members covers #private members only; a TS `private` one is tsc's noUnusedLocals (TS6133), which @jlg/tsconfig turns on (probed 2026-11-14)",
   'typescript-js/no-unused-vars':
     'duplicates native no-unused-vars (verified 2026-10-14 · TS probe)',
   'typescript-js/no-use-before-define':
@@ -159,11 +167,32 @@ const off = Object.freeze({
   'unicorn-js/comma-spacing': 'meta.languages JSON only: never reports on JS',
   'unicorn-js/consistent-arrow-return-style':
     'contradicts native arrow-body-style: the explicit return it demands on a multiline body is the block as-needed forbids',
+  'unicorn-js/dom-node-dataset':
+    'duplicates native unicorn/prefer-dom-node-dataset, the name upstream renamed it from (identical on every probed case; probed 2026-11-14 on oxlint 1.93)',
+  'unicorn-js/id-match': 'duplicates native id-match (probed 2026-11-14 on oxlint 1.93)',
   'unicorn-js/indent': 'meta.languages CSS/JSON only: never reports on JS',
   'unicorn-js/key-name-casing': 'meta.languages JSON/TOML/YAML only: never reports on JS',
+  'unicorn-js/logical-assignment-operators':
+    'duplicates native logical-assignment-operators (probed 2026-11-14 on oxlint 1.93)',
+  'unicorn-js/no-accidental-bitwise-operator':
+    'duplicates native oxc/bad-bitwise-operator (probed 2026-11-14 on oxlint 1.93)',
+  'unicorn-js/no-chained-comparison':
+    'duplicates native oxc/bad-comparison-sequence (probed 2026-11-14 on oxlint 1.93)',
+  'unicorn-js/no-constant-zero-expression':
+    'duplicates native oxc/erasing-op (probed 2026-11-14 on oxlint 1.93)',
+  'unicorn-js/no-duplicate-logical-operands':
+    'duplicates native oxc/const-comparisons (probed 2026-11-14 on oxlint 1.93)',
   'unicorn-js/no-empty-link-text': 'meta.languages Markdown only: never reports on JS',
+  'unicorn-js/no-for-each':
+    'duplicates native unicorn/no-array-for-each, its earlier name, which also covers Map and Set (probed 2026-11-14 on oxlint 1.93)',
+  'unicorn-js/no-invalid-character-comparison':
+    'duplicates native oxc/bad-char-at-comparison (probed 2026-11-14 on oxlint 1.93)',
   'unicorn-js/no-javascript-url': 'meta.languages Markdown only: never reports on JS',
   'unicorn-js/no-loss-of-precision': 'meta.languages CSS/JSON/TOML only: never reports on JS',
+  'unicorn-js/no-misrefactored-assignment':
+    'duplicates native oxc/misrefactored-assign-op (probed 2026-11-14 on oxlint 1.93)',
+  'unicorn-js/no-useless-concat':
+    'duplicates native no-useless-concat (probed 2026-11-14 on oxlint 1.93)',
   'unicorn-js/require-frontmatter-fields': 'meta.languages Markdown only: never reports on JS',
 });
 

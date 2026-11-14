@@ -10,7 +10,10 @@ const mixed =
   'Only some members are `readonly`: wrap the whole literal in `Readonly<{ … }>` or split the type.';
 const redundant = '`readonly` is redundant inside `Readonly<{ … }>`.';
 
-/** per file: its source, the rule's messages on it, and its text once every fix settles */
+/**
+per file: its source, the rule's messages on it, and its text once every fix settles
+@type {Record<string, [string, string[], string?]>}
+*/
 const cases = {
   'generic.ts': [
     'export type Bag = Set<{ readonly a: string; readonly [key: string]: string }>;\n',
