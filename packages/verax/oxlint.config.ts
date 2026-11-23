@@ -81,6 +81,23 @@ export default defineConfig({
         'no-unused-vars': ['error', { ...unused, varsIgnorePattern: '^_key$' }],
       },
     },
+    // the bench imports src as tests do, and names schemas like the types they validate
+    {
+      files: ['bench/*.ts'],
+      rules: {
+        // a copy of verax loaded at runtime is typed as the module's own namespace
+        'import/no-namespace': ['error', { ignore: ['../src/index.js'] }],
+        // the bench sits beside src and measures it, as tests do
+        'import/no-relative-parent-imports': 'off',
+        // a schema const is named like the type it validates: `const Node = object(…)`
+        'typescript-js/naming-convention': [
+          'warn',
+          ...naming,
+          { format: ['camelCase', 'PascalCase'], selector: 'import' },
+          { format: ['camelCase', 'PascalCase', 'UPPER_CASE'], selector: 'variable' },
+        ],
+      },
+    },
     // the docs runner drives the page in a browser
     { env: { browser: true }, files: ['docs/*.ts'] },
     // tests hand verax thenables, holes, non-Error throws and cross-realm promises
