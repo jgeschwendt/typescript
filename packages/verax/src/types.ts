@@ -33,17 +33,43 @@ import type { StandardSchemaV1 } from './standard.js';
 // ─── leaves: one predicate decides, and the output is the input ──────────────────────────────────
 
 /**
+A leaf's list walk from `from`: the first index failing, else `length`. Each
+item is read once, and kept in `out` when given once its check returns.
+*/
+type Scan = (items: readonly unknown[], from: number, length: number, out?: unknown[]) => number;
+
+/**
 Each leaf's predicate and the noun its issue names: containers call `test`
-directly, skipping `fast`. A pure one runs no callback: not a `scalar`'s.
+directly, skipping `fast`, and lists `scan`. A pure one runs no callback: not a `scalar`'s.
 */
 const leaves = new WeakMap<
   StandardSchemaV1,
   Readonly<{
     expected: string;
     pure: boolean;
+    scan: Scan;
     test: (value: unknown) => boolean;
   }>
 >();
+
+/**
+A list walk calling `test`: one loop for every leaf, so its call site is megamorphic once a process has a few — built-ins have their own.
+*/
+const scanning =
+  (test: (value: unknown) => boolean): Scan =>
+  (items, from, length, out) => {
+    for (let index = from; index < length; index += 1) {
+      const each = items[index];
+      const passed = test(each);
+      if (out !== undefined) {
+        out[index] = each;
+      }
+      if (!passed) {
+        return index;
+      }
+    }
+    return length;
+  };
 
 /**
 Each `literal` and its value — a discriminant, if its union's members share its key.
@@ -55,6 +81,7 @@ const leaf = <TValue>(
   expected: string,
   test: (value: unknown) => boolean,
   pure = true,
+  scan = scanning(test),
 ): Schema<TValue> => {
   const made = schema<TValue>(
     def,
@@ -66,7 +93,7 @@ const leaf = <TValue>(
       return value as TValue;
     },
   );
-  leaves.set(made, { expected, pure, test });
+  leaves.set(made, { expected, pure, scan, test });
   return made;
 };
 
@@ -94,22 +121,77 @@ const INT_MAX = 2 ** 31 - 1;
 const INT_MIN = -(2 ** 31);
 const isString = (value: unknown): boolean => typeof value === 'string';
 
+// each built-in's own list walk: its check inlines, no call per item
+const scanBoolean: Scan = (items, from, length, out) => {
+  for (let index = from; index < length; index += 1) {
+    const each = items[index];
+    const passed = typeof each === 'boolean';
+    if (out !== undefined) {
+      out[index] = each;
+    }
+    if (!passed) {
+      return index;
+    }
+  }
+  return length;
+};
+const scanFloat: Scan = (items, from, length, out) => {
+  for (let index = from; index < length; index += 1) {
+    const each = items[index];
+    const passed = Number.isFinite(each);
+    if (out !== undefined) {
+      out[index] = each;
+    }
+    if (!passed) {
+      return index;
+    }
+  }
+  return length;
+};
+const scanInt: Scan = (items, from, length, out) => {
+  for (let index = from; index < length; index += 1) {
+    const each = items[index];
+    const passed =
+      typeof each === 'number' && Number.isInteger(each) && each >= INT_MIN && each <= INT_MAX;
+    if (out !== undefined) {
+      out[index] = each;
+    }
+    if (!passed) {
+      return index;
+    }
+  }
+  return length;
+};
+const scanString: Scan = (items, from, length, out) => {
+  for (let index = from; index < length; index += 1) {
+    const each = items[index];
+    const passed = typeof each === 'string';
+    if (out !== undefined) {
+      out[index] = each;
+    }
+    if (!passed) {
+      return index;
+    }
+  }
+  return length;
+};
+
 /**
 `true` or `false` — GraphQL `Boolean`.
 */
 export const boolean = (): Schema<boolean> =>
-  leaf(BUILTINS.Boolean, 'Boolean', (value) => typeof value === 'boolean');
+  leaf(BUILTINS.Boolean, 'Boolean', (value) => typeof value === 'boolean', true, scanBoolean);
 
 /**
 Finite double — GraphQL `Float`.
 */
 export const float = (): Schema<number> =>
-  leaf(BUILTINS.Float, 'Float', (value) => Number.isFinite(value));
+  leaf(BUILTINS.Float, 'Float', (value) => Number.isFinite(value), true, scanFloat);
 
 /**
 Opaque identifier — GraphQL `ID`, a string here (coerce to accept integers).
 */
-export const id = (): Schema<string> => leaf(BUILTINS.ID, 'ID', isString);
+export const id = (): Schema<string> => leaf(BUILTINS.ID, 'ID', isString, true, scanString);
 
 /**
 Signed 32-bit integer — GraphQL `Int`.
@@ -120,12 +202,15 @@ export const int = (): Schema<number> =>
     'Int',
     (value) =>
       typeof value === 'number' && Number.isInteger(value) && value >= INT_MIN && value <= INT_MAX,
+    true,
+    scanInt,
   );
 
 /**
 Any string — GraphQL `String`.
 */
-export const string = (): Schema<string> => leaf(BUILTINS.String, 'String', isString);
+export const string = (): Schema<string> =>
+  leaf(BUILTINS.String, 'String', isString, true, scanString);
 
 /**
 Exactly `value`, by `Object.is` — `literal(NaN)` matches NaN, `literal(0)` rejects -0.
@@ -152,14 +237,14 @@ export const list = <TSchema extends StandardSchemaV1>(
   of: TSchema,
 ): Schema<Infer<TSchema>[], Input<TSchema>[]> => {
   type Out = Infer<TSchema>[];
-  const test = leaves.get(of)?.test;
+  const scan = leaves.get(of)?.scan;
   const { check, fast, run } = impl(of);
   /**
   Admits a list of `length` items, a level down only if items descend; a proxy's `length` can be anything.
   */
   const open = (length: number): string | undefined =>
     Number.isInteger(length) && length >= 0 && length <= 2 ** 32 - 1
-      ? (test === undefined ? enter : admit)(length)
+      ? (scan === undefined ? enter : admit)(length)
       : 'Invalid list length';
   return schema<Out, Input<TSchema>[]>(
     { kind: 'list', of },
@@ -175,26 +260,18 @@ export const list = <TSchema extends StandardSchemaV1>(
       // Sized up front — growing it is 2–3× slower — so a list that fails
       // forfeits its unread items: they were allocated, if never read.
       const out = new Array<unknown>(length);
-      if (test === undefined) {
-        for (let index = 0; index < length; index += 1) {
-          const each = fast(items[index]);
-          if (each === FAIL) {
-            return forfeit(length - index);
-          }
-          out[index] = each;
-        }
-      } else {
-        for (let index = 0; index < length; index += 1) {
-          const each = items[index];
-          if (!test(each)) {
-            return forfeit(length - index);
-          }
-          out[index] = each;
-        }
+      if (scan !== undefined) {
+        const index = scan(items, 0, length, out);
+        return index < length ? forfeit(length - index) : out;
       }
-      if (test === undefined) {
-        leave();
+      for (let index = 0; index < length; index += 1) {
+        const each = fast(items[index]);
+        if (each === FAIL) {
+          return forfeit(length - index);
+        }
+        out[index] = each;
       }
+      leave();
       return out;
     },
     (value, context) => {
@@ -209,35 +286,36 @@ export const list = <TSchema extends StandardSchemaV1>(
         issue(context, why);
         return value as Out;
       }
-      const out: unknown[] = [];
+      // A scan fills it in place, as `fast` does; a walk of nested items grows it, which measured faster.
+      const out: unknown[] = scan === undefined ? [] : new Array(length);
       const { path } = context;
       const at = path.push(0) - 1;
-      if (test === undefined) {
+      if (scan === undefined) {
         for (let index = 0; index < length; index += 1) {
           path[at] = index;
           out.push(run(items[index], context));
         }
+        leave();
       } else {
-        let index = 0;
-        try {
-          for (; index < length; index += 1) {
-            const each = items[index];
-            if (!test(each)) {
-              path[at] = index;
-              run(each, context);
+        for (let index = 0; index < length; index += 1) {
+          try {
+            index = scan(items, index, length, out);
+          } catch (error) {
+            // The path is kept current only on faults: a throw is at the first item unread.
+            while (Object.hasOwn(out, index)) {
+              index += 1;
             }
-            out.push(each);
+            path[at] = index;
+            throw error;
           }
-        } catch (error) {
-          // The path is kept current only on faults: a throw sets it here.
+          if (index === length) {
+            break;
+          }
           path[at] = index;
-          throw error;
+          run(out[index], context);
         }
       }
       path.pop();
-      if (test === undefined) {
-        leave();
-      }
       return out;
     },
     (value) => {
@@ -249,22 +327,16 @@ export const list = <TSchema extends StandardSchemaV1>(
       if (open(length) !== undefined) {
         return FAIL;
       }
-      if (test === undefined) {
-        for (let index = 0; index < length; index += 1) {
-          if (check(items[index]) === FAIL) {
-            return forfeit(length - index);
-          }
-        }
-      } else {
-        for (let index = 0; index < length; index += 1) {
-          if (!test(items[index])) {
-            return forfeit(length - index);
-          }
+      if (scan !== undefined) {
+        const index = scan(items, 0, length);
+        return index < length ? forfeit(length - index) : items;
+      }
+      for (let index = 0; index < length; index += 1) {
+        if (check(items[index]) === FAIL) {
+          return forfeit(length - index);
         }
       }
-      if (test === undefined) {
-        leave();
-      }
+      leave();
       return items;
     },
   );
