@@ -15,11 +15,11 @@ Not published to npm. Inside this workspace, depend on `"@jlg/hud": "workspace:*
 ```ts
 import { mount } from '@jlg/hud';
 
-const hud = mount(); // the page's <hud>, or mount(element, { page, threads })
+const hud = mount(); // the page's <hud>, or mount({ host, page, threads })
 hud.threads = await load(); // setting threads or page re-renders
 ```
 
-`<hud>` is a plain element, not a custom element: a custom element name needs a hyphen, and `attachShadow` is refused on an unknown element. `mount(el = document.querySelector('hud'), { page = location.pathname, threads = [] })` throws without one, renders into an inner `<div>` that owns a shadow root styled by a constructed stylesheet — so the page's CSS stays out and a CSP without `'unsafe-inline'` styles still works — and returns the handle. Nothing registers globally, nothing runs on import.
+`<hud>` is a plain element, not a custom element: a custom element name needs a hyphen, and `attachShadow` is refused on an unknown element. `mount({ host = document.querySelector('hud'), page = location.pathname, threads = [] })` throws without one, renders into an inner `<div>` that owns a shadow root styled by a constructed stylesheet — so the page's CSS stays out and a CSP without `'unsafe-inline'` styles still works — and returns the handle. Nothing registers globally, nothing runs on import.
 
 | handle            | does                                                                       |
 | ----------------- | -------------------------------------------------------------------------- |

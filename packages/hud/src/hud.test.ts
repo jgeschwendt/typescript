@@ -67,7 +67,7 @@ const thread = (
   y: 50,
 });
 const setup = (threads: Thread[] = []): { hud: Hud; seen: unknown[][]; shadow: ShadowRoot } => {
-  const hud = mount(undefined, { threads });
+  const hud = mount({ threads });
   const seen: unknown[][] = [];
   for (const name of [
     'hud:anchor',
@@ -120,7 +120,7 @@ test('mount needs a <hud> and leaves nothing behind', () => {
   expect(() => mount()).toThrow('no <hud>');
   const host = document.createElement('hud');
   document.body.append(host);
-  const hud = mount(host, { page: '/x' });
+  const hud = mount({ host, page: '/x' });
   expect([hud.page, hud.threads, host.children.length]).toEqual(['/x', [], 1]);
   hud.destroy();
   expect(host.children.length).toBe(0);

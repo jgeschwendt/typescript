@@ -110,6 +110,8 @@ const off = Object.freeze({
     "demands webpack's magic comment; Next, Turbopack and Bun name chunks themselves",
   'import-js/enforce-node-protocol-usage':
     'duplicates native unicorn/prefer-node-protocol; without its required option it crashes: Missing option',
+  'import-js/no-unresolved':
+    'eslint-module-utils ignores package.json `exports`: an exports-only package with no root index.js never resolves (eslint-plugin-unicorn, @typescript-eslint/parser; probed 2026-11-23); tsc resolves imports on TS files',
   'import-js/no-unused-modules':
     'inert without options; with unusedExports it fails every JS rule on the file (ESLint 10 exports no lib/util/glob-utils)',
   'import-js/order': 'formatting-only: import order oxfmt sortImports owns',
@@ -194,6 +196,8 @@ const off = Object.freeze({
   'unicorn-js/no-useless-concat':
     'duplicates native no-useless-concat (probed 2026-11-14 on oxlint 1.93)',
   'unicorn-js/require-frontmatter-fields': 'meta.languages Markdown only: never reports on JS',
+  'unicorn-js/require-spread-parentheses':
+    'formatting-only: the parentheses oxfmt writes (probed 2026-11-23 against oxfmt)',
 });
 
 // ※ oxlint-base
@@ -344,6 +348,7 @@ const typescriptOnly = [
   'no-unsafe-argument',
   'no-unsafe-assignment',
   'no-unsafe-call',
+  'no-unsafe-class-instance-assignment',
   'no-unsafe-declaration-merging',
   'no-unsafe-enum-assignment',
   'no-unsafe-enum-comparison',
@@ -585,17 +590,14 @@ const typescript = {
     'prefer-promise-reject-errors': 'off',
     'require-await': 'off',
     'types/prefer-readonly-generic': 'error',
+    // native typescript/prefer-regexp-exec, type-aware, has TS files
+    'unicorn-js/prefer-regexp-exec': 'off',
     ...Object.fromEntries([...twins, ...derive('typescript')]),
-    'import-js/no-unresolved': 'off',
   },
 };
 
-/** an override's options replace the base's: a consumer relaxing no-unresolved restates ^bun: @type {Override} */
-const bun = {
-  files: ['**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}'],
-  globals: { Bun: 'readonly' },
-  rules: { 'import-js/no-unresolved': ['error', { ignore: ['^bun:'] }] },
-};
+/** @type {Override} */
+const bun = { files: ['**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}'], globals: { Bun: 'readonly' } };
 
 /** @type {Override[]} */
 const react = [
@@ -910,7 +912,6 @@ const defineConfig = ({
     ...rootOptions(isRoot, typed && detected.tsgolint, config.options),
     overrides: [
       ...always,
-      // before the TypeScript override, whose import-js/no-unresolved off must win on TS files
       ...((isBun ?? detected.bun) ? [bun] : []),
       ...(typed ? [typescript] : []),
       ...((isReact ?? detected.react) ? react : []),

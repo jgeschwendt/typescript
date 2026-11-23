@@ -153,6 +153,8 @@ test('a running -js rule shares its bare name with a native rule of another scop
     'unicorn/no-named-default',
     // the core rule misses the template-literal forms
     'unicorn/operator-assignment',
+    // the TypeScript one is type-aware: this one is off on TS files
+    'unicorn/prefer-regexp-exec',
     // the TypeScript one is type-aware, TS only
     'unicorn/require-array-sort-compare',
   ]);

@@ -15,7 +15,7 @@ const cells = Array.from({ length: 9 }, (_slot, index): Thread => ({
   x: 80,
   y: 50,
 }));
-const hud = mount(undefined, {
+const hud = mount({
   page: '/',
   threads: [
     {

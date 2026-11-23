@@ -11,11 +11,6 @@ export default defineConfig({
         // imported for its resolve-hook side effect
         'import/no-unassigned-import': ['error', { allow: ['**/typescript6.js'] }],
 
-        // eslint-module-utils ignores `exports` maps, the only way these two resolve
-        'import-js/no-unresolved': [
-          'error',
-          { ignore: ['^@typescript-eslint/eslint-plugin$', '^eslint/use-at-your-own-risk$'] },
-        ],
         'unicorn-js/no-top-level-side-effects': 'off',
       },
     },
