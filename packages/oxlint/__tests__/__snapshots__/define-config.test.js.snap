@@ -187,60 +187,6 @@ exports[`overrides 1`] = `
           },
         },
       ],
-      "typescript-js/naming-convention": [
-        "warn",
-        {
-          "format": [
-            "camelCase",
-          ],
-          "leadingUnderscore": "forbid",
-          "selector": "default",
-          "trailingUnderscore": "forbid",
-        },
-        {
-          "format": [
-            "PascalCase",
-          ],
-          "selector": "enumMember",
-        },
-        {
-          "format": [
-            "camelCase",
-            "PascalCase",
-          ],
-          "selector": "objectLiteralProperty",
-        },
-        {
-          "format": [],
-          "modifiers": [
-            "requiresQuotes",
-          ],
-          "selector": [
-            "objectLiteralProperty",
-            "typeProperty",
-          ],
-        },
-        {
-          "format": [
-            "camelCase",
-          ],
-          "leadingUnderscore": "allow",
-          "selector": "parameter",
-        },
-        {
-          "format": [
-            "PascalCase",
-          ],
-          "selector": "typeLike",
-        },
-        {
-          "format": [
-            "camelCase",
-            "UPPER_CASE",
-          ],
-          "selector": "variable",
-        },
-      ],
       "typescript-js/no-invalid-this": "error",
       "unicorn-js/prefer-regexp-exec": "off",
     },
@@ -283,90 +229,6 @@ exports[`overrides 1`] = `
         },
       ],
       "react/function-component-definition": "error",
-    },
-  },
-  {
-    "files": [
-      "**/*.tsx",
-    ],
-    "rules": {
-      "typescript-js/naming-convention": [
-        "warn",
-        {
-          "format": [
-            "camelCase",
-          ],
-          "leadingUnderscore": "forbid",
-          "selector": "default",
-          "trailingUnderscore": "forbid",
-        },
-        {
-          "format": [
-            "camelCase",
-            "PascalCase",
-          ],
-          "selector": "function",
-        },
-        {
-          "format": [
-            "camelCase",
-            "PascalCase",
-          ],
-          "selector": "import",
-        },
-        {
-          "format": [
-            "camelCase",
-            "PascalCase",
-          ],
-          "selector": "objectLiteralMethod",
-        },
-        {
-          "format": [
-            "camelCase",
-            "PascalCase",
-          ],
-          "selector": "objectLiteralProperty",
-        },
-        {
-          "format": [],
-          "modifiers": [
-            "requiresQuotes",
-          ],
-          "selector": [
-            "objectLiteralProperty",
-            "typeProperty",
-          ],
-        },
-        {
-          "format": [
-            "camelCase",
-          ],
-          "leadingUnderscore": "allow",
-          "selector": "parameter",
-        },
-        {
-          "format": [
-            "PascalCase",
-          ],
-          "selector": "typeLike",
-        },
-        {
-          "format": [
-            "camelCase",
-            "PascalCase",
-          ],
-          "selector": "typeProperty",
-        },
-        {
-          "format": [
-            "camelCase",
-            "PascalCase",
-            "UPPER_CASE",
-          ],
-          "selector": "variable",
-        },
-      ],
     },
   },
   {
@@ -420,53 +282,6 @@ exports[`overrides 1`] = `
       "func-style": [
         "error",
         "declaration",
-      ],
-      "typescript-js/naming-convention": [
-        "warn",
-        {
-          "format": [
-            "camelCase",
-          ],
-          "leadingUnderscore": "forbid",
-          "selector": "default",
-          "trailingUnderscore": "forbid",
-        },
-        {
-          "format": [
-            "UPPER_CASE",
-          ],
-          "selector": "function",
-        },
-        {
-          "format": [],
-          "modifiers": [
-            "requiresQuotes",
-          ],
-          "selector": [
-            "objectLiteralProperty",
-            "typeProperty",
-          ],
-        },
-        {
-          "format": [
-            "camelCase",
-          ],
-          "leadingUnderscore": "allow",
-          "selector": "parameter",
-        },
-        {
-          "format": [
-            "PascalCase",
-          ],
-          "selector": "typeLike",
-        },
-        {
-          "format": [
-            "camelCase",
-            "UPPER_CASE",
-          ],
-          "selector": "variable",
-        },
       ],
     },
   },

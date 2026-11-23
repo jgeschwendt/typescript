@@ -1,29 +1,6 @@
 import { defineConfig } from '@jlg/oxlint';
 
 /**
-the base's naming-convention set but its variable entry, which an override restates whole
-*/
-const naming = [
-  {
-    format: ['camelCase'],
-    leadingUnderscore: 'forbid',
-    selector: 'default',
-    trailingUnderscore: 'forbid',
-  },
-  { format: ['PascalCase'], selector: 'enumMember' },
-  { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralProperty' },
-  { format: [], modifiers: ['requiresQuotes'], selector: 'objectLiteralProperty' },
-  // GraphQL's own union tag
-  {
-    filter: { match: true, regex: '^__typename$' },
-    format: null,
-    selector: 'objectLiteralProperty',
-  },
-  { format: ['camelCase'], leadingUnderscore: 'allow', selector: 'parameter' },
-  { format: ['PascalCase'], selector: 'typeLike' },
-] as const;
-
-/**
 the base's no-unused-vars options, which an override restates whole
 */
 const unused = {
@@ -77,7 +54,6 @@ export default defineConfig({
         'no-redeclare': 'off',
         'typescript/no-namespace': 'off',
 
-        'typescript-js/naming-convention': 'off',
         'unicorn-js/name-replacements': 'off',
       },
     },
@@ -101,14 +77,8 @@ export default defineConfig({
         'unicorn-js/prefer-number-is-safe-integer': 'off',
 
         // counting the keys for…in enumerates binds one it never reads: `_key`, which tsc's noUnusedLocals exempts
-        'no-underscore-dangle': ['error', { allow: ['_key'] }],
+        'names/case': ['error', { allow: ['_key'] }],
         'no-unused-vars': ['error', { ...unused, varsIgnorePattern: '^_key$' }],
-        'typescript-js/naming-convention': [
-          'warn',
-          ...naming,
-          { filter: '^_key$', format: null, selector: 'variable' },
-          { format: ['camelCase', 'UPPER_CASE'], selector: 'variable' },
-        ],
       },
     },
     // the docs runner drives the page in a browser
@@ -131,14 +101,8 @@ export default defineConfig({
         'typescript/only-throw-error': 'off',
         'typescript/promise-function-async': 'off',
 
-        // a schema const is named like the type it validates, a scalar like a GraphQL type: `const User = object(…)`
-        'typescript-js/naming-convention': [
-          'warn',
-          ...naming,
-          { format: ['camelCase', 'PascalCase'], selector: 'import' },
-          { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralMethod' },
-          { format: ['camelCase', 'PascalCase', 'UPPER_CASE'], selector: 'variable' },
-        ],
+        // a schema is named like the type it validates, a scalar like a GraphQL type (`const User = object(…)`), and `__typename` is GraphQL's own union tag
+        'names/case': ['error', { allow: ['[A-Z][A-Za-z0-9]*', '__typename'] }],
         'unicorn/no-thenable': 'off',
         // `literal(undefined)` is a schema of undefined, not a redundant argument
         'unicorn/no-useless-undefined': ['error', { checkArguments: false }],

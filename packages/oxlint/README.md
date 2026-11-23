@@ -35,7 +35,7 @@ Functions are expressions, `const f = () => …`, except where React or Next wan
 
 `jsx-no-bind` and `react-perf` agree: an inline handler on a host element (`<button onClick={() => …}>`) passes, on a component (`<Button onClick={() => …}>`) it reports under both, once each; `jsx-no-bind` runs through the plugin host with `ignoreDOMComponents`, as `react-perf` runs with `nativeAllowList: all`.
 
-`camelcase` runs on TypeScript too, as `eslint-js/camelcase`. A consumer with a snake_case boundary (a wire format, a generated client) allows it with an anchored pattern, `['error', { allow: ['^api_\\w+$'] }]`, never a bare prefix: an entry matches as the whole name or as an unanchored regex, so `api_` would wave through anything containing it.
+`names/case` checks every name the code declares, on JavaScript and TypeScript alike, in the case its kind takes: camelCase by default; PascalCase for classes, interfaces, type aliases, enums, their members and type parameters; camelCase or UPPER_CASE for variables; camelCase or PascalCase for object-literal properties. A parameter may lead with one underscore, and one of underscores alone passes. A `.jsx` or `.tsx` file adds PascalCase to functions, default and namespace imports, object-literal methods and properties, type properties and variables; in a `route.{js,ts}` an exported `GET`, `POST` and the other HTTP methods pass. A key that needs quotes, a computed key, a member read or assignment, and a named import kept under its own name are never checked. Its one option, `allow`, exempts a foreign name once: an entry matches as the name itself or as a regex anchored at both ends, so a snake_case boundary (a wire format, a generated client) reads `['error', { allow: ['api_\\w+'] }]`.
 
 One import statement per module: a type-only name joins the value import inline, `import { type T, x } from 'm'`, and `import type { T }` stands alone only where a module gives types alone; `--fix` writes both.
 
@@ -48,5 +48,3 @@ React does not imply a browser (Ink renders to a terminal): a consumer with a DO
 `no-manually-wrapped-comments` joins consecutive `//` prose lines; a deliberate break ends its line with `.`, `:`, `!` or `?`, or starts the next with a list marker.
 
 `off` maps every rule the base turns off to the fact that turns it off.
-
-`namingConvention` exports the base's naming-convention entry lists (`default`, `tsx`, `route`) so a consumer override can restate the rule as `['warn', ...own entries, ...namingConvention.tsx]`, since an override's options replace the base's rather than merge.
