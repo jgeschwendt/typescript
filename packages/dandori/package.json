@@ -15,6 +15,6 @@
     "@jlg/oxlint": "^0.1.5",
     "@jlg/tsconfig": "^0.1.2",
     "@types/bun": "^1.4.5",
-    "tsrs": "^7.1.0-beta.tsrs4"
+    "tsrs": "^7.1.0-beta.tsrs5"
   }
 }
