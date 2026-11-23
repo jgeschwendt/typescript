@@ -271,9 +271,9 @@ const close = (from: number): void => {
 
 const MAX_ISSUES = 100;
 /**
-Thrown to end a full check early; caught only by `verify`.
+Thrown to end a full check early, by identity: built once, so a throw captures no stack. Caught only where a full check runs.
 */
-const STOP: unique symbol = Symbol('verax.stop');
+const STOP = new Error('verax: stop');
 
 const note = (
   context: Context,
