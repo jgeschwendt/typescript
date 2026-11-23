@@ -12,8 +12,6 @@ const unused = {
 } as const;
 
 export default defineConfig({
-  // engines.node >=24: rules naming an API Node 24 lacks stay off
-  env: { node: 24 },
   ignorePatterns: ['dist/**'],
   overrides: [
     // `new Set(tags).size` is the unique count; prefer-set-size refuses the spread that would avoid it
@@ -24,10 +22,27 @@ export default defineConfig({
     {
       files: ['src/core.ts'],
       rules: {
+        // `verify` is bound as every entry: as a bound arrow, bun's parse/validate ran up to 2.6% slower (measured 2026-11-23)
+        'func-style': 'off',
+        // a no-op callback is the minimal way to swallow a rejection
+        'no-empty-function': 'off',
+        // the last-resort message is a three-way choice; an if chain would repeat the call
+        'no-nested-ternary': 'off',
         // a schema's own keys enumerate as built: def, then ~standard
         'sort-keys': 'off',
         // the call's budget is module state: nested frames share it, and every entry resets it
         'unicorn-js/no-top-level-assignment-in-function': 'off',
+      },
+    },
+    {
+      files: ['src/core.ts', 'src/types.ts'],
+      rules: {
+        // the internal schema constructor takes its parts positionally; a bag would allocate
+        'max-params': 'off',
+        // hot paths inline their checks; a helper per loop body costs a call per item
+        'max-statements': 'off',
+        // a check writes its issues, path and output into what it is handed
+        'typescript/prefer-readonly-parameter-types': 'off',
       },
     },
     // the package entry is a re-export list by design
@@ -37,6 +52,8 @@ export default defineConfig({
       rules: {
         // for-of would run the value's iterator; the oracle reads by index, as verax does
         'typescript/prefer-for-of': 'off',
+        // a recipe's transforms shape the array they are handed: holes, extra keys, a cycle
+        'typescript/prefer-readonly-parameter-types': 'off',
         'unicorn-js/no-for-loop': 'off',
         // lib is ES2024, which types no iterator helpers
         'unicorn-js/prefer-iterator-helpers': 'off',
@@ -45,13 +62,23 @@ export default defineConfig({
         'unicorn-js/prefer-object-iterable-methods': 'off',
       },
     },
-    // a vendored subset of the Standard Schema spec: its names are the spec's
+    {
+      files: ['src/sdl.ts'],
+      rules: {
+        // each refusal is a statement: one rule GraphQL has, checked where it applies
+        'max-statements': 'off',
+        // bareType and reference recurse into each other
+        'no-use-before-define': ['error', { variables: false }],
+      },
+    },
+    // a vendored subset of the Standard Schema spec: its names and shapes are the spec's
     {
       files: ['src/standard.ts'],
       rules: {
         'import/group-exports': 'off',
         'no-redeclare': 'off',
         'typescript/no-namespace': 'off',
+        'typescript/prefer-readonly-parameter-types': 'off',
 
         'unicorn-js/name-replacements': 'off',
       },
@@ -61,6 +88,8 @@ export default defineConfig({
       rules: {
         // every key for…in enumerates is counted, inherited ones too
         'guard-for-in': 'off',
+        // a leaf value's test sits inline: through a helper, a record's parse/validate ran 2–3.5% slower (measured 2026-11-23)
+        'no-nested-ternary': 'off',
         // a field copies its impl's checks: in place would write into the shared impl
         'oxc/no-map-spread': 'off',
         // `test?.(each)` is a nullable boolean, which strict-boolean-expressions refuses
@@ -84,29 +113,45 @@ export default defineConfig({
     {
       files: ['bench/*.ts'],
       rules: {
+        // a point's fields are x and y; an unused index is `_`
+        'id-length': 'off',
         // a copy of verax loaded at runtime is typed as the module's own namespace
         'import/no-namespace': ['error', { ignore: ['../src/index.js'] }],
         // the bench sits beside src and measures it, as tests do
         'import/no-relative-parent-imports': 'off',
         // a schema const is named like the type it validates: `const Node = object(…)`
-        'typescript-js/naming-convention': [
-          'warn',
-          ...naming,
-          { format: ['camelCase', 'PascalCase'], selector: 'import' },
-          { format: ['camelCase', 'PascalCase', 'UPPER_CASE'], selector: 'variable' },
-        ],
+        'names/case': ['error', { allow: ['[A-Z][A-Za-z0-9]*', '__typename'] }],
+        // workload sizes and sample counts read clearest as literals where they are used
+        'no-magic-numbers': 'off',
+        // a round runs one side, or both in alternating order
+        'no-nested-ternary': 'off',
+        // a fixture's return type is the literal it builds
+        'typescript/explicit-function-return-type': 'off',
+        // the copy of verax a case runs is handed in as its module namespace
+        'typescript/prefer-readonly-parameter-types': 'off',
+        // schemas compose by nesting calls: list(nullable(string())) is the DSL
+        'unicorn/max-nested-calls': 'off',
       },
     },
-    // the docs runner drives the page in a browser
-    { env: { browser: true }, files: ['docs/*.ts'] },
+    {
+      // the docs runner drives the page in a browser
+      env: { browser: true },
+      files: ['docs/*.ts'],
+      // the page's runner is two flat procedures: printing a value, wiring the blocks
+      rules: { 'max-statements': 'off' },
+    },
     // tests hand verax thenables, holes, non-Error throws and cross-realm promises
     {
       files: ['__tests__/*.ts'],
       rules: {
+        // a test's one-letter schema and value names are its fixtures
+        'id-length': 'off',
         // fast-check's names collide with verax's; a second copy's type is the module's own
         'import/no-namespace': ['error', { ignore: ['../src/index.js', 'fast-check'] }],
         // tests sit beside src, as in @jlg/oxlint: they import the module under test from ../src
         'import/no-relative-parent-imports': 'off',
+        // limits, sizes and edge values are the cases themselves
+        'no-magic-numbers': 'off',
         'no-sparse-arrays': 'off',
         'no-throw-literal': 'off',
         // type tests declare schemas read only by `typeof`; a rest destructure omits a key unread
@@ -114,11 +159,18 @@ export default defineConfig({
           'error',
           { ...unused, ignoreRestSiblings: true, reportVarsOnlyUsedAsTypes: false },
         ],
+        // recursive schemas name themselves inside getters, and the oracle's judges each other
+        'no-use-before-define': ['error', { variables: false }],
+        // a thunk in a typed table is typed by the table
+        'typescript/explicit-function-return-type': 'off',
         'typescript/only-throw-error': 'off',
+        // ~standard.validate is typed to return a Promise too: an async wrapper would make every result one
         'typescript/promise-function-async': 'off',
 
         // a schema is named like the type it validates, a scalar like a GraphQL type (`const User = object(…)`), and `__typename` is GraphQL's own union tag
         'names/case': ['error', { allow: ['[A-Z][A-Za-z0-9]*', '__typename'] }],
+        // schemas compose by nesting calls: list(nullable(string())) is the DSL
+        'unicorn/max-nested-calls': 'off',
         'unicorn/no-thenable': 'off',
         // `literal(undefined)` is a schema of undefined, not a redundant argument
         'unicorn/no-useless-undefined': ['error', { checkArguments: false }],
@@ -126,43 +178,19 @@ export default defineConfig({
     },
   ],
   rules: {
-    // a shape's cyclomatic count is the check itself; splitting it costs a call per value
-    complexity: 'off',
     // switch-exhaustiveness-check proves every case; a default would hide a new one
     'default-case': 'off',
-    // arrows and overloaded declarations each fit where they are used
-    'func-style': 'off',
-    // `at`, `of`, `id` are the domain's words
-    'id-length': 'off',
-    // a lazy cache (a resolved shape) starts unset
+    // a lazy cache (a resolved shape) starts unset: `= undefined` trips no-undef-init and unicorn/no-useless-undefined
     'init-declarations': 'off',
-    // the internal schema constructor takes its parts positionally; a bag would allocate
-    'max-params': 'off',
-    // hot paths inline their checks; a helper per loop body costs a call per item
-    'max-statements': 'off',
-    // a no-op callback is the minimal way to swallow a rejection
-    'no-empty-function': 'off',
-    // limits and bounds read clearest as literals where they are used
-    'no-magic-numbers': 'off',
-    // one level of nesting states a three-way choice in one expression
-    'no-nested-ternary': 'off',
-    // recursive schemas name themselves inside getters; only a same-scope use hits the TDZ
-    'no-use-before-define': ['error', { classes: true, functions: false, variables: false }],
-    // destructuring one property is ceremony
-    'prefer-destructuring': 'off',
-    // inference types internal functions; exported ones stay explicit
-    'typescript/explicit-function-return-type': 'off',
     // a validator's job is the one assertion the rule forbids: checked `unknown` becomes `T`
     'typescript/no-unsafe-type-assertion': 'off',
     // `x!` and `x as T` are the same claim; no-non-null-assertion keeps the former out
     'typescript/non-nullable-type-assertion-style': 'off',
-    // nothing here mutates its arguments
-    'typescript/prefer-readonly-parameter-types': 'off',
-    // schemas compose by nesting calls: list(nullable(string())) is the DSL
-    'unicorn/max-nested-calls': 'off',
-    // a fold is a reduce
-    'unicorn/no-array-reduce': 'off',
-    'unicorn/no-nested-ternary': 'off',
+    // a callback's parameters are its callee's; a schema's validate is a method, not state
+    'typescript/prefer-readonly-parameter-types': [
+      'warn',
+      { ignoreInferredTypes: true, treatMethodsAsReadonly: true },
+    ],
     // GraphQL null is data, distinct from an absent key
     'unicorn/no-null': 'off',
 
