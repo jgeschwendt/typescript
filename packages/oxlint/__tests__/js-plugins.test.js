@@ -31,7 +31,7 @@ const fixtured = Object.entries({
   'eslint-js':
     'camelcase consistent-this no-invalid-this no-restricted-syntax no-undef-init require-atomic-updates',
   'import-js':
-    'no-deprecated no-extraneous-dependencies no-import-module-exports no-internal-modules no-relative-packages no-restricted-paths no-unresolved no-useless-path-segments',
+    'no-deprecated no-extraneous-dependencies no-import-module-exports no-internal-modules no-relative-packages no-restricted-paths no-useless-path-segments',
   'inline-config': 'no-directives',
   'react-js':
     'boolean-prop-naming destructuring-assignment jsx-no-bind jsx-no-leaked-render jsx-sort-props no-adjacent-inline-elements no-deprecated no-invalid-html-attribute no-typos no-unused-prop-types prefer-read-only-props require-default-props',
@@ -113,7 +113,6 @@ const fixtures = {
     "import inner from 'not-listed/lib/inner.js';",
     "import packaged from '../packages/inner/index.js';",
     "import { default as fresh, old } from './b.js';",
-    "import missing from './missing.js';",
     "import sibling from './sub/../b.js';",
     "import fs from 'node:fs';",
     "import assign from 'object-assign';",
@@ -123,7 +122,7 @@ const fixtures = {
     'const obj = { a: 1, unused: 2 };',
     "export const json = JSON.parse(fs.readFileSync('./package.json'));",
     "export const str = 'unicorn';",
-    'export const newThing = [inner, packaged, fresh, old, missing, sibling, assign, obj.a, my_var];',
+    'export const newThing = [inner, packaged, fresh, old, sibling, assign, obj.a, my_var];',
     '',
     'export function destructure(foo) {',
     '  const { first } = foo;',

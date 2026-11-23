@@ -2286,12 +2286,12 @@
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/yoda.html"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "options": "-",
-          "oxlint": "js",
-          "reason": "",
+          "oxlint": "none",
+          "reason": "eslint-module-utils ignores package.json `exports`: an exports-only package with no root index.js never resolves (eslint-plugin-unicorn, @typescript-eslint/parser; probed 2026-11-23); tsc resolves imports on TS files",
           "rule": "import/no-unresolved",
           "type-aware": "-",
           "url": "https://github.com/import-js/eslint-plugin-import/blob/v2.32.0/docs/rules/no-unresolved.md"
@@ -4767,6 +4767,17 @@
         {
           "base": "error",
           "baseOptions": [],
+          "category": "suspicious",
+          "options": "-",
+          "oxlint": "native",
+          "reason": "",
+          "rule": "typescript/no-unsafe-class-instance-assignment",
+          "type-aware": "yes",
+          "url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unsafe-class-instance-assignment.html"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
           "category": "correctness",
           "options": "-",
           "oxlint": "native",
@@ -5334,7 +5345,7 @@
           "reason": "",
           "rule": "unicorn/better-dom-traversing",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/better-dom-traversing.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/better-dom-traversing.md"
         },
         {
           "base": "error",
@@ -5356,7 +5367,7 @@
           "reason": "",
           "rule": "unicorn/class-reference-in-static-methods",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/class-reference-in-static-methods.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/class-reference-in-static-methods.md"
         },
         {
           "base": "off",
@@ -5367,7 +5378,7 @@
           "reason": "meta.languages JSON only: never reports on JS",
           "rule": "unicorn/comma-spacing",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/comma-spacing.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/comma-spacing.md"
         },
         {
           "base": "error",
@@ -5378,7 +5389,7 @@
           "reason": "",
           "rule": "unicorn/comment-content",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/comment-content.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/comment-content.md"
         },
         {
           "base": "off",
@@ -5389,7 +5400,7 @@
           "reason": "contradicts native arrow-body-style: the explicit return it demands on a multiline body is the block as-needed forbids",
           "rule": "unicorn/consistent-arrow-return-style",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/consistent-arrow-return-style.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/consistent-arrow-return-style.md"
         },
         {
           "base": "error",
@@ -5411,7 +5422,7 @@
           "reason": "",
           "rule": "unicorn/consistent-boolean-name",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/consistent-boolean-name.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/consistent-boolean-name.md"
         },
         {
           "base": "error",
@@ -5435,7 +5446,7 @@
           "reason": "",
           "rule": "unicorn/consistent-class-member-order",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/consistent-class-member-order.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/consistent-class-member-order.md"
         },
         {
           "base": "error",
@@ -5446,7 +5457,7 @@
           "reason": "",
           "rule": "unicorn/consistent-compound-words",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/consistent-compound-words.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/consistent-compound-words.md"
         },
         {
           "base": "error",
@@ -5457,7 +5468,7 @@
           "reason": "",
           "rule": "unicorn/consistent-conditional-object-spread",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/consistent-conditional-object-spread.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/consistent-conditional-object-spread.md"
         },
         {
           "base": "error",
@@ -5479,7 +5490,7 @@
           "reason": "",
           "rule": "unicorn/consistent-destructuring",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/consistent-destructuring.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/consistent-destructuring.md"
         },
         {
           "base": "error",
@@ -5512,7 +5523,7 @@
           "reason": "",
           "rule": "unicorn/consistent-export-decorator-position",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/consistent-export-decorator-position.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/consistent-export-decorator-position.md"
         },
         {
           "base": "error",
@@ -5534,7 +5545,7 @@
           "reason": "",
           "rule": "unicorn/consistent-function-style",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/consistent-function-style.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/consistent-function-style.md"
         },
         {
           "base": "error",
@@ -5545,7 +5556,7 @@
           "reason": "",
           "rule": "unicorn/consistent-json-file-read",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/consistent-json-file-read.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/consistent-json-file-read.md"
         },
         {
           "base": "error",
@@ -5556,7 +5567,7 @@
           "reason": "",
           "rule": "unicorn/consistent-optional-chaining",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/consistent-optional-chaining.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/consistent-optional-chaining.md"
         },
         {
           "base": "error",
@@ -5578,7 +5589,7 @@
           "reason": "",
           "rule": "unicorn/consistent-tuple-labels",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/consistent-tuple-labels.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/consistent-tuple-labels.md"
         },
         {
           "base": "error",
@@ -5600,7 +5611,7 @@
           "reason": "",
           "rule": "unicorn/default-export-style",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/default-export-style.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/default-export-style.md"
         },
         {
           "base": "off",
@@ -5611,7 +5622,7 @@
           "reason": "duplicates native unicorn/prefer-dom-node-dataset, the name upstream renamed it from (identical on every probed case; probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/dom-node-dataset",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/dom-node-dataset.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/dom-node-dataset.md"
         },
         {
           "base": "off",
@@ -5655,7 +5666,7 @@
           "reason": "",
           "rule": "unicorn/expiring-todo-comments",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/expiring-todo-comments.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/expiring-todo-comments.md"
         },
         {
           "base": "error",
@@ -5699,7 +5710,7 @@
           "reason": "duplicates native id-match (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/id-match",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/id-match.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/id-match.md"
         },
         {
           "base": "error",
@@ -5721,7 +5732,7 @@
           "reason": "meta.languages CSS/JSON only: never reports on JS",
           "rule": "unicorn/indent",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/indent.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/indent.md"
         },
         {
           "base": "error",
@@ -5732,7 +5743,7 @@
           "reason": "",
           "rule": "unicorn/isolated-functions",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/isolated-functions.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/isolated-functions.md"
         },
         {
           "base": "error",
@@ -5743,7 +5754,7 @@
           "reason": "",
           "rule": "unicorn/iteration-fallback-style",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/iteration-fallback-style.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/iteration-fallback-style.md"
         },
         {
           "base": "off",
@@ -5754,7 +5765,7 @@
           "reason": "meta.languages JSON/TOML/YAML only: never reports on JS",
           "rule": "unicorn/key-name-casing",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/key-name-casing.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/key-name-casing.md"
         },
         {
           "base": "off",
@@ -5765,7 +5776,7 @@
           "reason": "duplicates native logical-assignment-operators (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/logical-assignment-operators",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/logical-assignment-operators.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/logical-assignment-operators.md"
         },
         {
           "base": "error",
@@ -5787,7 +5798,7 @@
           "reason": "",
           "rule": "unicorn/name-replacements",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/name-replacements.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/name-replacements.md"
         },
         {
           "base": "error",
@@ -5831,7 +5842,7 @@
           "reason": "duplicates native oxc/bad-bitwise-operator (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-accidental-bitwise-operator",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-accidental-bitwise-operator.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-accidental-bitwise-operator.md"
         },
         {
           "base": "error",
@@ -5864,7 +5875,7 @@
           "reason": "",
           "rule": "unicorn/no-array-concat-in-loop",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-array-concat-in-loop.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-array-concat-in-loop.md"
         },
         {
           "base": "error",
@@ -5886,7 +5897,7 @@
           "reason": "",
           "rule": "unicorn/no-array-from-fill",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-array-from-fill.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-array-from-fill.md"
         },
         {
           "base": "error",
@@ -5897,7 +5908,7 @@
           "reason": "",
           "rule": "unicorn/no-array-front-mutation",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-array-front-mutation.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-array-front-mutation.md"
         },
         {
           "base": "error",
@@ -5952,7 +5963,7 @@
           "reason": "",
           "rule": "unicorn/no-array-sort-for-min-max",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-array-sort-for-min-max.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-array-sort-for-min-max.md"
         },
         {
           "base": "error",
@@ -5963,7 +5974,7 @@
           "reason": "",
           "rule": "unicorn/no-array-splice",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-array-splice.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-array-splice.md"
         },
         {
           "base": "error",
@@ -5974,7 +5985,7 @@
           "reason": "",
           "rule": "unicorn/no-asterisk-prefix-in-documentation-comments",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-asterisk-prefix-in-documentation-comments.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-asterisk-prefix-in-documentation-comments.md"
         },
         {
           "base": "error",
@@ -5985,7 +5996,7 @@
           "reason": "",
           "rule": "unicorn/no-async-iterator-callback",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-async-iterator-callback.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-async-iterator-callback.md"
         },
         {
           "base": "error",
@@ -5996,7 +6007,7 @@
           "reason": "",
           "rule": "unicorn/no-async-promise-finally",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-async-promise-finally.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-async-promise-finally.md"
         },
         {
           "base": "error",
@@ -6029,7 +6040,7 @@
           "reason": "",
           "rule": "unicorn/no-barrel-files",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-barrel-files.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-barrel-files.md"
         },
         {
           "base": "error",
@@ -6040,7 +6051,7 @@
           "reason": "",
           "rule": "unicorn/no-blob-to-file",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-blob-to-file.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-blob-to-file.md"
         },
         {
           "base": "error",
@@ -6051,7 +6062,7 @@
           "reason": "",
           "rule": "unicorn/no-boolean-sort-comparator",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-boolean-sort-comparator.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-boolean-sort-comparator.md"
         },
         {
           "base": "error",
@@ -6062,7 +6073,7 @@
           "reason": "",
           "rule": "unicorn/no-break-in-nested-loop",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-break-in-nested-loop.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-break-in-nested-loop.md"
         },
         {
           "base": "error",
@@ -6073,7 +6084,7 @@
           "reason": "",
           "rule": "unicorn/no-canvas-to-image",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-canvas-to-image.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-canvas-to-image.md"
         },
         {
           "base": "off",
@@ -6084,7 +6095,7 @@
           "reason": "duplicates native oxc/bad-comparison-sequence (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-chained-comparison",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-chained-comparison.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-chained-comparison.md"
         },
         {
           "base": "error",
@@ -6095,7 +6106,7 @@
           "reason": "",
           "rule": "unicorn/no-collection-bracket-access",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-collection-bracket-access.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-collection-bracket-access.md"
         },
         {
           "base": "error",
@@ -6106,7 +6117,7 @@
           "reason": "",
           "rule": "unicorn/no-computed-property-existence-check",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-computed-property-existence-check.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-computed-property-existence-check.md"
         },
         {
           "base": "error",
@@ -6117,7 +6128,7 @@
           "reason": "",
           "rule": "unicorn/no-conflicting-constraints",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-conflicting-constraints.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-conflicting-constraints.md"
         },
         {
           "base": "error",
@@ -6128,7 +6139,7 @@
           "reason": "",
           "rule": "unicorn/no-confusing-array-splice",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-confusing-array-splice.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-confusing-array-splice.md"
         },
         {
           "base": "error",
@@ -6161,7 +6172,7 @@
           "reason": "duplicates native oxc/erasing-op (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-constant-zero-expression",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-constant-zero-expression.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-constant-zero-expression.md"
         },
         {
           "base": "error",
@@ -6172,7 +6183,7 @@
           "reason": "",
           "rule": "unicorn/no-declarations-before-early-exit",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-declarations-before-early-exit.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-declarations-before-early-exit.md"
         },
         {
           "base": "error",
@@ -6194,7 +6205,7 @@
           "reason": "",
           "rule": "unicorn/no-double-comparison",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-double-comparison.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-double-comparison.md"
         },
         {
           "base": "error",
@@ -6205,7 +6216,7 @@
           "reason": "",
           "rule": "unicorn/no-duplicate-if-branches",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-duplicate-if-branches.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-duplicate-if-branches.md"
         },
         {
           "base": "off",
@@ -6216,7 +6227,7 @@
           "reason": "duplicates native oxc/const-comparisons (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-duplicate-logical-operands",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-duplicate-logical-operands.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-duplicate-logical-operands.md"
         },
         {
           "base": "error",
@@ -6227,7 +6238,7 @@
           "reason": "",
           "rule": "unicorn/no-duplicate-loops",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-duplicate-loops.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-duplicate-loops.md"
         },
         {
           "base": "error",
@@ -6238,7 +6249,7 @@
           "reason": "",
           "rule": "unicorn/no-duplicate-set-values",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-duplicate-set-values.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-duplicate-set-values.md"
         },
         {
           "base": "error",
@@ -6260,7 +6271,7 @@
           "reason": "meta.languages Markdown only: never reports on JS",
           "rule": "unicorn/no-empty-link-text",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-empty-link-text.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-empty-link-text.md"
         },
         {
           "base": "error",
@@ -6271,7 +6282,7 @@
           "reason": "",
           "rule": "unicorn/no-error-property-assignment",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-error-property-assignment.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-error-property-assignment.md"
         },
         {
           "base": "error",
@@ -6282,7 +6293,7 @@
           "reason": "",
           "rule": "unicorn/no-exports-in-scripts",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-exports-in-scripts.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-exports-in-scripts.md"
         },
         {
           "base": "off",
@@ -6293,7 +6304,7 @@
           "reason": "duplicates native unicorn/no-array-for-each, its earlier name, which also covers Map and Set (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-for-each",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-for-each.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-for-each.md"
         },
         {
           "base": "error",
@@ -6304,7 +6315,7 @@
           "reason": "",
           "rule": "unicorn/no-for-loop",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-for-loop.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-for-loop.md"
         },
         {
           "base": "error",
@@ -6315,7 +6326,7 @@
           "reason": "",
           "rule": "unicorn/no-global-object-property-assignment",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-global-object-property-assignment.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-global-object-property-assignment.md"
         },
         {
           "base": "error",
@@ -6337,7 +6348,7 @@
           "reason": "",
           "rule": "unicorn/no-impossible-length-comparison",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-impossible-length-comparison.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-impossible-length-comparison.md"
         },
         {
           "base": "error",
@@ -6348,7 +6359,7 @@
           "reason": "",
           "rule": "unicorn/no-incomplete-accessor-override",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-incomplete-accessor-override.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-incomplete-accessor-override.md"
         },
         {
           "base": "error",
@@ -6359,7 +6370,7 @@
           "reason": "",
           "rule": "unicorn/no-incorrect-query-selector",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-incorrect-query-selector.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-incorrect-query-selector.md"
         },
         {
           "base": "error",
@@ -6370,7 +6381,7 @@
           "reason": "",
           "rule": "unicorn/no-incorrect-template-string-interpolation",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-incorrect-template-string-interpolation.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-incorrect-template-string-interpolation.md"
         },
         {
           "base": "error",
@@ -6381,7 +6392,7 @@
           "reason": "",
           "rule": "unicorn/no-ineffective-csp-directives",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-ineffective-csp-directives.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-ineffective-csp-directives.md"
         },
         {
           "base": "error",
@@ -6403,7 +6414,7 @@
           "reason": "",
           "rule": "unicorn/no-invalid-argument-count",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-argument-count.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-invalid-argument-count.md"
         },
         {
           "base": "error",
@@ -6414,7 +6425,7 @@
           "reason": "",
           "rule": "unicorn/no-invalid-boolean-attribute-value",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-boolean-attribute-value.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-invalid-boolean-attribute-value.md"
         },
         {
           "base": "off",
@@ -6425,7 +6436,7 @@
           "reason": "duplicates native oxc/bad-char-at-comparison (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-invalid-character-comparison",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-character-comparison.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-invalid-character-comparison.md"
         },
         {
           "base": "error",
@@ -6436,7 +6447,7 @@
           "reason": "",
           "rule": "unicorn/no-invalid-dom-token",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-dom-token.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-invalid-dom-token.md"
         },
         {
           "base": "error",
@@ -6458,7 +6469,7 @@
           "reason": "",
           "rule": "unicorn/no-invalid-file-input-accept",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-file-input-accept.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-invalid-file-input-accept.md"
         },
         {
           "base": "error",
@@ -6469,7 +6480,7 @@
           "reason": "",
           "rule": "unicorn/no-invalid-integrity",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-integrity.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-invalid-integrity.md"
         },
         {
           "base": "error",
@@ -6480,7 +6491,7 @@
           "reason": "",
           "rule": "unicorn/no-invalid-intl-options",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-intl-options.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-invalid-intl-options.md"
         },
         {
           "base": "error",
@@ -6491,7 +6502,7 @@
           "reason": "",
           "rule": "unicorn/no-invalid-property-descriptor",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-property-descriptor.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-invalid-property-descriptor.md"
         },
         {
           "base": "error",
@@ -6513,7 +6524,7 @@
           "reason": "",
           "rule": "unicorn/no-invalid-response-options",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-response-options.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-invalid-response-options.md"
         },
         {
           "base": "error",
@@ -6524,7 +6535,7 @@
           "reason": "",
           "rule": "unicorn/no-invalid-style-set-property",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-style-set-property.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-invalid-style-set-property.md"
         },
         {
           "base": "error",
@@ -6535,7 +6546,7 @@
           "reason": "",
           "rule": "unicorn/no-invalid-temporal-arithmetic",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-temporal-arithmetic.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-invalid-temporal-arithmetic.md"
         },
         {
           "base": "error",
@@ -6546,7 +6557,7 @@
           "reason": "",
           "rule": "unicorn/no-invalid-url-protocol-comparison",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-url-protocol-comparison.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-invalid-url-protocol-comparison.md"
         },
         {
           "base": "error",
@@ -6557,7 +6568,7 @@
           "reason": "",
           "rule": "unicorn/no-invalid-well-known-symbol-methods",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-invalid-well-known-symbol-methods.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-invalid-well-known-symbol-methods.md"
         },
         {
           "base": "off",
@@ -6568,7 +6579,7 @@
           "reason": "meta.languages Markdown only: never reports on JS",
           "rule": "unicorn/no-javascript-url",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-javascript-url.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-javascript-url.md"
         },
         {
           "base": "error",
@@ -6579,7 +6590,7 @@
           "reason": "",
           "rule": "unicorn/no-keyword-prefix",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-keyword-prefix.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-keyword-prefix.md"
         },
         {
           "base": "error",
@@ -6590,7 +6601,7 @@
           "reason": "",
           "rule": "unicorn/no-late-current-target-access",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-late-current-target-access.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-late-current-target-access.md"
         },
         {
           "base": "error",
@@ -6601,7 +6612,7 @@
           "reason": "",
           "rule": "unicorn/no-late-event-control",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-late-event-control.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-late-event-control.md"
         },
         {
           "base": "error",
@@ -6612,7 +6623,7 @@
           "reason": "",
           "rule": "unicorn/no-leading-empty-lines",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-leading-empty-lines.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-leading-empty-lines.md"
         },
         {
           "base": "error",
@@ -6634,7 +6645,7 @@
           "reason": "",
           "rule": "unicorn/no-loop-iterable-mutation",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-loop-iterable-mutation.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-loop-iterable-mutation.md"
         },
         {
           "base": "off",
@@ -6645,7 +6656,7 @@
           "reason": "meta.languages CSS/JSON/TOML only: never reports on JS",
           "rule": "unicorn/no-loss-of-precision",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-loss-of-precision.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-loss-of-precision.md"
         },
         {
           "base": "error",
@@ -6667,7 +6678,7 @@
           "reason": "",
           "rule": "unicorn/no-manually-wrapped-comments",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-manually-wrapped-comments.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-manually-wrapped-comments.md"
         },
         {
           "base": "error",
@@ -6678,7 +6689,7 @@
           "reason": "",
           "rule": "unicorn/no-mismatched-map-key",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-mismatched-map-key.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-mismatched-map-key.md"
         },
         {
           "base": "off",
@@ -6689,7 +6700,7 @@
           "reason": "duplicates native oxc/misrefactored-assign-op (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-misrefactored-assignment",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-misrefactored-assignment.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-misrefactored-assignment.md"
         },
         {
           "base": "error",
@@ -6700,7 +6711,7 @@
           "reason": "",
           "rule": "unicorn/no-missing-local-resource",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-missing-local-resource.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-missing-local-resource.md"
         },
         {
           "base": "error",
@@ -6711,7 +6722,7 @@
           "reason": "",
           "rule": "unicorn/no-multiple-promise-resolver-calls",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-multiple-promise-resolver-calls.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-multiple-promise-resolver-calls.md"
         },
         {
           "base": "error",
@@ -6722,7 +6733,7 @@
           "reason": "",
           "rule": "unicorn/no-named-default",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-named-default.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-named-default.md"
         },
         {
           "base": "error",
@@ -6733,7 +6744,7 @@
           "reason": "",
           "rule": "unicorn/no-negated-array-predicate",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-negated-array-predicate.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-negated-array-predicate.md"
         },
         {
           "base": "error",
@@ -6744,7 +6755,7 @@
           "reason": "",
           "rule": "unicorn/no-negated-comparison",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-negated-comparison.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-negated-comparison.md"
         },
         {
           "base": "error",
@@ -6810,7 +6821,7 @@
           "reason": "needs type information the JS plugin host has none of",
           "rule": "unicorn/no-non-function-verb-prefix",
           "type-aware": "yes",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-non-function-verb-prefix.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-non-function-verb-prefix.md"
         },
         {
           "base": "error",
@@ -6821,7 +6832,7 @@
           "reason": "",
           "rule": "unicorn/no-nonstandard-builtin-properties",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-nonstandard-builtin-properties.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-nonstandard-builtin-properties.md"
         },
         {
           "base": "error",
@@ -6854,7 +6865,7 @@
           "reason": "",
           "rule": "unicorn/no-object-methods-with-collections",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-object-methods-with-collections.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-object-methods-with-collections.md"
         },
         {
           "base": "error",
@@ -6865,7 +6876,7 @@
           "reason": "",
           "rule": "unicorn/no-optional-chaining-on-undeclared-variable",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-optional-chaining-on-undeclared-variable.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-optional-chaining-on-undeclared-variable.md"
         },
         {
           "base": "error",
@@ -6876,7 +6887,7 @@
           "reason": "",
           "rule": "unicorn/no-prevent-default-in-passive-listener",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-prevent-default-in-passive-listener.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-prevent-default-in-passive-listener.md"
         },
         {
           "base": "error",
@@ -6898,7 +6909,7 @@
           "reason": "",
           "rule": "unicorn/no-redundant-comparison",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-redundant-comparison.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-redundant-comparison.md"
         },
         {
           "base": "error",
@@ -6909,7 +6920,7 @@
           "reason": "",
           "rule": "unicorn/no-repeated-call-wrappers",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-repeated-call-wrappers.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-repeated-call-wrappers.md"
         },
         {
           "base": "error",
@@ -6920,7 +6931,7 @@
           "reason": "",
           "rule": "unicorn/no-return-array-push",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-return-array-push.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-return-array-push.md"
         },
         {
           "base": "error",
@@ -6931,7 +6942,7 @@
           "reason": "",
           "rule": "unicorn/no-selector-as-dom-name",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-selector-as-dom-name.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-selector-as-dom-name.md"
         },
         {
           "base": "error",
@@ -6942,7 +6953,7 @@
           "reason": "",
           "rule": "unicorn/no-shorthand-property-overrides",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-shorthand-property-overrides.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-shorthand-property-overrides.md"
         },
         {
           "base": "error",
@@ -6975,7 +6986,7 @@
           "reason": "",
           "rule": "unicorn/no-subtraction-comparison",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-subtraction-comparison.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-subtraction-comparison.md"
         },
         {
           "base": "error",
@@ -7008,7 +7019,7 @@
           "reason": "",
           "rule": "unicorn/no-this-outside-of-class",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-this-outside-of-class.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-this-outside-of-class.md"
         },
         {
           "base": "error",
@@ -7019,7 +7030,7 @@
           "reason": "",
           "rule": "unicorn/no-top-level-assignment-in-function",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-top-level-assignment-in-function.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-top-level-assignment-in-function.md"
         },
         {
           "base": "error",
@@ -7030,7 +7041,7 @@
           "reason": "",
           "rule": "unicorn/no-top-level-side-effects",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-top-level-side-effects.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-top-level-side-effects.md"
         },
         {
           "base": "error",
@@ -7041,7 +7052,7 @@
           "reason": "",
           "rule": "unicorn/no-transition-all",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-transition-all.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-transition-all.md"
         },
         {
           "base": "error",
@@ -7063,7 +7074,7 @@
           "reason": "",
           "rule": "unicorn/no-uncalled-method",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-uncalled-method.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-uncalled-method.md"
         },
         {
           "base": "error",
@@ -7074,7 +7085,7 @@
           "reason": "",
           "rule": "unicorn/no-undeclared-class-members",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-undeclared-class-members.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-undeclared-class-members.md"
         },
         {
           "base": "error",
@@ -7096,7 +7107,7 @@
           "reason": "",
           "rule": "unicorn/no-unnecessary-array-flat-map",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unnecessary-array-flat-map.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unnecessary-array-flat-map.md"
         },
         {
           "base": "error",
@@ -7129,7 +7140,7 @@
           "reason": "",
           "rule": "unicorn/no-unnecessary-boolean-comparison",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unnecessary-boolean-comparison.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unnecessary-boolean-comparison.md"
         },
         {
           "base": "error",
@@ -7140,7 +7151,7 @@
           "reason": "",
           "rule": "unicorn/no-unnecessary-default-arguments",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unnecessary-default-arguments.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unnecessary-default-arguments.md"
         },
         {
           "base": "error",
@@ -7151,7 +7162,7 @@
           "reason": "",
           "rule": "unicorn/no-unnecessary-fetch-options",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unnecessary-fetch-options.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unnecessary-fetch-options.md"
         },
         {
           "base": "error",
@@ -7162,7 +7173,7 @@
           "reason": "",
           "rule": "unicorn/no-unnecessary-global-this",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unnecessary-global-this.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unnecessary-global-this.md"
         },
         {
           "base": "error",
@@ -7173,7 +7184,7 @@
           "reason": "",
           "rule": "unicorn/no-unnecessary-nested-ternary",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unnecessary-nested-ternary.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unnecessary-nested-ternary.md"
         },
         {
           "base": "error",
@@ -7184,7 +7195,7 @@
           "reason": "",
           "rule": "unicorn/no-unnecessary-parameters",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unnecessary-parameters.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unnecessary-parameters.md"
         },
         {
           "base": "error",
@@ -7195,7 +7206,7 @@
           "reason": "",
           "rule": "unicorn/no-unnecessary-polyfills",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unnecessary-polyfills.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unnecessary-polyfills.md"
         },
         {
           "base": "error",
@@ -7217,7 +7228,7 @@
           "reason": "",
           "rule": "unicorn/no-unnecessary-splice",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unnecessary-splice.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unnecessary-splice.md"
         },
         {
           "base": "error",
@@ -7228,7 +7239,7 @@
           "reason": "",
           "rule": "unicorn/no-unnecessary-string-trim",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unnecessary-string-trim.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unnecessary-string-trim.md"
         },
         {
           "base": "error",
@@ -7250,7 +7261,7 @@
           "reason": "",
           "rule": "unicorn/no-unreadable-for-of-expression",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unreadable-for-of-expression.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unreadable-for-of-expression.md"
         },
         {
           "base": "error",
@@ -7272,7 +7283,7 @@
           "reason": "",
           "rule": "unicorn/no-unreadable-new-expression",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unreadable-new-expression.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unreadable-new-expression.md"
         },
         {
           "base": "error",
@@ -7283,7 +7294,7 @@
           "reason": "",
           "rule": "unicorn/no-unreadable-object-destructuring",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unreadable-object-destructuring.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unreadable-object-destructuring.md"
         },
         {
           "base": "error",
@@ -7294,7 +7305,7 @@
           "reason": "",
           "rule": "unicorn/no-unsafe-buffer-conversion",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unsafe-buffer-conversion.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unsafe-buffer-conversion.md"
         },
         {
           "base": "error",
@@ -7305,7 +7316,7 @@
           "reason": "",
           "rule": "unicorn/no-unsafe-dom-html",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unsafe-dom-html.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unsafe-dom-html.md"
         },
         {
           "base": "error",
@@ -7316,7 +7327,7 @@
           "reason": "",
           "rule": "unicorn/no-unsafe-json-serialization",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unsafe-json-serialization.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unsafe-json-serialization.md"
         },
         {
           "base": "error",
@@ -7327,7 +7338,7 @@
           "reason": "",
           "rule": "unicorn/no-unsafe-promise-all-settled-values",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unsafe-promise-all-settled-values.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unsafe-promise-all-settled-values.md"
         },
         {
           "base": "error",
@@ -7338,7 +7349,7 @@
           "reason": "",
           "rule": "unicorn/no-unsafe-property-key",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unsafe-property-key.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unsafe-property-key.md"
         },
         {
           "base": "error",
@@ -7349,7 +7360,7 @@
           "reason": "",
           "rule": "unicorn/no-unsafe-sqlite-interpolation",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unsafe-sqlite-interpolation.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unsafe-sqlite-interpolation.md"
         },
         {
           "base": "error",
@@ -7360,7 +7371,7 @@
           "reason": "",
           "rule": "unicorn/no-unsafe-string-replacement",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unsafe-string-replacement.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unsafe-string-replacement.md"
         },
         {
           "base": "error",
@@ -7371,7 +7382,7 @@
           "reason": "",
           "rule": "unicorn/no-unused-builtin-method-return",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unused-builtin-method-return.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unused-builtin-method-return.md"
         },
         {
           "base": "error",
@@ -7382,7 +7393,7 @@
           "reason": "",
           "rule": "unicorn/no-unused-iterator-helper",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unused-iterator-helper.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unused-iterator-helper.md"
         },
         {
           "base": "error",
@@ -7393,7 +7404,7 @@
           "reason": "",
           "rule": "unicorn/no-unused-properties",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-unused-properties.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-unused-properties.md"
         },
         {
           "base": "error",
@@ -7404,7 +7415,7 @@
           "reason": "",
           "rule": "unicorn/no-url-in-search-params",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-url-in-search-params.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-url-in-search-params.md"
         },
         {
           "base": "error",
@@ -7415,7 +7426,7 @@
           "reason": "",
           "rule": "unicorn/no-useless-boolean-cast",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-boolean-cast.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-useless-boolean-cast.md"
         },
         {
           "base": "error",
@@ -7426,7 +7437,7 @@
           "reason": "",
           "rule": "unicorn/no-useless-coercion",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-coercion.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-useless-coercion.md"
         },
         {
           "base": "error",
@@ -7448,7 +7459,7 @@
           "reason": "",
           "rule": "unicorn/no-useless-compound-assignment",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-compound-assignment.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-useless-compound-assignment.md"
         },
         {
           "base": "off",
@@ -7459,7 +7470,7 @@
           "reason": "duplicates native no-useless-concat (probed 2026-11-14 on oxlint 1.93)",
           "rule": "unicorn/no-useless-concat",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-concat.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-useless-concat.md"
         },
         {
           "base": "error",
@@ -7470,7 +7481,7 @@
           "reason": "",
           "rule": "unicorn/no-useless-continue",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-continue.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-useless-continue.md"
         },
         {
           "base": "error",
@@ -7481,7 +7492,7 @@
           "reason": "",
           "rule": "unicorn/no-useless-delete-check",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-delete-check.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-useless-delete-check.md"
         },
         {
           "base": "error",
@@ -7492,7 +7503,7 @@
           "reason": "",
           "rule": "unicorn/no-useless-else",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-else.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-useless-else.md"
         },
         {
           "base": "error",
@@ -7547,7 +7558,7 @@
           "reason": "",
           "rule": "unicorn/no-useless-logical-operand",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-logical-operand.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-useless-logical-operand.md"
         },
         {
           "base": "error",
@@ -7558,7 +7569,7 @@
           "reason": "",
           "rule": "unicorn/no-useless-override",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-override.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-useless-override.md"
         },
         {
           "base": "error",
@@ -7580,7 +7591,7 @@
           "reason": "",
           "rule": "unicorn/no-useless-re-export",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-re-export.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-useless-re-export.md"
         },
         {
           "base": "error",
@@ -7591,7 +7602,7 @@
           "reason": "",
           "rule": "unicorn/no-useless-recursion",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-recursion.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-useless-recursion.md"
         },
         {
           "base": "error",
@@ -7602,7 +7613,7 @@
           "reason": "",
           "rule": "unicorn/no-useless-set-construction",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-set-construction.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-useless-set-construction.md"
         },
         {
           "base": "error",
@@ -7635,7 +7646,7 @@
           "reason": "",
           "rule": "unicorn/no-useless-template-literals",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-useless-template-literals.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-useless-template-literals.md"
         },
         {
           "base": "error",
@@ -7657,7 +7668,7 @@
           "reason": "",
           "rule": "unicorn/no-using-resource-escape",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-using-resource-escape.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-using-resource-escape.md"
         },
         {
           "base": "error",
@@ -7668,7 +7679,7 @@
           "reason": "",
           "rule": "unicorn/no-xor-as-exponentiation",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/no-xor-as-exponentiation.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/no-xor-as-exponentiation.md"
         },
         {
           "base": "error",
@@ -7712,7 +7723,7 @@
           "reason": "",
           "rule": "unicorn/operator-assignment",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/operator-assignment.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/operator-assignment.md"
         },
         {
           "base": "error",
@@ -7723,7 +7734,7 @@
           "reason": "",
           "rule": "unicorn/prefer-abort-signal-any",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-abort-signal-any.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-abort-signal-any.md"
         },
         {
           "base": "error",
@@ -7734,7 +7745,7 @@
           "reason": "",
           "rule": "unicorn/prefer-abort-signal-timeout",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-abort-signal-timeout.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-abort-signal-timeout.md"
         },
         {
           "base": "error",
@@ -7756,7 +7767,7 @@
           "reason": "",
           "rule": "unicorn/prefer-add-event-listener-options",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-add-event-listener-options.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-add-event-listener-options.md"
         },
         {
           "base": "error",
@@ -7767,7 +7778,7 @@
           "reason": "",
           "rule": "unicorn/prefer-aggregate-error",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-aggregate-error.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-aggregate-error.md"
         },
         {
           "base": "error",
@@ -7811,7 +7822,7 @@
           "reason": "",
           "rule": "unicorn/prefer-array-from-async",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-array-from-async.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-array-from-async.md"
         },
         {
           "base": "error",
@@ -7822,7 +7833,7 @@
           "reason": "",
           "rule": "unicorn/prefer-array-from-map",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-array-from-map.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-array-from-map.md"
         },
         {
           "base": "error",
@@ -7833,7 +7844,7 @@
           "reason": "",
           "rule": "unicorn/prefer-array-from-range",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-array-from-range.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-array-from-range.md"
         },
         {
           "base": "error",
@@ -7855,7 +7866,7 @@
           "reason": "",
           "rule": "unicorn/prefer-array-iterable-methods",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-array-iterable-methods.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-array-iterable-methods.md"
         },
         {
           "base": "error",
@@ -7866,7 +7877,7 @@
           "reason": "",
           "rule": "unicorn/prefer-array-last-methods",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-array-last-methods.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-array-last-methods.md"
         },
         {
           "base": "error",
@@ -7877,7 +7888,7 @@
           "reason": "",
           "rule": "unicorn/prefer-array-slice",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-array-slice.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-array-slice.md"
         },
         {
           "base": "error",
@@ -7910,7 +7921,7 @@
           "reason": "",
           "rule": "unicorn/prefer-await",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-await.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-await.md"
         },
         {
           "base": "error",
@@ -7943,7 +7954,7 @@
           "reason": "",
           "rule": "unicorn/prefer-block-statement-over-iife",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-block-statement-over-iife.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-block-statement-over-iife.md"
         },
         {
           "base": "error",
@@ -7954,7 +7965,7 @@
           "reason": "",
           "rule": "unicorn/prefer-boolean-return",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-boolean-return.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-boolean-return.md"
         },
         {
           "base": "error",
@@ -7998,7 +8009,7 @@
           "reason": "",
           "rule": "unicorn/prefer-combined-guards",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-combined-guards.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-combined-guards.md"
         },
         {
           "base": "error",
@@ -8009,7 +8020,7 @@
           "reason": "",
           "rule": "unicorn/prefer-continue",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-continue.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-continue.md"
         },
         {
           "base": "error",
@@ -8042,7 +8053,7 @@
           "reason": "",
           "rule": "unicorn/prefer-direct-iteration",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-direct-iteration.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-direct-iteration.md"
         },
         {
           "base": "error",
@@ -8053,7 +8064,7 @@
           "reason": "",
           "rule": "unicorn/prefer-dispose",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-dispose.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-dispose.md"
         },
         {
           "base": "error",
@@ -8075,7 +8086,7 @@
           "reason": "",
           "rule": "unicorn/prefer-dom-node-html-methods",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-dom-node-html-methods.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-dom-node-html-methods.md"
         },
         {
           "base": "error",
@@ -8097,7 +8108,7 @@
           "reason": "",
           "rule": "unicorn/prefer-dom-node-replace-children",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-dom-node-replace-children.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-dom-node-replace-children.md"
         },
         {
           "base": "error",
@@ -8119,7 +8130,7 @@
           "reason": "",
           "rule": "unicorn/prefer-early-return",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-early-return.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-early-return.md"
         },
         {
           "base": "error",
@@ -8130,7 +8141,7 @@
           "reason": "",
           "rule": "unicorn/prefer-else-if",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-else-if.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-else-if.md"
         },
         {
           "base": "error",
@@ -8141,7 +8152,7 @@
           "reason": "",
           "rule": "unicorn/prefer-error-is-error",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-error-is-error.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-error-is-error.md"
         },
         {
           "base": "error",
@@ -8152,7 +8163,7 @@
           "reason": "",
           "rule": "unicorn/prefer-escaped-irregular-whitespace",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-escaped-irregular-whitespace.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-escaped-irregular-whitespace.md"
         },
         {
           "base": "error",
@@ -8185,7 +8196,7 @@
           "reason": "",
           "rule": "unicorn/prefer-flat-math-min-max",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-flat-math-min-max.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-flat-math-min-max.md"
         },
         {
           "base": "error",
@@ -8196,7 +8207,7 @@
           "reason": "",
           "rule": "unicorn/prefer-get-or-insert-computed",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-get-or-insert-computed.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-get-or-insert-computed.md"
         },
         {
           "base": "error",
@@ -8207,7 +8218,7 @@
           "reason": "",
           "rule": "unicorn/prefer-global-number-constants",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-global-number-constants.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-global-number-constants.md"
         },
         {
           "base": "error",
@@ -8229,7 +8240,7 @@
           "reason": "",
           "rule": "unicorn/prefer-group-by",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-group-by.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-group-by.md"
         },
         {
           "base": "error",
@@ -8240,7 +8251,7 @@
           "reason": "",
           "rule": "unicorn/prefer-has-check",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-has-check.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-has-check.md"
         },
         {
           "base": "error",
@@ -8251,7 +8262,7 @@
           "reason": "",
           "rule": "unicorn/prefer-hoisting-branch-code",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-hoisting-branch-code.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-hoisting-branch-code.md"
         },
         {
           "base": "error",
@@ -8262,7 +8273,7 @@
           "reason": "",
           "rule": "unicorn/prefer-https",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-https.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-https.md"
         },
         {
           "base": "error",
@@ -8273,7 +8284,7 @@
           "reason": "",
           "rule": "unicorn/prefer-identifier-import-export-specifiers",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-identifier-import-export-specifiers.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-identifier-import-export-specifiers.md"
         },
         {
           "base": "error",
@@ -8306,7 +8317,7 @@
           "reason": "",
           "rule": "unicorn/prefer-includes-over-repeated-comparisons",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-includes-over-repeated-comparisons.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-includes-over-repeated-comparisons.md"
         },
         {
           "base": "error",
@@ -8317,7 +8328,7 @@
           "reason": "",
           "rule": "unicorn/prefer-iterable-in-constructor",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-iterable-in-constructor.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-iterable-in-constructor.md"
         },
         {
           "base": "error",
@@ -8328,7 +8339,7 @@
           "reason": "",
           "rule": "unicorn/prefer-iterator-concat",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-iterator-concat.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-iterator-concat.md"
         },
         {
           "base": "error",
@@ -8339,7 +8350,7 @@
           "reason": "",
           "rule": "unicorn/prefer-iterator-helpers",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-iterator-helpers.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-iterator-helpers.md"
         },
         {
           "base": "error",
@@ -8350,7 +8361,7 @@
           "reason": "",
           "rule": "unicorn/prefer-iterator-to-array",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-iterator-to-array.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-iterator-to-array.md"
         },
         {
           "base": "error",
@@ -8361,7 +8372,7 @@
           "reason": "",
           "rule": "unicorn/prefer-iterator-to-array-at-end",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-iterator-to-array-at-end.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-iterator-to-array-at-end.md"
         },
         {
           "base": "error",
@@ -8372,7 +8383,7 @@
           "reason": "",
           "rule": "unicorn/prefer-iterator-zip",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-iterator-zip.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-iterator-zip.md"
         },
         {
           "base": "error",
@@ -8383,7 +8394,7 @@
           "reason": "",
           "rule": "unicorn/prefer-json-import",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-json-import.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-json-import.md"
         },
         {
           "base": "error",
@@ -8405,7 +8416,7 @@
           "reason": "",
           "rule": "unicorn/prefer-literal-ascii",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-literal-ascii.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-literal-ascii.md"
         },
         {
           "base": "error",
@@ -8416,7 +8427,7 @@
           "reason": "",
           "rule": "unicorn/prefer-location-assign",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-location-assign.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-location-assign.md"
         },
         {
           "base": "error",
@@ -8438,7 +8449,7 @@
           "reason": "",
           "rule": "unicorn/prefer-map-from-entries",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-map-from-entries.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-map-from-entries.md"
         },
         {
           "base": "error",
@@ -8449,7 +8460,7 @@
           "reason": "",
           "rule": "unicorn/prefer-math-abs",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-math-abs.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-math-abs.md"
         },
         {
           "base": "error",
@@ -8460,7 +8471,7 @@
           "reason": "",
           "rule": "unicorn/prefer-math-constants",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-math-constants.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-math-constants.md"
         },
         {
           "base": "error",
@@ -8493,7 +8504,7 @@
           "reason": "",
           "rule": "unicorn/prefer-minimal-ternary",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-minimal-ternary.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-minimal-ternary.md"
         },
         {
           "base": "error",
@@ -8581,7 +8592,7 @@
           "reason": "",
           "rule": "unicorn/prefer-number-is-safe-integer",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-number-is-safe-integer.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-number-is-safe-integer.md"
         },
         {
           "base": "error",
@@ -8603,7 +8614,7 @@
           "reason": "",
           "rule": "unicorn/prefer-object-define-properties",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-object-define-properties.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-object-define-properties.md"
         },
         {
           "base": "error",
@@ -8614,7 +8625,7 @@
           "reason": "",
           "rule": "unicorn/prefer-object-destructuring-defaults",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-object-destructuring-defaults.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-object-destructuring-defaults.md"
         },
         {
           "base": "error",
@@ -8636,7 +8647,7 @@
           "reason": "",
           "rule": "unicorn/prefer-object-iterable-methods",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-object-iterable-methods.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-object-iterable-methods.md"
         },
         {
           "base": "error",
@@ -8647,7 +8658,7 @@
           "reason": "",
           "rule": "unicorn/prefer-observer-apis",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-observer-apis.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-observer-apis.md"
         },
         {
           "base": "error",
@@ -8667,9 +8678,20 @@
           "options": "-",
           "oxlint": "js",
           "reason": "",
+          "rule": "unicorn/prefer-options-parameter",
+          "type-aware": "-",
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-options-parameter.md"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "-",
+          "options": "-",
+          "oxlint": "js",
+          "reason": "",
           "rule": "unicorn/prefer-path2d",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-path2d.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-path2d.md"
         },
         {
           "base": "error",
@@ -8680,7 +8702,7 @@
           "reason": "",
           "rule": "unicorn/prefer-private-class-fields",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-private-class-fields.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-private-class-fields.md"
         },
         {
           "base": "error",
@@ -8691,7 +8713,7 @@
           "reason": "",
           "rule": "unicorn/prefer-promise-static-methods",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-promise-static-methods.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-promise-static-methods.md"
         },
         {
           "base": "error",
@@ -8702,7 +8724,7 @@
           "reason": "",
           "rule": "unicorn/prefer-promise-try",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-promise-try.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-promise-try.md"
         },
         {
           "base": "error",
@@ -8713,7 +8735,7 @@
           "reason": "",
           "rule": "unicorn/prefer-promise-with-resolvers",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-promise-with-resolvers.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-promise-with-resolvers.md"
         },
         {
           "base": "error",
@@ -8746,7 +8768,7 @@
           "reason": "",
           "rule": "unicorn/prefer-queue-microtask",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-queue-microtask.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-queue-microtask.md"
         },
         {
           "base": "error",
@@ -8768,7 +8790,18 @@
           "reason": "",
           "rule": "unicorn/prefer-regexp-escape",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-regexp-escape.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-regexp-escape.md"
+        },
+        {
+          "base": "error",
+          "baseOptions": [],
+          "category": "-",
+          "options": "-",
+          "oxlint": "js",
+          "reason": "",
+          "rule": "unicorn/prefer-regexp-exec",
+          "type-aware": "-",
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-regexp-exec.md"
         },
         {
           "base": "error",
@@ -8801,7 +8834,7 @@
           "reason": "",
           "rule": "unicorn/prefer-scoped-selector",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-scoped-selector.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-scoped-selector.md"
         },
         {
           "base": "error",
@@ -8823,7 +8856,7 @@
           "reason": "",
           "rule": "unicorn/prefer-set-methods",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-set-methods.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-set-methods.md"
         },
         {
           "base": "error",
@@ -8845,7 +8878,7 @@
           "reason": "",
           "rule": "unicorn/prefer-short-arrow-method",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-short-arrow-method.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-short-arrow-method.md"
         },
         {
           "base": "error",
@@ -8856,7 +8889,7 @@
           "reason": "",
           "rule": "unicorn/prefer-short-escape-sequences",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-short-escape-sequences.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-short-escape-sequences.md"
         },
         {
           "base": "error",
@@ -8867,7 +8900,7 @@
           "reason": "",
           "rule": "unicorn/prefer-simple-condition-first",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-simple-condition-first.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-simple-condition-first.md"
         },
         {
           "base": "error",
@@ -8878,7 +8911,7 @@
           "reason": "",
           "rule": "unicorn/prefer-simple-sort-comparator",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-simple-sort-comparator.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-simple-sort-comparator.md"
         },
         {
           "base": "error",
@@ -8889,7 +8922,7 @@
           "reason": "",
           "rule": "unicorn/prefer-simplified-conditions",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-simplified-conditions.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-simplified-conditions.md"
         },
         {
           "base": "error",
@@ -8900,7 +8933,7 @@
           "reason": "",
           "rule": "unicorn/prefer-single-array-predicate",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-single-array-predicate.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-single-array-predicate.md"
         },
         {
           "base": "error",
@@ -8922,7 +8955,7 @@
           "reason": "",
           "rule": "unicorn/prefer-single-object-destructuring",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-single-object-destructuring.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-single-object-destructuring.md"
         },
         {
           "base": "error",
@@ -8933,7 +8966,7 @@
           "reason": "",
           "rule": "unicorn/prefer-single-replace",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-single-replace.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-single-replace.md"
         },
         {
           "base": "error",
@@ -8944,7 +8977,7 @@
           "reason": "",
           "rule": "unicorn/prefer-smaller-scope",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-smaller-scope.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-smaller-scope.md"
         },
         {
           "base": "error",
@@ -8955,7 +8988,7 @@
           "reason": "",
           "rule": "unicorn/prefer-split-limit",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-split-limit.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-split-limit.md"
         },
         {
           "base": "error",
@@ -8977,7 +9010,7 @@
           "reason": "",
           "rule": "unicorn/prefer-string-match-all",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-string-match-all.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-string-match-all.md"
         },
         {
           "base": "error",
@@ -8988,7 +9021,7 @@
           "reason": "",
           "rule": "unicorn/prefer-string-pad-start-end",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-string-pad-start-end.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-string-pad-start-end.md"
         },
         {
           "base": "error",
@@ -9010,7 +9043,7 @@
           "reason": "",
           "rule": "unicorn/prefer-string-repeat",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-string-repeat.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-string-repeat.md"
         },
         {
           "base": "error",
@@ -9076,7 +9109,7 @@
           "reason": "",
           "rule": "unicorn/prefer-switch",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-switch.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-switch.md"
         },
         {
           "base": "error",
@@ -9087,7 +9120,7 @@
           "reason": "",
           "rule": "unicorn/prefer-temporal",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-temporal.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-temporal.md"
         },
         {
           "base": "error",
@@ -9098,7 +9131,7 @@
           "reason": "",
           "rule": "unicorn/prefer-temporal-conversion",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-temporal-conversion.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-temporal-conversion.md"
         },
         {
           "base": "error",
@@ -9120,7 +9153,7 @@
           "reason": "",
           "rule": "unicorn/prefer-then-catch",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-then-catch.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-then-catch.md"
         },
         {
           "base": "error",
@@ -9131,7 +9164,7 @@
           "reason": "",
           "rule": "unicorn/prefer-toggle-attribute",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-toggle-attribute.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-toggle-attribute.md"
         },
         {
           "base": "error",
@@ -9164,7 +9197,7 @@
           "reason": "",
           "rule": "unicorn/prefer-type-literal-last",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-type-literal-last.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-type-literal-last.md"
         },
         {
           "base": "error",
@@ -9175,7 +9208,7 @@
           "reason": "",
           "rule": "unicorn/prefer-uint8array-base64",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-uint8array-base64.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-uint8array-base64.md"
         },
         {
           "base": "error",
@@ -9186,7 +9219,7 @@
           "reason": "",
           "rule": "unicorn/prefer-uint8array-hex",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-uint8array-hex.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-uint8array-hex.md"
         },
         {
           "base": "error",
@@ -9197,7 +9230,7 @@
           "reason": "",
           "rule": "unicorn/prefer-unary-minus",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-unary-minus.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-unary-minus.md"
         },
         {
           "base": "error",
@@ -9208,7 +9241,7 @@
           "reason": "",
           "rule": "unicorn/prefer-unicode-code-point-escapes",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-unicode-code-point-escapes.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-unicode-code-point-escapes.md"
         },
         {
           "base": "error",
@@ -9219,7 +9252,7 @@
           "reason": "",
           "rule": "unicorn/prefer-url-can-parse",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-url-can-parse.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-url-can-parse.md"
         },
         {
           "base": "error",
@@ -9230,7 +9263,7 @@
           "reason": "",
           "rule": "unicorn/prefer-url-href",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-url-href.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-url-href.md"
         },
         {
           "base": "error",
@@ -9241,7 +9274,7 @@
           "reason": "",
           "rule": "unicorn/prefer-url-search-parameters",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-url-search-parameters.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-url-search-parameters.md"
         },
         {
           "base": "error",
@@ -9252,7 +9285,7 @@
           "reason": "",
           "rule": "unicorn/prefer-while-loop-condition",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/prefer-while-loop-condition.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/prefer-while-loop-condition.md"
         },
         {
           "base": "error",
@@ -9285,7 +9318,7 @@
           "reason": "",
           "rule": "unicorn/require-array-sort-compare",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/require-array-sort-compare.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/require-array-sort-compare.md"
         },
         {
           "base": "error",
@@ -9296,7 +9329,7 @@
           "reason": "",
           "rule": "unicorn/require-css-escape",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/require-css-escape.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/require-css-escape.md"
         },
         {
           "base": "off",
@@ -9307,7 +9340,7 @@
           "reason": "meta.languages Markdown only: never reports on JS",
           "rule": "unicorn/require-frontmatter-fields",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/require-frontmatter-fields.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/require-frontmatter-fields.md"
         },
         {
           "base": "error",
@@ -9351,7 +9384,7 @@
           "reason": "",
           "rule": "unicorn/require-passive-events",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/require-passive-events.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/require-passive-events.md"
         },
         {
           "base": "error",
@@ -9373,7 +9406,18 @@
           "reason": "",
           "rule": "unicorn/require-proxy-trap-boolean-return",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/require-proxy-trap-boolean-return.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/require-proxy-trap-boolean-return.md"
+        },
+        {
+          "base": "off",
+          "baseOptions": [],
+          "category": "-",
+          "options": "-",
+          "oxlint": "none",
+          "reason": "formatting-only: the parentheses oxfmt writes (probed 2026-11-23 against oxfmt)",
+          "rule": "unicorn/require-spread-parentheses",
+          "type-aware": "-",
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/require-spread-parentheses.md"
         },
         {
           "base": "error",
@@ -9384,7 +9428,7 @@
           "reason": "",
           "rule": "unicorn/require-text-decoder-streaming",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/require-text-decoder-streaming.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/require-text-decoder-streaming.md"
         },
         {
           "base": "error",
@@ -9395,7 +9439,7 @@
           "reason": "",
           "rule": "unicorn/single-line-block-comment-style",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/single-line-block-comment-style.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/single-line-block-comment-style.md"
         },
         {
           "base": "error",
@@ -9406,7 +9450,7 @@
           "reason": "",
           "rule": "unicorn/string-content",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/string-content.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/string-content.md"
         },
         {
           "base": "error",
@@ -9439,7 +9483,7 @@
           "reason": "",
           "rule": "unicorn/template-indent",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/template-indent.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/template-indent.md"
         },
         {
           "base": "error",
@@ -9472,7 +9516,7 @@
           "reason": "",
           "rule": "unicorn/try-complexity",
           "type-aware": "-",
-          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v79.0.0/docs/rules/try-complexity.md"
+          "url": "https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v80.0.0/docs/rules/try-complexity.md"
         },
         {
           "base": "error",

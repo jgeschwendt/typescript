@@ -46,7 +46,6 @@ import-js/no-import-module-exports: error
 import-js/no-internal-modules: error
 import-js/no-relative-packages: error
 import-js/no-restricted-paths: error
-import-js/no-unresolved: off
 import-js/no-useless-path-segments: error
 import/consistent-type-specifier-style: off
 import/default: error
@@ -449,6 +448,7 @@ typescript/no-unnecessary-type-parameters: error
 typescript/no-unsafe-argument: error
 typescript/no-unsafe-assignment: error
 typescript/no-unsafe-call: error
+typescript/no-unsafe-class-instance-assignment: error
 typescript/no-unsafe-declaration-merging: error
 typescript/no-unsafe-enum-assignment: error
 typescript/no-unsafe-enum-comparison: error
@@ -675,6 +675,7 @@ unicorn-js/prefer-object-define-properties: error
 unicorn-js/prefer-object-destructuring-defaults: error
 unicorn-js/prefer-object-iterable-methods: error
 unicorn-js/prefer-observer-apis: error
+unicorn-js/prefer-options-parameter: error
 unicorn-js/prefer-path2d: error
 unicorn-js/prefer-private-class-fields: error
 unicorn-js/prefer-promise-static-methods: error
@@ -682,6 +683,7 @@ unicorn-js/prefer-promise-try: error
 unicorn-js/prefer-promise-with-resolvers: error
 unicorn-js/prefer-queue-microtask: error
 unicorn-js/prefer-regexp-escape: error
+unicorn-js/prefer-regexp-exec: off
 unicorn-js/prefer-scoped-selector: error
 unicorn-js/prefer-set-methods: error
 unicorn-js/prefer-short-arrow-method: error
@@ -864,17 +866,13 @@ vars-on-top: error
 yoda: error"
 `;
 
-exports[`bun / a.js, a.jsx, app/layout.jsx, app/page.js, app/route.js, instrumentation.js from typescript / a.js 1`] = `
-"(globals): {"Bun":"readonly"}
-import-js/no-unresolved: error [{"ignore":["^bun:"]}]"
-`;
+exports[`bun / a.js, a.jsx, app/layout.jsx, app/page.js, app/route.js, instrumentation.js from typescript / a.js 1`] = `"(globals): {"Bun":"readonly"}"`;
 
 exports[`bun / a.test.ts from typescript / a.ts 1`] = `
 "(globals): {"Bun":"readonly"}
 eslint-js/consistent-return: error
 eslint-js/dot-notation: error
 eslint-js/no-invalid-this: error
-import-js/no-unresolved: error [{"ignore":["^bun:"]}]
 import/consistent-type-specifier-style: error
 import/extensions: error
 max-statements: off
@@ -884,7 +882,8 @@ require-await: error
 types/prefer-readonly-generic: unset
 typescript-js/member-ordering: unset
 typescript-js/naming-convention: unset
-typescript-js/no-invalid-this: unset"
+typescript-js/no-invalid-this: unset
+unicorn-js/prefer-regexp-exec: error"
 `;
 
 exports[`bun / a.ts, a.tsx, app/api/route.ts, app/error.tsx, app/icon.tsx, app/page.tsx, app/robots.ts, instrumentation.ts, mdx-components.tsx, proxy.ts from typescript / a.ts 1`] = `
@@ -892,7 +891,6 @@ exports[`bun / a.ts, a.tsx, app/api/route.ts, app/error.tsx, app/icon.tsx, app/p
 eslint-js/consistent-return: error
 eslint-js/dot-notation: error
 eslint-js/no-invalid-this: error
-import-js/no-unresolved: error [{"ignore":["^bun:"]}]
 import/consistent-type-specifier-style: error
 import/extensions: error
 no-implied-eval: error
@@ -901,12 +899,12 @@ require-await: error
 types/prefer-readonly-generic: unset
 typescript-js/member-ordering: unset
 typescript-js/naming-convention: unset
-typescript-js/no-invalid-this: unset"
+typescript-js/no-invalid-this: unset
+unicorn-js/prefer-regexp-exec: error"
 `;
 
 exports[`bun / eslint.config.js from typescript / a.js 1`] = `
 "(globals): {"Bun":"readonly"}
-import-js/no-unresolved: error [{"ignore":["^bun:"]}]
 import/no-default-export: off
 import/no-named-export: error
 import/no-nodejs-modules: off
@@ -918,7 +916,6 @@ exports[`bun / next.config.ts from typescript / a.ts 1`] = `
 eslint-js/consistent-return: error
 eslint-js/dot-notation: error
 eslint-js/no-invalid-this: error
-import-js/no-unresolved: error [{"ignore":["^bun:"]}]
 import/consistent-type-specifier-style: error
 import/extensions: error
 import/no-default-export: off
@@ -931,7 +928,8 @@ types/prefer-readonly-generic: unset
 typescript-js/member-ordering: unset
 typescript-js/naming-convention: unset
 typescript-js/no-invalid-this: unset
-unicorn-js/no-top-level-side-effects: off"
+unicorn-js/no-top-level-side-effects: off
+unicorn-js/prefer-regexp-exec: error"
 `;
 
 exports[`js / a.js, a.jsx, app/layout.jsx, app/page.js, app/route.js, instrumentation.js from typescript / a.js 1`] = `""`;
@@ -940,7 +938,6 @@ exports[`js / a.test.ts from typescript / a.ts 1`] = `
 "eslint-js/consistent-return: error
 eslint-js/dot-notation: error
 eslint-js/no-invalid-this: error
-import-js/no-unresolved: error
 import/consistent-type-specifier-style: error
 import/extensions: error
 max-statements: off
@@ -950,14 +947,14 @@ require-await: error
 types/prefer-readonly-generic: unset
 typescript-js/member-ordering: unset
 typescript-js/naming-convention: unset
-typescript-js/no-invalid-this: unset"
+typescript-js/no-invalid-this: unset
+unicorn-js/prefer-regexp-exec: error"
 `;
 
 exports[`js / a.ts, a.tsx, app/api/route.ts, app/error.tsx, app/icon.tsx, app/page.tsx, app/robots.ts, instrumentation.ts, mdx-components.tsx, proxy.ts from typescript / a.ts 1`] = `
 "eslint-js/consistent-return: error
 eslint-js/dot-notation: error
 eslint-js/no-invalid-this: error
-import-js/no-unresolved: error
 import/consistent-type-specifier-style: error
 import/extensions: error
 no-implied-eval: error
@@ -966,7 +963,8 @@ require-await: error
 types/prefer-readonly-generic: unset
 typescript-js/member-ordering: unset
 typescript-js/naming-convention: unset
-typescript-js/no-invalid-this: unset"
+typescript-js/no-invalid-this: unset
+unicorn-js/prefer-regexp-exec: error"
 `;
 
 exports[`js, typescript / eslint.config.js from typescript / a.js 1`] = `
@@ -980,7 +978,6 @@ exports[`js / next.config.ts from typescript / a.ts 1`] = `
 "eslint-js/consistent-return: error
 eslint-js/dot-notation: error
 eslint-js/no-invalid-this: error
-import-js/no-unresolved: error
 import/consistent-type-specifier-style: error
 import/extensions: error
 import/no-default-export: off
@@ -993,14 +990,14 @@ types/prefer-readonly-generic: unset
 typescript-js/member-ordering: unset
 typescript-js/naming-convention: unset
 typescript-js/no-invalid-this: unset
-unicorn-js/no-top-level-side-effects: off"
+unicorn-js/no-top-level-side-effects: off
+unicorn-js/prefer-regexp-exec: error"
 `;
 
 exports[`typescript / a.js from typescript / a.ts 1`] = `
 "eslint-js/consistent-return: error
 eslint-js/dot-notation: error
 eslint-js/no-invalid-this: error
-import-js/no-unresolved: error
 import/consistent-type-specifier-style: error
 import/extensions: error
 no-implied-eval: error
@@ -1073,6 +1070,7 @@ typescript/no-unnecessary-type-parameters: off
 typescript/no-unsafe-argument: off
 typescript/no-unsafe-assignment: off
 typescript/no-unsafe-call: off
+typescript/no-unsafe-class-instance-assignment: off
 typescript/no-unsafe-declaration-merging: off
 typescript/no-unsafe-enum-assignment: off
 typescript/no-unsafe-enum-comparison: off
@@ -1117,7 +1115,8 @@ typescript/switch-exhaustiveness-check: off
 typescript/triple-slash-reference: off
 typescript/unbound-method: off
 typescript/unified-signatures: off
-typescript/use-unknown-in-catch-callback-variable: off"
+typescript/use-unknown-in-catch-callback-variable: off
+unicorn-js/prefer-regexp-exec: error"
 `;
 
 exports[`typescript / a.jsx, app/layout.jsx, app/page.js, app/route.js, instrumentation.js from typescript / a.js 1`] = `""`;

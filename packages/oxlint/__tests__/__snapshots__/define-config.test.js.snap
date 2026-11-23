@@ -78,6 +78,7 @@ exports[`overrides 1`] = `
       "typescript/no-unsafe-argument": "off",
       "typescript/no-unsafe-assignment": "off",
       "typescript/no-unsafe-call": "off",
+      "typescript/no-unsafe-class-instance-assignment": "off",
       "typescript/no-unsafe-declaration-merging": "off",
       "typescript/no-unsafe-enum-assignment": "off",
       "typescript/no-unsafe-enum-comparison": "off",
@@ -141,16 +142,6 @@ exports[`overrides 1`] = `
     "globals": {
       "Bun": "readonly",
     },
-    "rules": {
-      "import-js/no-unresolved": [
-        "error",
-        {
-          "ignore": [
-            "^bun:",
-          ],
-        },
-      ],
-    },
   },
   {
     "files": [
@@ -160,7 +151,6 @@ exports[`overrides 1`] = `
       "eslint-js/consistent-return": "off",
       "eslint-js/dot-notation": "off",
       "eslint-js/no-invalid-this": "off",
-      "import-js/no-unresolved": "off",
       "import/consistent-type-specifier-style": "off",
       "import/extensions": "off",
       "no-implied-eval": "off",
@@ -252,6 +242,7 @@ exports[`overrides 1`] = `
         },
       ],
       "typescript-js/no-invalid-this": "error",
+      "unicorn-js/prefer-regexp-exec": "off",
     },
   },
   {

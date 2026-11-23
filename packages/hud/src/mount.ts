@@ -46,6 +46,7 @@ type Hud = {
 };
 
 type Options = {
+  host?: Element | null;
   page?: string;
   threads?: Thread[];
 };
@@ -455,7 +456,7 @@ const observe = (layer: Layer, signal: AbortSignal): void => {
 const createLayer = (
   host: Element,
   shadow: ShadowRoot,
-  { page, threads }: Required<Options>,
+  { page, threads }: Required<Omit<Options, 'host'>>,
 ): Layer => {
   const sheet = new CSSStyleSheet();
   sheet.replaceSync(css);
@@ -481,10 +482,11 @@ const createLayer = (
 /**
 Render the layer into `host` (default: the page's `<hud>`) and return its handle.
 */
-const mount = (
+const mount = ({
   host = document.querySelector('hud'),
-  { page = location.pathname, threads = [] }: Options = {},
-): Hud => {
+  page = location.pathname,
+  threads = [],
+}: Options = {}): Hud => {
   if (!host) {
     throw new Error('@jlg/hud: no <hud> element to mount into');
   }
@@ -496,27 +498,27 @@ const mount = (
   observe(layer, controller.signal);
   render(layer);
   return {
-    destroy: () => {
+    destroy: (): void => {
       if (layer.isPicking) {
         stopPicking(layer);
       }
       controller.abort();
       root.remove();
     },
-    get page() {
+    get page(): string {
       return layer.page;
     },
     set page(value) {
       layer.page = value;
       render(layer);
     },
-    pick: () => {
+    pick: (): void => {
       pick(layer);
     },
-    select: (id) => {
+    select: (id): void => {
       select(layer, id);
     },
-    get threads() {
+    get threads(): Thread[] {
       return layer.threads;
     },
     set threads(value) {

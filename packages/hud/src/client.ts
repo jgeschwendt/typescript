@@ -21,7 +21,7 @@ const contextOf = (element: Element): string => {
 };
 
 const host = document.querySelector('hud');
-const hud = mount(host);
+const hud = mount({ host });
 const parse: (text: string) => Thread[] = JSON.parse;
 const live: { socket?: WebSocket } = {};
 const connect = (): void => {
