@@ -107,6 +107,8 @@ A `VeraxError` holds every issue in `.issues`, and lists them in its message.
 | `Infer<typeof S>`                | what `parse` returns             |
 | `Input<typeof S>`                | what `is` and `assert` narrow to |
 | `Issue`                          | `{ message, path }`              |
+| `Primitive`                      | a value `literal` matches        |
+| `Result<Output>`                 | what `validate` returns          |
 | `Schema<Output, Input = Output>` | any schema                       |
 
 ## SDL
