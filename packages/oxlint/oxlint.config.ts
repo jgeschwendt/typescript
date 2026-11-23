@@ -10,6 +10,8 @@ export default defineConfig({
         'import/no-default-export': 'off',
         // imported for its resolve-hook side effect
         'import/no-unassigned-import': ['error', { allow: ['**/typescript6.js'] }],
+        // a visitor's keys are the ESTree node types it handles
+        'names/case': ['error', { allow: ['Program', String.raw`TS\w+`, 'VariableDeclarator'] }],
 
         'unicorn-js/no-top-level-side-effects': 'off',
       },
@@ -29,7 +31,7 @@ export default defineConfig({
       files: ['plugins/typescript6.js'],
       // Node's CommonJS resolver hook, the only one Bun routes through, called with Module as `this`
       rules: {
-        'no-underscore-dangle': ['error', { allow: ['_resolveFilename'] }],
+        'names/case': ['error', { allow: ['Module', '_resolveFilename'] }],
         'unicorn-js/no-this-outside-of-class': 'off',
       },
     },

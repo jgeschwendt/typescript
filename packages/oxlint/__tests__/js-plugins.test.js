@@ -7,36 +7,28 @@ const { default: typescript } = await import(
   join(import.meta.dirname, '..', 'plugins', 'typescript-js.js')
 );
 
-test('typescript-js/naming-convention refuses the typed `types` option', () => {
-  expect(() =>
-    typescript.rules['naming-convention'].create({
-      options: [{ types: ['boolean'] }],
-      sourceCode: {},
-    }),
-  ).toThrow('needs type information');
-});
-
 test('a host lists oxlint only the rules a config names', () => {
   expect(Object.keys(typescript.rules).map((name) => `typescript-js/${name}`)).toEqual(
     ruleNames.filter((key) => key.startsWith('typescript-js/')),
   );
-  expect(
-    ['naming-convention', 'typedef'].map((name) => Reflect.has(typescript.rules, name)),
-  ).toEqual([true, false]);
+  expect(['member-ordering', 'typedef'].map((name) => Reflect.has(typescript.rules, name))).toEqual(
+    [true, false],
+  );
 });
 
 /** the rules the fixtures below trip; every other configured one need only load and not crash */
 const fixtured = Object.entries({
   comments: 'divider',
   'eslint-js':
-    'camelcase consistent-this no-invalid-this no-restricted-syntax no-undef-init require-atomic-updates',
+    'consistent-this no-invalid-this no-restricted-syntax no-undef-init require-atomic-updates',
   'import-js':
     'no-deprecated no-extraneous-dependencies no-import-module-exports no-internal-modules no-relative-packages no-restricted-paths no-useless-path-segments',
   'inline-config': 'no-directives',
+  names: 'case',
   'react-js':
     'boolean-prop-naming destructuring-assignment jsx-no-bind jsx-no-leaked-render jsx-sort-props no-adjacent-inline-elements no-deprecated no-invalid-html-attribute no-typos no-unused-prop-types prefer-read-only-props require-default-props',
   types: 'prefer-readonly-generic',
-  'typescript-js': 'member-ordering naming-convention no-shadow',
+  'typescript-js': 'member-ordering no-shadow',
   'unicorn-js':
     'consistent-destructuring consistent-json-file-read expiring-todo-comments name-replacements no-for-loop no-keyword-prefix no-named-default no-unnecessary-polyfills no-unused-properties prefer-switch string-content',
 }).flatMap(([scope, names]) => names.split(' ').map((name) => `${scope}(${name})`));

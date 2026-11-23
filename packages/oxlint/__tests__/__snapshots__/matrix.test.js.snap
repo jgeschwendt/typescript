@@ -18,7 +18,6 @@ default-case: error
 default-case-last: error
 default-param-last: error
 eqeqeq: error
-eslint-js/camelcase: error
 eslint-js/consistent-return: off
 eslint-js/consistent-this: error
 eslint-js/dot-notation: off
@@ -90,6 +89,7 @@ max-lines-per-function: off
 max-nested-callbacks: error
 max-params: error
 max-statements: error [{},{"ignoreTopLevelFunctions":true}]
+names/case: error
 new-cap: error
 no-alert: error
 no-array-constructor: error
@@ -187,7 +187,7 @@ no-throw-literal: error
 no-unassigned-vars: error
 no-undef: warn
 no-undefined: off
-no-underscore-dangle: error
+no-underscore-dangle: off
 no-unexpected-multiline: off
 no-unmodified-loop-condition: error
 no-unneeded-ternary: error
@@ -381,7 +381,6 @@ sort-vars: error
 symbol-description: error
 types/prefer-readonly-generic: error
 typescript-js/member-ordering: error [{"default":{"memberTypes":["signature","call-signature","static-field","public-field","protected-field","private-field","#private-field","static-initialization","constructor","static-method",["get","set","accessor","public-method","protected-method"],["private-method","#private-method"]]}}]
-typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["PascalCase"],"selector":"enumMember"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","UPPER_CASE"],"selector":"variable"}]
 typescript-js/no-invalid-this: error
 typescript/adjacent-overload-signatures: error
 typescript/array-type: error
@@ -881,7 +880,6 @@ prefer-promise-reject-errors: error
 require-await: error
 types/prefer-readonly-generic: unset
 typescript-js/member-ordering: unset
-typescript-js/naming-convention: unset
 typescript-js/no-invalid-this: unset
 unicorn-js/prefer-regexp-exec: error"
 `;
@@ -898,7 +896,6 @@ prefer-promise-reject-errors: error
 require-await: error
 types/prefer-readonly-generic: unset
 typescript-js/member-ordering: unset
-typescript-js/naming-convention: unset
 typescript-js/no-invalid-this: unset
 unicorn-js/prefer-regexp-exec: error"
 `;
@@ -926,7 +923,6 @@ prefer-promise-reject-errors: error
 require-await: error
 types/prefer-readonly-generic: unset
 typescript-js/member-ordering: unset
-typescript-js/naming-convention: unset
 typescript-js/no-invalid-this: unset
 unicorn-js/no-top-level-side-effects: off
 unicorn-js/prefer-regexp-exec: error"
@@ -946,7 +942,6 @@ prefer-promise-reject-errors: error
 require-await: error
 types/prefer-readonly-generic: unset
 typescript-js/member-ordering: unset
-typescript-js/naming-convention: unset
 typescript-js/no-invalid-this: unset
 unicorn-js/prefer-regexp-exec: error"
 `;
@@ -962,7 +957,6 @@ prefer-promise-reject-errors: error
 require-await: error
 types/prefer-readonly-generic: unset
 typescript-js/member-ordering: unset
-typescript-js/naming-convention: unset
 typescript-js/no-invalid-this: unset
 unicorn-js/prefer-regexp-exec: error"
 `;
@@ -988,7 +982,6 @@ prefer-promise-reject-errors: error
 require-await: error
 types/prefer-readonly-generic: unset
 typescript-js/member-ordering: unset
-typescript-js/naming-convention: unset
 typescript-js/no-invalid-this: unset
 unicorn-js/no-top-level-side-effects: off
 unicorn-js/prefer-regexp-exec: error"
@@ -1005,7 +998,6 @@ prefer-promise-reject-errors: error
 require-await: error
 types/prefer-readonly-generic: unset
 typescript-js/member-ordering: unset
-typescript-js/naming-convention: unset
 typescript-js/no-invalid-this: unset
 typescript/adjacent-overload-signatures: off
 typescript/array-type: off
@@ -1232,7 +1224,6 @@ react-perf/jsx-no-new-array-as-prop: error [{"nativeAllowList":"all"}]
 react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
 react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
 react/function-component-definition: error
-typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["camelCase","PascalCase"],"selector":"function"},{"format":["camelCase","PascalCase"],"selector":"import"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralMethod"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","PascalCase"],"selector":"typeProperty"},{"format":["camelCase","PascalCase","UPPER_CASE"],"selector":"variable"}]
 unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false}}]"
 `;
 
@@ -1464,7 +1455,6 @@ react-perf/jsx-no-new-array-as-prop: error [{"nativeAllowList":"all"}]
 react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
 react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
 react/function-component-definition: error
-typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["camelCase","PascalCase"],"selector":"function"},{"format":["camelCase","PascalCase"],"selector":"import"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralMethod"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","PascalCase"],"selector":"typeProperty"},{"format":["camelCase","PascalCase","UPPER_CASE"],"selector":"variable"}]
 unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
 `;
 
@@ -1493,7 +1483,6 @@ nextjs/no-sync-scripts: error
 nextjs/no-title-in-document-head: error
 nextjs/no-typos: error
 nextjs/no-unwanted-polyfillio: error
-typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["UPPER_CASE"],"selector":"function"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","UPPER_CASE"],"selector":"variable"}]
 unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
 `;
 
@@ -1564,7 +1553,6 @@ react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
 react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
 react/function-component-definition: error
 react/only-export-components: error [{"allowExportNames":["dynamic","dynamicParams","experimental_ppr","fetchCache","generateMetadata","generateStaticParams","generateViewport","maxDuration","metadata","preferredRegion","revalidate","runtime","viewport"]}]
-typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["camelCase","PascalCase"],"selector":"function"},{"format":["camelCase","PascalCase"],"selector":"import"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralMethod"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","PascalCase"],"selector":"typeProperty"},{"format":["camelCase","PascalCase","UPPER_CASE"],"selector":"variable"}]
 unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]
 unicorn/filename-case: error [{"case":"kebabCase"}]"
 `;
@@ -1636,7 +1624,6 @@ react-perf/jsx-no-new-array-as-prop: error [{"nativeAllowList":"all"}]
 react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
 react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
 react/function-component-definition: error
-typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["camelCase","PascalCase"],"selector":"function"},{"format":["camelCase","PascalCase"],"selector":"import"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralMethod"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","PascalCase"],"selector":"typeProperty"},{"format":["camelCase","PascalCase","UPPER_CASE"],"selector":"variable"}]
 unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
 `;
 
@@ -1808,7 +1795,6 @@ react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
 react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
 react/function-component-definition: error
 react/only-export-components: error [{"allowExportNames":["dynamic","dynamicParams","experimental_ppr","fetchCache","generateMetadata","generateStaticParams","generateViewport","maxDuration","metadata","preferredRegion","revalidate","runtime","viewport"]}]
-typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["camelCase","PascalCase"],"selector":"function"},{"format":["camelCase","PascalCase"],"selector":"import"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralMethod"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","PascalCase"],"selector":"typeProperty"},{"format":["camelCase","PascalCase","UPPER_CASE"],"selector":"variable"}]
 unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]
 unicorn/filename-case: error [{"case":"kebabCase"}]"
 `;
@@ -1866,7 +1852,6 @@ nextjs/no-sync-scripts: error
 nextjs/no-title-in-document-head: error
 nextjs/no-typos: error
 nextjs/no-unwanted-polyfillio: error
-typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["UPPER_CASE"],"selector":"function"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","UPPER_CASE"],"selector":"variable"}]
 unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]"
 `;
 
@@ -2023,7 +2008,6 @@ react-perf/jsx-no-new-array-as-prop: error [{"nativeAllowList":"all"}]
 react-perf/jsx-no-new-function-as-prop: error [{"nativeAllowList":"all"}]
 react-perf/jsx-no-new-object-as-prop: error [{"nativeAllowList":"all"}]
 react/function-component-definition: error
-typescript-js/naming-convention: warn [{"format":["camelCase"],"leadingUnderscore":"forbid","selector":"default","trailingUnderscore":"forbid"},{"format":["camelCase","PascalCase"],"selector":"function"},{"format":["camelCase","PascalCase"],"selector":"import"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralMethod"},{"format":["camelCase","PascalCase"],"selector":"objectLiteralProperty"},{"format":[],"modifiers":["requiresQuotes"],"selector":["objectLiteralProperty","typeProperty"]},{"format":["camelCase"],"leadingUnderscore":"allow","selector":"parameter"},{"format":["PascalCase"],"selector":"typeLike"},{"format":["camelCase","PascalCase"],"selector":"typeProperty"},{"format":["camelCase","PascalCase","UPPER_CASE"],"selector":"variable"}]
 unicorn-js/name-replacements: error [{"replacements":{"props":false,"ref":false,"refs":false,"params":false}}]
 unicorn/filename-case: error [{"case":"kebabCase"}]"
 `;

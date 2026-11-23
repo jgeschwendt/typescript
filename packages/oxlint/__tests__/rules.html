@@ -112,12 +112,12 @@
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/block-scoped-var.html"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "-",
           "options": "-",
-          "oxlint": "js",
-          "reason": "",
+          "oxlint": "none",
+          "reason": "names/case owns declared names: a foreign one is exempted in one allow, not two",
           "rule": "eslint/camelcase",
           "type-aware": "-",
           "url": "https://eslint.org/docs/latest/rules/camelcase"
@@ -1618,12 +1618,12 @@
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-undefined.html"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "suspicious",
           "options": "-",
           "oxlint": "native",
-          "reason": "",
+          "reason": "names/case owns declared names: a foreign one is exempted in one allow, not two",
           "rule": "eslint/no-underscore-dangle",
           "type-aware": "-",
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-underscore-dangle.html"
@@ -4165,29 +4165,12 @@
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/method-signature-style.html"
         },
         {
-          "base": "warn",
-          "baseOptions": [
-            {
-              "format": ["camelCase"],
-              "leadingUnderscore": "forbid",
-              "selector": "default",
-              "trailingUnderscore": "forbid"
-            },
-            { "format": ["PascalCase"], "selector": "enumMember" },
-            { "format": ["camelCase", "PascalCase"], "selector": "objectLiteralProperty" },
-            {
-              "format": [],
-              "modifiers": ["requiresQuotes"],
-              "selector": ["objectLiteralProperty", "typeProperty"]
-            },
-            { "format": ["camelCase"], "leadingUnderscore": "allow", "selector": "parameter" },
-            { "format": ["PascalCase"], "selector": "typeLike" },
-            { "format": ["camelCase", "UPPER_CASE"], "selector": "variable" }
-          ],
+          "base": "off",
+          "baseOptions": [],
           "category": "-",
-          "options": "set",
-          "oxlint": "js",
-          "reason": "",
+          "options": "-",
+          "oxlint": "none",
+          "reason": "names/case owns declared names: this one needs parser services oxlint's host lacks",
           "rule": "typescript/naming-convention",
           "type-aware": "yes",
           "url": "https://typescript-eslint.io/rules/naming-convention"

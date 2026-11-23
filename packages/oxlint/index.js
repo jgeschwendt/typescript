@@ -33,6 +33,7 @@ const jsPlugins = [
   absolute('./plugins/comments.js'),
   absolute('./plugins/eslint-js.js'),
   absolute('./plugins/inline-config.js'),
+  absolute('./plugins/names.js'),
   absolute('./plugins/types.js'),
   absolute('./plugins/typescript-js.js'),
 ];
@@ -76,6 +77,8 @@ const off = Object.freeze({
     "duplicates unicorn/no-negated-condition, unicorn's replacement for the core rule (identical on every probed case; probed 2026-11-14 on oxlint 1.93)",
   'no-ternary': 'bans ternaries, syntax the house writes',
   'no-undefined': 'bans undefined, syntax the house writes',
+  'no-underscore-dangle':
+    'names/case owns declared names: a foreign one is exempted in one allow, not two',
   'no-unexpected-multiline':
     "eslint-config-prettier's residue: unreachable after the semicolons oxfmt writes (probed against oxfmt)",
   'oxc/no-async-await': 'bans async/await, syntax the house writes',
@@ -106,6 +109,8 @@ const off = Object.freeze({
   'unicorn/number-literal-case':
     "eslint-config-prettier's residue: conflicts with oxfmt over 0xff vs 0xFF (probed against oxfmt)",
 
+  'eslint-js/camelcase':
+    'names/case owns declared names: a foreign one is exempted in one allow, not two',
   'import-js/dynamic-import-chunkname':
     "demands webpack's magic comment; Next, Turbopack and Bun name chunks themselves",
   'import-js/enforce-node-protocol-usage':
@@ -146,6 +151,8 @@ const off = Object.freeze({
   'typescript-js/init-declarations':
     'duplicates native init-declarations (verified 2026-10-14 · TS probe)',
   'typescript-js/max-params': 'duplicates native max-params (verified 2026-10-14 · TS probe)',
+  'typescript-js/naming-convention':
+    "names/case owns declared names: this one needs parser services oxlint's host lacks",
   'typescript-js/no-array-constructor':
     'duplicates native no-array-constructor (verified 2026-10-14 · TS probe)',
   'typescript-js/no-dupe-class-members':
@@ -281,6 +288,7 @@ const rules = {
   'typescript/prefer-readonly-parameter-types': 'warn',
 
   'inline-config/no-directives': 'error',
+  'names/case': 'error',
 };
 
 // oxlint cannot drop a plugin per override: every category-enabled TypeScript rule, by name
@@ -413,54 +421,6 @@ const always = [
   { files: ['**/*.test.*', '**/__tests__/**'], rules: { 'max-statements': 'off' } },
 ];
 
-const naming = {
-  format: ['camelCase'],
-  leadingUnderscore: 'forbid',
-  selector: 'default',
-  trailingUnderscore: 'forbid',
-};
-/** a name that needs quotes belongs to the DOM or a wire format, not the code */
-const quoted = {
-  format: [],
-  modifiers: ['requiresQuotes'],
-  selector: ['objectLiteralProperty', 'typeProperty'],
-};
-const parameter = { format: ['camelCase'], leadingUnderscore: 'allow', selector: 'parameter' };
-const typeLike = { format: ['PascalCase'], selector: 'typeLike' };
-
-/** naming-convention's entries after the severity, per file set: a consumer override restates the rule, since its options replace the base's */
-const namingConvention = Object.freeze({
-  default: [
-    naming,
-    { format: ['PascalCase'], selector: 'enumMember' },
-    { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralProperty' },
-    quoted,
-    parameter,
-    typeLike,
-    { format: ['camelCase', 'UPPER_CASE'], selector: 'variable' },
-  ],
-  route: [
-    naming,
-    { format: ['UPPER_CASE'], selector: 'function' },
-    quoted,
-    parameter,
-    typeLike,
-    { format: ['camelCase', 'UPPER_CASE'], selector: 'variable' },
-  ],
-  tsx: [
-    naming,
-    { format: ['camelCase', 'PascalCase'], selector: 'function' },
-    { format: ['camelCase', 'PascalCase'], selector: 'import' },
-    { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralMethod' },
-    { format: ['camelCase', 'PascalCase'], selector: 'objectLiteralProperty' },
-    quoted,
-    parameter,
-    typeLike,
-    { format: ['camelCase', 'PascalCase'], selector: 'typeProperty' },
-    { format: ['camelCase', 'PascalCase', 'UPPER_CASE'], selector: 'variable' },
-  ],
-});
-
 /**
 options and severities other than a bare `error`
 @type {NonNullable<Config['rules']>}
@@ -469,8 +429,6 @@ const tuned = {
   // host elements pass, as react-perf's nativeAllowList spares them; a component still reports
   'react-js/jsx-no-bind': ['error', { ignoreDOMComponents: true }],
   'react-js/require-default-props': ['error', { functions: 'defaultArguments' }],
-  // typed upstream, yet needs types only for the `types` option the wrapper refuses
-  'typescript-js/naming-convention': ['warn', ...namingConvention.default],
   'unicorn-js/expiring-todo-comments': ['error', { checkDates: true }],
 
   // one member order for js and ts: public before private, accessors with public methods (unicorn has no accessor group)
@@ -578,7 +536,6 @@ const twins = Object.keys(wrapped.typescript)
   .filter((key) => Object.hasOwn(javascript, key))
   .map((key) => [key, 'off']);
 
-// later overrides win: the .ts, .tsx, then route naming-convention sets, in that order
 /** @type {Override} */
 const typescript = {
   files: ['**/*.{cts,mts,ts,tsx}'],
@@ -620,12 +577,6 @@ const react = [
       ),
     },
   },
-  {
-    files: ['**/*.tsx'],
-    rules: {
-      'typescript-js/naming-convention': ['warn', ...namingConvention.tsx],
-    },
-  },
   // React's names are `props`, `ref`, `inputRef`, `ButtonProps`: the word, not the identifier, since the rule splits camelCase
   {
     files: ['**/*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}'],
@@ -649,10 +600,7 @@ const next = [
   },
   {
     files: ['**/route.{js,ts}'],
-    rules: {
-      'func-style': ['error', 'declaration'],
-      'typescript-js/naming-convention': ['warn', ...namingConvention.route],
-    },
+    rules: { 'func-style': ['error', 'declaration'] },
   },
   // segment files export reserved names (metadata, segment config) beside the component
   {
@@ -942,4 +890,4 @@ const defineConfig = ({
   return built;
 };
 
-export { defineConfig, namingConvention, off };
+export { defineConfig, off };
