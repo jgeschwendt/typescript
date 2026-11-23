@@ -90,34 +90,9 @@ type Impl<TOut = unknown> = Readonly<{
   run: (value: unknown, context: Context) => TOut;
 }>;
 
-// ─── issues ──────────────────────────────────────────────────────────────────────────────────────
-
-const MAX_ISSUES = 100;
-const TOO_COMPLEX = 'Too complex';
-/**
-Thrown to end a full check early; caught only by `verify`.
-*/
-const STOP: unique symbol = Symbol('verax.stop');
-
-const note = (
-  context: Context,
-  message: string,
-  path: readonly PropertyKey[] = [...context.path],
-): void => {
-  context.issues.push({ message, path });
-};
-
-const issue = (context: Context, message: string, path?: readonly PropertyKey[]): void => {
-  // Past the budget every refusal is its doing, whatever it looks like.
-  const why = limit === 0 ? TOO_COMPLEX : message;
-  note(context, why, path);
-  if (why === TOO_COMPLEX || context.issues.length >= (context.cap ?? MAX_ISSUES)) {
-    throw STOP;
-  }
-};
-
 // ─── the containers being walked ─────────────────────────────────────────────────────────────────
 
+const TOO_COMPLEX = 'Too complex';
 const MAX_DEPTH = 512;
 /**
 Work allowed in one call, useful or wasted: a DAG walked per path, or callbacks that re-validate, stop here.
@@ -235,6 +210,17 @@ const refund = (rest: number): Fail => {
 };
 
 /**
+A walk counting `work` that is never waste; it fails, if it stops here.
+*/
+const spend = (work: number): Fail => {
+  linear += work;
+  if (steps + linear > MAX_STEPS) {
+    limit = 0;
+  }
+  return FAIL;
+};
+
+/**
 A list failing with `rest` items unread: its output was sized for them, so
 they stay work, but never waste. `is` counts them alike, for one verdict.
 */
@@ -247,17 +233,6 @@ const forfeit = (rest: number): Fail => {
 A walk failing on its leaf field `index`: those read before it are never waste, and the first `FREE` are free.
 */
 const miss = (index: number): Fail => (index > FREE ? spend(index - FREE) : FAIL);
-
-/**
-A walk counting `work` that is never waste; it fails, if it stops here.
-*/
-const spend = (work: number): Fail => {
-  linear += work;
-  if (steps + linear > MAX_STEPS) {
-    limit = 0;
-  }
-  return FAIL;
-};
 
 const leave = (): void => {
   top -= 1;
@@ -290,6 +265,31 @@ Closes a frame opened at depth `from`, however its walk ended.
 const close = (from: number): void => {
   top = from;
   frames -= 1;
+};
+
+// ─── issues ──────────────────────────────────────────────────────────────────────────────────────
+
+const MAX_ISSUES = 100;
+/**
+Thrown to end a full check early; caught only by `verify`.
+*/
+const STOP: unique symbol = Symbol('verax.stop');
+
+const note = (
+  context: Context,
+  message: string,
+  path: readonly PropertyKey[] = [...context.path],
+): void => {
+  context.issues.push({ message, path });
+};
+
+const issue = (context: Context, message: string, path?: readonly PropertyKey[]): void => {
+  // Past the budget every refusal is its doing, whatever it looks like.
+  const why = limit === 0 ? TOO_COMPLEX : message;
+  note(context, why, path);
+  if (why === TOO_COMPLEX || context.issues.length >= (context.cap ?? MAX_ISSUES)) {
+    throw STOP;
+  }
 };
 
 // ─── describing values in messages ───────────────────────────────────────────────────────────────
@@ -601,7 +601,7 @@ const foreign = (spec: StandardSchemaV1): Impl => {
     if (typeof then === 'function') {
       try {
         // Swallow its rejection: the verdict is already given.
-        Reflect.apply(then, result, [undefined, () => {}]);
+        Reflect.apply(then, result, [undefined, (): void => {}]);
       } catch {
         // A hostile thenable: the verdict stands.
       }
@@ -625,7 +625,7 @@ const foreign = (spec: StandardSchemaV1): Impl => {
   return {
     check: fast,
     fast,
-    run: (value, context) => {
+    run: (value, context): unknown => {
       const result = call(value);
       if (typeof result === 'string') {
         issue(context, result);
@@ -683,40 +683,11 @@ Never throws: an exception from a user callback or a hostile value (throwing get
 /**
 Built ahead: at the stack's very edge, returning it needs no call that could overflow.
 */
-const EXHAUSTED: Result<never> = Object.freeze({
-  issues: Object.freeze([
-    Object.freeze({
-      message: 'Threw: stack exhausted',
-      path: Object.freeze([]),
-    }),
-  ]),
+const EXHAUSTION: Issue = Object.freeze({
+  message: 'Threw: stack exhausted',
+  path: Object.freeze([]),
 });
-
-/**
-Never throws: an overflow anywhere in the walk, its bookkeeping, or finding
-`self` from `spec` is the prebuilt rejection. Bound, it is each entry itself
-— no frame of verax stands outside its `try`.
-*/
-function verify<TOut>(
-  self: Impl<TOut> | undefined,
-  value: unknown,
-  spec?: StandardSchemaV1,
-): Result<TOut> {
-  const level = frames;
-  const from = top;
-  try {
-    return walk(value, self ?? (impl(spec as StandardSchemaV1) as Impl<TOut>));
-  } catch {
-    // `close` itself can overflow: unwind by assignment alone.
-    frames = level;
-    top = from;
-    if (level > 0) {
-      exhausted = true;
-      limit = 0;
-    }
-    return EXHAUSTED;
-  }
-}
+const EXHAUSTED: Result<never> = Object.freeze({ issues: Object.freeze([EXHAUSTION]) });
 
 /**
 Whether the call is exhausted, now that a frame caught `thrown`: in a nested frame an overflow ends it.
@@ -786,6 +757,32 @@ const walk = <TOut>(value: unknown, self: Impl<TOut>): Result<TOut> => {
   }
   return { issues: context.issues };
 };
+
+/**
+Never throws: an overflow anywhere in the walk, its bookkeeping, or finding
+`self` from `spec` is the prebuilt rejection. Bound, it is each entry itself
+— no frame of verax stands outside its `try`.
+*/
+function verify<TOut>(
+  self: Impl<TOut> | undefined,
+  value: unknown,
+  spec?: StandardSchemaV1,
+): Result<TOut> {
+  const level = frames;
+  const from = top;
+  try {
+    return walk(value, self ?? (impl(spec as StandardSchemaV1) as Impl<TOut>));
+  } catch {
+    // `close` itself can overflow: unwind by assignment alone.
+    frames = level;
+    top = from;
+    if (level > 0) {
+      exhausted = true;
+      limit = 0;
+    }
+    return EXHAUSTED;
+  }
+}
 
 /**
 The output — fresh, coercions applied — or every issue. Never throws.

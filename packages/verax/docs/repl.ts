@@ -3,6 +3,11 @@
 // suite runs the same program, so every output the page shows is one a run printed.
 
 /**
+Columns an object's one-line form may take.
+*/
+const WIDTH = 72;
+
+/**
 A value as the page prints it: a string bare at the top level and single-quoted inside, objects on one line until 72 columns, then one entry per line.
 */
 const show = (value: unknown, indent = '', top = true): string => {
@@ -31,8 +36,8 @@ const show = (value: unknown, indent = '', top = true): string => {
   });
   const [open, close] = array ? ['[', ']'] : ['{ ', ' }'];
   const line =
-    entries.length === 0 ? (array ? '[]' : '{}') : `${open}${entries.join(', ')}${close}`;
-  return line.length + indent.length <= 72 && !line.includes('\n')
+    entries.length === 0 ? `${open.trim()}${close.trim()}` : `${open}${entries.join(', ')}${close}`;
+  return line.length + indent.length <= WIDTH && !line.includes('\n')
     ? line
     : `${open.trim()}\n${entries.map((entry) => `${inner}${entry},`).join('\n')}\n${indent}${close.trim()}`;
 };
@@ -51,7 +56,7 @@ const execute = async (
     at: (block: number) => {
       at = block;
     },
-    log: (...values: unknown[]) => {
+    log: (...values: readonly unknown[]) => {
       printed[at]?.push(values.map((value) => show(value)).join(' '));
     },
   });
@@ -62,7 +67,7 @@ const execute = async (
     .join('\n')
     .replaceAll(
       /from '(?<name>verax(?:\/sdl)?)'/gu,
-      (_, name: string) => `from '${specifiers[name] ?? name}'`,
+      (_match, name: string) => `from '${specifiers[name] ?? name}'`,
     );
   try {
     await load(source);

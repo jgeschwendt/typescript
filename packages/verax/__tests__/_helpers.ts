@@ -89,7 +89,7 @@ only that run.
 const sweep = (thunk: () => unknown): void => {
   for (let width = 0; width < 8; width += 1) {
     let deepest = -1;
-    const edge = (level: number, ...pad: number[]): void => {
+    const edge = (level: number, ...pad: readonly number[]): void => {
       try {
         edge(level + 1, ...pad);
       } catch {
