@@ -131,7 +131,16 @@ describe('issue messages', () => {
     expect(messages(1, object('Named', {}))).toEqual(['Expected Named, received 1']);
     expect(messages({ extra: 1 }, object({}))).toEqual(['Unknown field on object']);
     expect(messages({ extra: 1 }, object('Named', {}))).toEqual(['Unknown field on Named']);
-    expect(messages(1, union([string()]))).toEqual(['Expected union member, received 1']);
+    expect(messages('c', union([literal('a'), literal('b')]))).toEqual([
+      'Expected "a" | "b", received "c"',
+    ]);
+    expect(messages(true, union([string(), int()]))).toEqual([
+      'Expected String | Int, received true',
+    ]);
+    expect(messages(1, union([string(), object({})]))).toEqual([
+      'Expected union member, received 1',
+    ]);
+    expect(messages(1, union([]))).toEqual(['Expected union member, received 1']);
     expect(messages(1, union('Named', [string()]))).toEqual(['Expected Named, received 1']);
   });
   test('a value that throws when described is "value"', () => {

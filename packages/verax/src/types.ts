@@ -94,6 +94,9 @@ const INT_MAX = 2 ** 31 - 1;
 const INT_MIN = -(2 ** 31);
 const isString = (value: unknown): boolean => typeof value === 'string';
 
+/**
+`true` or `false` — GraphQL `Boolean`.
+*/
 export const boolean = (): Schema<boolean> =>
   leaf(BUILTINS.Boolean, 'Boolean', (value) => typeof value === 'boolean');
 
@@ -119,6 +122,9 @@ export const int = (): Schema<number> =>
       typeof value === 'number' && Number.isInteger(value) && value >= INT_MIN && value <= INT_MAX,
   );
 
+/**
+Any string — GraphQL `String`.
+*/
 export const string = (): Schema<string> => leaf(BUILTINS.String, 'String', isString);
 
 /**
@@ -132,6 +138,9 @@ export const literal = <const TValue extends Primitive>(value: TValue): Schema<T
   return made;
 };
 
+/**
+Any value, as given.
+*/
 export const unknown = (): Schema => leaf({ kind: 'unknown' }, 'unknown', () => true);
 
 // ─── wrappers: non-null is the default, as in GraphQL ────────────────────────────────────────────
@@ -284,10 +293,16 @@ const wrap = <TOut, TIn>(def: Def, of: StandardSchemaV1, allowed?: null): Schema
   );
 };
 
+/**
+The value may be `null`. Distinct from `optional`.
+*/
 export const nullable = <TSchema extends StandardSchemaV1>(
   of: TSchema,
 ): Schema<Infer<TSchema> | null, Input<TSchema> | null> => wrap({ kind: 'nullable', of }, of, null);
 
+/**
+What `optional` returns: the schema admitting `undefined`, its def marked optional.
+*/
 export type Optional<TOut, TIn = TOut> = Readonly<{
   def: Extract<Def, { kind: 'optional' }>;
 }> &
@@ -717,7 +732,7 @@ const unwind = (value: object, seen: number): void => {
 A plain object of any string keys, each own enumerable one's value checked
 against `of` — `Record<string, V>`. Keys are enumerated with `for…in`, each
 value read once; the output is a fresh plain object of what was read, in the
-input's key order. A record of n keys is n + 1 steps.
+input's key order.
 */
 export const record = <TSchema extends StandardSchemaV1>(
   of: TSchema,
@@ -844,6 +859,9 @@ export const record = <TSchema extends StandardSchemaV1>(
   );
 };
 
+/**
+One of the given strings — a GraphQL enum; pass a name first for SDL.
+*/
 export function enums<const TValues extends readonly string[]>(
   values: TValues,
 ): Schema<TValues[number]>;
@@ -1026,30 +1044,29 @@ const tell = (of: readonly StandardSchemaV1[], own: readonly Impl[]): Impl['run'
   return closest(runs.filter((_run, at) => !leaves.has(of[at] as StandardSchemaV1)));
 };
 
-type UnionOf<TMembers extends readonly StandardSchemaV1[]> = Schema<
-  Infer<TMembers[number]>,
-  Input<TMembers[number]>
->;
-
 /**
 Tries members in order; the first to accept wins and its output is the
-output. Each try is a fast check, which stops at the first failure and
-decides leaf fields (enum, literal, scalar) before nested ones — so a
-discriminant field makes recursive unions linear regardless of key order.
+output. A try stops at its first failure and decides leaf fields (enum,
+literal, scalar) before nested ones — so a discriminant field makes
+recursive unions linear regardless of key order.
 A member that throws is a member that failed — but stack exhaustion fails the whole check.
 */
 export function union<const TMembers extends readonly StandardSchemaV1[]>(
   of: TMembers,
-): UnionOf<TMembers>;
+): Schema<Infer<TMembers[number]>, Input<TMembers[number]>>;
 export function union<const TMembers extends readonly StandardSchemaV1[]>(
   name: string,
   of: TMembers,
-): UnionOf<TMembers>;
+): Schema<Infer<TMembers[number]>, Input<TMembers[number]>>;
 export function union<const TMembers extends readonly StandardSchemaV1[]>(
   ...parts: readonly [TMembers] | readonly [string, TMembers]
-): UnionOf<TMembers> {
+): Schema<Infer<TMembers[number]>, Input<TMembers[number]>> {
   const [naming, of] = split(parts);
-  const label = naming.name ?? 'union member';
+  // a union of leaves names theirs: `Expected "a" | "b"`
+  const nouns = of.map((member) => leaves.get(member)?.expected);
+  const label =
+    naming.name ??
+    (nouns.length > 0 && !nouns.includes(undefined) ? nouns.join(' | ') : 'union member');
   const own = of.map((member) => impl(member));
   const sequential: Members = {
     check: own.map(({ check }) => check),

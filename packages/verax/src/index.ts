@@ -1,4 +1,4 @@
-export type { Def, Infer, Input, Issue, Schema, Shape } from './core.js';
+export type { Def, Infer, Input, Issue, Primitive, Result, Schema, Shape } from './core.js';
 export { VeraxError, assert, is, parse, validate } from './core.js';
 export type { StandardSchemaV1 } from './standard.js';
 export type { ObjectOf, Optional } from './types.js';

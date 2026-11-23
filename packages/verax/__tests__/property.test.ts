@@ -1,7 +1,8 @@
 // Differential property tests: the public API against an independent reference
 // model. A schema is generated as a plain-data description, compiled to verax,
 // and judged by `reference`, a slow, obviously-correct interpreter of the
-// README's semantics. A failure prints its seed: replay with FC_SEED=<seed>.
+// semantics at docs/contract.html#semantics. A failure prints its seed: replay
+// with FC_SEED=<seed>.
 import { describe, expect, test } from 'bun:test';
 import * as fc from 'fast-check';
 import {
