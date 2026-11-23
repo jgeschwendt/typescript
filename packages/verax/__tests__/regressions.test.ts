@@ -30,7 +30,8 @@ import { sdl } from '../src/sdl.js';
 /**
 An object schema built from entries: key order is the variable under test.
 */
-const ordered = (...entries: [string, Schema][]): Schema => object(Object.fromEntries(entries));
+const ordered = (...entries: readonly (readonly [string, Schema])[]): Schema =>
+  object(Object.fromEntries(entries));
 
 describe('object keys are own keys', () => {
   test('#0 prototype-named extra keys are unknown fields', () => {

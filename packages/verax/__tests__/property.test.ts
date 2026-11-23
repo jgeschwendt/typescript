@@ -202,7 +202,7 @@ const judgeList = (of: Desc, value: unknown): Verdict => {
 /**
 Each field against its own key, or `undefined` if the object does not own it.
 */
-const judgeFields = (shape: Shape, target: Record<string, unknown>): Verdict => {
+const judgeFields = (shape: Shape, target: Readonly<Record<string, unknown>>): Verdict => {
   const out = made({});
   for (const [key, field] of shape) {
     const present = Object.hasOwn(target, key);
@@ -922,7 +922,7 @@ Every verb's view of an accepted value: no issues, a fresh snapshot mirroring th
 */
 const expectAccepted = (
   input: unknown,
-  { out, schema }: { out: unknown; schema: Schema },
+  { out, schema }: Readonly<{ out: unknown; schema: Schema }>,
 ): void => {
   expect(validate(input, schema).issues).toBeUndefined();
   expect(mirrors(out, parse(input, schema), reachable(input))).toBe(true);

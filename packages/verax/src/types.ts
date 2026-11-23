@@ -115,8 +115,8 @@ compose `coerce` for parseValue-style conversion.
 const scalar = <TValue>(name: string, test: (value: unknown) => value is TValue): Schema<TValue> =>
   leaf({ kind: 'scalar', name }, name, test, false);
 
-const INT_MAX = 2 ** 31 - 1;
-const INT_MIN = -(2 ** 31);
+const INT_MAX = 2_147_483_647;
+const INT_MIN = -2_147_483_648;
 const isString = (value: unknown): boolean => typeof value === 'string';
 
 // each built-in's own list walk: its check inlines, no call per item
@@ -228,6 +228,11 @@ const unknown = (): Schema => leaf({ kind: 'unknown' }, 'unknown', () => true);
 // ─── wrappers: non-null is the default, as in GraphQL ────────────────────────────────────────────
 
 /**
+The longest array an engine can hold: `2 ** 32 - 1`.
+*/
+const MAX_LENGTH = 4_294_967_295;
+
+/**
 Checks items by index, never through the input's own methods or iterator, so holes are checked too. Each item is read once; the output is a fresh array of what was read.
 */
 const list = <TSchema extends StandardSchemaV1>(
@@ -240,7 +245,7 @@ const list = <TSchema extends StandardSchemaV1>(
   Admits a list of `length` items, a level down only if items descend; a proxy's `length` can be anything.
   */
   const open = (length: number): string | undefined =>
-    Number.isInteger(length) && length >= 0 && length <= 2 ** 32 - 1
+    Number.isInteger(length) && length >= 0 && length <= MAX_LENGTH
       ? (scan === undefined ? enter : admit)(length)
       : 'Invalid list length';
   return schema<Out, Input<TSchema>[]>(
@@ -1022,7 +1027,7 @@ const discriminate = (members: readonly Impl[]): Members | undefined => {
     resolvers.push(resolve);
   }
   const resolved = resolvers.map((resolve) => resolve());
-  const first = resolved[0];
+  const [first] = resolved;
   if (first === undefined) {
     return undefined;
   }
@@ -1039,7 +1044,7 @@ const discriminate = (members: readonly Impl[]): Members | undefined => {
       };
       return {
         check: [
-          (value) => {
+          (value): unknown => {
             const found = isPlain(value) ? find(value) : undefined;
             return found === undefined
               ? FAIL
@@ -1047,7 +1052,7 @@ const discriminate = (members: readonly Impl[]): Members | undefined => {
           },
         ],
         fast: [
-          (value) => {
+          (value): unknown => {
             const found = isPlain(value) ? find(value) : undefined;
             if (found === undefined) {
               return FAIL;
