@@ -26,10 +26,7 @@ concurrency:
   group: pages
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -50,5 +47,15 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
+
+  # its own job: deploy-pages lists the run's artifacts and misses one finalized a moment
+  # earlier in the same job, which no re-run recovers (actions/deploy-pages#451)
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - id: deploy
         uses: actions/deploy-pages@v4
