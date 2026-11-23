@@ -18,7 +18,7 @@ hazards:
   - claim: TYPE TESTS — the `true satisfies Equal<…>` assertions fail only under tsc; bun test strips types, so ci.yaml and dandori run `bunx tsc --noEmit` in packages/verax (the lockfile compiler)
     anchor: ※ verax-type-tests
 edges:
-  depends: [packages/oxlint]
+  depends: [packages/oxfmt, packages/oxlint]
 ```
 
 <!-- @stele -->
