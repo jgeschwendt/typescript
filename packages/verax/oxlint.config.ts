@@ -26,8 +26,6 @@ export default defineConfig({
       rules: {
         // a schema's own keys enumerate as built: def, then ~standard
         'sort-keys': 'off',
-        // a private symbol ends a full check early; only verify catches it
-        'typescript/only-throw-error': 'off',
         // the call's budget is module state: nested frames share it, and every entry resets it
         'unicorn-js/no-top-level-assignment-in-function': 'off',
       },
