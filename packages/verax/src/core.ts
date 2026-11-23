@@ -3,7 +3,7 @@ import type { StandardSchemaV1 } from './standard.js';
 /**
 One failure: its message, and the path of keys and indexes to the value.
 */
-export type Issue = StandardSchemaV1.Issue &
+type Issue = StandardSchemaV1.Issue &
   Readonly<{
     path: readonly PropertyKey[];
   }>;
@@ -12,7 +12,7 @@ export type Issue = StandardSchemaV1.Issue &
 Structural description of a schema — what `sdl()` and tooling walk. A child
 may be a Standard Schema from elsewhere, which has no `def`.
 */
-export type Def =
+type Def =
   | Readonly<{
       kind: 'enum';
       name?: string;
@@ -35,12 +35,12 @@ export type Def =
 /**
 A value `literal` matches.
 */
-export type Primitive = bigint | boolean | number | string | null | undefined;
+type Primitive = bigint | boolean | number | string | null | undefined;
 
 /**
 `TOut` is the output; `TIn` is what the schema accepts — they differ once `coerce` is involved.
 */
-export type Schema<TOut = unknown, TIn = TOut> = Readonly<{
+type Schema<TOut = unknown, TIn = TOut> = Readonly<{
   def: Def;
 }> &
   StandardSchemaV1<TIn, TOut>;
@@ -48,25 +48,25 @@ export type Schema<TOut = unknown, TIn = TOut> = Readonly<{
 /**
 An object's fields: each key's schema.
 */
-export type Shape = Readonly<Record<string, StandardSchemaV1>>;
+type Shape = Readonly<Record<string, StandardSchemaV1>>;
 
 /**
 The output type of a schema.
 */
-export type Infer<TSchema extends StandardSchemaV1> = StandardSchemaV1.InferOutput<TSchema>;
+type Infer<TSchema extends StandardSchemaV1> = StandardSchemaV1.InferOutput<TSchema>;
 
 /**
 The input type of a schema — what `is` and `assert` narrow to.
 */
-export type Input<TSchema extends StandardSchemaV1> = StandardSchemaV1.InferInput<TSchema>;
+type Input<TSchema extends StandardSchemaV1> = StandardSchemaV1.InferInput<TSchema>;
 
 /**
 Rejection from a fast check. Module-private: no input can be it.
 */
-export const FAIL: unique symbol = Symbol('verax.fail');
-export type Fail = typeof FAIL;
+const FAIL: unique symbol = Symbol('verax.fail');
+type Fail = typeof FAIL;
 
-export type Context = Readonly<{
+type Context = Readonly<{
   /**
   Issues collected before the walk stops: `MAX_ISSUES` unless set.
   */
@@ -78,7 +78,7 @@ export type Context = Readonly<{
 /**
 A schema's checks, private to this copy of verax. Any may throw.
 */
-export type Impl<TOut = unknown> = Readonly<{
+type Impl<TOut = unknown> = Readonly<{
   /**
   The verdict alone, for `is`: `FAIL`, or anything else.
   */
@@ -107,7 +107,7 @@ const note = (
   context.issues.push({ message, path });
 };
 
-export const issue = (context: Context, message: string, path?: readonly PropertyKey[]): void => {
+const issue = (context: Context, message: string, path?: readonly PropertyKey[]): void => {
   // Past the budget every refusal is its doing, whatever it looks like.
   const why = limit === 0 ? TOO_COMPLEX : message;
   note(context, why, path);
@@ -131,7 +131,7 @@ const RATIO = 16;
 /**
 Work a failed stretch may do free, so a discriminant failing a level down costs nothing; and leaf fields a walk may read free before one fails.
 */
-export const FREE = 8;
+const FREE = 8;
 
 /**
 Containers on the path. A validation nested in a callback continues its caller's depth, so no nesting of calls outruns the engine stack. A cycle is walked like any other value: only where the schema follows it, to this limit.
@@ -187,7 +187,7 @@ Admits a container `weight` fields or items wide, or says why not — too
 complex or too deep. Its work is counted up front, so a throw cannot hide
 it; a walk that fails refunds the rest.
 */
-export const admit = (weight: number): string | undefined => {
+const admit = (weight: number): string | undefined => {
   if (top >= limit) {
     if (limit === 0) {
       return TOO_COMPLEX;
@@ -206,7 +206,7 @@ export const admit = (weight: number): string | undefined => {
 /**
 Admits a container a level down, for walks that descend: its children are one deeper.
 */
-export const enter = (weight: number): string | undefined => {
+const enter = (weight: number): string | undefined => {
   const why = admit(weight);
   if (why === undefined) {
     top += 1;
@@ -217,7 +217,7 @@ export const enter = (weight: number): string | undefined => {
 /**
 One more key a walk counts as it enumerates — a record's — or why not: too complex.
 */
-export const tick = (): string | undefined => {
+const tick = (): string | undefined => {
   steps += 1;
   if (steps + linear > MAX_STEPS) {
     limit = 0;
@@ -229,7 +229,7 @@ export const tick = (): string | undefined => {
 /**
 A walk failing with `rest` of its weight unread.
 */
-export const refund = (rest: number): Fail => {
+const refund = (rest: number): Fail => {
   steps -= rest;
   return FAIL;
 };
@@ -238,7 +238,7 @@ export const refund = (rest: number): Fail => {
 A list failing with `rest` items unread: its output was sized for them, so
 they stay work, but never waste. `is` counts them alike, for one verdict.
 */
-export const forfeit = (rest: number): Fail => {
+const forfeit = (rest: number): Fail => {
   steps -= rest;
   return spend(rest);
 };
@@ -246,12 +246,12 @@ export const forfeit = (rest: number): Fail => {
 /**
 A walk failing on its leaf field `index`: those read before it are never waste, and the first `FREE` are free.
 */
-export const miss = (index: number): Fail => (index > FREE ? spend(index - FREE) : FAIL);
+const miss = (index: number): Fail => (index > FREE ? spend(index - FREE) : FAIL);
 
 /**
 A walk counting `work` that is never waste; it fails, if it stops here.
 */
-export const spend = (work: number): Fail => {
+const spend = (work: number): Fail => {
   linear += work;
   if (steps + linear > MAX_STEPS) {
     limit = 0;
@@ -259,14 +259,14 @@ export const spend = (work: number): Fail => {
   return FAIL;
 };
 
-export const leave = (): void => {
+const leave = (): void => {
   top -= 1;
 };
 
 /**
 Containers on the path: 0 between top-level calls.
 */
-export const depth = (): number => top;
+const depth = (): number => top;
 
 /**
 Opens a frame; a top-level frame starts afresh.
@@ -341,7 +341,7 @@ const render = (value: unknown): string => {
 /**
 A short, never-throwing rendering of a received value (a revoked Proxy throws from `Array.isArray`).
 */
-export const describe = (value: unknown): string => {
+const describe = (value: unknown): string => {
   try {
     return render(value);
   } catch {
@@ -372,7 +372,7 @@ const OVERFLOW = /call stack/iu;
 Stack exhaustion is never a failed member: swallowing it would make the
 verdict depend on the caller's stack. Any other `RangeError` is a failure.
 */
-export const overflow = (error: unknown): boolean => {
+const overflow = (error: unknown): boolean => {
   try {
     if (!(error instanceof RangeError)) {
       return false;
@@ -393,10 +393,7 @@ export const overflow = (error: unknown): boolean => {
 /**
 The first member's output to accept, or `FAIL`. A member that throws failed.
 */
-export const pick = (
-  members: readonly ((value: unknown) => unknown)[],
-  value: unknown,
-): unknown => {
+const pick = (members: readonly ((value: unknown) => unknown)[], value: unknown): unknown => {
   const from = top;
   for (const member of members) {
     const start = steps;
@@ -438,7 +435,7 @@ Unions taken to pass so far: an output holding one is unjudged, so no `refine` m
 */
 let taken = 0;
 
-export const unjudged = (): number => taken;
+const unjudged = (): number => taken;
 /**
 Keys a member being tried did not know, on the value its union compares members on.
 */
@@ -447,7 +444,7 @@ let strangers = 0;
 /**
 Reports an unknown key; one of the value a union compares members on means the member is not it.
 */
-export const stray = (context: Context, key: string, message: string): void => {
+const stray = (context: Context, key: string, message: string): void => {
   strangers += frames === 1 && context.path.length === comparing ? 1 : 0;
   issue(context, message, [...context.path, key]);
 };
@@ -487,7 +484,7 @@ outside nested unions, the first on a tie. Each full check tried is charged
 as a failed member is, and stops once it cannot be closer; past the budget,
 or inside another untagged union's explanation, it reports nothing.
 */
-export const closest =
+const closest =
   (runs: readonly Impl['run'][]): Impl['run'] =>
   (value, context) => {
     if (explaining) {
@@ -530,7 +527,7 @@ export const closest =
 `pick`, reporting a failure: the issues `report` finds — at their paths, unless
 a limit ends it — else a refusal met on the way, else the mismatch.
 */
-export const choose = (
+const choose = (
   members: readonly ((value: unknown) => unknown)[],
   report: Impl['run'],
   value: unknown,
@@ -660,7 +657,7 @@ const foreign = (spec: StandardSchemaV1): Impl => {
 /**
 This copy's checks for a schema it made — or a spread or copy of one — else an adapter.
 */
-export const impl = (spec: StandardSchemaV1): Impl => {
+const impl = (spec: StandardSchemaV1): Impl => {
   let properties: unknown;
   try {
     properties = spec['~standard'];
@@ -675,7 +672,7 @@ export const impl = (spec: StandardSchemaV1): Impl => {
 /**
 What `validate` returns: the output, or every issue.
 */
-export type Result<TOut> =
+type Result<TOut> =
   | Readonly<{ issues?: undefined; value: TOut }>
   | Readonly<{ issues: readonly Issue[] }>;
 
@@ -793,15 +790,13 @@ const walk = <TOut>(value: unknown, self: Impl<TOut>): Result<TOut> => {
 /**
 The output — fresh, coercions applied — or every issue. Never throws.
 */
-export const validate: <TSchema extends Schema>(
-  value: unknown,
-  spec: TSchema,
-) => Result<Infer<TSchema>> = verify.bind(undefined, undefined);
+const validate: <TSchema extends Schema>(value: unknown, spec: TSchema) => Result<Infer<TSchema>> =
+  verify.bind(undefined, undefined);
 
 /**
 Makes a schema; `check` defaults to `fast` — a leaf or a refine builds nothing it could skip.
 */
-export const schema = <TOut, TIn = TOut>(
+const schema = <TOut, TIn = TOut>(
   def: Def,
   fast: Impl<TOut>['fast'],
   run: Impl<TOut>['run'],
@@ -823,7 +818,7 @@ const format = ({ message, path }: Issue): string =>
 /**
 Thrown by `assert` and `parse`: `issues` holds every issue, the message one per line.
 */
-export class VeraxError extends TypeError {
+class VeraxError extends TypeError {
   public override name = 'VeraxError';
   public readonly issues: readonly Issue[];
   public constructor(issues: readonly Issue[]) {
@@ -835,10 +830,7 @@ export class VeraxError extends TypeError {
 /**
 Guards the value as the schema's input. Coercions run during the check but the value is not converted — use `parse` for the output.
 */
-export const is = <TSchema extends Schema>(
-  value: unknown,
-  spec: TSchema,
-): value is Input<TSchema> => {
+const is = <TSchema extends Schema>(value: unknown, spec: TSchema): value is Input<TSchema> => {
   const level = frames;
   const from = top;
   try {
@@ -871,7 +863,7 @@ export const is = <TSchema extends Schema>(
 /**
 Validates and returns the output — fresh, coercions applied; throws `VeraxError` listing every issue.
 */
-export const parse = <TSchema extends Schema>(value: unknown, spec: TSchema): Infer<TSchema> => {
+const parse = <TSchema extends Schema>(value: unknown, spec: TSchema): Infer<TSchema> => {
   const result = validate(value, spec);
   if (result.issues) {
     throw new VeraxError(result.issues);
@@ -882,9 +874,49 @@ export const parse = <TSchema extends Schema>(value: unknown, spec: TSchema): In
 /**
 Narrows the value to the schema's input, else throws `VeraxError` listing every issue.
 */
-export const assert: <TSchema extends Schema>(
+const assert: <TSchema extends Schema>(
   value: unknown,
   spec: TSchema,
 ) => asserts value is Input<TSchema> = (value, spec) => {
   parse(value, spec);
+};
+
+export {
+  admit,
+  assert,
+  choose,
+  closest,
+  type Context,
+  type Def,
+  depth,
+  describe,
+  enter,
+  FAIL,
+  type Fail,
+  forfeit,
+  FREE,
+  type Impl,
+  impl,
+  type Infer,
+  type Input,
+  is,
+  type Issue,
+  issue,
+  leave,
+  miss,
+  overflow,
+  parse,
+  pick,
+  type Primitive,
+  refund,
+  type Result,
+  type Schema,
+  schema,
+  type Shape,
+  spend,
+  stray,
+  tick,
+  unjudged,
+  validate,
+  VeraxError,
 };

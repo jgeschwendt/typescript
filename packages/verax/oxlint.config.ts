@@ -51,6 +51,7 @@ export default defineConfig({
     {
       files: ['src/standard.ts'],
       rules: {
+        'import/group-exports': 'off',
         'no-redeclare': 'off',
         'typescript/no-namespace': 'off',
 
@@ -135,9 +136,6 @@ export default defineConfig({
     'func-style': 'off',
     // `at`, `of`, `id` are the domain's words
     'id-length': 'off',
-    // a library's export stays at its declaration
-    'import/exports-last': 'off',
-    'import/group-exports': 'off',
     // a lazy cache (a resolved shape) starts unset
     'init-declarations': 'off',
     // the internal schema constructor takes its parts positionally; a bag would allocate
