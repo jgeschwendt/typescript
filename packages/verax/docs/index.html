@@ -370,10 +370,11 @@ console.log(parse(await response.json(), User));</code></pre>
         <pre class="snippet" data-out>{ age: null, name: 'Lin', tags: ['c'] }</pre>
         <h3 class="h3" id="forms">Form data</h3>
         <p class="docs-note">
-          Form values are strings and an unchecked box is absent: coerce each field.
+          Form values are strings and an unchecked box is absent: coerce each field, and leave a
+          blank one to fail.
         </p>
         <pre class="snippet" data-ts><code>const Signup = object('Signup', {
-  age: coerce(int(), Number),
+  age: coerce(int(), (v) =&gt; (typeof v === 'string' &amp;&amp; v.trim() !== '' ? Number(v) : v)),
   email: Email,
   newsletter: coerce(boolean(), (v) =&gt; v === 'on'),
 });
@@ -381,8 +382,31 @@ console.log(parse(await response.json(), User));</code></pre>
 const form = new FormData();
 form.set('age', '36');
 form.set('email', 'ada@example.com');
-console.log(parse({ newsletter: undefined, ...Object.fromEntries(form.entries()) }, Signup));</code></pre>
-        <pre class="snippet" data-out>{ age: 36, email: 'ada@example.com', newsletter: false }</pre>
+console.log(parse(Object.fromEntries(form.entries()), Signup));
+form.set('age', '');
+console.log(validate(Object.fromEntries(form.entries()), Signup).issues);</code></pre>
+        <pre class="snippet" data-out>
+{ age: 36, email: 'ada@example.com', newsletter: false }
+[{ message: 'Expected Int, received ""', path: ['age'] }]</pre>
+        <p class="docs-note">
+          <code class="code">Object.fromEntries</code> keeps only the last value of a repeated key:
+          group with <code class="code">getAll</code>, and default the list no field sent.
+        </p>
+        <pre class="snippet" data-ts><code>const Upload = object({
+  files: list(scalar('File', (v): v is File =&gt; v instanceof File)),
+  tags: coerce(list(string()), (v) =&gt; v ?? []),
+});
+
+const many = new FormData();
+many.append('files', new File(['hi'], 'hi.txt'));
+many.append('tags', 'a');
+many.append('tags', 'b');
+const grouped = Object.fromEntries(
+  Array.from(new Set(many.keys()), (key) =&gt; [key, many.getAll(key)]),
+);
+const upload = parse(grouped, Upload);
+console.log(upload.files.map((file) =&gt; file.name), upload.tags, parse({ files: [] }, Upload));</code></pre>
+        <pre class="snippet" data-out>['hi.txt'] ['a', 'b'] { files: [], tags: [] }</pre>
         <h3 class="h3" id="tests">Tests</h3>
         <p class="docs-note">
           In <code class="code">bun:test</code> or <code class="code">node:test</code>,
