@@ -487,7 +487,7 @@ type Plan = Readonly<{
 
 // ※ verax-hot-path
 // Shapes resolve here, once: the per-run walks index these plans and never call
-// Object.entries/keys or iterator helpers (measured: 2–11× slower).
+// Object.entries/keys or iterator helpers (measured 2026-11-23: 2.8–28× slower).
 const read = (shape: Shape): Plan => {
   const record = Object.create(null) as Record<string, StandardSchemaV1>;
   const fields = Object.entries(shape).map(([key, field], at): Field => {

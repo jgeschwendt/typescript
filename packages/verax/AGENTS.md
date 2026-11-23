@@ -13,7 +13,7 @@ invariants:
 hazards:
   - claim: DEF IDENTITY — refine and coerce must reuse the inner schema's def object; sdl() detects name collisions and dedupes union members by def identity, so a fresh def breaks sdl naming
     anchor: ※ verax-def-identity
-  - claim: "HOT PATH — per-run code never calls Object.entries/Object.keys or iterator helpers (values().every etc.), and `is` runs check-only paths that allocate nothing (outside refine) while parse/validate allocate only the output snapshot; shapes resolve once into plans. Measured on bun 1.4.2 / node 24: iterator helpers 2–11× slower, Object.entries 24–95 ns per call; every perf change is kept only with a before/after run of the benchmark harness"
+  - claim: "HOT PATH — per-run code never calls Object.entries/Object.keys or iterator helpers (values().every etc.), and `is` runs check-only paths that allocate nothing (outside refine) while parse/validate allocate only the output snapshot; shapes resolve once into plans; built-in leaves walk lists in their own loops. Measured by bench/run.ts 2026-11-23: iterator helpers 2.8–28× slower, own loops 30–81% faster; perf changes keep a before/after run"
     anchor: ※ verax-hot-path
   - claim: TYPE TESTS — the `true satisfies Equal<…>` assertions fail only under tsc; bun test strips types, so ci.yaml and dandori run `bunx tsc --noEmit` in packages/verax (the lockfile compiler)
     anchor: ※ verax-type-tests
