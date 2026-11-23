@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en" class="ui">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>verax — contract</title>
+    <link rel="stylesheet" href="https://gigantic.dev/ui/ui.css" />
+    <link rel="stylesheet" href="https://gigantic.dev/ui/docs.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23345c7a'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body data-page="docs">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true">
+      <!-- Phosphor Icons (regular), MIT (c) 2023 Phosphor Icons — via jgeschwendt/ui icons/ -->
+      <symbol id="ph-circle-half" viewBox="0 0 256 256" fill="currentColor">
+        <path
+          d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,16.37a86.4,86.4,0,0,1,16,3V212.67a86.4,86.4,0,0,1-16,3Zm32,9.26a87.81,87.81,0,0,1,16,10.54V195.83a87.81,87.81,0,0,1-16,10.54ZM40,128a88.11,88.11,0,0,1,80-87.63V215.63A88.11,88.11,0,0,1,40,128Zm160,50.54V77.46a87.82,87.82,0,0,1,0,101.08Z"
+        />
+      </symbol>
+      <symbol id="ph-moon" viewBox="0 0 256 256" fill="currentColor">
+        <path
+          d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"
+        />
+      </symbol>
+      <symbol id="ph-sun" viewBox="0 0 256 256" fill="currentColor">
+        <path
+          d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"
+        />
+      </symbol>
+      <symbol
+        id="verax-check"
+        viewBox="0 0 256 256"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="16"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="128" cy="128" r="96" />
+        <path d="M84 132l32 32 56-64" />
+      </symbol>
+    </svg>
+
+    <header class="appbar">
+      <h1 class="appbar-title">
+        <svg class="icon" aria-hidden="true"><use href="#verax-check" /></svg>
+        verax <small>· contract</small>
+      </h1>
+      <span class="spacer"></span>
+      <div class="segmented" role="group" aria-label="theme">
+        <button type="button" data-theme-set="light" aria-pressed="false" title="light">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-sun" /></svg>light
+        </button>
+        <button type="button" data-theme-set="auto" aria-pressed="true" title="follow the system">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-circle-half" /></svg>auto
+        </button>
+        <button type="button" data-theme-set="dark" aria-pressed="false" title="dark">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-moon" /></svg>dark
+        </button>
+      </div>
+    </header>
+
+    <main class="docs-shell" data-container>
+      <header class="stack">
+        <p class="eyebrow">vērāx — the exact contract</p>
+        <p class="lead docs-lead">
+          What verax guarantees for any input, where it stops, and how each schema reads a value.
+          The <a class="link" href="./">docs</a> show it running.
+        </p>
+        <nav class="row docs-toc" aria-label="sections">
+          <a class="pill" href="#limits">guarantees and limits</a>
+          <a class="pill" href="#semantics">semantics</a>
+          <a class="pill" href="#recursive">recursive schemas</a>
+        </nav>
+      </header>
+      <section class="docs-section" id="limits">
+        <header><h2 class="h2">Guarantees and limits</h2></header>
+        <p class="docs-note">
+          For any input, validation never throws and never returns a wrong verdict: a throwing
+          callback, hostile getter or proxy, or exhausted stack becomes an issue. Every limit below
+          fails closed: it is an issue (and <code class="code">is</code> is
+          <code class="code">false</code>), never an accept. For plain data — what
+          <code class="code">JSON.parse</code> or <code class="code">structuredClone</code> produce,
+          shared subtrees and holes included — the limits bound time and memory. Other objects cost
+          in proportion to their structure: verax reads only what the schema asks for, but an engine
+          may step over an object's non-enumerable or symbol keys, uncounted, on every visit.
+        </p>
+        <ul>
+          <li>
+            <strong>Plain objects.</strong> <code class="code">object</code> and
+            <code class="code">record</code> accept an object of this realm whose prototype is
+            <code class="code">Object.prototype</code> or <code class="code">null</code> — not
+            arrays, dates, class instances, or an object created beneath another. Bring another
+            realm's objects over with <code class="code">structuredClone</code>; lists from any
+            realm are lists.
+          </li>
+          <li>
+            <strong><code class="code">Too deep</code>.</strong> Nesting past 512 objects, records
+            and lists, the same on every engine, counted on through validations nested in callbacks.
+            Inside a union it fails the member that met it; later members are still tried. A cyclic
+            value is walked like any other, only as far as the schema goes: a schema that follows
+            the cycle meets <code class="code">Too deep</code>, one that stops before it accepts.
+          </li>
+          <li>
+            <strong>Stack.</strong> A stack exhausted anyway (a deep caller, or a dozen or more
+            wrappers per level on a small stack — node's default fits about 18) is an issue too. Met
+            by a validation nested in a callback, it fails the whole call (<code class="code"
+              >Threw: stack exhausted</code
+            >), whatever the callback made of it.
+          </li>
+          <li>
+            <strong><code class="code">Too complex</code>.</strong> Each pass of a call, with every
+            validation nested in its callbacks, may take 10 million steps, whatever a callback made
+            of a verdict. Entering an object, record or list is a step, and so is each field, key or
+            item it holds, each key its shape lacks, and each union member tried and failed — on
+            every attempt, and along every path to a shared object. A list of n items, an object of
+            n fields and a record of n keys are each n + 1: a million rows of 3 fields is 5 million;
+            a list of 10 million numbers is past it, and so are 100,000 items that each fail 99
+            members of a union tried in turn before one accepts. A list that fails counts all its
+            items, read or not (its output was sized for them), and a record that fails every key it
+            enumerates — except that a leaf value failing within its first 9 keys costs nothing, as
+            a leaf field does.
+          </li>
+          <li>
+            <strong>Waste</strong> is <code class="code">Too complex</code> too: failed union
+            members and a nested validation's rejected fast pass may exceed 16× the useful steps by
+            a million, no more. A member failing on a leaf field (enum, literal, scalar — read
+            before nested ones) or an unknown key wastes nothing: the leaf fields it read count
+            toward the 10 million past the first 8, and a shape of more than 8 leaf fields reads
+            enums and literals first. So a discriminant tried in turn costs one step per member
+            tried, wherever its key sorts; found by <a class="link" href="#semantics">lookup</a>,
+            one step if no member holds its value, whatever the union's width. A member failing
+            later costs one step plus each field it read (and what that held), and wastes what it
+            costs past 8; untagged unions whose failures cost under 16× the match never trip it.
+            Waste that compounds does: a recursive union whose members differ only below the
+            recursion tries every path, so input some 20 levels deep is
+            <code class="code">Too complex</code> even when valid — give its members a discriminant.
+          </li>
+          <li>
+            <strong>A union over budget</strong> reports <code class="code">Too complex</code> at
+            its own path, not where it was met. Explaining a failed union tries each member's full
+            check, charged as failed members are, and each issue's path is work; an explanation that
+            runs past the budget is undone — the mismatch stands — and is the call's last.
+          </li>
+          <li>
+            <strong>Memory.</strong> <code class="code">parse</code> and
+            <code class="code">validate</code> copy each path: an object shared along many paths is
+            copied along each, so their memory, like their time, grows with paths — within the
+            budget, up to roughly 600 MB for one large shared object or record.
+          </li>
+          <li><strong>Issues</strong> stop at 100, and so does the walk.</li>
+          <li>
+            <strong>Schemas from elsewhere</strong> — another copy of verax, another library
+            speaking Standard Schema — are black boxes, run through their synchronous
+            <code class="code">~standard.validate</code> with their own depth and budget. A result
+            must be an object with an array of <code class="code">issues</code> or a
+            <code class="code">value</code>; anything else, or a thenable, is an issue. Their issue
+            paths become property keys.
+          </li>
+        </ul>
+      </section>
+      <section class="docs-section" id="semantics">
+        <header><h2 class="h2">Semantics</h2></header>
+        <ul>
+          <li><strong>Lists</strong> are walked by index to their length, holes included.</li>
+          <li>
+            <strong>Objects</strong> read their shape's keys from their own properties — a known key
+            even when non-enumerable — and report their other own enumerable string keys as unknown.
+          </li>
+          <li>
+            <strong>Records</strong> read every own enumerable string key, in the input's order, and
+            check its value — any key, <code class="code">__proto__</code> included.
+          </li>
+          <li>
+            <strong>Absent keys.</strong> A key may be absent exactly when its schema accepts
+            <code class="code">undefined</code> — <code class="code">optional(x)</code>,
+            <code class="code">unknown()</code>, <code class="code">literal(undefined)</code> — and
+            its type is then <code class="code">key?: T | undefined</code>.
+          </li>
+          <li>
+            <strong>Types.</strong> A schema has an output and an input type;
+            <code class="code">coerce</code> makes the input <code class="code">unknown</code>.
+            <code class="code">is</code> and <code class="code">assert</code> narrow to the input
+            type; <code class="code">parse</code> returns the output type.
+            <code class="code">is</code> narrows <code class="code">false</code> too: a
+            <code class="code">number</code> failing <code class="code">int()</code> becomes
+            <code class="code">never</code> — guard <code class="code">unknown</code>.
+          </li>
+          <li>
+            <strong>Defaults.</strong> <code class="code">optional</code> short-circuits
+            <code class="code">undefined</code> before an inner
+            <code class="code">coerce</code> runs; write a default as
+            <code class="code">coerce(optional(x), (v) =&gt; v ?? d)</code> — its output type still
+            admits <code class="code">undefined</code>.
+          </li>
+          <li>
+            <strong>Unions</strong> try members in order and the first to accept wins. A member
+            stops at its first failure, checking leaf fields, then unknown keys, before nested ones
+            — so a discriminant field makes recursive unions linear regardless of key order. A
+            member that throws failed, except on stack exhaustion (a
+            <code class="code">RangeError</code> about the call stack), which fails the whole check.
+          </li>
+          <li>
+            <strong>Lookup.</strong> A discriminated union finds its member by lookup: when every
+            member is a verax <code class="code">object</code> (not refined or coerced) holding a
+            defined <code class="code">literal</code> at one key, a distinct value in each (<code
+              class="code"
+              >0</code
+            >
+            and <code class="code">-0</code> count as one), read after only built-in leaf fields,
+            the value's key is read once, first, and only the member holding it is tried. For plain
+            data the verdict is the one trying each would reach — every other member fails at that
+            key. A getter, proxy or callback that changes the value mid-check can change the outcome
+            either way. On first use such a union reads every member's shape; a shape getter that
+            throws leaves its members tried in turn until it reads — unless it exhausts the stack,
+            which fails the check.
+          </li>
+          <li>
+            <strong>A union that rejects says why</strong>, in a top-level call only — a validation
+            nested in a callback reports the mismatch alone, as its caller's verdict is still open.
+            Tagged — every member an <code class="code">object</code>, or a
+            <code class="code">refine</code> of one (never a <code class="code">coerce</code>, which
+            may rewrite the tag), holding a distinct literal at one key — it reports the member the
+            value's tag names, or one issue at that key naming the tags it accepts:
+            <code class="code">__typename: Expected "Ping" | "Track", received "Pong"</code>.
+            Otherwise it reports its closest member: of those failing below the value itself and
+            knowing every key it holds, the one with the fewest issues, the first on a tie. Only the
+            outermost failing untagged union explains itself: comparing members, a union nested in
+            one is taken to pass, and in the closest member's issues a nested untagged union is its
+            mismatch, at its path (a tagged one still reports its member). When no member qualifies,
+            it is <code class="code">Expected User, received object</code> (or
+            <code class="code">Too deep</code>) at the union's path. A member's throw is its issue,
+            at its path.
+          </li>
+          <li>
+            <strong>Snapshot.</strong> <code class="code">parse</code> and
+            <code class="code">validate</code> read each field and item once, and every object,
+            record and list the schema checks is a fresh plain one — objects in shape key order and
+            records in the input's, integer-like keys first, as JavaScript does — so no getter,
+            proxy, prototype or later mutation of the input reaches the output. Values under
+            <code class="code">unknown()</code> or a custom scalar — a
+            <code class="code">coerce</code> into one included — pass through as they are, so an
+            output may hold the input's cyclic references. <code class="code">is</code> builds only
+            what a <code class="code">refine</code> test must see.
+          </li>
+          <li>
+            <strong>Rejection costs a second pass.</strong> A fast check decides, then a full check
+            collects the issues — so on invalid input <code class="code">refine</code>/<code
+              class="code"
+              >coerce</code
+            >
+            callbacks and input getters run again, and inside a union once per member tried — then,
+            to explain a union that rejects, once more per member compared and again for the
+            closest.
+          </li>
+          <li>
+            <strong>Schemas</strong> come from verax's factories; a spread or copy of one is that
+            schema. A Standard Schema from elsewhere nests as a field, list item, union member, or
+            under <code class="code">nullable</code>/<code class="code">optional</code>, typed by
+            its own <code class="code">~standard.types</code>; <code class="code">refine</code>,
+            <code class="code">coerce</code> and <code class="code">sdl()</code> need verax's own.
+          </li>
+        </ul>
+      </section>
+      <section class="docs-section" id="recursive">
+        <header><h2 class="h2">Recursive schemas</h2></header>
+        <p class="docs-note">
+          Make the field a getter and annotate the schema with its type, which TypeScript cannot
+          infer through a cycle — a bare <code class="code">Schema</code> infers
+          <code class="code">unknown</code>. The shape is read once, on first use: its getters run
+          then, <code class="code">def.shape</code> is a frozen copy, and later changes to the
+          object passed in have no effect.
+        </p>
+        <pre class="snippet"><code>import type { Schema } from 'verax';
+
+type Node = {
+  next: Node | null;
+  note?: string | undefined;
+};
+
+const Node: Schema&lt;Node&gt; = object('Node', {
+  get next() {
+    return nullable(Node);
+  },
+  note: optional(string()),
+});</code></pre>
+      </section>
+      <nav class="row link-row" aria-label="links">
+        <a class="pill" href="./">docs</a>
+        <a class="pill" href="https://github.com/jgeschwendt/typescript/tree/main/packages/verax"
+          >repo · packages/verax</a
+        >
+        <a class="pill" href="https://www.npmjs.com/package/verax">npm · verax</a>
+      </nav>
+    </main>
+    <script>
+      /* The theme contract, verbatim from jgeschwendt/ui docs.js — same localStorage
+   key, so a theme chosen on the ui pages is the theme this one opens in. */
+      const THEME_KEY = 'ui-theme';
+      function applyTheme(mode) {
+        const root = document.documentElement;
+        if (mode === 'auto') {
+          root.removeAttribute('data-theme');
+          localStorage.removeItem(THEME_KEY);
+        } else {
+          root.dataset.theme = mode;
+          localStorage.setItem(THEME_KEY, mode);
+        }
+        for (const b of document.querySelectorAll('[data-theme-set]')) {
+          b.setAttribute('aria-pressed', String(b.dataset.themeSet === mode));
+        }
+      }
+      for (const b of document.querySelectorAll('[data-theme-set]')) {
+        b.addEventListener('click', () => applyTheme(b.dataset.themeSet));
+      }
+      applyTheme(localStorage.getItem(THEME_KEY) || 'auto');
+    </script>
+  </body>
+</html>

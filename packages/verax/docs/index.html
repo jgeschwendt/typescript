@@ -456,12 +456,7 @@ input Signup {
           getter or exhausted stack is an issue, and every limit fails closed: nesting past 512 is
           <code class="code">Too deep</code>, work past 10 million steps
           <code class="code">Too complex</code>, and issues stop at 100. The
-          <a
-            class="link"
-            href="https://github.com/jgeschwendt/typescript/tree/main/packages/verax#readme"
-            >README</a
-          >
-          states the exact contract.
+          <a class="link" href="contract.html">contract</a> states each limit exactly.
         </p>
         <pre class="snippet" data-ts><code>const hostile = {
   age: null,
