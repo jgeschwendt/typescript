@@ -5,7 +5,7 @@
 /**
 A value as the page prints it: a string bare at the top level and single-quoted inside, objects on one line until 72 columns, then one entry per line.
 */
-export const show = (value: unknown, indent = '', top = true): string => {
+const show = (value: unknown, indent = '', top = true): string => {
   if (typeof value === 'string') {
     if (top) {
       return value;
@@ -40,7 +40,7 @@ export const show = (value: unknown, indent = '', top = true): string => {
 /**
 Runs the blocks as one module, `verax` imports resolved through `specifiers`, and returns what each block printed. `load` imports a module's source: from a file in the test, a Blob on the page.
 */
-export const execute = async (
+const execute = async (
   blocks: readonly string[],
   specifiers: Readonly<Record<string, string>>,
   load: (source: string) => Promise<unknown>,
@@ -89,7 +89,7 @@ const load = async (source: string): Promise<unknown> => {
 /**
 Makes the page's blocks editable and runnable: ▶ or ⌘↵ reruns every block and marks each output the same as the page's or changed.
 */
-export const start = (): void => {
+const start = (): void => {
   const codes = [...document.querySelectorAll<HTMLElement>('pre[data-ts] > code')];
   const outputs = codes.map((code) => {
     const pre = code.parentElement;
@@ -143,3 +143,5 @@ export const start = (): void => {
     });
   }
 };
+
+export { execute, show, start };

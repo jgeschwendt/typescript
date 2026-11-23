@@ -100,7 +100,7 @@ const leaf = <TValue>(
 /**
 One def per built-in, so `sdl()` can tell `int()` from a user scalar named `Int`.
 */
-export const BUILTINS = Object.freeze({
+const BUILTINS = Object.freeze({
   Boolean: Object.freeze({ kind: 'scalar', name: 'Boolean' }),
   Float: Object.freeze({ kind: 'scalar', name: 'Float' }),
   ID: Object.freeze({ kind: 'scalar', name: 'ID' }),
@@ -112,10 +112,8 @@ export const BUILTINS = Object.freeze({
 A named leaf type — GraphQL's custom scalar. `test` is the whole contract;
 compose `coerce` for parseValue-style conversion.
 */
-export const scalar = <TValue>(
-  name: string,
-  test: (value: unknown) => value is TValue,
-): Schema<TValue> => leaf({ kind: 'scalar', name }, name, test, false);
+const scalar = <TValue>(name: string, test: (value: unknown) => value is TValue): Schema<TValue> =>
+  leaf({ kind: 'scalar', name }, name, test, false);
 
 const INT_MAX = 2 ** 31 - 1;
 const INT_MIN = -(2 ** 31);
@@ -179,24 +177,24 @@ const scanString: Scan = (items, from, length, out) => {
 /**
 `true` or `false` — GraphQL `Boolean`.
 */
-export const boolean = (): Schema<boolean> =>
+const boolean = (): Schema<boolean> =>
   leaf(BUILTINS.Boolean, 'Boolean', (value) => typeof value === 'boolean', true, scanBoolean);
 
 /**
 Finite double — GraphQL `Float`.
 */
-export const float = (): Schema<number> =>
+const float = (): Schema<number> =>
   leaf(BUILTINS.Float, 'Float', (value) => Number.isFinite(value), true, scanFloat);
 
 /**
 Opaque identifier — GraphQL `ID`, a string here (coerce to accept integers).
 */
-export const id = (): Schema<string> => leaf(BUILTINS.ID, 'ID', isString, true, scanString);
+const id = (): Schema<string> => leaf(BUILTINS.ID, 'ID', isString, true, scanString);
 
 /**
 Signed 32-bit integer — GraphQL `Int`.
 */
-export const int = (): Schema<number> =>
+const int = (): Schema<number> =>
   leaf(
     BUILTINS.Int,
     'Int',
@@ -209,13 +207,12 @@ export const int = (): Schema<number> =>
 /**
 Any string — GraphQL `String`.
 */
-export const string = (): Schema<string> =>
-  leaf(BUILTINS.String, 'String', isString, true, scanString);
+const string = (): Schema<string> => leaf(BUILTINS.String, 'String', isString, true, scanString);
 
 /**
 Exactly `value`, by `Object.is` — `literal(NaN)` matches NaN, `literal(0)` rejects -0.
 */
-export const literal = <const TValue extends Primitive>(value: TValue): Schema<TValue> => {
+const literal = <const TValue extends Primitive>(value: TValue): Schema<TValue> => {
   const made = leaf<TValue>({ kind: 'literal', value }, describe(value), (received) =>
     Object.is(received, value),
   );
@@ -226,14 +223,14 @@ export const literal = <const TValue extends Primitive>(value: TValue): Schema<T
 /**
 Any value, as given.
 */
-export const unknown = (): Schema => leaf({ kind: 'unknown' }, 'unknown', () => true);
+const unknown = (): Schema => leaf({ kind: 'unknown' }, 'unknown', () => true);
 
 // ─── wrappers: non-null is the default, as in GraphQL ────────────────────────────────────────────
 
 /**
 Checks items by index, never through the input's own methods or iterator, so holes are checked too. Each item is read once; the output is a fresh array of what was read.
 */
-export const list = <TSchema extends StandardSchemaV1>(
+const list = <TSchema extends StandardSchemaV1>(
   of: TSchema,
 ): Schema<Infer<TSchema>[], Input<TSchema>[]> => {
   type Out = Infer<TSchema>[];
@@ -368,14 +365,14 @@ const wrap = <TOut, TIn>(def: Def, of: StandardSchemaV1, allowed?: null): Schema
 /**
 The value may be `null`. Distinct from `optional`.
 */
-export const nullable = <TSchema extends StandardSchemaV1>(
+const nullable = <TSchema extends StandardSchemaV1>(
   of: TSchema,
 ): Schema<Infer<TSchema> | null, Input<TSchema> | null> => wrap({ kind: 'nullable', of }, of, null);
 
 /**
 What `optional` returns: the schema admitting `undefined`, its def marked optional.
 */
-export type Optional<TOut, TIn = TOut> = Readonly<{
+type Optional<TOut, TIn = TOut> = Readonly<{
   def: Extract<Def, { kind: 'optional' }>;
 }> &
   Schema<TOut | undefined, TIn | undefined>;
@@ -383,7 +380,7 @@ export type Optional<TOut, TIn = TOut> = Readonly<{
 /**
 The key may be absent (or `undefined`). Distinct from `nullable`.
 */
-export const optional = <TSchema extends StandardSchemaV1>(
+const optional = <TSchema extends StandardSchemaV1>(
   of: TSchema,
 ): Optional<Infer<TSchema>, Input<TSchema>> =>
   wrap({ kind: 'optional', of }, of) as Optional<Infer<TSchema>, Input<TSchema>>;
@@ -408,7 +405,7 @@ A key is optional exactly when its side admits `undefined`: an absent key is
 validated as `undefined`, and stays absent in the output when that is what
 its schema produced.
 */
-export type ObjectOf<TShape extends Shape, TSide extends 'input' | 'output' = 'output'> = {
+type ObjectOf<TShape extends Shape, TSide extends 'input' | 'output' = 'output'> = {
   -readonly [
     TKey in keyof TShape & string as undefined extends Side<TShape[TKey], TSide> ? never : TKey
   ]: Side<TShape[TKey], TSide>;
@@ -671,14 +668,14 @@ Only own keys count, each read once; an absent key is validated as
 `undefined`, and kept in the output only if its schema produced a value (a
 coerced default). The output is a fresh plain object, in shape key order.
 */
-export function object<TShape extends Shape>(
+function object<TShape extends Shape>(
   shape: TShape,
 ): Schema<ObjectOf<TShape>, ObjectOf<TShape, 'input'>>;
-export function object<TShape extends Shape>(
+function object<TShape extends Shape>(
   name: string,
   shape: TShape,
 ): Schema<ObjectOf<TShape>, ObjectOf<TShape, 'input'>>;
-export function object<TShape extends Shape>(
+function object<TShape extends Shape>(
   ...parts: readonly [TShape] | readonly [string, TShape]
 ): Schema<ObjectOf<TShape>, ObjectOf<TShape, 'input'>> {
   type Out = ObjectOf<TShape>;
@@ -806,7 +803,7 @@ against `of` — `Record<string, V>`. Keys are enumerated with `for…in`, each
 value read once; the output is a fresh plain object of what was read, in the
 input's key order.
 */
-export const record = <TSchema extends StandardSchemaV1>(
+const record = <TSchema extends StandardSchemaV1>(
   of: TSchema,
 ): Schema<Record<string, Infer<TSchema>>, Record<string, Input<TSchema>>> => {
   type Out = Record<string, Infer<TSchema>>;
@@ -934,14 +931,12 @@ export const record = <TSchema extends StandardSchemaV1>(
 /**
 One of the given strings — a GraphQL enum; pass a name first for SDL.
 */
-export function enums<const TValues extends readonly string[]>(
-  values: TValues,
-): Schema<TValues[number]>;
-export function enums<const TValues extends readonly string[]>(
+function enums<const TValues extends readonly string[]>(values: TValues): Schema<TValues[number]>;
+function enums<const TValues extends readonly string[]>(
   name: string,
   values: TValues,
 ): Schema<TValues[number]>;
-export function enums<const TValues extends readonly string[]>(
+function enums<const TValues extends readonly string[]>(
   ...parts: readonly [TValues] | readonly [string, TValues]
 ): Schema<TValues[number]> {
   const [naming, given] = split(parts);
@@ -1123,14 +1118,14 @@ literal, scalar) before nested ones — so a discriminant field makes
 recursive unions linear regardless of key order.
 A member that throws is a member that failed — but stack exhaustion fails the whole check.
 */
-export function union<const TMembers extends readonly StandardSchemaV1[]>(
+function union<const TMembers extends readonly StandardSchemaV1[]>(
   of: TMembers,
 ): Schema<Infer<TMembers[number]>, Input<TMembers[number]>>;
-export function union<const TMembers extends readonly StandardSchemaV1[]>(
+function union<const TMembers extends readonly StandardSchemaV1[]>(
   name: string,
   of: TMembers,
 ): Schema<Infer<TMembers[number]>, Input<TMembers[number]>>;
-export function union<const TMembers extends readonly StandardSchemaV1[]>(
+function union<const TMembers extends readonly StandardSchemaV1[]>(
   ...parts: readonly [TMembers] | readonly [string, TMembers]
 ): Schema<Infer<TMembers[number]>, Input<TMembers[number]>> {
   const [naming, of] = split(parts);
@@ -1182,7 +1177,7 @@ export function union<const TMembers extends readonly StandardSchemaV1[]>(
 /**
 Narrows accepted values without changing the type. Skipped once the inner schema fails.
 */
-export const refine = <TSchema extends Schema>(
+const refine = <TSchema extends Schema>(
   of: TSchema,
   message: string,
   test: (value: Infer<TSchema>) => boolean,
@@ -1215,7 +1210,7 @@ export const refine = <TSchema extends Schema>(
 /**
 Converts input before validating — GraphQL's parseValue. The input side becomes `unknown`.
 */
-export const coerce = <TSchema extends Schema>(
+const coerce = <TSchema extends Schema>(
   of: TSchema,
   convert: (value: unknown) => unknown,
 ): Pick<TSchema, 'def'> & Schema<Infer<TSchema>, unknown> => {
@@ -1226,4 +1221,27 @@ export const coerce = <TSchema extends Schema>(
     (value, context) => run(convert(value), context) as Infer<TSchema>,
     (value) => check(convert(value)),
   );
+};
+
+export {
+  boolean,
+  BUILTINS,
+  coerce,
+  enums,
+  float,
+  id,
+  int,
+  list,
+  literal,
+  nullable,
+  object,
+  type ObjectOf,
+  type Optional,
+  optional,
+  record,
+  refine,
+  scalar,
+  string,
+  union,
+  unknown,
 };
