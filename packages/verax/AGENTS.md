@@ -6,7 +6,7 @@ purpose: verax — minimal, zero-dep, GraphQL-shaped runtime types (superstruct 
 commands:
   test: bun run --filter verax test
 invariants:
-  - claim: MODERN ONLY — TypeScript 7+, ESM-only (exports "import" only, no CJS), Node >=22; never add a CJS build, node10 types fallback, or downlevel target
+  - claim: MODERN ONLY — TypeScript 7+, ESM-only (exports "import" only, no CJS), Node >=24; never add a CJS build, node10 types fallback, or downlevel target
     anchor: packages/verax/README.md#requirements
   - claim: NEVER THROWS — validate (and ~standard.validate, is, and the checks inside assert and parse) turns any exception from a user callback or hostile value into an issue at its path; union members that throw count as failed members, except on stack exhaustion (a RangeError whose message names the call stack), which fails the whole check
     anchor: ※ verax-never-throws

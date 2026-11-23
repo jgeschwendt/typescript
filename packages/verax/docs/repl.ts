@@ -15,7 +15,7 @@ export const show = (value: unknown, indent = '', top = true): string => {
   if (value instanceof Date) {
     return value.toISOString();
   }
-  if (value instanceof Error) {
+  if (Error.isError(value)) {
     return `${value.name}: ${value.message}`;
   }
   if (typeof value !== 'object' || value === null) {

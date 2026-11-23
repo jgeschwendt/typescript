@@ -1,5 +1,8 @@
 import type { StandardSchemaV1 } from './standard.js';
 
+/**
+One failure: its message, and the path of keys and indexes to the value.
+*/
 export type Issue = StandardSchemaV1.Issue &
   Readonly<{
     path: readonly PropertyKey[];
@@ -29,6 +32,9 @@ export type Def =
     }>
   | Readonly<{ kind: 'unknown' }>;
 
+/**
+A value `literal` matches.
+*/
 export type Primitive = bigint | boolean | number | string | null | undefined;
 
 /**
@@ -39,6 +45,9 @@ export type Schema<TOut = unknown, TIn = TOut> = Readonly<{
 }> &
   StandardSchemaV1<TIn, TOut>;
 
+/**
+An object's fields: each key's schema.
+*/
 export type Shape = Readonly<Record<string, StandardSchemaV1>>;
 
 /**
@@ -345,7 +354,7 @@ A thrown value's message; the value, and its message, may be hostile.
 */
 const explain = (error: unknown): string => {
   try {
-    if (error instanceof Error) {
+    if (Error.isError(error)) {
       const { message } = error as { message: unknown };
       return typeof message === 'string' ? message : describe(message);
     }
@@ -663,7 +672,10 @@ export const impl = (spec: StandardSchemaV1): Impl => {
 
 // ─── the verbs ───────────────────────────────────────────────────────────────────────────────────
 
-type Result<TOut> =
+/**
+What `validate` returns: the output, or every issue.
+*/
+export type Result<TOut> =
   | Readonly<{ issues?: undefined; value: TOut }>
   | Readonly<{ issues: readonly Issue[] }>;
 
@@ -778,6 +790,9 @@ const walk = <TOut>(value: unknown, self: Impl<TOut>): Result<TOut> => {
   return { issues: context.issues };
 };
 
+/**
+The output — fresh, coercions applied — or every issue. Never throws.
+*/
 export const validate: <TSchema extends Schema>(
   value: unknown,
   spec: TSchema,
@@ -805,6 +820,9 @@ export const schema = <TOut, TIn = TOut>(
 const format = ({ message, path }: Issue): string =>
   path.length === 0 ? message : `${path.map(String).join('.')}: ${message}`;
 
+/**
+Thrown by `assert` and `parse`: `issues` holds every issue, the message one per line.
+*/
 export class VeraxError extends TypeError {
   public override name = 'VeraxError';
   public readonly issues: readonly Issue[];
@@ -861,6 +879,9 @@ export const parse = <TSchema extends Schema>(value: unknown, spec: TSchema): In
   return result.value;
 };
 
+/**
+Narrows the value to the schema's input, else throws `VeraxError` listing every issue.
+*/
 export const assert: <TSchema extends Schema>(
   value: unknown,
   spec: TSchema,

@@ -3,7 +3,7 @@
   "compilerOptions": {
     "erasableSyntaxOnly": true,
     "exactOptionalPropertyTypes": true,
-    "lib": ["ES2024"],
+    "lib": ["ES2024", "ESNext.Error"],
     "noEmit": true,
     "types": ["bun"]
   },

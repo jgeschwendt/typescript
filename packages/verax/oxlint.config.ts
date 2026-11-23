@@ -12,8 +12,8 @@ const unused = {
 } as const;
 
 export default defineConfig({
-  // engines.node >=22: rules naming an API Node 22 lacks (Error.isError among them) stay off
-  env: { node: 22 },
+  // engines.node >=24: rules naming an API Node 24 lacks stay off
+  env: { node: 24 },
   ignorePatterns: ['dist/**'],
   overrides: [
     // `new Set(tags).size` is the unique count; prefer-set-size refuses the spread that would avoid it

@@ -972,7 +972,7 @@ describe('a discriminated union finds its member by lookup, with the verdict of 
           clean = false;
           return next(2) === 0
             ? refine(object(Object.fromEntries(entries)), 'r', () => true)
-            : int();
+            : list(int());
         }
         return at % 2 === 0
           ? object(Object.fromEntries(entries))
