@@ -212,6 +212,32 @@ const cases = (verax: typeof Verax) => {
       fill(100, untagged, { height: 1 }),
     ],
   ];
+  // every verb runs every schema, beside more lists and records of leaves, before any is measured:
+  // an app's call sites see many schemas, and a case measured as the only one run would flatter it
+  const lists = [fill(100, (at) => at), fill(100, String)];
+  const warm: (readonly [Verax.Schema, unknown])[] = [
+    ...groups.flatMap(([, schema, valid, invalid]) => [
+      [schema, valid] as const,
+      [schema, invalid] as const,
+    ]),
+    ...[verax.boolean(), float(), id(), nullable(int()), optional(string())].flatMap((of) =>
+      lists.flatMap((items) => [
+        [list(of), items] as const,
+        [record(of), Object.fromEntries(items.entries())] as const,
+      ]),
+    ),
+  ];
+  for (let turn = 0; turn < 20; turn += 1) {
+    for (const [schema, input] of warm) {
+      verax.is(input, schema);
+      verax.validate(input, schema);
+      try {
+        verax.parse(input, schema);
+      } catch {
+        // half the inputs are invalid
+      }
+    }
+  }
   return groups.flatMap(([name, schema, valid, invalid]) => {
     if (!verax.is(valid, schema) || verax.is(invalid, schema)) {
       throw new Error(`${name}: inputs are not one valid, one invalid`);
