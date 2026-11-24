@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en" class="ui">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>verax — benchmarks</title>
+    <link rel="stylesheet" href="https://gigantic.dev/ui/ui.css" />
+    <link rel="stylesheet" href="https://gigantic.dev/ui/docs.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23345c7a'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+    <style>
+      .chart {
+        display: grid;
+        gap: var(--ui-space-5);
+        grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+      }
+      .chart .axis text,
+      .chart .label {
+        fill: var(--ui-fg-muted);
+        font-family: var(--ui-font-mono);
+        font-size: 12px;
+      }
+      .chart .axis line,
+      .chart .axis path,
+      .chart .zero {
+        stroke: var(--ui-border-strong);
+      }
+      .chart .bar {
+        stroke-width: 1px;
+      }
+      .chart .bar:focus {
+        outline: none;
+        stroke: var(--ui-fg);
+        stroke-width: 2px;
+      }
+      .chart .bar[data-kind='faster'] {
+        fill: var(--ui-accent);
+        stroke: var(--ui-accent);
+      }
+      .chart .bar[data-kind='noise'] {
+        fill: none;
+        stroke: var(--ui-fg-muted);
+      }
+      .chart .bar[data-kind='slower'] {
+        fill: var(--ui-danger);
+        stroke: var(--ui-danger);
+      }
+      .chart .band {
+        fill: var(--ui-border);
+      }
+      .chart .group {
+        fill: var(--ui-fg);
+        font-family: var(--ui-font-mono);
+        font-size: 12px;
+      }
+      .chart .title {
+        fill: var(--ui-fg);
+        font-family: var(--ui-font-sans);
+        font-size: 14px;
+        font-weight: var(--ui-weight-bold);
+      }
+      .chart .value {
+        fill: var(--ui-accent-fg);
+        font-family: var(--ui-font-mono);
+        font-size: 12px;
+      }
+      .chart-readout {
+        font-family: var(--ui-font-mono);
+        font-size: var(--ui-text-sm);
+        min-height: 1.5em;
+      }
+      .key {
+        display: inline-block;
+        height: 0.75em;
+        margin-right: 0.35em;
+        width: 1.25em;
+      }
+      .key[data-kind='faster'] {
+        background: var(--ui-accent);
+      }
+      .key[data-kind='noise'] {
+        border: 1px solid var(--ui-fg-muted);
+      }
+      .key[data-kind='slower'] {
+        background: var(--ui-danger);
+      }
+      .scroll {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+      details {
+        margin-top: var(--ui-space-3);
+      }
+      figure {
+        margin: var(--ui-space-5) 0;
+      }
+      figcaption {
+        color: var(--ui-fg-muted);
+        font-size: 0.9375rem;
+        margin-top: var(--ui-space-3);
+        max-width: var(--ui-measure);
+      }
+      summary {
+        cursor: pointer;
+      }
+      td.beyond {
+        font-weight: var(--ui-weight-bold);
+      }
+    </style>
+  </head>
+  <body data-page="docs">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none" aria-hidden="true">
+      <!-- Phosphor Icons (regular), MIT (c) 2023 Phosphor Icons — via jgeschwendt/ui icons/ -->
+      <symbol id="ph-circle-half" viewBox="0 0 256 256" fill="currentColor">
+        <path
+          d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,16.37a86.4,86.4,0,0,1,16,3V212.67a86.4,86.4,0,0,1-16,3Zm32,9.26a87.81,87.81,0,0,1,16,10.54V195.83a87.81,87.81,0,0,1-16,10.54ZM40,128a88.11,88.11,0,0,1,80-87.63V215.63A88.11,88.11,0,0,1,40,128Zm160,50.54V77.46a87.82,87.82,0,0,1,0,101.08Z"
+        />
+      </symbol>
+      <symbol id="ph-moon" viewBox="0 0 256 256" fill="currentColor">
+        <path
+          d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"
+        />
+      </symbol>
+      <symbol id="ph-sun" viewBox="0 0 256 256" fill="currentColor">
+        <path
+          d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"
+        />
+      </symbol>
+      <symbol
+        id="verax-check"
+        viewBox="0 0 256 256"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="16"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="128" cy="128" r="96" />
+        <path d="M84 132l32 32 56-64" />
+      </symbol>
+    </svg>
+
+    <header class="appbar">
+      <h1 class="appbar-title">
+        <svg class="icon" aria-hidden="true"><use href="#verax-check" /></svg>
+        verax <small>· benchmarks</small>
+      </h1>
+      <span class="spacer"></span>
+      <div class="segmented" role="group" aria-label="theme">
+        <button type="button" data-theme-set="light" aria-pressed="false" title="light">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-sun" /></svg>light
+        </button>
+        <button type="button" data-theme-set="auto" aria-pressed="true" title="follow the system">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-circle-half" /></svg>auto
+        </button>
+        <button type="button" data-theme-set="dark" aria-pressed="false" title="dark">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-moon" /></svg>dark
+        </button>
+      </div>
+    </header>
+
+    <main class="docs-shell" data-container>
+      <header class="stack">
+        <p class="eyebrow">verax · bench/run.ts</p>
+        <p class="lead docs-lead">
+          How fast verax checks data, how that is measured, and every change measured on 2026-11-23:
+          the one kept, the ones dropped and the ones still open.
+        </p>
+        <nav class="row docs-toc" aria-label="sections">
+          <a class="pill" href="#run">run</a>
+          <a class="pill" href="#method">method</a>
+          <a class="pill" href="#result">result</a>
+          <a class="pill" href="#dropped">dropped</a>
+          <a class="pill" href="#lint">lint rewrites</a>
+          <a class="pill" href="#open">open options</a>
+          <a class="pill" href="#add">add a case</a>
+        </nav>
+      </header>
+
+      <section class="docs-section" id="run">
+        <header><h2 class="h2">Run</h2></header>
+        <p class="docs-note">
+          From the repo root, under the pinned runtimes. Without
+          <code class="code">--base</code> it measures the working copy alone; with it, a second
+          copy of <code class="code">src</code> against the working copy.
+        </p>
+        <pre class="snippet"><code>mise x -C . -- bun packages/verax/bench/run.ts
+mise x -C . -- node packages/verax/bench/run.ts --filter list --time 3000
+mise x -C . -- bun packages/verax/bench/run.ts --base /tmp/base/packages/verax/src --json out.json</code></pre>
+        <table data-table>
+          <thead>
+            <tr>
+              <th>flag</th>
+              <th>effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="code">--base &lt;dir&gt;</code></td>
+              <td>A/B against the copy whose <code class="code">index.ts</code> is in the dir</td>
+            </tr>
+            <tr>
+              <td><code class="code">--filter &lt;text&gt;</code></td>
+              <td>only cases whose name contains the text</td>
+            </tr>
+            <tr>
+              <td><code class="code">--json &lt;path&gt;</code></td>
+              <td>also write the rows as JSON, the format of the files under bench/results</td>
+            </tr>
+            <tr>
+              <td><code class="code">--time &lt;ms&gt;</code></td>
+              <td>sampling budget per case, all processes together; default 1000</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="docs-note">
+          A case is <code class="code">group.verb.input</code>: eleven schema groups, each through
+          <code class="code">is</code>, <code class="code">parse</code> and
+          <code class="code">validate</code> on a valid and an invalid input, 66 in all. The
+          columns, in nanoseconds per call:
+        </p>
+        <table data-table>
+          <thead>
+            <tr>
+              <th>column</th>
+              <th>meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="code">base</code> · <code class="code">work</code></td>
+              <td>interquartile mean of the per-process means, for each copy</td>
+            </tr>
+            <tr>
+              <td><code class="code">ns/op</code></td>
+              <td>the same, with no base</td>
+            </tr>
+            <tr>
+              <td><code class="code">min</code></td>
+              <td>the fastest single sample of the working copy</td>
+            </tr>
+            <tr>
+              <td><code class="code">Δ</code></td>
+              <td><code class="code">work / base − 1</code>; negative is faster</td>
+            </tr>
+            <tr>
+              <td><code class="code">±</code></td>
+              <td>
+                twice the standard error (of the ratio, in A/B): a Δ inside it is noise, and a later
+                run outside it differs
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="docs-section" id="method">
+        <header><h2 class="h2">Method</h2></header>
+        <h3 class="h3">A fresh process per sample</h3>
+        <p class="docs-note">
+          Each process loads one copy of verax, builds every case, and times one: three 2 ms slices
+          to warm, then twelve measured. Processes alternate between the two copies and swap which
+          goes first each round, so drift lands on both. Two copies in one process measured apart on
+          identical code, the later-compiled slower (the run.ts header records up to 35 %), and a
+          process lands a case in one of a few JIT modes, so more time buys more processes, not
+          longer ones: 42 per side and case at <code class="code">--time 2000</code>.
+        </p>
+        <h3 class="h3">Every schema warmed through every verb</h3>
+        <p class="docs-note">
+          A real program holds many schemas, so the engine sees many shapes at each call site.
+          Before timing, every schema runs <code class="code">is</code>,
+          <code class="code">validate</code> and <code class="code">parse</code> twenty times on
+          both inputs, beside lists and records of five more leaves. Without that, a case measured
+          alone flatters itself: a 1 000-item <code class="code">list(int())</code> ran
+          <code class="code">is</code> in 287 ns on bun and 262 ns on node as the only list schema,
+          and in 1 530 and 4 189 ns once five others had run (probe, 2026-11-23). Adding the warm-up
+          moved <code class="code">list-int</code>, ns per call:
+        </p>
+        <div class="scroll">
+          <table data-table>
+            <thead>
+              <tr>
+                <th>runtime</th>
+                <th class="table-num">is.valid</th>
+                <th class="table-num">parse.valid</th>
+                <th class="table-num">validate.invalid</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>bun</td>
+                <td class="table-num">2 314 → 2 039</td>
+                <td class="table-num">894 → 2 696</td>
+                <td class="table-num">4 832 → 6 202</td>
+              </tr>
+              <tr>
+                <td>node</td>
+                <td class="table-num">4 430 → 4 366</td>
+                <td class="table-num">1 138 → 6 753</td>
+                <td class="table-num">4 653 → 13 642</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3 class="h3">Noise</h3>
+        <p class="docs-note">
+          A copy measured against itself on bun, before the warm-up was added, put 4 of 66 rows
+          outside ±, about what twice the standard error predicts; its largest Δ, 8.4 %, sat inside
+          its own ± of 8.6 %. A change is kept only when its Δ clears ± on both runtimes and no
+          other row regresses beyond ±; a borderline row is rerun, never accepted from one run.
+        </p>
+        <div data-results="2026-11-23-aa-bun.json" data-title="A/A, bun: identical copies"></div>
+      </section>
+
+      <section class="docs-section" id="result">
+        <header><h2 class="h2">Result</h2></header>
+        <p class="docs-note">
+          Kept: each built-in leaf (<code class="code">boolean</code>,
+          <code class="code">float</code>, <code class="code">int</code>,
+          <code class="code">string</code> and <code class="code">id</code>) walks a list in its own
+          loop with its check inline. Every list schema used to share one loop, so its per-item call
+          site went megamorphic once a program held a few list schemas. Custom scalars, enums,
+          literals and wrapped leaves keep the shared loop.
+        </p>
+        <p class="docs-note">
+          The A/B below is the source on main before the bench (7bbcd0a) against the merged
+          verax-publish branch, <code class="code">--time 2000</code>, bun 1.4.4 and node 24, one
+          Apple-silicon Mac, 2026-11-23. Lists of scalars run 31–71 % faster on bun and 46–81 % on
+          node (node <code class="code">list-int.is.valid</code> 4 327 → 834 ns). Every other row is
+          within −2.5 % to +3.3 %; the worst slowdown is <code class="code">coerce.is.valid</code>,
+          +1.9 % on bun and +3.3 % on node.
+        </p>
+        <figure>
+          <div class="chart" id="chart"></div>
+          <p class="chart-readout" id="readout" aria-live="polite"></p>
+          <figcaption>
+            Δ per case, bun and node. <span class="key" data-kind="faster"></span>faster beyond ± ·
+            <span class="key" data-kind="slower"></span>slower beyond ± ·
+            <span class="key" data-kind="noise"></span>within ±, the shaded band. Hover or tab to a
+            bar for base → work.
+          </figcaption>
+        </figure>
+        <div data-results="2026-11-23-bun.json" data-title="all 66 cases, bun"></div>
+        <div data-results="2026-11-23-node.json" data-title="all 66 cases, node"></div>
+        <p class="docs-note">
+          Two choices inside the kept change were measured too. Sharing one Int and one Float test
+          function between the loops made bun
+          <code class="code">recursive.validate.invalid</code> 3.8–4.9 % slower in repeated runs, so
+          each leaf keeps its own. The rejection path sizes its output array up front for the leaf
+          loops only: growing it cut node's <code class="code">list-int.validate.invalid</code>
+          gain from −68.0 % to −51.2 %, and sizing it for lists of non-leaf items cost node
+          <code class="code">coerce.validate.invalid</code> +2.0 %.
+        </p>
+      </section>
+
+      <section class="docs-section" id="dropped">
+        <header><h2 class="h2">Tried and dropped</h2></header>
+        <p class="docs-note">
+          Measured 2026-11-23 against the warmed harness. Probe figures time a 1 000-item
+          <code class="code">list(int())</code> after five other list schemas ran, or a six-field
+          object.
+        </p>
+        <div class="scroll">
+          <table data-table>
+            <thead>
+              <tr>
+                <th>change</th>
+                <th>measured, ns or Δ</th>
+                <th>why dropped</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>a switch on leaf kind inside the shared list loop</td>
+                <td>
+                  probe <code class="code">is</code>: bun 1 530 → 2 311, node 4 189 → 2 502; the
+                  per-leaf loops in the same probe: bun 2 103 → 566, node 4 339 → 976
+                </td>
+                <td>bun 51 % slower; per-leaf loops win on both runtimes</td>
+              </tr>
+              <tr>
+                <td>the same switch for object fields</td>
+                <td>
+                  node flat valid rows −5.1 to −7.4 %; bun
+                  <code class="code">reordered.is.valid</code> +2.4 % (± 0.9), every nested row +0.6
+                  to +1.1 %
+                </td>
+                <td>bun regresses beyond ±</td>
+              </tr>
+              <tr>
+                <td>record output built on a null prototype, the prototype set once at the end</td>
+                <td>bun parse of a 3-key record 28 → 39; 100 keys 715 → 725 (bun only)</td>
+                <td>slower</td>
+              </tr>
+              <tr>
+                <td>a schema's checks found through a hidden symbol, not the WeakMap</td>
+                <td>
+                  flat object <code class="code">is.valid</code>: bun 75.4 → 76.9, node 135.5 →
+                  126.1; <code class="code">validate.valid</code>: bun 93.0 → 91.5, node 197.6 →
+                  185.1
+                </td>
+                <td>at most 12 ns, and a foreign schema could forge the symbol</td>
+              </tr>
+              <tr>
+                <td>read a field before calling <code class="code">Object.hasOwn</code></td>
+                <td>not built</td>
+                <td>
+                  guarding against a prototype polluted after the plan was built still needs
+                  <code class="code">hasOwn</code> on every present value, so valid data saves
+                  nothing
+                </td>
+              </tr>
+              <tr>
+                <td>enums as a <code class="code">Set</code></td>
+                <td>not pursued</td>
+                <td>
+                  the bench's enums have two values, where <code class="code">includes</code> wins
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="docs-section" id="lint">
+        <header><h2 class="h2">Lint rewrites rejected for speed</h2></header>
+        <p class="docs-note">
+          The lint pass of 2026-11-23 rewrote src to satisfy rules and kept only what the A/B showed
+          neutral. Each rule left off for speed says why in
+          <code class="code">oxlint.config.ts</code>.
+        </p>
+        <div class="scroll">
+          <table data-table>
+            <thead>
+              <tr>
+                <th>rewrite</th>
+                <th>measured</th>
+                <th>rule left off</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code class="code">verify</code> as a bound arrow</td>
+                <td>bun parse and validate up to +2.6 % (nested, record, tagged)</td>
+                <td><code class="code">func-style</code> in core.ts</td>
+              </tr>
+              <tr>
+                <td>a record's leaf test through a helper</td>
+                <td>record parse and validate +2.0–2.6 % on bun, +3.1–3.5 % on node</td>
+                <td><code class="code">no-nested-ternary</code> in types.ts</td>
+              </tr>
+              <tr>
+                <td><code class="code">Number.isSafeInteger</code> for Int</td>
+                <td>
+                  a valid Int list's <code class="code">is</code> 55–72 % slower (2026-10-22; raw
+                  run not kept)
+                </td>
+                <td><code class="code">prefer-number-is-safe-integer</code></td>
+              </tr>
+              <tr>
+                <td>iterator helpers in place of index loops</td>
+                <td>
+                  <code class="code">values().every</code> over 100 items: bun 2.8×, node 28.4× an
+                  index loop (probe)
+                </td>
+                <td>held by the HOT PATH rule in AGENTS.md</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="docs-note">
+          Both rewrites rode the lint pass's first batch, measured against b6df244 with the style
+          changes beside them; after reverting the two, a rerun on bun was neutral but for three
+          rows at +0.8 to +1.3 %.
+        </p>
+        <div
+          data-results="2026-11-23-lint-rewrites-bun.json"
+          data-title="first lint batch, bun"
+        ></div>
+        <div
+          data-results="2026-11-23-lint-rewrites-node.json"
+          data-title="first lint batch, node"
+        ></div>
+      </section>
+
+      <section class="docs-section" id="open">
+        <header><h2 class="h2">Open options</h2></header>
+        <h3 class="h3">Code generation</h3>
+        <p class="docs-note">
+          A scratch prototype generated the six-field flat object's
+          <code class="code">is</code> with fixed-key reads and inline leaf checks: bun 77.9 → 41.3
+          ns valid and 21.9 → 9.2 invalid, node 131.9 → 82.3 and 48.9 → 32.9;
+          <code class="code">validate</code>, not generated, did not move. About 1.6–1.9× on
+          <code class="code">is</code>. The cost: it needs <code class="code">new Function</code>,
+          which a Content Security Policy without <code class="code">'unsafe-eval'</code> blocks, so
+          it would need the current engine as a fallback. Not implemented; an architecture decision.
+        </p>
+        <h3 class="h3">A stack trace that starts at the caller</h3>
+        <p class="docs-note">
+          Built and removed: <code class="code">Error.captureStackTrace(error, verb)</code> on the
+          failure path of <code class="code">parse</code> and <code class="code">assert</code>, so a
+          failed assertion points at the test. Plain, it made every failed parse 10–75 % slower on
+          node and up to 28.5 % on bun. Capturing once under
+          <code class="code">Error.stackTraceLimit = 0</code> brought it to about +80 ns on bun and
+          +200 ns on node (+16 % on the cheapest schemas), but it assigns a global property: under a
+          frozen <code class="code">Error</code>, parse and assert threw
+          <code class="code">TypeError: Attempted to assign to readonly property</code> in place of
+          the VeraxError. Values from the printed tables, rounded.
+        </p>
+        <div
+          data-results="2026-11-23-stack-trace-bun.json"
+          data-title="plain captureStackTrace, bun"
+        ></div>
+        <div
+          data-results="2026-11-23-stack-trace-node.json"
+          data-title="plain captureStackTrace, node"
+        ></div>
+        <div
+          data-results="2026-11-23-stack-trace-limit-bun.json"
+          data-title="captured once, failed parse, bun"
+        ></div>
+        <div
+          data-results="2026-11-23-stack-trace-limit-node.json"
+          data-title="captured once, failed parse, node"
+        ></div>
+      </section>
+
+      <section class="docs-section" id="add">
+        <header><h2 class="h2">Add a case, compare a change</h2></header>
+        <p class="docs-note">
+          A case group is one entry in <code class="code">groups</code> inside
+          <code class="code">cases()</code>: a name, a schema built from the copy being measured, a
+          valid input and an input that fails only at its end. It yields six cases and joins the
+          warm-up by itself; the harness throws if the valid input fails or the invalid one passes.
+          To measure a change, snapshot the source before it and A/B on both runtimes:
+        </p>
+        <pre class="snippet"><code>git archive &lt;sha&gt; packages/verax/src | tar -x -C /tmp/base
+mise x -C . -- bun packages/verax/bench/run.ts --base /tmp/base/packages/verax/src --time 3000
+mise x -C . -- node packages/verax/bench/run.ts --base /tmp/base/packages/verax/src --time 3000</code></pre>
+        <p class="docs-note">
+          Keep a perf change with its before/after run: write it with
+          <code class="code">--json</code> to
+          <code class="code">bench/results/&lt;date&gt;-&lt;change&gt;-&lt;runtime&gt;.json</code>
+          and add it here.
+        </p>
+      </section>
+
+      <nav class="row link-row" aria-label="links">
+        <a class="pill" href="index.html">docs</a>
+        <a class="pill" href="contract.html">contract</a>
+        <a
+          class="pill"
+          href="https://github.com/jgeschwendt/typescript/tree/main/packages/verax/bench"
+          >repo · packages/verax/bench</a
+        >
+      </nav>
+    </main>
+    <script type="module">
+      // results ship beside the page on Pages, and sit in bench/results beside docs/ in the repo
+      const DIR = location.pathname.includes('/docs/') ? '../bench/results/' : 'results/';
+      const load = async (file) => (await fetch(DIR + file)).json();
+      const ns = (value) => value.toFixed(value < 100 ? 1 : 0);
+      const pct = (fraction) => `${fraction >= 0 ? '+' : ''}${(fraction * 100).toFixed(1)}%`;
+      const kind = (row) =>
+        Math.abs(row.delta) <= row.noise ? 'noise' : row.delta < 0 ? 'faster' : 'slower';
+      const detail = (runtime, row) =>
+        `${runtime} ${row.name}: ${ns(row.base)} → ${ns(row.work)} ns, ${pct(row.delta)} ± ${(row.noise * 100).toFixed(1)}%`;
+
+      const table = (rows, title) => {
+        const details = document.createElement('details');
+        const summary = details.appendChild(document.createElement('summary'));
+        summary.textContent = `${title} (${rows.length} rows)`;
+        const frame = details.appendChild(document.createElement('div'));
+        frame.className = 'scroll';
+        const grid = frame.appendChild(document.createElement('table'));
+        grid.dataset.table = '';
+        const head = grid.createTHead().insertRow();
+        for (const label of ['case', 'base', 'work', 'min', 'Δ', '±']) {
+          const cell = head.appendChild(document.createElement('th'));
+          cell.textContent = label;
+          cell.className = label === 'case' ? '' : 'table-num';
+        }
+        const body = grid.createTBody();
+        for (const row of rows) {
+          const line = body.insertRow();
+          const cells = [row.name, ns(row.base), ns(row.work), ns(row.min), pct(row.delta)];
+          for (const text of [...cells, `${(row.noise * 100).toFixed(1)}%`]) {
+            const cell = line.insertCell();
+            cell.textContent = text;
+            cell.className = text === row.name ? '' : 'table-num';
+          }
+          if (kind(row) !== 'noise') {
+            line.cells[4].classList.add('beyond');
+          }
+        }
+        return details;
+      };
+
+      const readout = document.querySelector('#readout');
+      const ROW = 14;
+      const HEADER = 20;
+      const draw = (host, runtime, rows) => {
+        host.replaceChildren();
+        const width = host.clientWidth;
+        const left = 132;
+        const groups = d3.groups(rows, (row) => row.name.split('.')[0]);
+        const height = 48 + groups.length * (HEADER + 6 * ROW);
+        const x = d3.scaleLinear([-0.85, 0.1], [left, width - 8]);
+        const svg = d3
+          .select(host)
+          .append('svg')
+          .attr('width', width)
+          .attr('height', height)
+          .attr('role', 'img')
+          .attr(
+            'aria-label',
+            `${runtime}: Δ per case, merged branch against main before the bench`,
+          );
+        svg.append('text').attr('class', 'title').attr('x', 0).attr('y', 16).text(runtime);
+        svg
+          .append('g')
+          .attr('class', 'axis')
+          .attr('transform', 'translate(0,34)')
+          .call(d3.axisTop(x).ticks(width < 400 ? 3 : 5, '+.0%'));
+        let y = 48;
+        for (const [group, members] of groups) {
+          svg
+            .append('text')
+            .attr('class', 'group')
+            .attr('x', 0)
+            .attr('y', y + 14)
+            .text(group);
+          y += HEADER;
+          for (const row of members) {
+            const top = y + 2;
+            svg
+              .append('rect')
+              .attr('class', 'band')
+              .attr('x', x(-row.noise))
+              .attr('y', top)
+              .attr('width', x(row.noise) - x(-row.noise))
+              .attr('height', ROW - 4);
+            svg
+              .append('text')
+              .attr('class', 'label')
+              .attr('x', 12)
+              .attr('y', top + 9)
+              .text(row.name.slice(group.length + 1));
+            const bar = svg
+              .append('rect')
+              .attr('class', 'bar')
+              .attr('data-kind', kind(row))
+              .attr('tabindex', 0)
+              .attr('x', x(Math.min(0, row.delta)))
+              .attr('y', top)
+              .attr('width', Math.max(1, Math.abs(x(row.delta) - x(0))))
+              .attr('height', ROW - 4);
+            bar.append('title').text(detail(runtime, row));
+            bar.on('focus mouseenter', () => {
+              readout.textContent = detail(runtime, row);
+            });
+            if (row.delta < -0.2) {
+              svg
+                .append('text')
+                .attr('class', 'value')
+                .attr('x', x(row.delta) + 4)
+                .attr('y', top + 9)
+                .text(pct(row.delta));
+            }
+            y += ROW;
+          }
+        }
+        svg
+          .append('line')
+          .attr('class', 'zero')
+          .attr('x1', x(0))
+          .attr('x2', x(0))
+          .attr('y1', 34)
+          .attr('y2', height);
+      };
+
+      const chart = document.querySelector('#chart');
+      const runs = await Promise.all(
+        ['bun', 'node'].map(async (runtime) => [runtime, await load(`2026-11-23-${runtime}.json`)]),
+      );
+      const hosts = runs.map(([runtime, rows]) => {
+        const host = chart.appendChild(document.createElement('div'));
+        return () => draw(host, runtime, rows);
+      });
+      new ResizeObserver(() => {
+        for (const redraw of hosts) {
+          redraw();
+        }
+      }).observe(chart);
+
+      for (const slot of document.querySelectorAll('[data-results]')) {
+        slot.replaceWith(table(await load(slot.dataset.results), slot.dataset.title));
+      }
+    </script>
+    <script>
+      /* The theme contract, verbatim from jgeschwendt/ui docs.js — same localStorage
+   key, so a theme chosen on the ui pages is the theme this one opens in. */
+      const THEME_KEY = 'ui-theme';
+      function applyTheme(mode) {
+        const root = document.documentElement;
+        if (mode === 'auto') {
+          root.removeAttribute('data-theme');
+          localStorage.removeItem(THEME_KEY);
+        } else {
+          root.dataset.theme = mode;
+          localStorage.setItem(THEME_KEY, mode);
+        }
+        for (const b of document.querySelectorAll('[data-theme-set]')) {
+          b.setAttribute('aria-pressed', String(b.dataset.themeSet === mode));
+        }
+      }
+      for (const b of document.querySelectorAll('[data-theme-set]')) {
+        b.addEventListener('click', () => applyTheme(b.dataset.themeSet));
+      }
+      applyTheme(localStorage.getItem(THEME_KEY) || 'auto');
+    </script>
+  </body>
+</html>

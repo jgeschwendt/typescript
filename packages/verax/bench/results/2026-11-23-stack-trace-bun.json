@@ -1,0 +1,530 @@
+[
+  {
+    "base": 1192.0,
+    "delta": 0.001,
+    "min": 1063.0,
+    "name": "coerce.is.valid",
+    "noise": 0.008,
+    "work": 1193.0
+  },
+  {
+    "base": 1245.0,
+    "delta": 0.011000000000000001,
+    "min": 1120.0,
+    "name": "coerce.parse.valid",
+    "noise": 0.01,
+    "work": 1259.0
+  },
+  {
+    "base": 1250.0,
+    "delta": 0.001,
+    "min": 1119.0,
+    "name": "coerce.validate.valid",
+    "noise": 0.011000000000000001,
+    "work": 1251.0
+  },
+  {
+    "base": 1192.0,
+    "delta": 0.005,
+    "min": 1068.0,
+    "name": "coerce.is.invalid",
+    "noise": 0.008,
+    "work": 1198.0
+  },
+  {
+    "base": 3170.0,
+    "delta": 0.055,
+    "min": 2905.0,
+    "name": "coerce.parse.invalid",
+    "noise": 0.01,
+    "work": 3346.0
+  },
+  {
+    "base": 2830.0,
+    "delta": -0.0,
+    "min": 2384.0,
+    "name": "coerce.validate.invalid",
+    "noise": 0.006999999999999999,
+    "work": 2830.0
+  },
+  {
+    "base": 70.7,
+    "delta": 0.008,
+    "min": 65.5,
+    "name": "flat.is.valid",
+    "noise": 0.008,
+    "work": 71.3
+  },
+  {
+    "base": 92.4,
+    "delta": -0.002,
+    "min": 84.1,
+    "name": "flat.parse.valid",
+    "noise": 0.01,
+    "work": 92.2
+  },
+  {
+    "base": 90.1,
+    "delta": -0.006999999999999999,
+    "min": 83.0,
+    "name": "flat.validate.valid",
+    "noise": 0.006999999999999999,
+    "work": 89.5
+  },
+  {
+    "base": 19.1,
+    "delta": -0.005,
+    "min": 17.6,
+    "name": "flat.is.invalid",
+    "noise": 0.01,
+    "work": 19.0
+  },
+  {
+    "base": 507.0,
+    "delta": 0.285,
+    "min": 580.0,
+    "name": "flat.parse.invalid",
+    "noise": 0.006999999999999999,
+    "work": 651.0
+  },
+  {
+    "base": 174.0,
+    "delta": -0.004,
+    "min": 143.0,
+    "name": "flat.validate.invalid",
+    "noise": 0.013000000000000001,
+    "work": 173.0
+  },
+  {
+    "base": 1207.0,
+    "delta": -0.028999999999999998,
+    "min": 896.0,
+    "name": "list-int.is.valid",
+    "noise": 0.054000000000000006,
+    "work": 1172.0
+  },
+  {
+    "base": 1801.0,
+    "delta": 0.001,
+    "min": 1434.0,
+    "name": "list-int.parse.valid",
+    "noise": 0.015,
+    "work": 1803.0
+  },
+  {
+    "base": 1854.0,
+    "delta": -0.017,
+    "min": 1409.0,
+    "name": "list-int.validate.valid",
+    "noise": 0.019,
+    "work": 1823.0
+  },
+  {
+    "base": 1200.0,
+    "delta": 0.018000000000000002,
+    "min": 1011.0,
+    "name": "list-int.is.invalid",
+    "noise": 0.053,
+    "work": 1222.0
+  },
+  {
+    "base": 4112.0,
+    "delta": 0.021,
+    "min": 3312.0,
+    "name": "list-int.parse.invalid",
+    "noise": 0.013000000000000001,
+    "work": 4196.0
+  },
+  {
+    "base": 3662.0,
+    "delta": 0.006,
+    "min": 2977.0,
+    "name": "list-int.validate.invalid",
+    "noise": 0.013999999999999999,
+    "work": 3683.0
+  },
+  {
+    "base": 524.0,
+    "delta": 0.001,
+    "min": 415.0,
+    "name": "list-string.is.valid",
+    "noise": 0.013000000000000001,
+    "work": 525.0
+  },
+  {
+    "base": 1437.0,
+    "delta": -0.005,
+    "min": 981.0,
+    "name": "list-string.parse.valid",
+    "noise": 0.015,
+    "work": 1430.0
+  },
+  {
+    "base": 1419.0,
+    "delta": 0.01,
+    "min": 891.0,
+    "name": "list-string.validate.valid",
+    "noise": 0.021,
+    "work": 1434.0
+  },
+  {
+    "base": 504.0,
+    "delta": -0.022000000000000002,
+    "min": 405.0,
+    "name": "list-string.is.invalid",
+    "noise": 0.043,
+    "work": 493.0
+  },
+  {
+    "base": 3429.0,
+    "delta": 0.046,
+    "min": 2542.0,
+    "name": "list-string.parse.invalid",
+    "noise": 0.013999999999999999,
+    "work": 3586.0
+  },
+  {
+    "base": 2921.0,
+    "delta": 0.02,
+    "min": 2204.0,
+    "name": "list-string.validate.invalid",
+    "noise": 0.027000000000000003,
+    "work": 2978.0
+  },
+  {
+    "base": 2355.0,
+    "delta": -0.006,
+    "min": 2024.0,
+    "name": "nested.is.valid",
+    "noise": 0.009000000000000001,
+    "work": 2341.0
+  },
+  {
+    "base": 2513.0,
+    "delta": -0.002,
+    "min": 2233.0,
+    "name": "nested.parse.valid",
+    "noise": 0.008,
+    "work": 2509.0
+  },
+  {
+    "base": 2489.0,
+    "delta": -0.004,
+    "min": 2256.0,
+    "name": "nested.validate.valid",
+    "noise": 0.008,
+    "work": 2480.0
+  },
+  {
+    "base": 2306.0,
+    "delta": 0.0,
+    "min": 2011.0,
+    "name": "nested.is.invalid",
+    "noise": 0.008,
+    "work": 2307.0
+  },
+  {
+    "base": 5853.0,
+    "delta": 0.015,
+    "min": 5251.0,
+    "name": "nested.parse.invalid",
+    "noise": 0.009000000000000001,
+    "work": 5940.0
+  },
+  {
+    "base": 5228.0,
+    "delta": 0.002,
+    "min": 4637.0,
+    "name": "nested.validate.invalid",
+    "noise": 0.006999999999999999,
+    "work": 5241.0
+  },
+  {
+    "base": 1957.0,
+    "delta": 0.004,
+    "min": 1754.0,
+    "name": "record.is.valid",
+    "noise": 0.01,
+    "work": 1965.0
+  },
+  {
+    "base": 2823.0,
+    "delta": -0.002,
+    "min": 2489.0,
+    "name": "record.parse.valid",
+    "noise": 0.009000000000000001,
+    "work": 2816.0
+  },
+  {
+    "base": 2766.0,
+    "delta": 0.001,
+    "min": 2472.0,
+    "name": "record.validate.valid",
+    "noise": 0.01,
+    "work": 2768.0
+  },
+  {
+    "base": 3155.0,
+    "delta": -0.001,
+    "min": 2841.0,
+    "name": "record.is.invalid",
+    "noise": 0.006999999999999999,
+    "work": 3151.0
+  },
+  {
+    "base": 7526.0,
+    "delta": 0.027000000000000003,
+    "min": 6778.0,
+    "name": "record.parse.invalid",
+    "noise": 0.009000000000000001,
+    "work": 7729.0
+  },
+  {
+    "base": 7003.0,
+    "delta": -0.004,
+    "min": 6149.0,
+    "name": "record.validate.invalid",
+    "noise": 0.006999999999999999,
+    "work": 6974.0
+  },
+  {
+    "base": 1175.0,
+    "delta": 0.006,
+    "min": 1118.0,
+    "name": "recursive.is.valid",
+    "noise": 0.008,
+    "work": 1182.0
+  },
+  {
+    "base": 2321.0,
+    "delta": -0.003,
+    "min": 1994.0,
+    "name": "recursive.parse.valid",
+    "noise": 0.006,
+    "work": 2315.0
+  },
+  {
+    "base": 2300.0,
+    "delta": -0.003,
+    "min": 1986.0,
+    "name": "recursive.validate.valid",
+    "noise": 0.006,
+    "work": 2293.0
+  },
+  {
+    "base": 1138.0,
+    "delta": -0.001,
+    "min": 1088.0,
+    "name": "recursive.is.invalid",
+    "noise": 0.006,
+    "work": 1138.0
+  },
+  {
+    "base": 4820.0,
+    "delta": 0.03,
+    "min": 4343.0,
+    "name": "recursive.parse.invalid",
+    "noise": 0.01,
+    "work": 4964.0
+  },
+  {
+    "base": 3863.0,
+    "delta": 0.001,
+    "min": 3375.0,
+    "name": "recursive.validate.invalid",
+    "noise": 0.006999999999999999,
+    "work": 3867.0
+  },
+  {
+    "base": 87.9,
+    "delta": -0.002,
+    "min": 82.3,
+    "name": "refine.is.valid",
+    "noise": 0.006999999999999999,
+    "work": 87.7
+  },
+  {
+    "base": 92.1,
+    "delta": 0.001,
+    "min": 85.5,
+    "name": "refine.parse.valid",
+    "noise": 0.006999999999999999,
+    "work": 92.2
+  },
+  {
+    "base": 90.7,
+    "delta": -0.001,
+    "min": 84.2,
+    "name": "refine.validate.valid",
+    "noise": 0.006999999999999999,
+    "work": 90.6
+  },
+  {
+    "base": 87.8,
+    "delta": -0.001,
+    "min": 82.2,
+    "name": "refine.is.invalid",
+    "noise": 0.006,
+    "work": 87.8
+  },
+  {
+    "base": 506.0,
+    "delta": 0.285,
+    "min": 591.0,
+    "name": "refine.parse.invalid",
+    "noise": 0.006,
+    "work": 650.0
+  },
+  {
+    "base": 223.0,
+    "delta": -0.003,
+    "min": 191.0,
+    "name": "refine.validate.invalid",
+    "noise": 0.008,
+    "work": 222.0
+  },
+  {
+    "base": 110.0,
+    "delta": -0.003,
+    "min": 100.0,
+    "name": "reordered.is.valid",
+    "noise": 0.009000000000000001,
+    "work": 110.0
+  },
+  {
+    "base": 173.0,
+    "delta": -0.0,
+    "min": 157.0,
+    "name": "reordered.parse.valid",
+    "noise": 0.006999999999999999,
+    "work": 173.0
+  },
+  {
+    "base": 169.0,
+    "delta": 0.004,
+    "min": 158.0,
+    "name": "reordered.validate.valid",
+    "noise": 0.006999999999999999,
+    "work": 170.0
+  },
+  {
+    "base": 65.0,
+    "delta": -0.003,
+    "min": 59.2,
+    "name": "reordered.is.invalid",
+    "noise": 0.009000000000000001,
+    "work": 64.8
+  },
+  {
+    "base": 654.0,
+    "delta": 0.217,
+    "min": 708.0,
+    "name": "reordered.parse.invalid",
+    "noise": 0.006999999999999999,
+    "work": 796.0
+  },
+  {
+    "base": 303.0,
+    "delta": 0.001,
+    "min": 265.0,
+    "name": "reordered.validate.invalid",
+    "noise": 0.01,
+    "work": 303.0
+  },
+  {
+    "base": 2286.0,
+    "delta": 0.006,
+    "min": 2047.0,
+    "name": "tagged.is.valid",
+    "noise": 0.008,
+    "work": 2300.0
+  },
+  {
+    "base": 3571.0,
+    "delta": -0.003,
+    "min": 3025.0,
+    "name": "tagged.parse.valid",
+    "noise": 0.009000000000000001,
+    "work": 3561.0
+  },
+  {
+    "base": 3547.0,
+    "delta": -0.001,
+    "min": 3133.0,
+    "name": "tagged.validate.valid",
+    "noise": 0.006999999999999999,
+    "work": 3543.0
+  },
+  {
+    "base": 2287.0,
+    "delta": 0.001,
+    "min": 2069.0,
+    "name": "tagged.is.invalid",
+    "noise": 0.008,
+    "work": 2288.0
+  },
+  {
+    "base": 8589.0,
+    "delta": 0.026000000000000002,
+    "min": 7399.0,
+    "name": "tagged.parse.invalid",
+    "noise": 0.008,
+    "work": 8809.0
+  },
+  {
+    "base": 7988.0,
+    "delta": -0.001,
+    "min": 6664.0,
+    "name": "tagged.validate.invalid",
+    "noise": 0.006999999999999999,
+    "work": 7978.0
+  },
+  {
+    "base": 2588.0,
+    "delta": -0.003,
+    "min": 2216.0,
+    "name": "untagged.is.valid",
+    "noise": 0.006999999999999999,
+    "work": 2580.0
+  },
+  {
+    "base": 3090.0,
+    "delta": 0.003,
+    "min": 2834.0,
+    "name": "untagged.parse.valid",
+    "noise": 0.006999999999999999,
+    "work": 3099.0
+  },
+  {
+    "base": 3095.0,
+    "delta": 0.001,
+    "min": 2812.0,
+    "name": "untagged.validate.valid",
+    "noise": 0.008,
+    "work": 3098.0
+  },
+  {
+    "base": 2588.0,
+    "delta": -0.005,
+    "min": 2368.0,
+    "name": "untagged.is.invalid",
+    "noise": 0.006999999999999999,
+    "work": 2574.0
+  },
+  {
+    "base": 7958.0,
+    "delta": 0.009000000000000001,
+    "min": 7151.0,
+    "name": "untagged.parse.invalid",
+    "noise": 0.009000000000000001,
+    "work": 8031.0
+  },
+  {
+    "base": 7433.0,
+    "delta": 0.004,
+    "min": 6597.0,
+    "name": "untagged.validate.invalid",
+    "noise": 0.011000000000000001,
+    "work": 7465.0
+  }
+]

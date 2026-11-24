@@ -1,0 +1,90 @@
+[
+  {
+    "base": 3560.0,
+    "delta": 0.055999999999999994,
+    "min": 3510.0,
+    "name": "coerce.parse.invalid",
+    "noise": 0.005,
+    "work": 3758.0
+  },
+  {
+    "base": 2056.0,
+    "delta": 0.1,
+    "min": 2089.0,
+    "name": "flat.parse.invalid",
+    "noise": 0.006999999999999999,
+    "work": 2261.0
+  },
+  {
+    "base": 6135.0,
+    "delta": 0.031,
+    "min": 5943.0,
+    "name": "list-int.parse.invalid",
+    "noise": 0.005,
+    "work": 6325.0
+  },
+  {
+    "base": 7681.0,
+    "delta": 0.031,
+    "min": 7569.0,
+    "name": "list-string.parse.invalid",
+    "noise": 0.006999999999999999,
+    "work": 7919.0
+  },
+  {
+    "base": 10817.0,
+    "delta": 0.018000000000000002,
+    "min": 10475.0,
+    "name": "nested.parse.invalid",
+    "noise": 0.006,
+    "work": 11015.0
+  },
+  {
+    "base": 16234.0,
+    "delta": 0.022000000000000002,
+    "min": 15087.0,
+    "name": "record.parse.invalid",
+    "noise": 0.006999999999999999,
+    "work": 16583.0
+  },
+  {
+    "base": 13924.0,
+    "delta": 0.011000000000000001,
+    "min": 12622.0,
+    "name": "recursive.parse.invalid",
+    "noise": 0.005,
+    "work": 14082.0
+  },
+  {
+    "base": 2137.0,
+    "delta": 0.10099999999999999,
+    "min": 2136.0,
+    "name": "refine.parse.invalid",
+    "noise": 0.006999999999999999,
+    "work": 2353.0
+  },
+  {
+    "base": 2337.0,
+    "delta": 0.086,
+    "min": 2317.0,
+    "name": "reordered.parse.invalid",
+    "noise": 0.006999999999999999,
+    "work": 2537.0
+  },
+  {
+    "base": 18660.0,
+    "delta": 0.025,
+    "min": 16578.0,
+    "name": "tagged.parse.invalid",
+    "noise": 0.01,
+    "work": 19131.0
+  },
+  {
+    "base": 17197.0,
+    "delta": 0.022000000000000002,
+    "min": 15705.0,
+    "name": "untagged.parse.invalid",
+    "noise": 0.006,
+    "work": 17575.0
+  }
+]
