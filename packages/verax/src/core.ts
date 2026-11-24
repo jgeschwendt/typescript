@@ -39,11 +39,13 @@ type Primitive = bigint | boolean | number | string | null | undefined;
 
 /**
 `TOut` is the output; `TIn` is what the schema accepts — they differ once `coerce` is involved.
+A Standard Schema whose `validate` is synchronous: it never returns a Promise.
 */
 type Schema<TOut = unknown, TIn = TOut> = Readonly<{
   def: Def;
-}> &
-  StandardSchemaV1<TIn, TOut>;
+  '~standard': Omit<StandardSchemaV1.Props<TIn, TOut>, 'validate'> &
+    Readonly<{ validate: (value: unknown, options?: StandardSchemaV1.Options) => Result<TOut> }>;
+}>;
 
 /**
 An object's fields: each key's schema.
@@ -73,7 +75,12 @@ type Context = Readonly<{
   cap?: number;
   issues: Issue[];
   path: PropertyKey[];
-}>;
+}> & {
+  /**
+  The path length of a key the walk found absent, if any: an object sets it for each field it reads.
+  */
+  gone?: number;
+};
 
 /**
 A schema's checks, private to this copy of verax. Any may throw.
@@ -329,13 +336,15 @@ const render = (value: unknown): string => {
   if (Array.isArray(value)) {
     return 'list';
   }
+  const prototype = Object.getPrototypeOf(value) as {
+    constructor?: { name?: unknown };
+  } | null;
   // A class instance by its constructor's name, if it is a short identifier: `Date`, not `object`.
-  const name: unknown = (
-    Object.getPrototypeOf(value) as {
-      constructor?: { name?: unknown };
-    } | null
-  )?.constructor?.name;
-  return typeof name === 'string' && name !== 'Object' && IDENTIFIER.test(name) ? name : 'object';
+  const name: unknown =
+    prototype === null || prototype === Object.prototype ? 'object' : prototype.constructor?.name;
+  return typeof name === 'string' && name !== 'Object' && IDENTIFIER.test(name)
+    ? name
+    : 'non-plain object';
 };
 
 /**
@@ -348,6 +357,17 @@ const describe = (value: unknown): string => {
     return 'value';
   }
 };
+
+/**
+A check's mismatch: `missing` for a key the walk found absent, else what it received.
+*/
+const mismatch = (
+  context: Context,
+  expected: string,
+  value: unknown,
+  absent = context.gone === context.path.length,
+): string =>
+  absent ? `Expected ${expected}, missing` : `Expected ${expected}, received ${describe(value)}`;
 
 /**
 A thrown value's message; the value, and its message, may be hostile.
@@ -544,7 +564,7 @@ const choose = (
   if (out !== FAIL) {
     return out;
   }
-  const why = deep === before ? `Expected ${label}, received ${describe(value)}` : 'Too deep';
+  const why = deep === before ? mismatch(context, label, value) : 'Too deep';
   let issues: Issue[] = [];
   // Only a top-level call explains: its verdict is given, so explaining can change none.
   if (frames === 1 && limit !== 0 && !drained) {
@@ -900,6 +920,7 @@ export {
   type Issue,
   issue,
   leave,
+  mismatch,
   miss,
   overflow,
   parse,

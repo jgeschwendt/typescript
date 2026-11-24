@@ -38,7 +38,7 @@ whose code no other test has run.
 const copy = async (tag = 'copy'): Promise<typeof Verax> => {
   const directory = copied(tag);
   await Promise.all(
-    ['core', 'index', 'sdl', 'standard', 'types'].map((name) =>
+    ['core', 'index', 'sdl', 'standard', 'types'].map(async (name) =>
       Bun.write(`${directory}/${name}.ts`, Bun.file(new URL(`../src/${name}.ts`, import.meta.url))),
     ),
   );

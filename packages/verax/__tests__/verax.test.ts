@@ -5,6 +5,7 @@ import {
   type Input,
   type ObjectOf,
   type Optional,
+  type Result,
   type Schema,
   type Shape,
   type StandardSchemaV1,
@@ -136,6 +137,28 @@ describe('issue messages', () => {
     expect(messages({}, string())).toEqual(['Expected String, received object']);
     expect(messages(Symbol('s'), string())).toEqual(['Expected String, received Symbol(s)']);
     expect(messages(undefined, string())).toEqual(['Expected String, received undefined']);
+  });
+  test('a missing key, an object of another realm and a nullable leaf each say so', () => {
+    expect(validate({ name: undefined }, object({ age: nullable(int()), name: string() }))).toEqual(
+      {
+        issues: [
+          { message: 'Expected Int | null, missing', path: ['age'] },
+          { message: 'Expected String, received undefined', path: ['name'] },
+        ],
+      },
+    );
+    const { runInNewContext } = process.getBuiltinModule('node:vm');
+    expect(messages(runInNewContext('({})'), object({}))).toEqual([
+      'Expected object, received non-plain object',
+    ]);
+    expect(messages('x', optional(int()))).toEqual(['Expected Int, received "x"']);
+    // a coerced default that fails is the missing key's; the items it builds were received
+    expect(messages({}, object({ n: coerce(int(), (value) => value ?? 'none') }))).toEqual([
+      'Expected Int, missing',
+    ]);
+    expect(validate({}, object({ n: coerce(list(int()), () => [undefined]) })).issues).toEqual([
+      { message: 'Expected Int, received undefined', path: ['n', 0] },
+    ]);
   });
   test('literal renders both sides; -0 and bigint stay distinct', () => {
     expect(messages(-0, literal(0))).toEqual(['Expected 0, received -0']);
@@ -309,14 +332,24 @@ describe('assert', () => {
   });
 });
 
+// a schema's ~standard.validate is synchronous, and the schema still a Standard Schema of its sides
+true satisfies Equal<
+  ReturnType<(typeof User)['~standard']['validate']>,
+  Result<Infer<typeof User>>
+>;
+true satisfies Equal<
+  typeof User extends StandardSchemaV1<Input<typeof User>, Infer<typeof User>> ? true : false,
+  true
+>;
+
 describe('Standard Schema', () => {
-  test('~standard.validate matches validate', async () => {
-    const std: StandardSchemaV1 = User;
+  test('~standard.validate matches validate, synchronously', () => {
+    const std: StandardSchemaV1<Input<typeof User>, Infer<typeof User>> = User;
     expect(std['~standard'].vendor).toBe('verax');
     expect(std['~standard'].version).toBe(1);
-    expect(await std['~standard'].validate(alice)).toEqual(validate(alice, User));
+    expect(User['~standard'].validate(alice)).toEqual(validate(alice, User));
     const bad = { ...alice, id: 1 };
-    expect(await std['~standard'].validate(bad)).toEqual(validate(bad, User));
+    expect(User['~standard'].validate(bad)).toEqual(validate(bad, User));
   });
 });
 

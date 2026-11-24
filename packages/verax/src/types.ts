@@ -18,6 +18,7 @@ import {
   impl,
   issue,
   leave,
+  mismatch,
   miss,
   overflow,
   pick,
@@ -88,7 +89,7 @@ const leaf = <TValue>(
     (value) => (test(value) ? (value as TValue) : FAIL),
     (value, context) => {
       if (!test(value)) {
-        issue(context, `Expected ${expected}, received ${describe(value)}`);
+        issue(context, mismatch(context, expected, value));
       }
       return value as TValue;
     },
@@ -213,8 +214,8 @@ const string = (): Schema<string> => leaf(BUILTINS.String, 'String', isString, t
 Exactly `value`, by `Object.is` — `literal(NaN)` matches NaN, `literal(0)` rejects -0.
 */
 const literal = <const TValue extends Primitive>(value: TValue): Schema<TValue> => {
-  const made = leaf<TValue>({ kind: 'literal', value }, describe(value), (received) =>
-    Object.is(received, value),
+  const made = leaf<TValue>({ kind: 'literal', value }, describe(value), (each) =>
+    Object.is(each, value),
   );
   literals.set(made, { value });
   return made;
@@ -278,7 +279,7 @@ const list = <TSchema extends StandardSchemaV1>(
     },
     (value, context) => {
       if (!Array.isArray(value)) {
-        issue(context, `Expected list, received ${describe(value)}`);
+        issue(context, mismatch(context, 'list', value));
         return value as Out;
       }
       const items: readonly unknown[] = value;
@@ -353,7 +354,7 @@ const wrap = <TOut, TIn>(def: Def, of: StandardSchemaV1, allowed?: null): Schema
     const { test } = inner;
     return leaf(
       def,
-      inner.expected,
+      allowed === null ? `${inner.expected} | null` : inner.expected,
       (value) => value === allowed || test(value),
       inner.pure,
     ) as Schema<TOut, TIn>;
@@ -427,7 +428,7 @@ When a field is checked, under any nullable/optional wrapping: an enum or
 literal — a discriminant — 2, another leaf (a scalar) 1, anything else 0.
 A def from elsewhere may be missing.
 */
-const rank = ({ def }: Partial<Schema>): number =>
+const rank = ({ def }: Readonly<{ def?: Def }> & StandardSchemaV1): number =>
   def?.kind === 'nullable' || def?.kind === 'optional'
     ? rank(def.of)
     : def?.kind === 'enum' || def?.kind === 'literal'
@@ -731,7 +732,7 @@ function object<TShape extends Shape>(
     },
     (value, context) => {
       if (!isPlain(value)) {
-        issue(context, `Expected ${label}, received ${describe(value)}`);
+        issue(context, mismatch(context, label, value));
         return value as Out;
       }
       const { fields, nested, shape: known } = plan ?? resolve();
@@ -747,6 +748,7 @@ function object<TShape extends Shape>(
         path[at] = field.key;
         const has = Object.hasOwn(value, field.key);
         const each = has ? value[field.key] : undefined;
+        context.gone = has ? -1 : path.length;
         // A leaf that passes needs no full check.
         const got = field.test !== undefined && field.test(each) ? each : field.run(each, context);
         if (has || got !== undefined) {
@@ -864,7 +866,7 @@ const record = <TSchema extends StandardSchemaV1>(
     },
     (value, context) => {
       if (!isPlain(value)) {
-        issue(context, `Expected record, received ${describe(value)}`);
+        issue(context, mismatch(context, 'record', value));
         return value as Out;
       }
       const why = open(0);
@@ -1082,7 +1084,7 @@ by the closest member.
 */
 const tell = (of: readonly StandardSchemaV1[], own: readonly Impl[]): Impl['run'] => {
   const runs = own.map(({ run }) => run);
-  const shapes = of.map(({ def }: Partial<Schema>, at) =>
+  const shapes = of.map(({ def }: Readonly<{ def?: Def }> & StandardSchemaV1, at) =>
     raw.has(own[at] as Impl) && def?.kind === 'object' ? def.shape : {},
   );
   for (const key in shapes[0]) {
@@ -1099,15 +1101,13 @@ const tell = (of: readonly StandardSchemaV1[], own: readonly Impl[]): Impl['run'
         if (!isPlain(value)) {
           return;
         }
-        const seen = Object.hasOwn(value, key) ? value[key] : undefined;
+        const has = Object.hasOwn(value, key);
+        const seen = has ? value[key] : undefined;
         const [tag, run] = table.get(seen) ?? [];
         if (run !== undefined && Object.is(seen, tag)) {
           run(value, context);
         } else {
-          issue(context, `Expected ${expected}, received ${describe(seen)}`, [
-            ...context.path,
-            key,
-          ]);
+          issue(context, mismatch(context, expected, seen, !has), [...context.path, key]);
         }
       };
     }

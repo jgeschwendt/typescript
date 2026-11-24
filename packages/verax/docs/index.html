@@ -140,8 +140,8 @@ console.log(validate({ age: 1.5, tags: [1] }, User));</code></pre>
 { age: 36, name: 'Ada', tags: ['math'] }
 {
   issues: [
-    { message: 'Expected Int, received 1.5', path: ['age'] },
-    { message: 'Expected String, received undefined', path: ['name'] },
+    { message: 'Expected Int | null, received 1.5', path: ['age'] },
+    { message: 'Expected String, missing', path: ['name'] },
     { message: 'Expected String, received 1', path: ['tags', 0] },
   ],
 }</pre>
@@ -317,8 +317,8 @@ try {
   parse: 3,
   validate: { issues: [{ message: 'Expected Int, received NaN', path: [] }] },
 }
-true VeraxError: age: Expected Int, received undefined
-tags: Expected list, received undefined</pre>
+true VeraxError: age: Expected Int | null, missing
+tags: Expected list, missing</pre>
       </section>
 
       <section class="docs-section" id="refine-coerce">

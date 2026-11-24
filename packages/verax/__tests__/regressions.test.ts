@@ -184,7 +184,7 @@ describe('lists and hostile input', () => {
       return value === 1;
     });
     expect(validate([2, 1, 3], list(nullable(Late))).issues).toEqual([
-      { message: 'Expected Late, received 2', path: [0] },
+      { message: 'Expected Late | null, received 2', path: [0] },
       { message: 'Threw: late', path: [2] },
     ]);
   });
@@ -774,7 +774,7 @@ describe('schemas are sealed; schemas from elsewhere are adapted', () => {
     expect(stackDepth()).toBe(0);
   });
   test('an asynchronous Standard Schema is an issue, never a hang or a throw', () => {
-    const Async: Schema = {
+    const Async: StandardSchemaV1 = {
       '~standard': {
         validate: async (value: unknown) => {
           await Promise.resolve();
@@ -783,7 +783,6 @@ describe('schemas are sealed; schemas from elsewhere are adapted', () => {
         vendor: 'elsewhere',
         version: 1,
       },
-      def: { kind: 'unknown' },
     };
     expect(validate([], list(Async)).issues).toBeUndefined();
     expect(validate([1], list(Async)).issues).toEqual([
@@ -1143,7 +1142,7 @@ describe('a failed union reports why', () => {
       { message: 'Expected Phone, received "555"', path: ['phone'] },
     ]);
     expect(validate([{ name: 1 }], list(User)).issues).toEqual([
-      { message: 'Expected Email, received undefined', path: [0, 'email'] },
+      { message: 'Expected Email, missing', path: [0, 'email'] },
       { message: 'Expected String, received 1', path: [0, 'name'] },
     ]);
     expect(validate({ a: 'x' }, union([string(), object({ a: int() })])).issues).toEqual([
@@ -1155,7 +1154,7 @@ describe('a failed union reports why', () => {
       object('Err', { error: string() }),
     ]);
     expect(validate({ id: '1' }, Response).issues).toEqual([
-      { message: 'Expected Int, received undefined', path: ['age'] },
+      { message: 'Expected Int, missing', path: ['age'] },
       { message: 'Expected Int, received "1"', path: ['id'] },
     ]);
     // No member gets past the value, or knows its keys: the mismatch, as before.
@@ -1185,7 +1184,7 @@ describe('a failed union reports why', () => {
       { message: 'Expected "Ping" | "Track", received "Pong"', path: ['__typename'] },
     ]);
     expect(validate({}, Tried).issues).toEqual([
-      { message: 'Expected "Ping" | "Track", received undefined', path: ['__typename'] },
+      { message: 'Expected "Ping" | "Track", missing', path: ['__typename'] },
     ]);
     expect(validate([], Message).issues).toEqual([
       { message: 'Expected Message, received list', path: [] },
@@ -1198,7 +1197,7 @@ describe('a failed union reports why', () => {
       ).issues,
     ).toEqual([
       { message: 'Expected "Ping", received "Pong"', path: ['__typename'] },
-      { message: 'Expected Int, received undefined', path: ['at'] },
+      { message: 'Expected Int, missing', path: ['at'] },
     ]);
     // The member named is the explanation, even where it fails at the value itself.
     const Refined = union([
