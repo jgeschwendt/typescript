@@ -49,6 +49,8 @@ export default defineConfig({
         'max-params': 'off',
         // hot paths inline their checks; a helper per loop body costs a call per item
         'max-statements': 'off',
+        // a schema's input type is set by its builder, never inferred: `TIn` is named once, in the return (bun lint)
+        'typescript/no-unnecessary-type-parameters': 'off',
         // a validator's job is the one assertion the rule forbids: checked `unknown` becomes `T`
         'typescript/no-unsafe-type-assertion': 'off',
         // `x!` and `x as T` are the same claim; no-non-null-assertion keeps the former out
