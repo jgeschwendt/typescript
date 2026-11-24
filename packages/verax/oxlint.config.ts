@@ -26,8 +26,6 @@ export default defineConfig({
     {
       files: ['src/core.ts'],
       rules: {
-        // switch-exhaustiveness-check proves every case; a default would hide a new one
-        'default-case': 'off',
         // `verify` is bound as every entry: as a bound arrow, bun's parse/validate ran up to 2.6% slower (measured 2026-11-23)
         'func-style': 'off',
         // a no-op callback is the minimal way to swallow a rejection
@@ -43,8 +41,6 @@ export default defineConfig({
     {
       files: ['src/core.ts', 'src/types.ts'],
       rules: {
-        // a lazy cache (a resolved shape) starts unset: `= undefined` trips no-undef-init and unicorn/no-useless-undefined
-        'init-declarations': 'off',
         // the internal schema constructor takes its parts positionally; a bag would allocate
         'max-params': 'off',
         // hot paths inline their checks; a helper per loop body costs a call per item
@@ -53,8 +49,6 @@ export default defineConfig({
         'typescript/no-unnecessary-type-parameters': 'off',
         // a validator's job is the one assertion the rule forbids: checked `unknown` becomes `T`
         'typescript/no-unsafe-type-assertion': 'off',
-        // `x!` and `x as T` are the same claim; no-non-null-assertion keeps the former out
-        'typescript/non-nullable-type-assertion-style': 'off',
         // a check writes its issues, path and output into what it is handed
         'typescript/prefer-readonly-parameter-types': 'off',
 
@@ -71,8 +65,6 @@ export default defineConfig({
     {
       files: ['src/sdl.ts'],
       rules: {
-        // switch-exhaustiveness-check proves every case; a default would hide a new one
-        'default-case': 'off',
         // each refusal is a statement: one rule GraphQL has, checked where it applies
         'max-statements': 'off',
         // bareType and reference recurse into each other
@@ -104,6 +96,8 @@ export default defineConfig({
       rules: {
         // every key for…in enumerates is counted, inherited ones too
         'guard-for-in': 'off',
+        // a lazy plan or union settle starts unset: a self-replacing resolver made valid input up to 6.8% slower on node, 2.2% on bun (measured 2026-11-24)
+        'init-declarations': 'off',
         // a leaf value's test sits inline: through a helper, a record's parse/validate ran 2–3.5% slower (measured 2026-11-23)
         'no-nested-ternary': 'off',
         // a field copies its impl's checks: in place would write into the shared impl
@@ -147,8 +141,6 @@ export default defineConfig({
         'typescript/explicit-function-return-type': 'off',
         // a validator's job is the one assertion the rule forbids: checked `unknown` becomes `T`
         'typescript/no-unsafe-type-assertion': 'off',
-        // `x!` and `x as T` are the same claim; no-non-null-assertion keeps the former out
-        'typescript/non-nullable-type-assertion-style': 'off',
         // the copy of verax a case runs is handed in as its module namespace
         'typescript/prefer-readonly-parameter-types': 'off',
         // schemas compose by nesting calls: list(nullable(string())) is the DSL
@@ -201,8 +193,6 @@ export default defineConfig({
         'typescript/explicit-function-return-type': 'off',
         // a validator's job is the one assertion the rule forbids: checked `unknown` becomes `T`
         'typescript/no-unsafe-type-assertion': 'off',
-        // `x!` and `x as T` are the same claim; no-non-null-assertion keeps the former out
-        'typescript/non-nullable-type-assertion-style': 'off',
         'typescript/only-throw-error': 'off',
         // a callback's parameters are its callee's; a schema's validate is a method, not state
         'typescript/prefer-readonly-parameter-types': [
@@ -224,16 +214,12 @@ export default defineConfig({
         'unicorn-js/consistent-boolean-name': 'off',
         // `def` is the API's word: every schema carries one
         'unicorn-js/name-replacements': ['error', { replacements: { def: false } }],
-        // contradicts native unicorn/prefer-number-properties, which demands the Number.NaN it forbids
-        'unicorn-js/prefer-global-number-constants': 'off',
       },
     },
     // after the tests block: it turns off what that block only loosens
     {
       files: ['__tests__/property.test.ts'],
       rules: {
-        // switch-exhaustiveness-check proves every case; a default would hide a new one
-        'default-case': 'off',
         // for-of would run the value's iterator; the oracle reads by index, as verax does
         'typescript/prefer-for-of': 'off',
         // a recipe's transforms shape the array they are handed: holes, extra keys, a cycle

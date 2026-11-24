@@ -211,7 +211,7 @@ describe('lists and hostile input', () => {
     }
   });
   test('#12 literal compares with Object.is', () => {
-    expect(is(Number.NaN, literal(Number.NaN))).toBe(true);
+    expect(is(NaN, literal(NaN))).toBe(true);
     expect(is(-0, literal(0))).toBe(false);
   });
 });
@@ -590,7 +590,7 @@ describe('the fast and full checks agree', () => {
     const schemas: Schema[] = [
       int(),
       string(),
-      literal(Number.NaN),
+      literal(NaN),
       enums(['A', 'B']),
       unknown(),
       nullable(int()),
@@ -623,7 +623,7 @@ describe('the fast and full checks agree', () => {
       1,
       -1,
       1.5,
-      Number.NaN,
+      NaN,
       '',
       '1',
       'A',
@@ -1064,7 +1064,7 @@ describe('hostile values and limits', () => {
     expect(stackDepth()).toBe(0);
   });
   test('a proxy whose length lies is not a list: only a valid array length sizes an output', () => {
-    for (const length of [-1, 1.5, 'abc', 2 ** 32, Number.NaN]) {
+    for (const length of [-1, 1.5, 'abc', 2 ** 32, NaN]) {
       const lying = new Proxy([], {
         get: (target, key) => (key === 'length' ? length : (Reflect.get(target, key) as unknown)),
       });

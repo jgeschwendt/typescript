@@ -182,6 +182,7 @@ export const sdl = (roots: readonly Schema[], { input = false } = {}): string =>
       case 'unknown': {
         break;
       }
+      // no default
     }
     return fail(`${def.kind}() has no GraphQL equivalent`);
   };

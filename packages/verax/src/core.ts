@@ -329,6 +329,7 @@ const render = (value: unknown): string => {
       const text = value.length > MAX_STRING ? `${value.slice(0, MAX_STRING)}…` : value;
       return PLAIN.test(text) ? `"${text}"` : JSON.stringify(text);
     }
+    // no default
   }
   if (value === null) {
     return 'null';
@@ -498,6 +499,11 @@ const trial = (
 };
 
 /**
+A run that reports nothing: `closest`'s pick until a member is closer.
+*/
+const quiet: Impl['run'] = () => {};
+
+/**
 Reports the closest of `runs`: of the members failing below the value
 itself and knowing every key it holds, the one with the fewest issues
 outside nested unions, the first on a tie. Each full check tried is charged
@@ -510,7 +516,7 @@ const closest =
     if (explaining) {
       return;
     }
-    let best: Impl['run'] | undefined;
+    let best = quiet;
     let fewest = Infinity;
     const { length } = context.path;
     explaining = true;
@@ -536,7 +542,7 @@ const closest =
           return;
         }
       }
-      best?.(value, context);
+      best(value, context);
     } finally {
       explaining = false;
       comparing = -1;
@@ -678,13 +684,12 @@ const foreign = (spec: StandardSchemaV1): Impl => {
 This copy's checks for a schema it made — or a spread or copy of one — else an adapter.
 */
 const impl = (spec: StandardSchemaV1): Impl => {
-  let properties: unknown;
   try {
-    properties = spec['~standard'];
+    return impls.get(spec['~standard']) ?? foreign(spec);
   } catch {
     // Adapted: the throw recurs, as an issue, when it validates.
+    return foreign(spec);
   }
-  return impls.get(properties as object) ?? foreign(spec);
 };
 
 // ─── the verbs ───────────────────────────────────────────────────────────────────────────────────
@@ -712,8 +717,8 @@ const EXHAUSTED: Result<never> = Object.freeze({ issues: Object.freeze([EXHAUSTI
 /**
 Whether the call is exhausted, now that a frame caught `thrown`: in a nested frame an overflow ends it.
 */
-const exhausts = (nested: boolean, thrown: Readonly<{ error: unknown }> | undefined): boolean => {
-  if (nested && thrown !== undefined && overflow(thrown.error)) {
+const exhausts = (nested: boolean, thrown: unknown): boolean => {
+  if (nested && overflow(thrown)) {
     exhausted = true;
     limit = 0;
   }
@@ -727,11 +732,12 @@ const walk = <TOut>(value: unknown, self: Impl<TOut>): Result<TOut> => {
   const from = top;
   open();
   let output: unknown = FAIL;
-  let thrown: Readonly<{ error: unknown }> | undefined;
+  // FAIL: nothing thrown
+  let thrown: unknown = FAIL;
   try {
     output = self.fast(value);
   } catch (error) {
-    thrown = { error };
+    thrown = error;
   }
   close(from);
   if (exhausts(nested, thrown)) {
@@ -748,19 +754,20 @@ const walk = <TOut>(value: unknown, self: Impl<TOut>): Result<TOut> => {
   }
   const context: Context = { issues: [], path: [] };
   open();
-  let failed: Readonly<{ error: unknown }> | undefined;
+  // STOP: nothing to note
+  let failed: unknown = STOP;
   try {
     self.run(value, context);
   } catch (error) {
-    failed = { error };
+    failed = error;
   }
   // Closed before describing the error: at the stack's edge that can overflow too.
   close(from);
   if (exhausts(nested, failed)) {
     return EXHAUSTED;
   }
-  if (failed !== undefined && failed.error !== STOP) {
-    note(context, `Threw: ${explain(failed.error)}`);
+  if (failed !== STOP) {
+    note(context, `Threw: ${explain(failed)}`);
   }
   // Fail closed: a rejection the full check cannot explain is still a rejection.
   const tripped = limit === 0;
@@ -769,9 +776,9 @@ const walk = <TOut>(value: unknown, self: Impl<TOut>): Result<TOut> => {
       context,
       tripped || complex
         ? TOO_COMPLEX
-        : thrown === undefined
+        : thrown === FAIL
           ? 'Internal: fast and full checks disagree'
-          : `Threw: ${explain(thrown.error)}`,
+          : `Threw: ${explain(thrown)}`,
       [],
     );
   }
