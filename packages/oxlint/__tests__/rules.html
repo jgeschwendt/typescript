@@ -4935,12 +4935,12 @@
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-wrapper-object-types.html"
         },
         {
-          "base": "error",
+          "base": "off",
           "baseOptions": [],
           "category": "restriction",
           "options": "-",
           "oxlint": "native",
-          "reason": "",
+          "reason": "chooses between `x!` and `x as T`, two unchecked spellings: no-non-null-assertion forbids the one it demands, and no-unsafe-type-assertion polices `as`",
           "rule": "typescript/non-nullable-type-assertion-style",
           "type-aware": "yes",
           "url": "https://oxc.rs/docs/guide/usage/linter/rules/typescript/non-nullable-type-assertion-style.html"
@@ -8579,9 +8579,9 @@
         },
         {
           "base": "error",
-          "baseOptions": [],
+          "baseOptions": [{ "checkNaN": false }],
           "category": "restriction",
-          "options": "-",
+          "options": "set",
           "oxlint": "native",
           "reason": "",
           "rule": "unicorn/prefer-number-properties",

@@ -460,7 +460,7 @@ typescript/no-useless-default-assignment: error
 typescript/no-useless-empty-export: error
 typescript/no-var-requires: off
 typescript/no-wrapper-object-types: error
-typescript/non-nullable-type-assertion-style: error
+typescript/non-nullable-type-assertion-style: off
 typescript/only-throw-error: error
 typescript/parameter-properties: error
 typescript/prefer-as-const: error
@@ -828,7 +828,7 @@ unicorn/prefer-native-coercion-functions: error
 unicorn/prefer-negative-index: error
 unicorn/prefer-node-protocol: error
 unicorn/prefer-number-coercion: error
-unicorn/prefer-number-properties: error
+unicorn/prefer-number-properties: error [{"checkNaN":false}]
 unicorn/prefer-object-from-entries: error
 unicorn/prefer-optional-catch-binding: error
 unicorn/prefer-prototype-methods: error
@@ -1074,7 +1074,6 @@ typescript/no-unsafe-unary-minus: off
 typescript/no-useless-default-assignment: off
 typescript/no-useless-empty-export: off
 typescript/no-wrapper-object-types: off
-typescript/non-nullable-type-assertion-style: off
 typescript/only-throw-error: off
 typescript/parameter-properties: off
 typescript/prefer-as-const: off
