@@ -59,7 +59,9 @@ jobs:
             exit 1
           fi
           [ "$EVENT" = pull_request ] || exit 0
-          unsigned="$(bump minor; verax)"
+          # only the changesets this PR adds or edits: one already on main was signed off in the PR that carried it
+          mine="$(git diff --name-only --diff-filter=AMR "$BASE" -- .changeset)"
+          unsigned="$({ bump minor; verax; } | sort -u | grep -Fx -f <(printf '%s\n' "$mine") || true)"
           for f in packages/*/package.json; do
             old=$(git show "$BASE:$f" 2>/dev/null | node -p 'JSON.parse(require("fs").readFileSync(0, "utf8")).version' 2>/dev/null) || continue
             new=$(node -p "require('./$f').version")
