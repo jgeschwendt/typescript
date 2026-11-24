@@ -34,7 +34,7 @@ A standard schema from elsewhere, as a hand-written adapter would make one.
 */
 const elsewhere = (validator: (value: unknown) => unknown): Schema => ({
   '~standard': {
-    validate: validator as StandardSchemaV1['~standard']['validate'],
+    validate: validator as Schema['~standard']['validate'],
     vendor: 'elsewhere',
     version: 1,
   },
@@ -605,8 +605,8 @@ describe('messages name what was received', () => {
     ).toEqual([
       'Expected Int, received Date',
       'Expected Int, received Point',
-      'Expected Int, received object',
-      'Expected Int, received object',
+      'Expected Int, received non-plain object',
+      'Expected Int, received non-plain object',
       'Expected Int, received object',
       'Expected Int, received list',
       'Expected Int, received value',
@@ -662,7 +662,7 @@ describe('plain data is bounded; exotic data costs its structure', () => {
     const items = Array.from({ length: 400 }, () => heir);
     expect(is(items, Items)).toBe(false);
     expect(validate(items, Items).issues?.[0]).toEqual({
-      message: 'Expected object, received object',
+      message: 'Expected object, received non-plain object',
       path: [0],
     });
   });

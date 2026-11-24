@@ -180,6 +180,16 @@
             its type is then <code class="code">key?: T | undefined</code>.
           </li>
           <li>
+            <strong>Messages</strong> read <code class="code">Expected Int, received "x"</code>. A
+            required key that is absent is <code class="code">Expected Int, missing</code>, an
+            explicit <code class="code">undefined</code> still
+            <code class="code">received undefined</code>; a nullable leaf names null,
+            <code class="code">Expected Int | null</code>; and an object that is not plain — another
+            realm's, or one beneath another — is
+            <code class="code">received non-plain object</code>, unless its constructor names it
+            (<code class="code">received Date</code>).
+          </li>
+          <li>
             <strong>Types.</strong> A schema has an output and an input type;
             <code class="code">coerce</code> makes the input <code class="code">unknown</code>.
             <code class="code">is</code> and <code class="code">assert</code> narrow to the input

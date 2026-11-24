@@ -13,7 +13,7 @@ const BUILTIN_DEFS = new Set<Def>(Object.values(BUILTINS));
 GraphQL's implicit `__typename`: on an output object, a literal of the object's own name tags it as a union member and is no field.
 */
 const isTypename = (key: string, field: StandardSchemaV1, name: string): boolean => {
-  const { def } = field as Partial<Schema>;
+  const { def }: Readonly<{ def?: Def }> & StandardSchemaV1 = field;
   return key === '__typename' && def?.kind === 'literal' && def.value === name;
 };
 
@@ -32,7 +32,7 @@ const checkName = (name: string, what: string): string => {
 A schema's def — missing on a Standard Schema from elsewhere, which GraphQL cannot see into.
 */
 const defOf = (schema: StandardSchemaV1): Def => {
-  const { def } = schema as Partial<Schema>;
+  const { def }: Readonly<{ def?: Def }> & StandardSchemaV1 = schema;
   return typeof def === 'object' && (def as Def | null) !== null
     ? def
     : fail('a schema without a def has no GraphQL equivalent');

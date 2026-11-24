@@ -14,10 +14,14 @@ const unused = {
 export default defineConfig({
   ignorePatterns: ['dist/**'],
   overrides: [
-    // `new Set(tags).size` is the unique count; prefer-set-size refuses the spread that would avoid it
     {
       files: ['__tests__/bounds.test.ts'],
-      rules: { 'unicorn-js/no-unreadable-new-expression': 'off' },
+      rules: {
+        // a thunk hands verax another realm's promise: an async one would wrap it in this realm's
+        'typescript/promise-function-async': 'off',
+        // `new Set(tags).size` is the unique count; prefer-set-size refuses the spread that would avoid it
+        'unicorn-js/no-unreadable-new-expression': 'off',
+      },
     },
     {
       files: ['src/core.ts'],
@@ -203,8 +207,6 @@ export default defineConfig({
           'warn',
           { ignoreInferredTypes: true, treatMethodsAsReadonly: true },
         ],
-        // ~standard.validate is typed to return a Promise too: an async wrapper would make every result one
-        'typescript/promise-function-async': 'off',
 
         // a schema is named like the type it validates, a scalar like a GraphQL type (`const User = object(…)`), and `__typename` is GraphQL's own union tag
         'names/case': ['error', { allow: ['[A-Z][A-Za-z0-9]*', '__typename'] }],
