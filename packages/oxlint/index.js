@@ -94,6 +94,8 @@ const off = Object.freeze({
     'deprecated upstream: double-reports with its successor no-empty-object-type',
   'typescript/no-var-requires':
     'deprecated upstream: double-reports with its successor no-require-imports',
+  'typescript/non-nullable-type-assertion-style':
+    'chooses between `x!` and `x as T`, two unchecked spellings: no-non-null-assertion forbids the one it demands, and no-unsafe-type-assertion polices `as`',
   'typescript/prefer-ts-expect-error':
     'deprecated upstream: double-reports with its successor ban-ts-comment',
   'unicorn/empty-brace-spaces':
@@ -286,6 +288,9 @@ const rules = {
   // inline, not split: `import { T, x }` fixes to `import { type T, x }`
   'typescript/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
   'typescript/prefer-readonly-parameter-types': 'warn',
+
+  // `NaN`, as unicorn-js/prefer-global-number-constants wants: upstream's default, not oxlint's port
+  'unicorn/prefer-number-properties': ['error', { checkNaN: false }],
 
   'inline-config/no-directives': 'error',
   'names/case': 'error',
