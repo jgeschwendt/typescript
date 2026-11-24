@@ -95,8 +95,8 @@ describe('scalars', () => {
   });
   test('Float rejects non-finite', () => {
     expect(is(1.5, float())).toBe(true);
-    expect(is(Number.NaN, float())).toBe(false);
-    expect(is(Number.POSITIVE_INFINITY, float())).toBe(false);
+    expect(is(NaN, float())).toBe(false);
+    expect(is(Infinity, float())).toBe(false);
   });
   test('Boolean, literal', () => {
     expect(is(false, boolean())).toBe(true);
@@ -106,7 +106,7 @@ describe('scalars', () => {
   test('a list of each built-in checks every item, and reports each bad one', () => {
     const cases: readonly (readonly [Schema, unknown, unknown])[] = [
       [list(boolean()), true, 0],
-      [list(float()), 1.5, Number.NaN],
+      [list(float()), 1.5, NaN],
       [list(id()), 'a', 1],
       [list(int()), 1, 1.5],
       [list(string()), 'a', 1],

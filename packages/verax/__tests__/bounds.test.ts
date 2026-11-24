@@ -929,7 +929,7 @@ describe('a discriminated union finds its member by lookup, with the verdict of 
     0,
     -0,
     1,
-    Number.NaN,
+    NaN,
     null,
     undefined,
     true,
@@ -983,7 +983,7 @@ describe('a discriminated union finds its member by lookup, with the verdict of 
       const Lookup = union(members);
       const Each = sequential(members);
       const values: unknown[] = [];
-      for (const tag of [...tags, 'zz', 2, -0, 0, Number.NaN, undefined]) {
+      for (const tag of [...tags, 'zz', 2, -0, 0, NaN, undefined]) {
         const { f0, ...rest } = shaped(tag);
         const { k, ...missing } = shaped(tag);
         values.push(

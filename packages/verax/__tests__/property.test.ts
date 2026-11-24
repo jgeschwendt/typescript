@@ -104,6 +104,7 @@ const boom = (kind: 'error' | 'hostileError' | 'revoked' | 'string'): never => {
     case 'string': {
       throw 'boom';
     }
+    // no default
   }
 };
 
@@ -432,7 +433,7 @@ const LITERALS: readonly Primitive[] = [
   undefined,
   0,
   -0,
-  Number.NaN,
+  NaN,
   1,
   INT_MAX + 1,
   '',
@@ -585,9 +586,9 @@ const EDGES: Named = [
   ['0', () => 0],
   ['-0', () => -0],
   ['0.5', () => 1 / 2],
-  ['NaN', () => Number.NaN],
-  ['Infinity', () => Number.POSITIVE_INFINITY],
-  ['-Infinity', () => Number.NEGATIVE_INFINITY],
+  ['NaN', () => NaN],
+  ['Infinity', () => Infinity],
+  ['-Infinity', () => -Infinity],
   ['2^31-1', () => INT_MAX],
   ['2^31', () => INT_MAX + 1],
   ['-2^31', () => INT_MIN],

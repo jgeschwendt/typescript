@@ -1161,12 +1161,12 @@ function union<const TMembers extends readonly StandardSchemaV1[]>(
       return sequential;
     }
   };
-  let told: Impl['run'] | undefined;
   /**
   Built on first failure, inside its try: a shape that throws is an issue.
   */
-  const report: Impl['run'] = (value, context) => {
-    (told ??= tell(of, own))(value, context);
+  let report: Impl['run'] = (value, context) => {
+    report = tell(of, own);
+    report(value, context);
   };
   return schema<Infer<TMembers[number]>, Input<TMembers[number]>>(
     { kind: 'union', ...naming, of },
