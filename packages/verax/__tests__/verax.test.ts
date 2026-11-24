@@ -102,6 +102,24 @@ describe('scalars', () => {
     expect(is('x', literal('x'))).toBe(true);
     expect(is('y', literal('x'))).toBe(false);
   });
+  test('a list of each built-in checks every item, and reports each bad one', () => {
+    const cases: readonly (readonly [Schema, unknown, unknown])[] = [
+      [list(boolean()), true, 0],
+      [list(float()), 1.5, Number.NaN],
+      [list(id()), 'a', 1],
+      [list(int()), 1, 1.5],
+      [list(string()), 'a', 1],
+    ];
+    for (const [Items, good, bad] of cases) {
+      expect(is([good, good], Items)).toBe(true);
+      expect(is([good, bad], Items)).toBe(false);
+      expect(parse([good, good], Items)).toEqual([good, good]);
+      expect(validate([good, bad, bad], Items).issues?.map((found) => found.path)).toEqual([
+        [1],
+        [2],
+      ]);
+    }
+  });
 });
 
 const messages = (value: unknown, against: Schema): string[] | undefined =>
