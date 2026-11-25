@@ -17,7 +17,7 @@ const fixers: readonly Gate[] = [
 ];
 
 const gates: readonly Gate[] = [
-  { command: 'bun test --isolate', ms: bunTestMs, name: 'bun test' },
+  { command: 'bun test --isolate . ./.changeset', ms: bunTestMs, name: 'bun test' },
   { command: 'bun --bun oxfmt --check', ms: oxfmtMs, name: 'oxfmt --check' },
   { command: 'bun --bun oxlint', ms: oxlintMs, name: 'oxlint' },
   // ※ stele-unstamped

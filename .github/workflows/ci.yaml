@@ -32,7 +32,8 @@ jobs:
       - run: bun --bun oxlint
       # --isolate: hud's happy-dom tests leave the VM's global lookups ~10× slower for every later file, and
       # verax's bounded-work tests time out behind them; bunfig has no isolate key on bun 1.4.4 (probed 2026-11-14)
-      - run: bun test --isolate
+      # discovery skips dot directories: ./.changeset is named (probed 2026-11-25)
+      - run: bun test --isolate . ./.changeset
       # ※ verax-type-tests
       # verax's type-level tests (`true satisfies Equal<…>`) only fail under tsc.
       # Run inside the package so bunx resolves the lockfile's compiler.

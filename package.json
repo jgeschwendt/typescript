@@ -12,12 +12,12 @@
     "ncu": "bunx npm-check-updates -u --workspaces",
     "release": "changeset publish",
     "update": "bunx npm-check-updates -u --workspaces && bun install",
-    "version-packages": "changeset version && bun install --lockfile-only"
+    "version-packages": "changeset version && bun .changeset/changelog.js packages/*/CHANGELOG.md && bun install --lockfile-only"
   },
   "devDependencies": {
-    "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3",
     "@changesets/config": "^4.0.1",
+    "@changesets/get-github-info": "^1.0.1",
     "@jlg/dandori": "workspace:*",
     "@jlg/oxfmt": "^0.1.2",
     "@jlg/oxlint": "^0.1.5",
