@@ -12,6 +12,10 @@ const cases = {
     'export const $_raw = 1;\nexport const api_key = 2;\nexport const not_api_key = 3;\n',
     ['The variable `not_api_key` is not camelCase or UPPER_CASE.'],
   ],
+  'app/api/route.ts': [
+    'export function GET() {}\nexport function Fetch() {}\nfunction POST() {}\n',
+    ['The function `Fetch` is not camelCase.', 'The function `POST` is not camelCase.'],
+  ],
   'app/route.js': [
     'export function GET() {}\nexport function Fetch() {}\nfunction POST() {}\n',
     ['The function `Fetch` is not camelCase.', 'The function `POST` is not camelCase.'],

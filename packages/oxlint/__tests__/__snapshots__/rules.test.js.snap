@@ -487,7 +487,7 @@ exports[`rules 1`] = `
   "typescript/max-params | - | none | - | off | - | duplicates native max-params (verified 2026-10-14 · TS probe)",
   "typescript/member-ordering | - | js | - | error | set | ",
   "typescript/method-signature-style | style | native | - | error | - | ",
-  "typescript/naming-convention | - | none | yes | off | - | names/case owns declared names: this one needs parser services oxlint's host lacks",
+  "typescript/naming-convention | - | none | yes | off | - | needs type information the JS plugin host has none of",
   "typescript/no-array-constructor | - | none | - | off | - | duplicates native no-array-constructor (verified 2026-10-14 · TS probe)",
   "typescript/no-array-delete | correctness | native | yes | error | - | ",
   "typescript/no-base-to-string | correctness | native | yes | error | - | ",
