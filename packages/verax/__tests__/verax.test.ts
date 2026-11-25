@@ -28,6 +28,7 @@ import {
   refine,
   scalar,
   string,
+  tuple,
   union,
   unknown,
   validate,
@@ -289,6 +290,103 @@ describe('record', () => {
     expect(parse({ a: 1 }, Either)).toEqual({ a: 1 });
     expect(is({ a: 1, b: 'x' }, Either)).toBe(false);
     expect(is(null, nullable(Counts))).toBe(true);
+  });
+});
+
+const Pair = tuple([string(), int()]);
+true satisfies Equal<Infer<typeof Pair>, [string, number]>;
+const Stamped = tuple([DateTime, nullable(object({ n: int() }))]);
+true satisfies Equal<Infer<typeof Stamped>, [Date, { n: number } | null]>;
+true satisfies Equal<Input<typeof Stamped>, [unknown, { n: number } | null]>;
+const Empty = tuple([]);
+true satisfies Equal<Infer<typeof Empty>, []>;
+
+describe('tuple', () => {
+  test('an array of exactly its items, each checked against its own schema', () => {
+    expect(is(['a', 1], Pair)).toBe(true);
+    expect(is([1, 'a'], Pair)).toBe(false);
+    expect(is(['a'], Pair)).toBe(false);
+    expect(is(['a', 1, 2], Pair)).toBe(false);
+    expect(is({ 0: 'a', 1: 1, length: 2 }, Pair)).toBe(false);
+    expect(is([], Empty)).toBe(true);
+    expect(is([undefined], Empty)).toBe(false);
+    expect(is(['2026-10-01T00:00:00Z', { n: 1 }], Stamped)).toBe(true);
+    expect(is(['2026-10-01T00:00:00Z', { n: 'x' }], Stamped)).toBe(false);
+  });
+  test('reports every item that fails at its index, and a wrong length once', () => {
+    expect(validate([1, 'x'], Pair).issues).toEqual([
+      { message: 'Expected String, received 1', path: [0] },
+      { message: 'Expected Int, received "x"', path: [1] },
+    ]);
+    expect(validate(['2026-10-01T00:00:00Z', { n: 'x' }], Stamped).issues).toEqual([
+      { message: 'Expected Int, received "x"', path: [1, 'n'] },
+    ]);
+    expect(validate(['a', 1, 2], Pair).issues).toEqual([
+      { message: 'Expected length 2, received 3', path: [] },
+    ]);
+    expect(validate({}, Pair).issues).toEqual([
+      { message: 'Expected tuple, received object', path: [] },
+    ]);
+    const holey: unknown[] = [];
+    holey[1] = 1;
+    expect(validate(holey, Pair).issues).toEqual([
+      { message: 'Expected String, received undefined', path: [0] },
+    ]);
+  });
+  test('parse is a fresh array, coercions applied, each item read once', () => {
+    let reads = 0;
+    const value = ['2026-10-01T00:00:00Z', null];
+    Object.defineProperty(value, 0, {
+      get: () => {
+        reads += 1;
+        return '2026-10-01T00:00:00Z';
+      },
+    });
+    const [at, rest] = parse(value, Stamped);
+    expect(reads).toBe(1);
+    expect(at).toBeInstanceOf(Date);
+    expect(rest).toBeNull();
+    const input: [string, number] = ['a', 1];
+    expect(parse(input, Pair)).not.toBe(input);
+    expect(parse(input, Pair)).toEqual(input);
+  });
+  test('the def holds a frozen copy of its items', () => {
+    const first = string();
+    const items: StandardSchemaV1[] = [first];
+    const One = tuple(items);
+    items.push(int());
+    expect(One.def).toEqual({ kind: 'tuple', of: [first] });
+    expect(Object.isFrozen(One.def.kind === 'tuple' && One.def.of)).toBe(true);
+    expect(is(['a'], One)).toBe(true);
+  });
+  test('nests: under list, union, and itself', () => {
+    const Rows = list(tuple([id(), tuple([float(), float()])]));
+    expect(parse([['a', [1, 2]]], Rows)).toEqual([['a', [1, 2]]]);
+    expect(validate([['a', [1, 'x']]], Rows).issues).toEqual([
+      { message: 'Expected Float, received "x"', path: [0, 1, 1] },
+    ]);
+    const Op = union([tuple([literal('add'), int()]), tuple([literal('neg')])]);
+    expect(parse(['neg'], Op)).toEqual(['neg']);
+    expect(is(['add', 'x'], Op)).toBe(false);
+    expect(validate(['add', 'x'], Op).issues).toEqual([
+      { message: 'Expected Int, received "x"', path: [1] },
+    ]);
+  });
+  test('too deep, as a list is', () => {
+    let Deep: StandardSchemaV1 = int();
+    let value: unknown = 1;
+    for (let at = 0; at < 600; at += 1) {
+      Deep = tuple([Deep]);
+      value = [value];
+    }
+    const Root = tuple([Deep]);
+    expect(is([value], Root)).toBe(false);
+    expect(validate([value], Root).issues?.[0]?.message).toBe('Too deep');
+  });
+  test('has no SDL form', () => {
+    expect(() => sdl([object('Point', { at: Pair })])).toThrow(
+      'sdl: tuple() has no GraphQL equivalent',
+    );
   });
 });
 

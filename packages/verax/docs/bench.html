@@ -486,6 +486,26 @@ mise x -C . -- bun packages/verax/bench/run.ts --base /tmp/base/packages/verax/s
         ></div>
       </section>
 
+      <section class="docs-section" id="tuple">
+        <header><h2 class="h2">Tuple</h2></header>
+        <p class="docs-note">
+          Adding <code class="code">tuple</code> left the 66 existing cases where they were: against
+          the source before it, the mean Δ is +0.07 % on bun and −0.22 % on node, and the few rows
+          past ± go both ways, within what noise gives across 66 cases. Default
+          <code class="code">--time</code>, bun 1.4.5 and node 24, 2026-11-25.
+        </p>
+        <p class="docs-note">
+          Its own groups: <code class="code">tuple</code> holds the six leaves of
+          <code class="code">flat</code> by position, and validates in about a third of the time —
+          bun <code class="code">is</code> 24 ns and <code class="code">parse</code> 34 ns against
+          70 and 93, node 43 and 67 against 133 and 203. <code class="code">tuple-rows</code> is a
+          list of 100 <code class="code">[id, [float, float]]</code>: bun 1.8 µs
+          <code class="code">is</code>, 2.7 µs <code class="code">parse</code>; node 3.3 and 4.9.
+        </p>
+        <div data-results="2026-11-25-tuple-bun.json" data-title="adding tuple, bun"></div>
+        <div data-results="2026-11-25-tuple-node.json" data-title="adding tuple, node"></div>
+      </section>
+
       <section class="docs-section" id="open">
         <header><h2 class="h2">Open options</h2></header>
         <h3 class="h3">Code generation</h3>

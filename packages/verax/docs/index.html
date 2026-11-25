@@ -156,7 +156,7 @@ console.log(validate({ age: 1.5, tags: [1] }, User));</code></pre>
         <pre
           class="snippet"
           data-ts
-        ><code>import { boolean, enums, float, id, is, literal, optional, record, scalar, unknown } from 'verax';
+        ><code>import { boolean, enums, float, id, is, literal, optional, record, scalar, tuple, unknown } from 'verax';
 
 const Role = enums('Role', ['ADMIN', 'MEMBER']);
 const Email = scalar('Email', (v): v is string =&gt; typeof v === 'string' &amp;&amp; v.includes('@'));
@@ -185,22 +185,33 @@ console.log({
         <p class="docs-note">
           Every field is non-null unless wrapped: <code class="code">nullable</code> may be
           <code class="code">null</code>, <code class="code">optional</code> may be absent.
-          <code class="code">record</code> checks every value under any key.
+          <code class="code">record</code> checks every value under any key;
+          <code class="code">tuple</code> an array of exactly its items, each by its own schema.
         </p>
         <pre
           class="snippet"
           data-ts
         ><code>const Patch = object({ bio: nullable(string()), nick: optional(string()) });
 const Scores = record(int());
+const Point = tuple([float(), float()]);
 
 console.log({
   bioNull: is({ bio: null }, Patch),
   bioMissing: is({}, Patch),
   scores: is({ ada: 3, lin: 5 }, Scores),
   scoreString: is({ ada: 3, lin: '5' }, Scores),
+  point: is([0.5, 2], Point),
+  pointLong: is([0.5, 2, 1], Point),
 });</code></pre>
         <pre class="snippet" data-out>
-{ bioNull: true, bioMissing: false, scores: true, scoreString: false }</pre>
+{
+  bioNull: true,
+  bioMissing: false,
+  scores: true,
+  scoreString: false,
+  point: true,
+  pointLong: false,
+}</pre>
       </section>
 
       <section class="docs-section" id="objects">

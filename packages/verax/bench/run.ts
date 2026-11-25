@@ -114,6 +114,7 @@ const cases = (verax: typeof Verax) => {
     record,
     refine,
     string,
+    tuple,
     union,
   } = verax;
   const Flat = object('Flat', {
@@ -197,6 +198,18 @@ const cases = (verax: typeof Verax) => {
       ),
       fill(60, tagged),
       fill(60, tagged, { ...tagged(59), value: 'x' }),
+    ],
+    [
+      'tuple',
+      tuple([verax.boolean(), int(), string(), id(), string(), float()]),
+      Object.values(flat(1)),
+      [...Object.values(flat(1)).slice(0, 5), 'x'],
+    ],
+    [
+      'tuple-rows',
+      list(tuple([id(), tuple([float(), float()])])),
+      fill(100, (at) => [`p${at}`, [at, -at]]),
+      fill(100, (at) => [`p${at}`, [at, -at]], ['p99', [0, 'x']]),
     ],
     [
       'untagged',
