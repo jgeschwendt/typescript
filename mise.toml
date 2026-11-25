@@ -12,5 +12,5 @@ run = "bunx dandori --fix"
 [tools]
 bun = "1.4.5"
 hk = { version = "2.14.0", workflow = "release.yml" }
-# oxlint/oxfmt launchers run under node
+# local runs launch oxlint/oxfmt with `bun --bun`; ci's lint (node) and fmt (node) prove the configs on node
 node = "24"
