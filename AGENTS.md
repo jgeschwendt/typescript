@@ -6,8 +6,8 @@ purpose: Bun-workspace monorepo publishing to npm — the @jlg configs (oxlint, 
 commands:
   changeset: bun run changeset
   check: mise run check
-  format-check: bunx oxfmt --check
-  lint: bunx oxlint
+  format-check: bun --bun oxfmt --check
+  lint: bun --bun oxlint
   test: bun test --isolate
 invariants:
   - claim: "STELE UNSTAMPED — dandori.config.ts runs stele `stamp: false`: its verdict reads Git history, not only the tree"

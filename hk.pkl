@@ -6,11 +6,11 @@ hooks {
     stash = "git"
     steps {
       ["oxfmt"] {
-        check = "bunx oxfmt --check --no-error-on-unmatched-pattern {{files}}"
-        fix = "bunx oxfmt --no-error-on-unmatched-pattern {{files}}"
+        check = "bun --bun oxfmt --check --no-error-on-unmatched-pattern {{files}}"
+        fix = "bun --bun oxfmt --no-error-on-unmatched-pattern {{files}}"
       }
       ["oxlint"] {
-        check = "bunx oxlint --no-error-on-unmatched-pattern {{files}}"
+        check = "bun --bun oxlint --no-error-on-unmatched-pattern {{files}}"
         glob = List("*.cjs", "*.cts", "*.js", "*.jsx", "*.mjs", "*.mts", "*.ts", "*.tsx")
       }
     }

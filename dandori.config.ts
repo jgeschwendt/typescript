@@ -12,14 +12,14 @@ const tscMs = 200;
 Fix mode runs these first, in this order: oxfmt formats whatever oxlint's fixes rewrote.
 */
 const fixers: readonly Gate[] = [
-  { command: 'bunx oxlint --fix', ms: oxlintMs, name: 'oxlint --fix' },
-  { command: 'bunx oxfmt', ms: oxfmtMs, name: 'oxfmt' },
+  { command: 'bun --bun oxlint --fix', ms: oxlintMs, name: 'oxlint --fix' },
+  { command: 'bun --bun oxfmt', ms: oxfmtMs, name: 'oxfmt' },
 ];
 
 const gates: readonly Gate[] = [
   { command: 'bun test --isolate', ms: bunTestMs, name: 'bun test' },
-  { command: 'bunx oxfmt --check', ms: oxfmtMs, name: 'oxfmt --check' },
-  { command: 'bunx oxlint', ms: oxlintMs, name: 'oxlint' },
+  { command: 'bun --bun oxfmt --check', ms: oxfmtMs, name: 'oxfmt --check' },
+  { command: 'bun --bun oxlint', ms: oxlintMs, name: 'oxlint' },
   // ※ stele-unstamped
   { command: 'stele check && stele emit --check', ms: steleMs, name: 'stele', stamp: false },
   {

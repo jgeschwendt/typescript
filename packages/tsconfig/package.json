@@ -15,7 +15,7 @@
     "access": "public"
   },
   "scripts": {
-    "format": "oxfmt --config node_modules/@jlg/oxfmt/oxfmtrc.json"
+    "format": "bun --bun oxfmt --config node_modules/@jlg/oxfmt/oxfmtrc.json"
   },
   "devDependencies": {
     "@jlg/oxfmt": "^0.1.1",

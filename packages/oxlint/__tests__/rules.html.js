@@ -162,4 +162,4 @@ await Bun.write(
 `,
 );
 // oxfmt reflows the embedded rows: formatting here keeps a regenerate diff-clean
-Bun.spawnSync([process.execPath, 'x', 'oxfmt', Bun.fileURLToPath(html)]);
+Bun.spawnSync([process.execPath, '--bun', 'oxfmt', Bun.fileURLToPath(html)]);

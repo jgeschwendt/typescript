@@ -23,7 +23,7 @@
     "access": "public"
   },
   "scripts": {
-    "format": "oxfmt",
+    "format": "bun --bun oxfmt",
     "report": "bun __tests__/rules.html.js",
     "test": "bun test"
   },
