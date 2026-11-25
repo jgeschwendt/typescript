@@ -12,7 +12,7 @@ commands:
 invariants:
   - claim: "STELE UNSTAMPED — dandori.config.ts runs stele `stamp: false`: its verdict reads Git history, not only the tree"
     anchor: ※ stele-unstamped
-  - claim: MINIMUM BUMP — pre-1.0 every changeset is patch, or minor for a breaking change; major is forbidden until a deliberate 1.0, and the ci check job fails on one; the guard regexes name every unscoped package (verax) beside @jlg/*
+  - claim: MINIMUM BUMP — pre-1.0 every changeset is patch, breaking too, since apps pin exact versions; major is forbidden until a deliberate 1.0 and fails the ci check; the guard regexes name every unscoped package (verax) beside @jlg/*
     anchor: ※ changeset-guard
   - claim: RELEASE APPROVAL — the Version Packages PR stays a draft; changesets ride their own PRs, and the owner's ready-and-merge is what publishes; a minor or major bump, and every verax bump, needs the release:signed-off label before ci's check passes — agents never ready, label or merge it
     anchor: ※ release-approval-gate
