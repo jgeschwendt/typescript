@@ -111,7 +111,7 @@ jobs:
   # oxlint.config.ts files and runs the JS plugins itself. One job per linter proves both read this config.
   lint-bun:
     name: lint (bun)
-    # bun lint ships in the release after 1.4.4 (oven-sh/bun#46439, 2026-10-26): canary until then. Its
+    # bun lint (oven-sh/bun#46439, merged 2026-10-26) is not in 1.4.5 (probed 2026-11-25): canary until a release has it. Its
     # natural sort-keys orders `-` before `/` where ESLint's natural-compare (and oxlint) order it after, so a
     # plugin's `x/` keys followed by its `x-js/` keys read as unsorted. A blank line between those two groups
     # (allowLineSeparatedGroups) makes each oxlint.config.ts sorted under both orders (2026-10-28).
