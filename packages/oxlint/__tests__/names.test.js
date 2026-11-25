@@ -20,6 +20,16 @@ const cases = {
     'export function GET() {}\nexport function Fetch() {}\nfunction POST() {}\n',
     ['The function `Fetch` is not camelCase.', 'The function `POST` is not camelCase.'],
   ],
+  'button.jsx': [
+    [
+      "import Component from 'm';",
+      'export function Button() {}',
+      'const Theme = { Primary: Component };',
+      'const snake_case = Theme;',
+      '',
+    ].join('\n'),
+    ['The variable `snake_case` is not camelCase or PascalCase or UPPER_CASE.'],
+  ],
   'default.ts': [
     [
       "import Default_x from 'm';",
