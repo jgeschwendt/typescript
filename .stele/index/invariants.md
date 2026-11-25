@@ -2,7 +2,7 @@
 
 | claim | node | anchor |
 | --- | --- | --- |
-| MINIMUM BUMP — pre-1.0 every changeset is patch, or minor for a breaking change; major is forbidden until a deliberate 1.0, and the ci check job fails on one; the guard regexes name every unscoped package (verax) beside @jlg/* | / | ※ changeset-guard |
+| MINIMUM BUMP — pre-1.0 every changeset is patch, breaking too, since apps pin exact versions; major is forbidden until a deliberate 1.0 and fails the ci check; the guard regexes name every unscoped package (verax) beside @jlg/* | / | ※ changeset-guard |
 | RELEASE APPROVAL — the Version Packages PR stays a draft; changesets ride their own PRs, and the owner's ready-and-merge is what publishes; a minor or major bump, and every verax bump, needs the release:signed-off label before ci's check passes — agents never ready, label or merge it | / | ※ release-approval-gate |
 | STELE UNSTAMPED — dandori.config.ts runs stele `stamp: false`: its verdict reads Git history, not only the tree | / | ※ stele-unstamped |
 | PASSES ONLY — only a pass is a stamp; a failure is logged for the order's failure estimate and always re-runs | packages/dandori | ※ dandori-passes-only |
