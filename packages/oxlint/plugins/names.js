@@ -15,11 +15,12 @@ const camel = ['camelCase'];
 const either = ['camelCase', 'PascalCase'];
 const pascal = ['PascalCase'];
 
-/** the formats per kind of name; an unlisted kind is camelCase */
+/** the formats per kind of name; an unlisted kind is camelCase; an import may follow its exporter's class or namespace */
 const kinds = {
   class: pascal,
   enum: pascal,
   enumMember: pascal,
+  import: either,
   interface: pascal,
   objectLiteralProperty: either,
   typeAlias: pascal,
@@ -30,7 +31,6 @@ const kinds = {
 /** a JSX file's components, hooks and props take PascalCase beside camelCase */
 const jsx = {
   function: either,
-  import: either,
   objectLiteralMethod: either,
   objectLiteralProperty: either,
   typeProperty: either,

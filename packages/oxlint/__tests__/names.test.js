@@ -54,8 +54,8 @@ const cases = {
       '',
     ].join('\n'),
     [
-      'The import `Default_x` is not camelCase.',
-      'The import `renamed_x` is not camelCase.',
+      'The import `Default_x` is not camelCase or PascalCase.',
+      'The import `renamed_x` is not camelCase or PascalCase.',
       'The variable `a_b` is not camelCase or UPPER_CASE.',
       'The variable `REST_` is not camelCase or UPPER_CASE.',
       'The variable `first_x` is not camelCase or UPPER_CASE.',
@@ -78,6 +78,10 @@ const cases = {
       'The parameter `param_x` is not camelCase.',
       'The parameter `Arg` is not camelCase.',
     ],
+  ],
+  'imports.ts': [
+    "import Client from 'm';\nimport * as Sentry from 'm';\nimport { Foo as Bar, baz as snake_x } from 'm';\n",
+    ['The import `snake_x` is not camelCase or PascalCase.'],
   ],
   'widget.tsx': [
     [
