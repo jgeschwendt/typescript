@@ -153,8 +153,6 @@ const off = Object.freeze({
   'typescript-js/init-declarations':
     'duplicates native init-declarations (verified 2026-10-14 · TS probe)',
   'typescript-js/max-params': 'duplicates native max-params (verified 2026-10-14 · TS probe)',
-  'typescript-js/naming-convention':
-    "names/case owns declared names: this one needs parser services oxlint's host lacks",
   'typescript-js/no-array-constructor':
     'duplicates native no-array-constructor (verified 2026-10-14 · TS probe)',
   'typescript-js/no-dupe-class-members':
