@@ -179,6 +179,7 @@ export const sdl = (roots: readonly Schema[], { input = false } = {}): string =>
       case 'nullable':
       case 'optional':
       case 'record':
+      case 'tuple':
       case 'unknown': {
         break;
       }

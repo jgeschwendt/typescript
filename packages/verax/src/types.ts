@@ -936,6 +936,111 @@ const record = <TSchema extends StandardSchemaV1>(
 };
 
 /**
+The array type a tuple's items describe; `TSide` picks the input or output side.
+*/
+type TupleOf<
+  TItems extends readonly StandardSchemaV1[],
+  TSide extends 'input' | 'output' = 'output',
+> = { -readonly [TAt in keyof TItems]: Side<TItems[TAt], TSide> };
+
+/**
+An array of exactly `of.length` items, each checked against its own schema. Items are read by index, each once, never through the input's own methods or iterator; the output is a fresh array of what was read.
+*/
+const tuple = <const TItems extends readonly StandardSchemaV1[]>(
+  of: TItems,
+): Schema<TupleOf<TItems>, TupleOf<TItems, 'input'>> => {
+  type Out = TupleOf<TItems>;
+  /**
+  An item's checks, and a leaf's predicate, called in place of them.
+  */
+  type Slot = Readonly<{ test: ((value: unknown) => boolean) | undefined }> & Impl;
+  // a frozen copy: a later change to the caller's array reaches neither the check nor the def
+  const items = Object.freeze([...of]);
+  const slots = items.map((each): Slot => ({ ...impl(each), test: leaves.get(each)?.test }));
+  const count = slots.length;
+  /**
+  Admits the tuple, a level down only if an item descends.
+  */
+  const open = slots.some(({ test }) => test === undefined) ? enter : admit;
+  const nested = open === enter;
+  return schema<Out, TupleOf<TItems, 'input'>>(
+    { kind: 'tuple', of: items },
+    (value) => {
+      if (!Array.isArray(value)) {
+        return FAIL;
+      }
+      const given: readonly unknown[] = value;
+      if (given.length !== count || open(count) !== undefined) {
+        return FAIL;
+      }
+      const out = new Array<unknown>(count);
+      for (let index = 0; index < count; index += 1) {
+        const { fast, test } = slots[index] as Slot;
+        const each = given[index];
+        const got = test === undefined ? fast(each) : test(each) ? each : FAIL;
+        if (got === FAIL) {
+          return refund(count - index);
+        }
+        out[index] = got;
+      }
+      if (nested) {
+        leave();
+      }
+      return out as Out;
+    },
+    (value, context) => {
+      if (!Array.isArray(value)) {
+        issue(context, mismatch(context, 'tuple', value));
+        return value as Out;
+      }
+      const given: readonly unknown[] = value;
+      const { length } = given;
+      const why =
+        length === count ? open(count) : `Expected length ${count}, received ${describe(length)}`;
+      if (why !== undefined) {
+        issue(context, why);
+        return value as Out;
+      }
+      const out = new Array<unknown>(count);
+      const { path } = context;
+      const at = path.push(0) - 1;
+      for (let index = 0; index < count; index += 1) {
+        path[at] = index;
+        const { run, test } = slots[index] as Slot;
+        const each = given[index];
+        // a leaf that passes needs no full check
+        out[index] = test !== undefined && test(each) ? each : run(each, context);
+      }
+      path.pop();
+      if (nested) {
+        leave();
+      }
+      return out as Out;
+    },
+    (value) => {
+      if (!Array.isArray(value)) {
+        return FAIL;
+      }
+      const given: readonly unknown[] = value;
+      if (given.length !== count || open(count) !== undefined) {
+        return FAIL;
+      }
+      for (let index = 0; index < count; index += 1) {
+        const { check, test } = slots[index] as Slot;
+        const each = given[index];
+        if (test === undefined ? check(each) === FAIL : !test(each)) {
+          return refund(count - index);
+        }
+      }
+      if (nested) {
+        leave();
+      }
+      return given;
+    },
+  );
+};
+
+/**
 One of the given strings — a GraphQL enum; pass a name first for SDL.
 */
 function enums<const TValues extends readonly string[]>(values: TValues): Schema<TValues[number]>;
@@ -1247,6 +1352,8 @@ export {
   refine,
   scalar,
   string,
+  tuple,
+  type TupleOf,
   union,
   unknown,
 };

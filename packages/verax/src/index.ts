@@ -1,7 +1,7 @@
 export type { Def, Infer, Input, Issue, Primitive, Result, Schema, Shape } from './core.js';
 export { VeraxError, assert, is, parse, validate } from './core.js';
 export type { StandardSchemaV1 } from './standard.js';
-export type { ObjectOf, Optional } from './types.js';
+export type { ObjectOf, Optional, TupleOf } from './types.js';
 export {
   boolean,
   coerce,
@@ -18,6 +18,7 @@ export {
   refine,
   scalar,
   string,
+  tuple,
   union,
   unknown,
 } from './types.js';

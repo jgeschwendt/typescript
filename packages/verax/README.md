@@ -96,6 +96,7 @@ A `VeraxError` holds every issue in `.issues`, and lists them in its message.
 | `record(schema)`                                        | a plain object with any keys      |
 | `refine(schema, message, test)`                         | `schema`, where `test` passes     |
 | `scalar(name, test)`                                    | what the type guard `test` passes |
+| `tuple(schemas)`                                        | an array of exactly `schemas`     |
 | `union(name?, schemas)`                                 | the first of `schemas` to match   |
 | `unknown()`                                             | anything                          |
 
@@ -117,7 +118,7 @@ A `VeraxError` holds every issue in `.issues`, and lists them in its message.
 rather than emit SDL that lies.
 
 - **Name what you emit**: `enums('Role', …)`, `object('User', …)`, `scalar('Date', …)`,
-  `union('Event', …)`. `literal`, `record` and `unknown` have no SDL form.
+  `union('Event', …)`. `literal`, `record`, `tuple` and `unknown` have no SDL form.
 - **A field that may be missing is `optional(nullable(x))`.** Output also takes `nullable(x)`;
   `{ input: true }`, which emits `input` types, does not.
 - **A union's members are named objects.** `__typename: literal('Ping')` tags `object('Ping', …)`

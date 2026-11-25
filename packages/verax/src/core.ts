@@ -25,6 +25,7 @@ type Def =
   | Readonly<{ kind: 'optional'; of: StandardSchemaV1 }>
   | Readonly<{ kind: 'record'; of: StandardSchemaV1 }>
   | Readonly<{ kind: 'scalar'; name: string }>
+  | Readonly<{ kind: 'tuple'; of: readonly StandardSchemaV1[] }>
   | Readonly<{
       kind: 'union';
       name?: string;
