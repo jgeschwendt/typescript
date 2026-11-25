@@ -3,7 +3,7 @@
   "access": "public",
   "baseBranch": "main",
   "changelog": [
-    "@changesets/changelog-github",
+    "./changelog.js",
     {
       "repo": "jgeschwendt/typescript"
     }

@@ -8,7 +8,7 @@ commands:
   check: mise run check
   format-check: bun --bun oxfmt --check
   lint: bun --bun oxlint
-  test: bun test --isolate
+  test: bun test --isolate . ./.changeset
 invariants:
   - claim: "STELE UNSTAMPED — dandori.config.ts runs stele `stamp: false`: its verdict reads Git history, not only the tree"
     anchor: ※ stele-unstamped
@@ -17,7 +17,7 @@ invariants:
   - claim: RELEASE APPROVAL — the Version Packages PR stays a draft; changesets ride their own PRs, and the owner's ready-and-merge is what publishes; a minor or major bump, and every verax bump, needs the release:signed-off label before ci's check passes — agents never ready, label or merge it
     anchor: ※ release-approval-gate
 hazards:
-  - claim: "VERSION PR TOKEN — the Version Packages PR must be opened with the release app token, never GITHUB_TOKEN: GITHUB_TOKEN-created events trigger no workflows, so the required check never runs and the PR can never merge"
+  - claim: "VERSION PR TOKEN — the Version Packages PR opens with the release app token, never GITHUB_TOKEN: GITHUB_TOKEN-created events trigger no workflows, so the required check never runs and the PR never merges"
     anchor: ※ release-app-token
   - claim: "ROOT NAME — the workspace root is named jlg, never typescript: changesets treats a workspace named like a dependency (@jlg/tsconfig peers on typescript) as satisfying it, reads its missing version, and every changeset command crashes with ERR_INVALID_ARG_TYPE"
     anchor: ※ root-name
@@ -33,7 +33,7 @@ edges:
 - ⚠ `packages/oxlint`: JS PLUGINS — index.js's jsPlugins run, as ESLint rule code, every live rule of the five wrapped plugins that the installed oxlint's configuration_schema.json does not name, minus typed rules and the reasoned `off` map, plus the directive ban, the naming rule, the printWidth divider and the TS-only Readonly<{…}> rule; every entry is a local plugins/*.js (a bare specifier cannot resolve from an isolated install's symlink) adapted to oxlint's host by host.js, which lists only keys defineConfig recorded (oxlint loads each listed rule after evaluating every config; probed 2026-10-27); JS plugins are alpha and outside oxlint's semver, so js-plugins.test.js gates every bump; a plugin that fails to load rejects the WHOLE config, and one that loads can report nothing (unicorn 66 stubbed two rules); unicorn floats at ^79 on eslint ^10, and eslint-plugin-import's index loads whole on ESLint 10 (probed 2026-10-21), but its no-unused-modules reaches for ESLint 9 internals and stays in `off` — js-plugins.test.js installs the packed tarball under both bun linkers, lints through a consumer oxlint.config.ts on node and bun, and fails on any crashed rule or unless every fixtured rule reports; typescript6.js redirects typescript-eslint's typescript import to @typescript/typescript6 (→ ※ oxlint-js-plugins)
 - ⚠ `packages/oxlint`: PEER COUPLING — peerDependencies.oxlint is a caret range though JS plugins are alpha; naming a version-N-only rule in index.js puts a floor of N under any range it widens to (older consumers hard-fail on the unknown name); category-activated rules and the catalog-filtered `typescriptOnly` don't; js-plugins.test.js lints on the range's floor oxlint (→ ※ oxlint-peer-coupling)
 - ⚠ `packages/oxlint`: VERSION PAIRING — the base depends on oxlint-tsgolint (oxlint 1.89 peers on >=7.0.2003) and points OXLINT_TSGOLINT_PATH at it unless the consumer lists its own; under bun --bun that env never reaches oxlint's binary, so only a hoisted .bin/tsgolint serves (probed 2026-10-27); an old tsgolint breaks type-aware SILENTLY, so probe it per bump (→ ※ oxlint-tsgolint-pairing)
-- ⚠ `/`: VERSION PR TOKEN — the Version Packages PR must be opened with the release app token, never GITHUB_TOKEN: GITHUB_TOKEN-created events trigger no workflows, so the required check never runs and the PR can never merge (→ ※ release-app-token)
+- ⚠ `/`: VERSION PR TOKEN — the Version Packages PR opens with the release app token, never GITHUB_TOKEN: GITHUB_TOKEN-created events trigger no workflows, so the required check never runs and the PR never merges (→ ※ release-app-token)
 - ⚠ `/`: ROOT NAME — the workspace root is named jlg, never typescript: changesets treats a workspace named like a dependency (@jlg/tsconfig peers on typescript) as satisfying it, reads its missing version, and every changeset command crashes with ERR_INVALID_ARG_TYPE (→ ※ root-name)
 - ⚠ `packages/oxlint`: FOOTGUN — an unknown rule NAME hard-fails the whole oxlint config (exit 1, nothing lints); a valid native rule whose plugin isn't enabled is a SILENT no-op; rule-existence.test.js guards native rules, lint.test.js (oxlint's own config-load check) guards jsPlugins rules, and js-plugins.test.js the Node-floor offs (→ ※ rule-existence-guard)
 - ⚠ `packages/oxlint`: SNAPSHOT RESOLUTION — the guard tests resolve oxlint from packages/oxlint/node_modules first, so a root-only oxlint bump leaves packages/oxlint's devDependency (and the regenerated rules.test.js snapshot) on the OLD catalog with a silent no-diff; bump both package.json files together (→ ※ snapshot-resolution)
