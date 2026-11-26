@@ -35,7 +35,7 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-unicorn": "^80.0.0",
-    "oxlint-tsgolint": "^7.0.2008"
+    "oxlint-tsgolint": "^7.0.2009"
   },
   "devDependencies": {
     "@jlg/oxfmt": "^0.1.1",
