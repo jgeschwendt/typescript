@@ -14,10 +14,12 @@ const load: (text: string) => Stored[] = JSON.parse;
 const read: (text: string) => Detail = JSON.parse;
 const option = (name: string): string | undefined =>
   Bun.argv.find((_argument, index, argv) => argv[index - 1] === `--${name}`);
-const root = resolve(String(Bun.argv[2]));
+const target = String(Bun.argv[2]);
+const upstream = /^https?:\/\//u.test(target) ? new URL(target) : undefined;
+const root = resolve(target);
 const store =
   option('store') ??
-  `${Bun.env['XDG_STATE_HOME'] ?? `${Bun.env['HOME']}/.local/state`}/hud/${root.slice(1).replaceAll(/[^\w.-]+/gu, '-')}.json`;
+  `${Bun.env['XDG_STATE_HOME'] ?? `${Bun.env['HOME']}/.local/state`}/hud/${(upstream?.host ?? root.slice(1)).replaceAll(/[^\w.-]+/gu, '-')}.json`;
 mkdirSync(dirname(store), { recursive: true });
 const threads: Stored[] = [];
 try {
@@ -97,9 +99,32 @@ const inject = (html: string): string =>
     '<hud></hud><script type="module" src="/__hud/client.js"></script></body>',
   );
 
+/**
+Fetch the request's path from the upstream with its method, redirects left to the browser; relay status, content-type and location, the layer injected into HTML.
+*/
+const relay = async ({ method }: Request, { pathname, search }: URL): Promise<Response> => {
+  const response = await fetch(new URL(`${pathname}${search}`, upstream), {
+    method,
+    redirect: 'manual',
+  });
+  const relayed = new Headers(headers);
+  for (const name of ['content-type', 'location']) {
+    const value = response.headers.get(name);
+    if (value !== null) {
+      relayed.set(name, value);
+    }
+  }
+  const html = relayed.get('content-type')?.startsWith('text/html') === true;
+  return new Response(html ? inject(await response.text()) : response.body, {
+    headers: relayed,
+    status: response.status,
+  });
+};
+
 const server = Bun.serve<string>({
   fetch: async (request, bun) => {
-    const { pathname } = new URL(request.url);
+    const url = new URL(request.url);
+    const { pathname } = url;
     if (pathname === '/__hud/client.js') {
       const { outputs } = await Bun.build({ entrypoints: [`${import.meta.dir}/client.ts`] });
       return new Response(outputs[0], { headers });
@@ -116,6 +141,9 @@ const server = Bun.serve<string>({
     }
     if (channels.has(pathname)) {
       return bun.upgrade(request, { data: pathname }) ? undefined : missing();
+    }
+    if (upstream) {
+      return relay(request, url);
     }
     const file = Bun.file(join(root, pathname.endsWith('/') ? `${pathname}index.html` : pathname));
     if (!(await file.exists())) {

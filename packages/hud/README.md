@@ -86,10 +86,10 @@ Set on `<hud>`; each falls back to the dark default.
 ## Serve
 
 ```sh
-bun packages/hud/src/serve.ts <dir> [--port 8765] [--store FILE]
+bun packages/hud/src/serve.ts <dir|url> [--port 8765] [--store FILE]
 ```
 
-Serves `<dir>` on 127.0.0.1 with `Cache-Control: no-store`, every HTML response carrying `<hud></hud>` and `/__hud/client.js` (the layer, bundled on request) before `</body>`. Threads live in one JSON file, written via tmp and rename: `--store`, else `${XDG_STATE_HOME:-~/.local/state}/hud/<dir as a slug>.json`; missing or unreadable is no threads. A new thread carries `context`, what a text-only reader needs to know the pinned element — `img "Five stations…" · under "Data root"`: the tag, its `alt`, `aria-label` or first 120 characters, the nearest preceding heading — re-read on re-anchor.
+Given an `http://` or `https://` url instead of a dir, every non-`/__hud/*` request is fetched from that origin with the same method and path (redirects relayed, not followed), HTML getting the layer and anything else streaming through; the default store slugs its `host:port`. Serves `<dir>` on 127.0.0.1 with `Cache-Control: no-store`, every HTML response carrying `<hud></hud>` and `/__hud/client.js` (the layer, bundled on request) before `</body>`. Threads live in one JSON file, written via tmp and rename: `--store`, else `${XDG_STATE_HOME:-~/.local/state}/hud/<dir as a slug>.json`; missing or unreadable is no threads. A new thread carries `context`, what a text-only reader needs to know the pinned element — `img "Five stations…" · under "Data root"`: the tag, its `alt`, `aria-label` or first 120 characters, the nearest preceding heading — re-read on re-anchor.
 
 | channel                  | does                                                                                                                      |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------- |

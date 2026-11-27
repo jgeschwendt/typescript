@@ -120,7 +120,7 @@
           "text": "MINIMUM BUMP — pre-1.0 every changeset is patch, breaking too, since apps pin exact versions; major is forbidden until a deliberate 1.0 and fails the ci check; the guard regexes name every unscoped package (verax) beside @jlg/*",
           "verified": {
             "digest": null,
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -132,7 +132,7 @@
           "text": "VERSION PR TOKEN — the Version Packages PR opens with the release app token, never GITHUB_TOKEN: GITHUB_TOKEN-created events trigger no workflows, so the required check never runs and the PR never merges",
           "verified": {
             "digest": null,
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -144,7 +144,7 @@
           "text": "RELEASE APPROVAL — the Version Packages PR stays a draft; changesets ride their own PRs, and the owner's ready-and-merge is what publishes; a minor or major bump, and every verax bump, needs the release:signed-off label before ci's check passes — agents never ready, label or merge it",
           "verified": {
             "digest": null,
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -156,7 +156,7 @@
           "text": "ROOT NAME — the workspace root is named jlg, never typescript: changesets treats a workspace named like a dependency (@jlg/tsconfig peers on typescript) as satisfying it, reads its missing version, and every changeset command crashes with ERR_INVALID_ARG_TYPE",
           "verified": {
             "digest": null,
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -168,7 +168,7 @@
           "text": "STELE UNSTAMPED — dandori.config.ts runs stele `stamp: false`: its verdict reads Git history, not only the tree",
           "verified": {
             "digest": "705771f66e49be0cf8638a76142d8cde3f24d11230f3c460f6ca2c442b27128f",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         }
       ],
@@ -235,7 +235,7 @@
           "text": "PASSES ONLY — only a pass is a stamp; a failure is logged for the order's failure estimate and always re-runs",
           "verified": {
             "digest": "c0c458657eb68733bf94f94c04e1b2e70178012afd7fe777e00b1caff3126478",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -247,7 +247,7 @@
           "text": "STAMP SOUNDNESS — a gate is skipped only when its pass was logged at the same key (tree hash, a hash of each configured input, platform-arch); that holds only while every stamped gate is deterministic and reads nothing outside the key but node_modules installed from the lockfile and the mise-pinned tools: a gate that reads anything else is `stamp: false`, or its input joins `inputs`",
           "verified": {
             "digest": "c0c458657eb68733bf94f94c04e1b2e70178012afd7fe777e00b1caff3126478",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -259,7 +259,7 @@
           "text": "TREE KEY — the key's tree is `git write-tree` after `git add -A` into an mtime-preserving copy of the index, so the real index is never written, Git's racy-clean check still sees a same-second edit, and a dirty tree's key equals HEAD^{tree} once that exact state is committed; the pass the agent loop earns is the stamp pre-push finds",
           "verified": {
             "digest": "c0c458657eb68733bf94f94c04e1b2e70178012afd7fe777e00b1caff3126478",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         }
       ],
@@ -344,7 +344,7 @@
           "text": "MAXIMALIST OPT-OUT — every non-deprecated rule of the wrapped ESLint plugins that oxlint lacks runs through the -js plugins at error by default; the only mechanical exclusion is requiresTypeChecking; every other off the base sets at top level, native or -js and runtime floors aside, is a named entry in `off` with a factual one-line reason (crash under the host, duplicate of a native rule, formatting oxfmt owns, non-JS language, contradiction with a rule the base runs, syntax the house writes), and rules.test.js fails on a reasonless off — noise is never a reason, the owner walks every entry; a JS-runtime rule goes to `off` the moment oxlint ships the rule natively under any name or scope, and rules.test.js's three guards (deprecated predecessor beside its successor, native names absent upstream, cross-scope name twins) fail a bump until each is decided",
           "verified": {
             "digest": "8700816a25da59ee3f892b1eb6e00f5a989f055a62ea4f3435161c1d2939965c",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -356,7 +356,7 @@
           "text": "SINGLE SOURCE OF TRUTH — index.js is the only base ruleset, defineConfig its only config entry; its only other export is `off`, the reasoned opt-out map the rules table reads; no JSON copy, no `base` export; consumer overrides always follow the base's; never fork the data",
           "verified": {
             "digest": "8700816a25da59ee3f892b1eb6e00f5a989f055a62ea4f3435161c1d2939965c",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -368,7 +368,7 @@
           "text": "JS-CONFIG RUNTIME — oxlint/oxfmt .config.ts files evaluate under Node >=22.18 through the bins' node shebang, plain `bun run`/`bunx` included, but under Bun with `bun --bun` — as do oxlint's JS plugins (probed 2026-10-09); in a JS config oxlint `extends` takes config OBJECTS, not path strings, and a nested config replaces the root for its subtree (options stay root-only, and a nested one fails the run)",
           "verified": {
             "digest": "8700816a25da59ee3f892b1eb6e00f5a989f055a62ea4f3435161c1d2939965c",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -380,7 +380,7 @@
           "text": "JS PLUGINS — index.js's jsPlugins run, as ESLint rule code, every live rule of the five wrapped plugins that the installed oxlint's configuration_schema.json does not name, minus typed rules and the reasoned `off` map, plus the directive ban, the naming rule, the printWidth divider and the TS-only Readonly<{…}> rule; every entry is a local plugins/*.js (a bare specifier cannot resolve from an isolated install's symlink) adapted to oxlint's host by host.js, which lists only keys defineConfig recorded (oxlint loads each listed rule after evaluating every config; probed 2026-10-27); JS plugins are alpha and outside oxlint's semver, so js-plugins.test.js gates every bump; a plugin that fails to load rejects the WHOLE config, and one that loads can report nothing (unicorn 66 stubbed two rules); unicorn floats at ^80 on eslint ^10, and eslint-plugin-import's index loads whole on ESLint 10 (probed 2026-10-21), but its no-unused-modules reaches for ESLint 9 internals and stays in `off` — js-plugins.test.js installs the packed tarball under both bun linkers, lints through a consumer oxlint.config.ts on node and bun, and fails on any crashed rule or unless every fixtured rule reports; typescript6.js redirects typescript-eslint's typescript import to @typescript/typescript6",
           "verified": {
             "digest": "8700816a25da59ee3f892b1eb6e00f5a989f055a62ea4f3435161c1d2939965c",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -392,7 +392,7 @@
           "text": "PEER COUPLING — peerDependencies.oxlint is a caret range though JS plugins are alpha; naming a version-N-only rule in index.js puts a floor of N under any range it widens to (older consumers hard-fail on the unknown name); category-activated rules and the catalog-filtered `typescriptOnly` don't; js-plugins.test.js lints on the range's floor oxlint",
           "verified": {
             "digest": "8700816a25da59ee3f892b1eb6e00f5a989f055a62ea4f3435161c1d2939965c",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -404,7 +404,7 @@
           "text": "VERSION PAIRING — the base depends on oxlint-tsgolint (oxlint 1.89 peers on >=7.0.2003) and points OXLINT_TSGOLINT_PATH at it unless the consumer lists its own; under bun --bun that env never reaches oxlint's binary, so only a hoisted .bin/tsgolint serves (probed 2026-10-27); an old tsgolint breaks type-aware SILENTLY, so probe it per bump",
           "verified": {
             "digest": "8700816a25da59ee3f892b1eb6e00f5a989f055a62ea4f3435161c1d2939965c",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -416,7 +416,7 @@
           "text": "FOOTGUN — an unknown rule NAME hard-fails the whole oxlint config (exit 1, nothing lints); a valid native rule whose plugin isn't enabled is a SILENT no-op; rule-existence.test.js guards native rules, lint.test.js (oxlint's own config-load check) guards jsPlugins rules, and js-plugins.test.js the Node-floor offs",
           "verified": {
             "digest": "96140d54f6e3f84a16d3a294cf792f91c75d89059033cb99444a441fa43ef665",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -428,7 +428,7 @@
           "text": "SNAPSHOT GATE — the rules.test.js bun snapshot (every rule of the enabled oxlint plugins and of the wrapped ESLint plugins' catalogs, one line each) and the define-config.test.js overrides snapshot (its typescript override derives from the catalogs) are the review gate for oxlint and typescript-eslint bumps; a bump adds new rules to on-categories as consumer-facing errors, so regen and review both diffs",
           "verified": {
             "digest": "4fcd5b718c042566b69633148ca6eb83ac041b657efe161e26143897e13ef39b",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -440,7 +440,7 @@
           "text": "SNAPSHOT RESOLUTION — the guard tests resolve oxlint from packages/oxlint/node_modules first, so a root-only oxlint bump leaves packages/oxlint's devDependency (and the regenerated rules.test.js snapshot) on the OLD catalog with a silent no-diff; bump both package.json files together",
           "verified": {
             "digest": "4d2be90e395665c423bcbd21469aad6bf4deb6009545a48087c96f19503a3e79",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -452,7 +452,7 @@
           "text": "CONVENTIONS, NOT RECIPES — the README states what the base does and how a rule reads its options (the func-style split, how a names/case `allow` entry matches); a consumer's exception to a rule it keeps (a barrel allowed one by one behind a sibling `<folder>.ts` and a tsconfig paths map, a snake_case boundary) is the app's config and the app's own stele, never a base recipe (the no-barrel-files recipe declined 2026-10-28, \"apps will do this on their own\")",
           "verified": {
             "digest": null,
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         }
       ],
@@ -489,7 +489,7 @@
           "text": "MODERN ONLY — TypeScript 7+, ESM-only (exports \"import\" only, no CJS), Node >=24; never add a CJS build, node10 types fallback, or downlevel target",
           "verified": {
             "digest": null,
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -501,7 +501,7 @@
           "text": "DEF IDENTITY — refine and coerce must reuse the inner schema's def object; sdl() detects name collisions and dedupes union members by def identity, so a fresh def breaks sdl naming",
           "verified": {
             "digest": "ba5c55003602fa3f465ba3192d5fa8d544364c7421c6bbf705ed6e331b709d09",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -513,7 +513,7 @@
           "text": "HOT PATH — per-run code never calls Object.entries/Object.keys or iterator helpers, and `is` runs check-only paths that allocate nothing (outside refine) while parse/validate allocate only the output snapshot; shapes resolve once into plans; built-in leaves walk lists in their own loops. Measured by bench/run.ts 2026-11-23: iterator helpers 2.8–28× slower, own loops 30–81% faster; perf changes keep a before/after run",
           "verified": {
             "digest": "c5862a5c4f9c2b45b40b888a3549e0a78d486c506f97ac60c0a10dce185cd790",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -525,7 +525,7 @@
           "text": "NEVER THROWS — validate (and ~standard.validate, is, and the checks inside assert and parse) turns any exception from a user callback or hostile value into an issue at its path; union members that throw count as failed members, except on stack exhaustion (a RangeError whose message names the call stack), which fails the whole check",
           "verified": {
             "digest": "7760e7388c0e62919de40a3a86277c1d359ca360005857be3466c6cb46bd633c",
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         },
         {
@@ -537,7 +537,7 @@
           "text": "TYPE TESTS — the `true satisfies Equal<…>` assertions fail only under tsc; bun test strips types, so ci.yaml and dandori run `bunx tsc --noEmit` in packages/verax (the lockfile compiler)",
           "verified": {
             "digest": null,
-            "sha": "b2acb28d6a0cf698ffa52e6127b7f62da321a778"
+            "sha": "dce89ba7a75b0a7a45aacf997bf3020c6247fa89"
           }
         }
       ],
