@@ -15,8 +15,8 @@
     "version-packages": "changeset version && bun .changeset/changelog.js packages/*/CHANGELOG.md && bun install --lockfile-only"
   },
   "devDependencies": {
-    "@changesets/cli": "^3.0.3",
-    "@changesets/config": "^4.0.1",
+    "@changesets/cli": "^3.1.0",
+    "@changesets/config": "^4.1.0",
     "@changesets/get-github-info": "^1.0.1",
     "@jlg/dandori": "workspace:*",
     "@jlg/oxfmt": "^0.1.2",
