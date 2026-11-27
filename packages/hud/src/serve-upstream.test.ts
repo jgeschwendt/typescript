@@ -37,14 +37,16 @@ afterAll(async () => {
 });
 
 test('relays the upstream: html injected, other types untouched, redirects and 404s as sent', async () => {
-  const [page, data, redirect, gone, head, client] = await Promise.all([
+  const [page, data, redirect, gone, head, client, slashes] = await Promise.all([
     get('docs/?a=1'),
     get('data.json'),
     get('docs'),
     get('nope'),
     get('docs/', { method: 'HEAD' }),
     get('__hud/client.js'),
+    get('/x'),
   ]);
+  expect(slashes.status).toBe(404);
   expect(await page.text()).toBe(
     '<html><body><p>docs</p><hud></hud><script type="module" src="/__hud/client.js"></script></body></html>',
   );
@@ -67,6 +69,7 @@ test('relays the upstream: html injected, other types untouched, redirects and 4
     'GET /docs',
     'GET /docs/?a=1',
     'GET /nope',
+    'GET /x',
     'HEAD /docs/',
   ]);
 });
