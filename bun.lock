@@ -10,7 +10,7 @@
         "@changesets/get-github-info": "^1.0.1",
         "@jlg/dandori": "workspace:*",
         "@jlg/oxfmt": "^0.1.2",
-        "@jlg/oxlint": "^0.1.5",
+        "@jlg/oxlint": "^0.1.6",
         "@types/bun": "^1.4.5",
         "oxfmt": "^0.80.0",
         "oxlint": "^1.95.0",
@@ -25,8 +25,8 @@
         "dandori": "./src/cli.ts",
       },
       "devDependencies": {
-        "@jlg/oxlint": "^0.1.5",
-        "@jlg/tsconfig": "^0.1.2",
+        "@jlg/oxlint": "^0.1.6",
+        "@jlg/tsconfig": "^0.1.3",
         "@types/bun": "^1.4.5",
         "tsrs": "^7.1.0-beta.tsrs5",
       },
@@ -37,8 +37,8 @@
       "devDependencies": {
         "@happy-dom/global-registrator": "^21.0.4",
         "@ibm/plex-mono": "2.5.0",
-        "@jlg/oxlint": "^0.1.5",
-        "@jlg/tsconfig": "^0.1.2",
+        "@jlg/oxlint": "^0.1.6",
+        "@jlg/tsconfig": "^0.1.3",
         "@types/bun": "^1.4.5",
         "@types/opentype.js": "1.3.10",
         "opentype.js": "2.0.0",
@@ -60,7 +60,7 @@
     },
     "packages/oxlint": {
       "name": "@jlg/oxlint",
-      "version": "0.1.5",
+      "version": "0.1.6",
       "dependencies": {
         "@typescript-eslint/eslint-plugin": "^8.74.0",
         "@typescript-eslint/parser": "^8.74.0",
@@ -73,7 +73,7 @@
       },
       "devDependencies": {
         "@jlg/oxfmt": "^0.1.1",
-        "@jlg/tsconfig": "^0.1.2",
+        "@jlg/tsconfig": "^0.1.3",
         "@types/bun": "^1.4.5",
         "oxlint": "^1.95.0",
       },
@@ -83,7 +83,7 @@
     },
     "packages/tsconfig": {
       "name": "@jlg/tsconfig",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "devDependencies": {
         "@jlg/oxfmt": "^0.1.1",
         "oxfmt": "^0.80.0",
@@ -95,10 +95,10 @@
     },
     "packages/verax": {
       "name": "verax",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "devDependencies": {
         "@jlg/oxfmt": "^0.1.2",
-        "@jlg/oxlint": "^0.1.4",
+        "@jlg/oxlint": "^0.1.6",
         "@types/bun": "^1.4.5",
         "fast-check": "^4.11.0",
         "typescript": "^7.0.2",
