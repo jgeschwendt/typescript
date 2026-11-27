@@ -103,7 +103,8 @@ const inject = (html: string): string =>
 Fetch the request's path from the upstream with its method, redirects left to the browser; relay status, content-type and location, the layer injected into HTML.
 */
 const relay = async ({ method }: Request, { pathname, search }: URL): Promise<Response> => {
-  const response = await fetch(new URL(`${pathname}${search}`, upstream), {
+  // dot-relative: a path opening `//` is a path, never a protocol-relative host
+  const response = await fetch(new URL(`.${pathname}${search}`, upstream), {
     method,
     redirect: 'manual',
   });
