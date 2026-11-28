@@ -1,5 +1,5 @@
 # npm trusted publishers name this file: renaming it silently breaks OIDC publishing
-# ENEEDAUTH despite a publisher: `npm trust revoke` then `npm trust github` (observed 2026-10-09)
+# ENEEDAUTH despite a publisher: `npm trust revoke` then `npm trust github … --allow-publish` (observed 2026-10-09; npm 11.20 requires the flag)
 name: release
 
 on:
