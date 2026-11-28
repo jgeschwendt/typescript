@@ -20,15 +20,47 @@ const contextOf = (element: Element): string => {
   return `${element.localName} "${label}"${heading ? ` · under "${textOf(heading)}"` : ''}`;
 };
 
+const scroll = 'hud:scroll';
+addEventListener('load', () => {
+  scrollTo(0, Number(sessionStorage.getItem(scroll)));
+  sessionStorage.removeItem(scroll);
+});
+
+const urlOf = ({ href }: HTMLLinkElement): URL => new URL(href);
+
+/**
+A changed `path` under the watched dir: stylesheets whose URL ends with it are re-fetched in place (JS state survives); with none, or for anything else, all of them or the whole page, scroll kept.
+*/
+const reload = (path: string): void => {
+  if (!path.endsWith('.css')) {
+    sessionStorage.setItem(scroll, String(scrollY));
+    location.reload();
+    return;
+  }
+  const links = [...document.querySelectorAll<HTMLLinkElement>('link[rel=stylesheet]')];
+  const hits = links.filter((link) => urlOf(link).pathname.endsWith(`/${path}`));
+  const swapped = hits.length > 0 ? hits : links;
+  for (const link of swapped) {
+    const url = urlOf(link);
+    url.searchParams.set('hud', String(Date.now()));
+    link.href = url.href;
+  }
+};
+
 const host = document.querySelector('hud');
 const hud = mount({ host });
-const parse: (text: string) => Thread[] = JSON.parse;
+const parse: (text: string) => Thread[] | { reload: string } = JSON.parse;
 const live: { socket?: WebSocket } = {};
 const connect = (): void => {
   const socket = new WebSocket(`ws://${location.host}/__hud/ws`);
   live.socket = socket;
   socket.addEventListener('message', ({ data }) => {
-    hud.threads = parse(String(data));
+    const frame = parse(String(data));
+    if ('reload' in frame) {
+      reload(frame.reload);
+    } else {
+      hud.threads = frame;
+    }
   });
   socket.addEventListener('close', () => {
     setTimeout(connect, retry);
