@@ -6,7 +6,7 @@ purpose: "@jlg/hud — zero-dependency comment layer: mount() renders pins, a pi
 commands:
   demo: bun run --filter '@jlg/hud' demo
   glyphs: bun run --filter '@jlg/hud' glyphs
-  serve: bun packages/hud/src/serve.ts <dir> [--port N] [--store FILE]
+  serve: bun packages/hud/src/serve.ts <dir> [--port N] [--store FILE] [--watch <dir>]…
   test: bun run --filter '@jlg/hud' test
 edges:
   depends: [packages/oxlint]

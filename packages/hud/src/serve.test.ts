@@ -20,7 +20,8 @@ await Bun.write(
 );
 await Bun.write(`${pages}/page.css`, 'p {}');
 Bun.env['XDG_STATE_HOME'] = `${directory}/state`;
-Bun.argv.splice(2, Infinity, pages, '--port', '0');
+// the state dir is watched too: the store written inside a watched dir must stay silent
+Bun.argv.splice(2, Infinity, pages, '--port', '0', '--watch', `${directory}/state`);
 const log = spyOn(console, 'log').mockReturnValue();
 const { server } = await import('./serve.js');
 const base = server.url.href;
@@ -115,7 +116,10 @@ test('the store starts empty under XDG_STATE_HOME; watch replays exactly the una
 test('browser events persist, broadcast and stream; agent replies land live', async () => {
   const { frames } = await listen('watch');
   const html = await text('');
-  GlobalRegistrator.register({ url: base });
+  GlobalRegistrator.register({
+    settings: { handleDisabledFileLoadingAsSuccess: true },
+    url: base,
+  });
   const sockets: WebSocket[] = [];
   class Recorded extends WebSocket {
     public constructor(...rest: ConstructorParameters<typeof WebSocket>) {
@@ -193,4 +197,43 @@ test('browser events persist, broadcast and stream; agent replies land live', as
   await until(() => sockets[3]?.readyState === WebSocket.OPEN);
   await send('resolve', { id: img });
   await until(() => shadow.querySelectorAll('[data-status="resolved"]').length === 6);
+});
+
+test('a changed file reaches the browser as a reload frame; the client swaps css or reloads', async () => {
+  // a new directory is itself a change: settle it before the frames under test
+  await Bun.write(`${pages}/sub/page.css`, 'p {}');
+  await Bun.sleep(100);
+  const { frames } = await listen('ws');
+  frames.length = 0;
+  await Bun.write(`${pages}/.hidden.css`, 'x');
+  await Bun.write(`${pages}/node_modules/x.js`, 'x');
+  await Bun.write(`${pages}/sub/page.css`, 'p {}');
+  await Bun.write(`${pages}/new.html`, '<p></p>');
+  await until(() => frames.length === 2);
+  await Bun.sleep(100);
+  expect(frames).toEqual(['{"reload":"sub/page.css"}', '{"reload":"new.html"}']);
+
+  const [first, second, icon] = [
+    ['stylesheet', '/page.css'],
+    ['stylesheet', '/sub/page.css'],
+    ['icon', '/i.png'],
+  ].map(([relation, href]) =>
+    Object.assign(document.createElement('link'), { href, rel: relation }),
+  );
+  document.head.replaceChildren(first!, second!, icon!);
+  const reload = spyOn(location, 'reload').mockReturnValue();
+  scrollTo(0, 42);
+  await Bun.write(`${pages}/sub/page.css`, 'p { color: red }');
+  await until(() => second!.href.includes('hud='));
+  expect([first!.href, reload.mock.calls.length]).toEqual([`${base}page.css`, 0]);
+  await Bun.write(`${pages}/other.css`, 'p {}');
+  await until(() => first!.href.includes('hud='));
+  expect(reload.mock.calls.length).toBe(0);
+  await Bun.write(`${pages}/new.html`, '<p>2</p>');
+  await until(() => reload.mock.calls.length === 1);
+  expect(sessionStorage.getItem('hud:scroll')).toBe('42');
+  scrollTo(0, 0);
+  dispatchEvent(new Event('load'));
+  expect(sessionStorage.getItem('hud:scroll')).toBeNull();
+  expect(scrollY).toBe(42);
 });

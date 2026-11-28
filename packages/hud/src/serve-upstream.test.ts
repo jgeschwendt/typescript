@@ -1,6 +1,6 @@
 import { afterAll, expect, spyOn, test } from 'bun:test';
 
-const { mkdtempSync } = process.getBuiltinModule('node:fs');
+const { mkdirSync, mkdtempSync } = process.getBuiltinModule('node:fs');
 const { tmpdir } = process.getBuiltinModule('node:os');
 
 const directory = mkdtempSync(`${tmpdir()}/hud-upstream-`);
@@ -23,7 +23,17 @@ const origin = Bun.serve({
   port: 0,
 });
 Bun.env['XDG_STATE_HOME'] = `${directory}/state`;
-Bun.argv.splice(2, Infinity, `http://127.0.0.1:${origin.port}/ignored`, '--port', '0');
+const watched = `${directory}/watched`;
+mkdirSync(watched);
+Bun.argv.splice(
+  2,
+  Infinity,
+  `http://127.0.0.1:${origin.port}/ignored`,
+  '--port',
+  '0',
+  '--watch',
+  watched,
+);
 spyOn(console, 'log').mockReturnValue();
 // serve.js reads argv once at import: this file needs `bun test --isolate`, a module registry of its own
 const { server } = await import('./serve.js');
@@ -84,4 +94,17 @@ test('the default store is slugged from the upstream host:port', async () => {
   await Bun.sleep(50);
   socket.close();
   expect(await file.exists()).toBe(true);
+});
+
+test('only --watch dirs are watched upstream; a change is a reload frame', async () => {
+  const socket = new WebSocket(`${base.replace('http', 'ws')}__hud/ws`);
+  const frames: string[] = [];
+  socket.addEventListener('message', ({ data }) => {
+    frames.push(String(data));
+  });
+  await Bun.sleep(50);
+  await Bun.write(`${watched}/site.css`, 'p {}');
+  await Bun.sleep(150);
+  socket.close();
+  expect(frames.slice(1)).toEqual(['{"reload":"site.css"}']);
 });

@@ -5,15 +5,19 @@ type Name = 'anchor' | 'delete' | 'open' | 'reopen' | 'reply' | 'resolve';
 type Detail = Omit<Stored, 'messages' | 'status'> & { name: Name; text: string };
 type Edit = (thread: Stored, detail: Detail, author: Message['author']) => string;
 
-const { mkdirSync, renameSync, writeFileSync } = process.getBuiltinModule('node:fs');
+const { mkdirSync, renameSync, watch, writeFileSync } = process.getBuiltinModule('node:fs');
 const { dirname, join, resolve } = process.getBuiltinModule('node:path');
 
+// a burst of file events becomes one frame per path after this many milliseconds
+const debounce = 50;
 const headers = { 'cache-control': 'no-store' };
 const channels = new Set(['/__hud/watch', '/__hud/ws']);
 const load: (text: string) => Stored[] = JSON.parse;
 const read: (text: string) => Detail = JSON.parse;
 const option = (name: string): string | undefined =>
   Bun.argv.find((_argument, index, argv) => argv[index - 1] === `--${name}`);
+const options = (name: string): string[] =>
+  Bun.argv.flatMap((argument, index, argv) => (argv[index - 1] === `--${name}` ? [argument] : []));
 const target = String(Bun.argv[2]);
 const upstream = /^https?:\/\//u.test(target) ? new URL(target) : undefined;
 const root = resolve(target);
@@ -188,6 +192,33 @@ const server = Bun.serve<string>({
     },
   },
 });
+
+// a change under a watched dir reaches every browser as `{"reload": <path under that dir>}`
+const changed = new Set<string>();
+const timer: { id?: Timer } = {};
+const ignored = (directory: string, path: string): boolean =>
+  path.split('/').some((part) => part.startsWith('.') || part === 'node_modules') ||
+  [store, `${store}.tmp`].includes(join(directory, path));
+for (const directory of [
+  upstream ? [] : [root],
+  options('watch').map((path) => resolve(path)),
+].flat()) {
+  watch(directory, { recursive: true }, (_event, name) => {
+    const path = String(name);
+    if (ignored(directory, path)) {
+      return;
+    }
+
+    changed.add(path);
+    clearTimeout(timer.id);
+    timer.id = setTimeout(() => {
+      for (const reload of changed) {
+        server.publish('/__hud/ws', JSON.stringify({ reload }));
+      }
+      changed.clear();
+    }, debounce);
+  });
+}
 
 console.log(`${server.url.href} · watch ws://${server.hostname}:${server.port}/__hud/watch`);
 

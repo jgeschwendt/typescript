@@ -86,8 +86,10 @@ Set on `<hud>`; each falls back to the dark default.
 ## Serve
 
 ```sh
-bun packages/hud/src/serve.ts <dir|url> [--port 8765] [--store FILE]
+bun packages/hud/src/serve.ts <dir|url> [--port 8765] [--store FILE] [--watch <dir>]…
 ```
+
+Live reload: a served `<dir>` and every repeatable `--watch <dir>` (the only watch against a url) are watched, dotfiles, `node_modules` and the store ignored, debounced 50 ms. A change publishes `{"reload": "<path under the watched dir>"}` on `/__hud/ws`: a `.css` swaps the stylesheets whose URL ends with that path in place (all of them when none does), keeping JS state; anything else reloads the page, scroll kept.
 
 Given an `http://` or `https://` url instead of a dir, every non-`/__hud/*` request is fetched from that origin with the same method and path (redirects relayed, not followed), HTML getting the layer and anything else streaming through; the default store slugs its `host:port`. Serves `<dir>` on 127.0.0.1 with `Cache-Control: no-store`, every HTML response carrying `<hud></hud>` and `/__hud/client.js` (the layer, bundled on request) before `</body>`. Threads live in one JSON file, written via tmp and rename: `--store`, else `${XDG_STATE_HOME:-~/.local/state}/hud/<dir as a slug>.json`; missing or unreadable is no threads. A new thread carries `context`, what a text-only reader needs to know the pinned element — `img "Five stations…" · under "Data root"`: the tag, its `alt`, `aria-label` or first 120 characters, the nearest preceding heading — re-read on re-anchor.
 
