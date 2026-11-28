@@ -57,7 +57,7 @@ jobs:
           verax() { grep -rEl --include='*.md' --exclude=README.md '^[[:space:]]*.?verax.?[[:space:]]*:' .changeset || true; }
           majors=$(bump major)
           if [ -n "$majors" ]; then
-            echo "::error::major bump forbidden pre-1.0 — rewrite as minor (breaking) or patch: $majors"
+            echo "::error::major bump forbidden pre-1.0 — rewrite as patch, breaking included: $majors"
             exit 1
           fi
           [ "$EVENT" = pull_request ] || exit 0
@@ -99,14 +99,20 @@ jobs:
       # --no-script: a package.json `fmt` script would otherwise run instead of the formatter
       - run: bun --version && bun fmt --no-script --check
 
+  # node 24 is the engines floor, 26 the active LTS consumers run
   fmt-node:
-    name: fmt (node)
+    env:
+      MISE_NODE_VERSION: ${{ matrix.node }}
+    name: fmt (node ${{ matrix.node }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [24, 26]
     steps:
       - uses: actions/checkout@v5
       - uses: jdx/mise-action@v2
       - run: bun install --frozen-lockfile
-      - run: node node_modules/oxfmt/bin/oxfmt --check
+      - run: node --version && node node_modules/oxfmt/bin/oxfmt --check
 
   # oxlint.config.ts and the base's JS plugins evaluate on whichever runtime launches oxlint's bin: node
   # through its shebang (bunx, plain `bun run`). `bun lint` is Bun's own linter: it reads the same
@@ -130,10 +136,15 @@ jobs:
       - run: bun --version && bun lint --no-script
 
   lint-node:
-    name: lint (node)
+    env:
+      MISE_NODE_VERSION: ${{ matrix.node }}
+    name: lint (node ${{ matrix.node }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [24, 26]
     steps:
       - uses: actions/checkout@v5
       - uses: jdx/mise-action@v2
       - run: bun install --frozen-lockfile
-      - run: node node_modules/oxlint/bin/oxlint
+      - run: node --version && node node_modules/oxlint/bin/oxlint
